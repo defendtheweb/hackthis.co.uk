@@ -1,7 +1,5 @@
-DROP DATABASE hackthis;
 CREATE DATABASE hackthis;
 USE hackthis;
-
 
 /* USERS */
 CREATE TABLE users (
@@ -123,4 +121,57 @@ CREATE TABLE users_medals (
 	PRIMARY KEY (`user_id`, `medal_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
 	FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)
+
+/*
+	ARTICLES
+*/
+CREATE TABLE articles_categories (
+	`category_id` int(7) NOT NULL AUTO_INCREMENT,
+	`parent_id` int(7) DEFAULT 0,
+	`title` varchar(32),
+	PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB;
+
+-- TODO: Timestamps man TIME!!
+CREATE TABLE articles (
+	`article_id` int(7) NOT NULL AUTO_INCREMENT,
+	`user_id` int(7) NOT NULL,
+	`title` varchar(32) NOT NULL,
+	`slug` varchar(32) NOT NULL,
+	`category_id` int(7) NOT NULL,
+	`body` TEXT  NOT NULL,
+	`thumbnail` varchar(16), 
+	`submitted` timestamp ,
+	`updated` timestamp,
+	`featured` int(1),
+	`views` int(5),
+	PRIMARY KEY (`article_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE articles_draft (
+	`article_id` int(7) NOT NULL AUTO_INCREMENT,
+	`user_id` int(7) NOT NULL,
+	`title` varchar(32) NOT NULL,
+	`category_id` int(7) NOT NULL,
+	`body` TEXT NOT NULL,
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`article_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+	FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`) 
+) ENGINE=InnoDB;
+
+CREATE TABLE articles_audit (
+	`audit_id` int(7) NOT NULL AUTO_INCREMENT,
+	`article_id` int(7) NOT NULL, 
+	`draft` tinyint(1) NOT NULL,
+	`field` varchar(9) NOT NULL,
+	`old_value` TEXT NOT NULL,
+	`new_value` TEXT NOT NULL,
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`user_id` int(7) NOT NULL,
+	`comment` TEXT NULL,
+	PRIMARY KEY (`audit_id`,`article_id`,`draft`,`field`)-- ,
+	-- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
 ) ENGINE=InnoDB;
