@@ -5,7 +5,13 @@ delimiter |
 DROP TRIGGER IF EXISTS delete_user;
 CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
 	BEGIN
-		DELETE FROM users_profile WHERE OLD.user_id = user_id;		
+		DELETE FROM users_profile WHERE OLD.user_id = user_id;
+		DELETE FROM users_priv WHERE OLD.user_id = user_id;
+		DELETE FROM users_friends WHERE OLD.user_id = user_id OR OLD.user_id = friend_id;
+		DELETE FROM users_blocks WHERE OLD.user_id = user_id OR OLD.user_id = blocked_id;
+		DELETE FROM users_activity WHERE OLD.user_id = user_id;
+		DELETE FROM users_notifications WHERE OLD.user_id = user_id;
+		DELETE FROM users_medals WHERE OLD.user_id = user_id;
 		-- Add other tables to be removed.
 	END;
 
