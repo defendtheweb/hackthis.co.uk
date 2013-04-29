@@ -1,5 +1,3 @@
-DROP DATABASE hackthis;
-
 CREATE DATABASE hackthis;
 USE hackthis;
 
@@ -81,6 +79,6 @@ CREATE TABLE articles_audit (
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`user_id` int(7) NOT NULL,
 	`comment` TEXT NULL,
-	PRIMARY KEY (`audit_id`,`article_id`,`draft`,`field`),
-	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+	PRIMARY KEY (`audit_id`,`article_id`,`draft`,`field`)-- ,
+	-- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
 ) ENGINE=InnoDB;
