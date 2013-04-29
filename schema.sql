@@ -40,6 +40,7 @@ CREATE TABLE articles_categories (
 	PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB;
 
+-- TODO: Timestamps man TIME!!
 CREATE TABLE articles (
 	`article_id` int(7) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
@@ -48,13 +49,13 @@ CREATE TABLE articles (
 	`category_id` int(7) NOT NULL,
 	`body` TEXT  NOT NULL,
 	`thumbnail` varchar(16), 
-	`submitted` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`submitted` timestamp ,
 	`updated` timestamp,
 	`featured` int(1),
 	`views` int(5),
 	PRIMARY KEY (`article_id`),
-        FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
-        FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE articles_draft (
