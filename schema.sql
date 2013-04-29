@@ -1,3 +1,4 @@
+DROP DATABASE hackthis;
 CREATE DATABASE hackthis;
 USE hackthis;
 
@@ -99,12 +100,20 @@ CREATE TABLE users_notifications (
 
 
 /* MEDALS */
+CREATE TABLE medals_colours (
+	`colour_id` tinyint(1) NOT NULL AUTO_INCREMENT,
+	`reward` int(4) NOT NULL DEFAULT 0,
+	`hex` char(6) NOT NULL,
+	PRIMARY KEY (`colour_id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE medals (
-	`medal_id` tinyint(3) UNSIGNED NOT NULL,
+	`medal_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`label` varchar(16) NOT NULL,
-	`colour` tinyint(1) NOT NULL,
+	`colour_id` tinyint(1) NOT NULL,
 	`description` text NOT NULL,
-	PRIMARY KEY (`medal_id`)
+	PRIMARY KEY (`medal_id`),
+	FOREIGN KEY (`colour_id`) REFERENCES medals_colours (`colour_id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE users_medals (
