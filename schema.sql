@@ -4,9 +4,9 @@ USE hackthis;
 /* USERS */
 CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
-	`username` varchar(125) NOT NULL,
-	`password` varchar(125) NOT NULL,
-	`score` mediumint(5) NOT NULL DEFAULT 0,
+	`username` varchar(16) NOT NULL,
+	`password` varchar(256) NOT NULL,
+	`score` mediumint(6) NOT NULL DEFAULT 0,
 	`status` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`user_id`),
 	UNIQUE KEY (`username`)
@@ -121,6 +121,7 @@ CREATE TABLE users_medals (
 	PRIMARY KEY (`user_id`, `medal_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
 	FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)
+) ENGINE=InnoDB;
 
 /*
 	ARTICLES
