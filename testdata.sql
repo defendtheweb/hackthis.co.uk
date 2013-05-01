@@ -9,35 +9,48 @@ DELETE FROM articles_draft;
 DELETE FROM articles_audit;
 
 -- Add a new user.
-INSERT INTO users (`user_id`, `username`, `password`) VALUES (-1, 'Osaka', MD5('pass') );
-INSERT INTO users_profile (`user_id`, `name`) VALUES (-1, 'Pete');
+INSERT INTO users (`username`, `password`) VALUES ('Osaka', SHA1('pass'));
+INSERT INTO users_profile (`user_id`, `name`) VALUES (1, 'Pete');
 
--- Meddals
+INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', SHA1('pass') );
+
+-- Medals
 INSERT INTO medals_colours (`reward`, `hex`) VALUES (100, 'FF9900');
 INSERT INTO medals_colours (`reward`, `hex`) VALUES (200, 'FFFF00');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Test');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test');
 
+-- Award medal
+INSERT INTO users_medals (`user_id`, `medal_id`, `time`) VALUES (1, 1, NOW());
+
+
+-- Send pm
+INSERT INTO pm (`title`) VALUES ('YO');
+INSERT INTO pm_users (`pm_id`, `user_id`) VALUES (1, 1);
+INSERT INTO pm_users (`pm_id`, `user_id`) VALUES (1, 2);
+INSERT INTO pm_messages (`pm_id`, `user_id`, `message`) VALUES (1, 1, 'Hello young sir');
+
+
 -- Add a New article
-INSERT INTO articles_categories (category_id, title) VALUES (-1, "TEST");
-INSERT INTO articles_categories (category_id, title) VALUES (-2, "TESTING");
+INSERT INTO articles_categories (category_id, title) VALUES (1, "TEST");
+INSERT INTO articles_categories (category_id, title) VALUES (2, "TESTING");
 
 
 -- ARTICALS DRAFT
 INSERT INTO articles_draft (user_id, title, category_id, body) 
-	VALUES(-1, "This is an Article", -1, "HERP DERP.");
+	VALUES(1, "This is an Article", 1, "HERP DERP.");
 -- Edit the article to test the audit triggers.
-UPDATE articles_draft SET title = "This is an REDACTED", body = "REDACTED", category_id = -2;
+UPDATE articles_draft SET title = "This is an REDACTED", body = "REDACTED", category_id = 2;
 
 -- ARTICLES
-
 INSERT INTO articles (user_id, title, slug, category_id, body, thumbnail, featured) 
-	VALUES(-1, "This is an SUBMITTED Article", "sub-art-woop", -1, "HERP DERP.", "sexy.jpg", 0);
+	VALUES(1, "This is an SUBMITTED Article", "sub-art-woop", 1, "HERP DERP.", "sexy.jpg", 0);
+
 -- Edit the article to test the audit triggers.
 UPDATE articles SET 
 	title = "This is an SUBMITTED REDACTED"
 	, slug = "REDACTED-woop"
-	, category_id = -2
+	, category_id = 2
 	, body = "REDACTED"
 	, thumbnail = "safe.jpg"
 	, featured = 1;

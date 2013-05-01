@@ -1,7 +1,9 @@
 CREATE DATABASE hackthis;
 USE hackthis;
 
-/* USERS */
+/*
+	USERS
+*/
 CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
 	`username` varchar(16) NOT NULL,
@@ -97,7 +99,9 @@ CREATE TABLE users_notifications (
 ) ENGINE=InnoDB;
 
 
-/* MEDALS */
+/*
+	MEDALS
+*/
 CREATE TABLE medals_colours (
 	`colour_id` tinyint(1) NOT NULL AUTO_INCREMENT,
 	`reward` int(4) NOT NULL DEFAULT 0,
@@ -123,13 +127,43 @@ CREATE TABLE users_medals (
 	FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)
 ) ENGINE=InnoDB;
 
+
+/*
+	MESSAGES
+*/
+CREATE TABLE pm (
+	`pm_id` int(7) NOT NULL AUTO_INCREMENT,
+	`title` varchar(64) NOT NULL,
+	PRIMARY KEY (`pm_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE pm_messages (
+	`message_id` int(7) NOT NULL AUTO_INCREMENT,
+	`pm_id` int(7) NOT NULL,
+	`user_id` int(7) NOT NULL,
+	`message` text NOT NULL,
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`message_id`),
+	FOREIGN KEY (`pm_id`) REFERENCES pm (`pm_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE pm_users (
+	`pm_id` int(7) NOT NULL,
+	`user_id` int(7) NOT NULL,
+	PRIMARY KEY (`pm_id`, `user_id`),
+	FOREIGN KEY (`pm_id`) REFERENCES pm (`pm_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
+
 /*
 	ARTICLES
 */
 CREATE TABLE articles_categories (
 	`category_id` int(7) NOT NULL AUTO_INCREMENT,
 	`parent_id` int(7) DEFAULT 0,
-	`title` varchar(32),
+	`title` varchar(64),
 	PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB;
 
@@ -137,8 +171,8 @@ CREATE TABLE articles_categories (
 CREATE TABLE articles (
 	`article_id` int(7) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`title` varchar(32) NOT NULL,
-	`slug` varchar(32) NOT NULL,
+	`title` varchar(128) NOT NULL,
+	`slug` varchar(64) NOT NULL,
 	`category_id` int(7) NOT NULL,
 	`body` TEXT  NOT NULL,
 	`thumbnail` varchar(16), 
@@ -154,7 +188,7 @@ CREATE TABLE articles (
 CREATE TABLE articles_draft (
 	`article_id` int(7) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`title` varchar(32) NOT NULL,
+	`title` varchar(128) NOT NULL,
 	`category_id` int(7) NOT NULL,
 	`body` TEXT NOT NULL,
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
