@@ -80,7 +80,7 @@ CREATE TABLE users_activity (
 	`last_active` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`last_login` timestamp,
 	`current_login` timestamp,
-	`login_count` int(5) DEFAULT 1,
+	`login_count` int(5) DEFAULT 0,
 	`consecutive` int(4) DEFAULT 0,
 	`consecutive_most` int(4) DEFAULT 0,
 	PRIMARY KEY (`user_id`),
@@ -88,7 +88,7 @@ CREATE TABLE users_activity (
 ) ENGINE=InnoDB;
 
 CREATE TABLE users_notifications (
-	`notification_id` int(7) NOT NULL AUTO_INCREMENT,
+	`notification_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
 	`type` tinyint(1) NOT NULL,
 	`item_id` int(6) NOT NULL,
@@ -161,19 +161,19 @@ CREATE TABLE pm_users (
 	ARTICLES
 */
 CREATE TABLE articles_categories (
-	`category_id` int(7) NOT NULL AUTO_INCREMENT,
-	`parent_id` int(7) DEFAULT 0,
+	`category_id` int(3) NOT NULL AUTO_INCREMENT,
+	`parent_id` int(3),
 	`title` varchar(64),
 	PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB;
 
 -- TODO: Timestamps man TIME!!
 CREATE TABLE articles (
-	`article_id` int(7) NOT NULL AUTO_INCREMENT,
+	`article_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
 	`title` varchar(128) NOT NULL,
 	`slug` varchar(64) NOT NULL,
-	`category_id` int(7) NOT NULL,
+	`category_id` int(3) NOT NULL,
 	`body` TEXT  NOT NULL,
 	`thumbnail` varchar(16), 
 	`submitted` timestamp ,
@@ -186,10 +186,10 @@ CREATE TABLE articles (
 ) ENGINE=InnoDB;
 
 CREATE TABLE articles_draft (
-	`article_id` int(7) NOT NULL AUTO_INCREMENT,
+	`article_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
 	`title` varchar(128) NOT NULL,
-	`category_id` int(7) NOT NULL,
+	`category_id` int(3) NOT NULL,
 	`body` TEXT NOT NULL,
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`article_id`),
@@ -199,7 +199,7 @@ CREATE TABLE articles_draft (
 
 CREATE TABLE articles_audit (
 	`audit_id` int(7) NOT NULL AUTO_INCREMENT,
-	`article_id` int(7) NOT NULL, 
+	`article_id` int(6) NOT NULL, 
 	`draft` tinyint(1) NOT NULL,
 	`field` varchar(32) NOT NULL,
 	`old_value` TEXT NOT NULL,
@@ -209,4 +209,17 @@ CREATE TABLE articles_audit (
 	`comment` TEXT NULL,
 	PRIMARY KEY (`audit_id`,`article_id`,`draft`,`field`)-- ,
 	-- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
+) ENGINE=InnoDB;
+
+CREATE TABLE articles_comments (
+	`comment_id` int(6) NOT NULL AUTO_INCREMENT,
+	`article_id` int(6) NOT NULL,
+	`user_id` int(7) NOT NULL,
+	`parent_id` int(6),
+	`comment` text NOT NULL,
+	`reported` tinyint(1), -- Number of times this comment has been reported
+	`time` timestamp,
+	PRIMARY KEY (`comment_id`),
+	FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
