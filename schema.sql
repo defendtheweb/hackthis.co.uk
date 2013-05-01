@@ -167,7 +167,7 @@ CREATE TABLE articles_audit (
 	`audit_id` int(7) NOT NULL AUTO_INCREMENT,
 	`article_id` int(7) NOT NULL, 
 	`draft` tinyint(1) NOT NULL,
-	`field` varchar(9) NOT NULL,
+	`field` varchar(32) NOT NULL,
 	`old_value` TEXT NOT NULL,
 	`new_value` TEXT NOT NULL,
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
