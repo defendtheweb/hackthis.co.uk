@@ -20,25 +20,23 @@ DROP PROCEDURE IF EXISTS award_medal;
 CREATE PROCEDURE `award_medal` (IN _user_id INT, IN _medal_id INT)
 DETERMINISTIC
 COMMENT 'Give user relevant score based on medal being awarded'  
-BEGIN
-	DECLARE REWARD INT;
-	SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = _medal_id LIMIT 1);
+	BEGIN
+		DECLARE REWARD INT;
+		SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = _medal_id LIMIT 1);
 
-	UPDATE users SET score = score + REWARD WHERE user_id = _user_id LIMIT 1;
-END;
+		UPDATE users SET score = score + REWARD WHERE user_id = _user_id LIMIT 1;
+	END;
 
 DROP TRIGGER IF EXISTS insert_medal;
 CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 	BEGIN
 		CALL award_medal(NEW.user_id, NEW.medal_id);
 	END;
-|
 
 -- ARTICLES
 -- TODO: Pull the user id and a comment made to the new version.
-
-DROP TRIGGER IF EXISTS articales_draft_update_audit;
-CREATE TRIGGER articales_draft_update_audit BEFORE UPDATE ON articles_draft FOR EACH ROW
+DROP TRIGGER IF EXISTS articles_draft_update_audit;
+CREATE TRIGGER articles_draft_update_audit BEFORE UPDATE ON articles_draft FOR EACH ROW
 	BEGIN
 		IF OLD.body <> NEW.body THEN
 			INSERT INTO articles_audit (article_id, draft, field, old_value, new_value) 
