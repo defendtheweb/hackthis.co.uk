@@ -32,7 +32,8 @@
  * @link https://github.com/flabbyrabbit/minifier-php
  */
 
-require_once("class.minijs.php");
+require_once("vendor/class.minijs.php");
+require_once("vendor/class.scss.php");
 
 class loader {
     /*
@@ -41,16 +42,16 @@ class loader {
      * will be generated at these locations to store generated files
      */
     var $php_base = '../html';
-    var $js_base = '/files/js';
-    var $css_base = '/files/css';
+    var $js_base = '/files/js/';
+    var $css_base = '/files/css/';
 
     /*
      * Default file arrays for both JS and CSS contain common files
      * across the application. These will be generated seperately to any
      * files that are specific to portions of the application
      */
-    var $default_js = Array('/main.js');
-    var $default_css = Array('/normalize.css', '/h5dp.css');
+    var $default_js = Array('main.js');
+    var $default_css = Array('normalize.css', 'h5dp.css', 'main.scss');
 
     /*
      * Generates and stores minified versions of selected javascript and css files
@@ -58,8 +59,11 @@ class loader {
      */
     public function load($type) {
         if ($type == "css") {
+            // Create scss compiler
+            $this->scss = new scssc();
+
             //Build default CSS file
-            $path = "{$this->css_base}/min/main.css";
+            $path = "{$this->css_base}min/main.css";
             if ($this->generate($path, $this->default_css, 'css')) {
                 $css_includes = "<link rel='stylesheet' href='{$path}' type='text/css'/>\n";
             }
@@ -68,7 +72,7 @@ class loader {
             if (isset($this->custom_css) && is_array($this->custom_css) && count($this->custom_css)) {
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_css)),0,10);
-                $path = "{$this->css_base}/min/extra_{$id}.css";
+                $path = "{$this->css_base}min/extra_{$id}.css";
 
                 if ($this->generate($path, $this->custom_css, 'css')) {
                     $css_includes .= "<link rel='stylesheet' href='{$path}' type='text/css'/>\n";
@@ -78,7 +82,7 @@ class loader {
             return $css_includes;
         } else if ($type == "js") {
             //Build default JS file
-            $path = "{$this->js_base}/min/main.js";
+            $path = "{$this->js_base}min/main.js";
             if ($this->generate($path, $this->default_js, 'js')) {
                 $js_includes = "<script type='text/javascript' src='{$path}'></script>\n";
             }
@@ -87,7 +91,7 @@ class loader {
             if (isset($this->custom_js) && is_array($this->custom_js) && count($this->custom_js)) {
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_js)),0,10);
-                $path = "{$this->js_base}/min/extra_{$id}.css";
+                $path = "{$this->js_base}min/extra_{$id}.css";
                 
                 if ($this->generate($path, $this->custom_js, 'js')) {
                     $js_includes .= "<script type='text/javascript' src='{$path}'></script>\n";
@@ -144,11 +148,19 @@ class loader {
         }
 
         if ($generate) {
+            $contents = '';
             // load and concatenate file contents
             foreach ($file_array as $file) {
                 $filepath = $base.$file;
                 if (file_exists($php_base.$filepath)) {
-                    $contents .= file_get_contents($php_base.$filepath) . "\n";
+                    $tmp_contents = file_get_contents($php_base.$filepath) . "\n";
+
+                    // do we need to compile with scss compiler?
+                    if (substr($filepath, -4) === 'scss') {
+                        $tmp_contents = $this->scss->compile($tmp_contents);
+                    }
+
+                    $contents .= $tmp_contents;
                 }
             }
 
