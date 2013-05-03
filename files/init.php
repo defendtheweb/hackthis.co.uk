@@ -31,4 +31,7 @@
 
 	// Create user object
 	$user = new user();
+
+	// Import resource minifier
+	$minifier = new loader();
 ?>

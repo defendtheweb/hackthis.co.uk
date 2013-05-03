@@ -1,0 +1,12 @@
+# humanstxt.org
+
+/* TEAM */                           
+flabbyrabbit
+Site: http://hackthis.co.uk
+Email: flabbyrabbit@hackthis.co.uk
+Location: United Kingdom
+
+/* SITE */
+Created: 5th January 2008
+Components: Modernizr, jQuery, H5DP, Normalize.css
+Software: Sublime Text 2
