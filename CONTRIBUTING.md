@@ -1,5 +1,4 @@
-# Contributing to HTML5 Boilerplate
-
+# Contributing to HackThis!!
 Want to get involved?
 Thanks! There are plenty of ways you can help!
 
@@ -66,11 +65,11 @@ project:
 
    ```bash
    # Clones your fork of the repo into the current directory in terminal
-   git clone https://github.com/<your-username>/html5-boilerplate.git
+   git clone https://github.com/<your-username>/hackthis.co.uk.git
    # Navigate to the newly cloned directory
-   cd html5-boilerplate
+   cd hackthis.co.uk
    # Assigns the original repo to a remote called "upstream"
-   git remote add upstream https://github.com/h5bp/html5-boilerplate.git
+   git remote add upstream https://github.com/hackthis/hackthis.co.uk.git
    ```
 
 2. If you cloned a while ago, get the latest changes from upstream:
@@ -111,8 +110,7 @@ project:
 
 ## Do not…
 
-Please **do not** use the issue tracker for personal support requests (use
-[StackOverflow](http://stackoverflow.com/questions/tagged/html5boilerplate) or IRC).
+Please **do not** use the issue tracker for personal support requests.
 
 Please **do not** derail or troll issues. Keep the
 discussion on topic and respect the opinions of others.
