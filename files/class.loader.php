@@ -51,7 +51,7 @@ class loader {
      * files that are specific to portions of the application
      */
     var $default_js = Array('main.js');
-    var $default_css = Array('normalize.css', 'h5dp.css', 'main.scss');
+    var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-12col.css', 'h5dp.css', 'main.scss');
 
     /*
      * Generates and stores minified versions of selected javascript and css files
