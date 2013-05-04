@@ -1,5 +1,5 @@
 -- Some test data.
--- USE hackthis;
+USE hackthis;
 
 -- Remove any data.
 DELETE FROM users;

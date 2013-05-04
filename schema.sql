@@ -1,5 +1,5 @@
--- CREATE DATABASE hackthis;
--- USE hackthis;
+CREATE DATABASE hackthis;
+USE hackthis;
 
 /*
 	USERS
