@@ -1,0 +1,87 @@
+/* 
+	12 COLUMN - RESPONSIVE GRID SYSTEM
+	DEVELOPED BY DENIS LEBLANC
+	URL - http://responsive.gs
+	VERSION - 2.0
+	LICENSED UNDER GPL & MIT
+*/
+
+
+/* 	SET ALL ELEMENTS BOX-SIZING TO BORDER-BOX
+	If you need support for IE7 and lower use polyfill: https://github.com/Schepp/box-sizing-polyfill */
+* { -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box; }
+
+/* MAIN CONTAINER */
+.container { margin: 0 auto; }
+@media (min-width: 1000px) {
+	.container {
+    	max-width: 960px;
+    }
+}
+@media (max-width: 1000px) {
+	.container {
+    	width: 95%;
+    }
+}
+
+/* SELF CLEARING FLOATS - CLEARFIX METHOD */
+.row:after, .col:after, .clr:after, .group:after { 
+	content: ""; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden; }
+
+
+/* DEFAULT ROW STYLES */
+.row { margin-bottom: 1.5em; } /* set according to preference*/
+			
+								  
+/* DEFAULT COLUMN STYLES */
+.col { 
+	display: block;
+	float:left;
+	width: 100%;
+}
+
+@media ( min-width : 768px ) {
+	.col {
+		/* margin-left: 2%; */
+		margin-left: 3%;
+	}
+}
+
+
+/* RESET MARGINS */
+.col:first-child, .col.last { margin-left: 0; } /* all browsers except IE6 and lower */
+
+
+/* COLUMN WIDTH ON DISPLAYS +768px */
+@media ( min-width : 768px ) {
+/*	.span_1 { width: 6.5%; }
+	.span_2 { width: 15.0%; }
+	.span_3 { width: 23.5%; }
+	.span_4 { width: 32.0%; }
+	.span_5 { width: 40.5%; }
+	.span_6 { width: 49.0%; }
+	.span_7 { width: 57.5%; }
+	.span_8 { width: 66.0%; }
+	.span_9 { width: 74.5%; }
+	.span_10 { width: 83.0%; }
+	.span_11 { width: 91.5%; }
+	.span_12 { width: 100%; }*/
+	.span_1 { width: 5.58%; }
+	.span_2 { width: 14.17%; }
+	.span_3 { width: 22.75%; }
+	.span_4 { width: 31.33%; }
+	.span_5 { width: 39.92%; }
+	.span_6 { width: 49.5%; }
+	.span_7 { width: 57.08%; }
+	.span_8 { width: 65.67%; }
+	.span_9 { width: 74.25%; }
+	.span_10 { width: 82.83%; }
+	.span_11 { width: 91.42%; }
+	.span_12 { width: 100%; }
+}
