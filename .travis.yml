@@ -6,7 +6,7 @@ before_script:
     - mysql -u root < schema.sql
     - mysql -u root < testdata.sql
 
-script: phpunit --configuration phpunit/phpunit.xml --coverage-text
+script: phpunit phpunit/mainTest.php
 
 notifications:
   irc: "irc.hackthis.co.uk#hackthis-dev"
