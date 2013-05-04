@@ -1,3 +1,8 @@
 machine:
   timezone:
     Europe/London
+
+database:
+  override:
+    - mysql -u ubuntu circle_test < schema.sql
+    - mysql -u ubuntu circle_test < testdata.sql
