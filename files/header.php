@@ -9,11 +9,27 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>HackThis!!</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+
+        <link href='//fonts.googleapis.com/css?family=Ubuntu|Orbitron' rel='stylesheet' type='text/css'>
 
         <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
+        <div id="header_wrap" class="container">
+            <header>
+                <div class="col span_8 banner">
+                    <a href='/'>&nbsp;</a>
+                </div>
+                <div class="col span_4 adverts">
+                    ADVERTS
+                </div>
+                <br style='clear: both'/>
+            </header>
+<?php include('elements/navigation.php'); ?>
+
+        <section id="content_wrap" class="row">
+            <article class="col span_9 clr">
