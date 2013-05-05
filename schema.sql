@@ -176,7 +176,7 @@ CREATE TABLE articles (
 	`category_id` int(3) NOT NULL,
 	`body` TEXT  NOT NULL,
 	`thumbnail` varchar(16), 
-	`submitted` timestamp ,
+	`submitted` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`updated` timestamp,
 	`featured` int(1),
 	`views` int(5),
