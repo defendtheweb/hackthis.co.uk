@@ -1,5 +1,4 @@
-        </div>
-        <div id="global_nav">
+        <div id="global-nav">
             <nav class="container row">
                 <ul>
                     <li><a href='/'>home</a></li>
@@ -32,10 +31,12 @@
                     <li><a href='/'>contact us</a></li>
 
                     <li class='right'><a href='/'><i class="icon-cog"></i></a></li>
-                    <li class='right active'><a href='/'><i class="icon-envelope-alt"></i></a></li>
-                    <li class='right'><a href='/'><i class="icon-user"></i></a></li>
+                    <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i></a></li>
+                    <li class='right'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i></a></li>
                     <li class='right'><a href='/'><i class="icon-search"></i></a></li>
                 </ul>
+                <div id='nav-extra-dropdown'>
+                    Hello I am some extra information
+                </div>
             </nav>
         </div>
-        <div id="body_wrap" class="container row">

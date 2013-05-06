@@ -6,22 +6,27 @@ $bg: #111;
 $light_bg: #151515;
 
 $text: #AAA;
+$text_dark: #555;
 $dark: #404040;
 
 $green: green;
 $green_hover: lighten($green, 5%);
 $bright_green: #0F0;
 
-@mixin font {
-    font-family: 'Ubuntu',Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
-    font-size: 1.1em;
+@mixin font($font) {
+    font-family: $font,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+}
+
+@mixin default_font {
+    @include font('Ubuntu');
+    font-size: 1em;
     color: $text;
 }
 
 @mixin title_font {
-    font-family: 'Orbitron',Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+    @include font('Orbitron');
     letter-spacing: 0.1em;
-    font-size: 1.4em;
+    font-size: 1.5em;
     color: $white;
     font-weight: bold;
 }
@@ -38,21 +43,43 @@ html {
 
 body {
     margin: 0px; padding: 0px;
-    @include font;
+    @include default_font;
 }
 
 
 a {
     text-decoration: none;
     color: $link;
+    outline: 0;
 
     &:hover {
         text-decoration: underline;
     }
+
+    &:active {
+        outline: none;
+    }
+
+    &:focus {
+        outline: none;
+        -moz-outline-style: none;
+    }
 }
 
 h1 {
+    margin: 0.3em 0;
     @include title_font;
+}
+
+h1 a:hover {
+    text-decoration: none;
+}
+
+.title {
+    @include font('Orbitron');
+    border-bottom: 1px solid $text;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
 }
 
 .left {
@@ -63,8 +90,18 @@ h1 {
     float: right;
 }
 
+.strong {
+    font-weight: bold;
+}
 
+article {
+    margin-bottom: 2.5em;
+}
 
+ul {
+    padding: 0;
+    margin: 0;
+}
 
 
 /* HEADER */
@@ -76,7 +113,7 @@ header .banner a {
 }
 
 
-#global_nav {
+#global-nav {
     border: {
         width: 1px 0;
         style: solid;
@@ -91,10 +128,51 @@ header .banner a {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#cc000000,endColorstr=#cc000000);
     zoom: 1;
 
+
+    #nav-extra-dropdown {
+        background: $black;
+        width: 275px;
+        position: absolute;
+        right: 0;
+        top: 23px;
+        display: none;
+ 
+        border: {
+            width: 0 1px 1px 1px;
+            style: solid;
+            color: $dark;
+        }
+
+        li {
+            list-style: none;
+            padding: 6px;
+            overflow: hidden;
+
+            &.new, &:hover {
+                background: $light_bg;
+            }
+
+            &:last-child {
+                margin-bottom: 0px;
+            }
+
+            img {
+                margin: 2px 8px 0 0;
+            }
+
+            time {
+                font-size: 0.9em;
+                color: $text_dark;
+                float: right;
+            }
+        }
+    }
+
     nav {
         margin: 0 auto;
+        position: relative;
         
-        ul {
+        > ul {
             position: relative;
             width: 960px;
             margin: 0 auto;
@@ -104,8 +182,13 @@ header .banner a {
             li {
                 float: left;
                 height: 23px;
+
                 &:hover {
                     background: $bg;
+                }
+
+                &:hover > ul {
+                    display: block;
                 }
 
                 a {
@@ -143,61 +226,62 @@ header .banner a {
                     }
                 }
 
-                &.right.active a {
-                    color: $white;
+                &.right.active {
+                    background: $bg;
+                    a {
+                        color: $white;
+                    }
+                }
+
+                &.right.alert a {
+                    color: $bright_green;
+                }
+
+                ul {
+                    display: none;
+                    position: absolute;
+                    top: 23px;
+                    background: black;
+                    width: auto;
+
+                    border: {
+                        width: 0 1px 1px 1px;
+                        style: solid;
+                        color: $dark;
+                    }
+
+                    li {
+                        float: none;
+
+                        a {
+                            font-weight: normal;
+                            color: $text;
+                            @include font('Ubuntu');
+                        }
+
+                        ul {
+                            position: absolute;
+                            top: 0px;
+                            left: 100%;
+                            border: {
+                                width: 1px 1px 1px 1px;
+                                style: solid;
+                                color: $dark;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-/* dropdown */
-#global_nav nav ul {
-    ul {
-        display: none;
-        position: absolute;
-        top: 23px;
-        background: black;
-        width: auto;
-
-        border: {
-            width: 0 1px 1px 1px;
-            style: solid;
-            color: $dark;
-        }
-
-        li {
-            float: none;
-
-            a {
-                font-weight: normal;
-                color: $text;
-                font-family: 'Ubuntu',Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
-            }
-
-            ul {
-                position: absolute;
-                top: 0px;
-                left: 100%;
-                border: {
-                    width: 1px 1px 1px 1px;
-                    style: solid;
-                    color: $dark;
-                }
-            }
-        }
-    }
-
-    li:hover > ul {
-        display: block;
-    }
-}
-
 
 /* MAIN CONTENT */
-#content_wrap {
+#content-wrap {
     text-align: justify;
 }
+
+
 
 
 /* QUOTES */
@@ -229,9 +313,7 @@ blockquote span {
 
 /* SIDEBAR */
 sidebar h1 {
-    border-bottom: 1px solid $text;
-    padding-bottom: 2px;
-    margin-bottom: 10px;
+    @extend .title;
 }
 
 
@@ -240,12 +322,12 @@ sidebar h1 {
 
 
 /* FOOTER */
-#page_footer {
+#page-footer {
     border-top: 2px solid $bg;
     background: $light_bg;
 }
 
-#page_footer footer {
+#page-footer footer {
     margin-bottom: 0px;
     padding: 12px 0;
 }
@@ -261,7 +343,7 @@ sidebar h1 {
         background-position: -175px -50px;
     }
 
-    #global_nav nav {
+    #global-nav nav {
         height: auto;
 
         ul {
@@ -275,13 +357,12 @@ sidebar h1 {
         display: none;
     }
 
-    #global_nav nav ul li {
+    #global-nav nav ul li {
         float: none;
         display: block;
     }
 
-    #global_nav nav ul ul {
+    #global-nav nav ul ul {
         display: none !important;
     }
 }
-
