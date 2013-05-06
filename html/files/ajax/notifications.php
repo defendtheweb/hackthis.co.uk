@@ -23,7 +23,7 @@
 
         // Mark items as seen
         $st = $db->prepare("UPDATE users_notifications
-            SET seen = '1';
+            SET seen = '1'
             WHERE user_id = :user_id");
         $st->execute(array(':user_id' => $user_id));    
 
