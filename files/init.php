@@ -23,11 +23,12 @@
 	}
 
 	// Connect to database
+	$db = $app->config('db')
 	try {
-		$dsn = "{$app->config('db')['driver']}:host={$app->config('db')['host']}";
-		$dsn .= (!empty($app->config('db')['port'])) ? ';port=' . $app->config('db')['port'] : '';
-		$dsn .= ";dbname={$app->config('db')['database']}";
-		$db = new PDO($dsn,$app->config('db')['username'], $app->config('db')['password']);
+		$dsn = "{$db['driver']}:host={$db['host']}";
+		$dsn .= (!empty($db['port'])) ? ';port=' . $db['port'] : '';
+		$dsn .= ";dbname={$db['database']}";
+		$db = new PDO($dsn, $db['username'], $db['password']);
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 	} catch(PDOException $e) {
