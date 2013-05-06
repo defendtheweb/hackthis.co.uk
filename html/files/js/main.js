@@ -61,7 +61,7 @@ $(function() {
                            '    {{else type == 2}}'+
                            '            <a href="/user/${username}">${username}<a/> accepted your friend request<br/>'+
                            '    {{else type == 3}}'+
-                           '            You have been awarded <div class="medal medal-gold">visit</div><br/>'+
+                           '            You have been awarded <a href="/medals/"><div class="medal medal-gold">visit</div></a><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
                            '    </li>'+

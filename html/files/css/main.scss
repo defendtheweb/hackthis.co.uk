@@ -316,6 +316,7 @@ blockquote span {
     display: inline-block;
     font-size: 9.75px;
     font-weight: bold;
+    margin: 0 1px;
     padding: 1px 4px 1px;
     text-transform: uppercase;
     white-space: nowrap;
@@ -381,12 +382,21 @@ sidebar h1 {
         display: none;
     }
 
-    #global-nav nav ul li {
-        float: none;
-        display: block;
-    }
+    #global-nav nav {
+        #nav-extra-dropdown {
+            width: 100%;
+            border-width: 1px;
+        }
+        
+        ul {
+            li {
+                float: none;
+                display: block;
 
-    #global-nav nav ul ul {
-        display: none !important;
+                ul {
+                    display: none !important;
+                }
+            }
+        }
     }
 }
