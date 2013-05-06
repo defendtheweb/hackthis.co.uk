@@ -50,8 +50,13 @@ class loader {
      * across the application. These will be generated seperately to any
      * files that are specific to portions of the application
      */
-    var $default_js = Array('main.js');
+    var $default_js = Array('jquery.tmpl.js', 'main.js');
     var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-12col.css', 'h5dp.css', 'main.scss');
+
+    function __construct($custom_css=Array(), $custom_js=Array()) {
+        $this->custom_css = $custom_css;
+        $this->custom_js = $custom_js;
+    }
 
     /*
      * Generates and stores minified versions of selected javascript and css files
