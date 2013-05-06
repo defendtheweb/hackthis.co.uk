@@ -87,11 +87,18 @@ CREATE TABLE users_activity (
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+/*
+ * Notification types:
+ * 1 - Friend request received
+ * 2 - Friend request accepted
+ * 3 - 
+ */
 CREATE TABLE users_notifications (
 	`notification_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
 	`type` tinyint(1) NOT NULL,
-	`item_id` int(6) NOT NULL,
+	`from_id` int(7),
+	`item_id` int(7),
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`seen` tinyint(1) DEFAULT 0,
 	PRIMARY KEY (`notification_id`),
@@ -247,6 +254,28 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
 		-- Add other tables to be removed.
 	END;
 
+-- NOTIFICATIONS
+DROP PROCEDURE IF EXISTS user_notify;
+CREATE PROCEDURE user_notify(user_id INT, type INT, from_id INT, item_id INT)
+  BEGIN
+  	INSERT INTO users_notifications (`user_id`, `type`, `from_id`, `item_id`) VALUES (user_id, type, from_id, item_id);
+  END;
+
+
+DROP TRIGGER IF EXISTS insert_friend;
+CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
+	BEGIN
+		CALL user_notify(NEW.friend_id, 1, NEW.user_id, null);
+	END;
+
+DROP TRIGGER IF EXISTS update_friend;
+CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
+	BEGIN
+		IF NEW.status = 1 THEN
+			CALL user_notify(NEW.user_id, 2, NEW.friend_id, null);
+		END IF;
+	END;
+
 DROP TRIGGER IF EXISTS insert_medal;
 CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 	BEGIN
@@ -255,6 +284,7 @@ CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 
 		UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
 	END;
+
 
 -- ARTICLES
 -- TODO: Pull the user id and a comment made to the new version.
