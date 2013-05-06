@@ -89,9 +89,7 @@ CREATE TABLE users_activity (
 
 /*
  * Notification types:
- * 1 - Friend request received
- * 2 - Friend request accepted
- * 3 - 
+ * see https://github.com/HackThis/hackthis.co.uk/wiki/Database#notification-types
  */
 CREATE TABLE users_notifications (
 	`notification_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -283,6 +281,8 @@ CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 		SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = NEW.medal_id LIMIT 1);
 
 		UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
+
+		CALL user_notify(NEW.user_id, 3, null, NEW.medal_id);
 	END;
 
 

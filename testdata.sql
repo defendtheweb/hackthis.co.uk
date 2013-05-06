@@ -13,6 +13,8 @@ INSERT INTO users (`username`, `password`) VALUES ('Osaka', SHA1('pass'));
 INSERT INTO users_profile (`user_id`, `name`) VALUES (1, 'Pete');
 
 INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', SHA1('pass') );
+INSERT INTO users (`username`, `password`) VALUES ('verath', SHA1('pass') );
+INSERT INTO users (`username`, `password`) VALUES ('daMage', SHA1('pass') );
 
 -- Medals
 INSERT INTO medals_colours (`reward`, `hex`) VALUES (100, 'FF9900');
@@ -21,7 +23,14 @@ INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Tes
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test');
 
 -- Award medal
-INSERT INTO users_medals (`user_id`, `medal_id`, `time`) VALUES (1, 1, NOW());
+INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (1, 1);
+INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (2, 2);
+
+-- Send friend request
+INSERT INTO users_friends (`user_id`, `friend_id`) VALUES (1, 2);
+INSERT INTO users_friends (`user_id`, `friend_id`) VALUES (3, 2);
+INSERT INTO users_friends (`user_id`, `friend_id`) VALUES (2, 4);
+UPDATE users_friends SET status = 1 WHERE user_id = '2' AND friend_id = '4';
 
 
 -- Send pm
