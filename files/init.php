@@ -23,7 +23,7 @@
 	}
 
 	// Connect to database
-	$db = $app->config('db')
+	$db = $app->config('db');
 	try {
 		$dsn = "{$db['driver']}:host={$db['host']}";
 		$dsn .= (!empty($db['port'])) ? ';port=' . $db['port'] : '';
