@@ -29,7 +29,7 @@
 		}
 
 		public function login($user, $pass) {
-			// Generate password hash
+			// TODO Generate password hash
 			$pass = sha1($pass);
 
 			global $db;
