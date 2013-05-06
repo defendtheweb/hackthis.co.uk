@@ -17,8 +17,8 @@ INSERT INTO users (`username`, `password`) VALUES ('verath', SHA1('pass') );
 INSERT INTO users (`username`, `password`) VALUES ('daMage', SHA1('pass') );
 
 -- Medals
-INSERT INTO medals_colours (`reward`, `hex`) VALUES (100, 'FF9900');
-INSERT INTO medals_colours (`reward`, `hex`) VALUES (200, 'FFFF00');
+INSERT INTO medals_colours (`reward`, `colour`) VALUES (100, 'FF9900');
+INSERT INTO medals_colours (`reward`, `colour`) VALUES (200, 'FFFF00');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Test');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test');
 
