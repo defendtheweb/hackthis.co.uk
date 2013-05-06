@@ -60,6 +60,8 @@ $(function() {
                            '            <a href="#">Accept</a> | <a href="#">Decline</a>'+
                            '    {{else type == 2}}'+
                            '            <a href="/user/${username}">${username}<a/> accepted your friend request<br/>'+
+                           '    {{else type == 3}}'+
+                           '            You have been awarded <div class="medal medal-gold">visit</div><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
                            '    </li>'+

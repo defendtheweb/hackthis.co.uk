@@ -308,7 +308,31 @@ blockquote span {
 
 
 
+/* MEDALS */
+.medal {
+    background-color: #BFBFBF;
+    border-radius: 3px 3px 3px 3px;
+    color: #000000;
+    display: inline-block;
+    font-size: 9.75px;
+    font-weight: bold;
+    padding: 1px 4px 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
 
+    &.medal-bronze {
+        background-color: #693909;
+    }
+    &.medal-silver {
+        background-color: silver;
+    }
+    &.medal-gold {
+        background-color: #FBB829;
+    }
+    &.medal-green {
+        background-color: green;
+    }
+}
 
 
 /* SIDEBAR */
