@@ -2,7 +2,7 @@
 <?php include("elements/sidebar.php"); ?>
             </section>
         </div>
-        <div id="page_footer">
+        <div id="page-footer">
             <footer class="container row">
                 Insert footer stuff here.
             </footer>

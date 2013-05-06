@@ -8,6 +8,9 @@
 	ini_set('session.use_only_cookies', 1);
 	ini_set('session.cookie_secure', 1);
 
+	//Set timezone
+	date_default_timezone_set("Europe/London");
+
 	function __autoload($class) {
 		require_once 'class.'.$class.'.php';
 	}
@@ -25,6 +28,8 @@
 		$dsn .= (!empty($app->config('db')['port'])) ? ';port=' . $app->config('db')['port'] : '';
 		$dsn .= ";dbname={$app->config('db')['database']}";
 		$db = new PDO($dsn,$app->config('db')['username'], $app->config('db')['password']);
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 	} catch(PDOException $e) {
 		die($e->getMessage());
 	}
@@ -33,5 +38,5 @@
 	$user = new user();
 
 	// Import resource minifier
-	$minifier = new loader();
+	$minifier = new loader($app->custom_css, $app->custom_js);
 ?>

@@ -19,7 +19,7 @@
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
-        <div id="header_wrap" class="container">
+        <div id="header-wrap" class="container">
             <header>
                 <div class="col span_8 banner">
                     <a href='/'>&nbsp;</a>
@@ -29,7 +29,10 @@
                 </div>
                 <br style='clear: both'/>
             </header>
+        </div>
+
 <?php include('elements/navigation.php'); ?>
 
-        <section id="content_wrap" class="row">
+        <div id="body-wrap" class="container row">
+        <section id="content-wrap" class="row">
             <article class="col span_9 clr">
