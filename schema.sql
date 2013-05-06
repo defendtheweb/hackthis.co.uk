@@ -110,7 +110,7 @@ CREATE TABLE users_notifications (
 CREATE TABLE medals_colours (
 	`colour_id` tinyint(1) NOT NULL AUTO_INCREMENT,
 	`reward` int(4) NOT NULL DEFAULT 0,
-	`hex` char(6) NOT NULL,
+	`colour` varchar(6) NOT NULL,
 	PRIMARY KEY (`colour_id`)
 ) ENGINE=InnoDB;
 

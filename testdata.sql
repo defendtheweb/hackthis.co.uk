@@ -24,6 +24,7 @@ INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Tes
 
 -- Award medal
 INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (1, 1);
+INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (2, 1);
 INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (2, 2);
 
 -- Send friend request
