@@ -1,6 +1,6 @@
 $(function() {
 
-    function time_since(oldD) {
+    function timeSince(oldD, short) {
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
         newD = new Date();
@@ -12,13 +12,13 @@ $(function() {
 
         if (isSameDay) {
             if (diff < 60) {
-                return "secs ago";
+                return "secs" + (!short ? " ago" : '');
             } else if (diff < 3600) {
                 var n = Math.floor(diff/60);
-                return n + " min" + (n==1?'':'s') + " ago";
+                return n + " min" + (n==1?'':'s') + (!short ? " ago" : '');
             } else {
                 var n = Math.floor(diff/3600);
-                return n + " hour" + (n==1?'':'s') + " ago";
+                return n + " hour" + (n==1?'':'s') + (!short ? " ago" : '');
             }
         } else {
             newD.setDate(newD.getDate() - 1);
@@ -33,11 +33,24 @@ $(function() {
                 newD.setDate(newD.getDate() - 6);
                 if (oldD > newD)
                     return days[oldD.getDay()];
-                else
-                    return (oldD.getDate()+1) + "/" + (oldD.getMonth()+1);
+                else {
+                    var day = oldD.getDate();
+                    var month = oldD.getMonth()+1;
+                    return ((day < 10) ? '0':'') + day + "/" + ((month < 10) ? '0':'') + month + "/" + (!short ? oldD.getFullYear() : '');
+                }
             }
         }
     }
+
+    (function updateTimes() {
+        $('time').each(function(index, value) {
+            $this = $(this);
+            d = new Date($this.attr('datetime'));
+            $this.text(timeSince(d, $this.hasClass('short')));
+        });
+
+        setTimeout(updateTimes, 10000);
+    })();
 
     var notificationsTmpl = '<tmpl>'+
                            '{{if seen == 0}}'+
@@ -45,7 +58,7 @@ $(function() {
                            '{{else}}'+
                            '    <li>'+
                            '{{/if}}'+
-                           '        <time datetime="${timestamp}">${time}</time>'+
+                           '        <time class="short" datetime="${timestamp}">${time}</time>'+
                            '{{if username}}'+
                            '        <a href="/user/${username}">'+
                            '            <img class="left" width="28" height="28" src="https://www.hackthis.co.uk/users/images/28/1:1/${img}.jpg"/>'+
@@ -57,11 +70,13 @@ $(function() {
                            '{{else}}'+
                            '    {{if type == 1}}'+
                            '            <a href="/user/${username}">${username}<a/> sent you a friend request'+
-                           '            <a href="#">Accept</a> | <a href="#">Decline</a>'+
+                           '            {{if status == 0}}'+
+                           '                <a href="#">Accept</a> | <a href="#">Decline</a>'+
+                           '            {{/if}}'+
                            '    {{else type == 2}}'+
                            '            <a href="/user/${username}">${username}<a/> accepted your friend request<br/>'+
                            '    {{else type == 3}}'+
-                           '            You have been awarded <a href="/medals/"><div class="medal medal-gold">visit</div></a><br/>'+
+                           '            You have been awarded <a href="/medals/"><div class="medal medal-${colour}">${label}</div></a><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
                            '    </li>'+
@@ -102,7 +117,7 @@ $(function() {
             var html = '';
             $.each(data, function(index, item) {
                 var d = new Date(item.timestamp*1000);
-                item.time = time_since(d);
+                item.time = timeSince(d, true);
                 item.timestamp = d.toISOString();
             });
 
