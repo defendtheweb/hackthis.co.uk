@@ -156,6 +156,7 @@ CREATE TABLE pm_messages (
 CREATE TABLE pm_users (
 	`pm_id` int(7) NOT NULL,
 	`user_id` int(7) NOT NULL,
+	`seen` timestamp NULL,
 	PRIMARY KEY (`pm_id`, `user_id`),
 	FOREIGN KEY (`pm_id`) REFERENCES pm (`pm_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
