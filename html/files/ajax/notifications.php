@@ -1,7 +1,7 @@
 <?php
     require_once('init.php');
 
-    $user_id = 2;
+    $userId = $user->uid;
 
     if (isset($_GET['events'])) {
         // Get items
@@ -22,7 +22,7 @@
             ORDER BY users_notifications.time DESC
             LIMIT 5");
 
-        $st->execute(array(':user_id' => $user_id));
+        $st->execute(array(':user_id' => $userId));
         $result = $st->fetchAll();
 
         // Loop items and create images
@@ -35,26 +35,27 @@
         $st = $db->prepare("UPDATE users_notifications
             SET seen = '1'
             WHERE user_id = :user_id");
-        $st->execute(array(':user_id' => $user_id));
+        $st->execute(array(':user_id' => $userId));
 
         $result = json_encode($result);
         // Remove null entries
         echo preg_replace('/,\s*"[^"]+":null|"[^"]+":null,?/', '', $result);
 
     } else if (isset($_GET['pm'])) {
+
         // Get items
-        $st = $db->prepare("SELECT pm.pm_id, title, username, message, UNIX_TIMESTAMP(MAX(time)) as timestamp, 1 as seen
+        $st = $db->prepare("SELECT pm.pm_id, title, username, message, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen
             FROM pm
             INNER JOIN pm_users
             ON pm.pm_id = pm_users.pm_id
             INNER JOIN pm_messages
-            ON pm.pm_id = pm_messages.pm_id
+            ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm.pm_id ORDER BY time DESC LIMIT 1)
             INNER JOIN users
             ON pm_messages.user_id = users.user_id
             WHERE pm_users.user_id = :user_id
-            GROUP BY pm_messages.pm_id
+            ORDER BY time DESC
             LIMIT 5");
-        $st->execute(array(':user_id' => $user_id));
+        $st->execute(array(':user_id' => $userId));
         $result = $st->fetchAll();
 
         // Loop items and create images
@@ -64,5 +65,29 @@
         } 
 
         echo json_encode($result);
+
+    } else {
+        // Get event count
+        $st = $db->prepare("SELECT count(notification_id) AS count
+            FROM users_notifications
+            WHERE users_notifications.user_id = :user_id AND seen = 0");
+        $st->execute(array(':user_id' => $userId));
+        $result = $st->fetch();
+
+        $eventCount = $result->count ? (int) $result->count : 0;
+
+        $st = $db->prepare("SELECT count(pm_users.pm_id) as count
+            FROM pm_users
+            INNER JOIN pm_messages
+            ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm_users.pm_id AND (seen IS NULL || time > seen) ORDER BY time DESC LIMIT 1)
+            WHERE pm_users.user_id = :user_id");
+        $st->execute(array(':user_id' => $userId));
+        $result = $st->fetch();
+
+        $pmCount = $result->count ? (int) $result->count : 0;
+
+
+        echo json_encode(array("events"=>$eventCount, "pm"=>$pmCount));
+
     }
 ?>
