@@ -1,4 +1,11 @@
                 <sidebar class="col span_3 clr">
-                    <h1>Feed</h1>
-                    Hello world
+<?php
+    if ($user->loggedIn) {
+        include('widgets/feed.php');
+    } else {
+        include('widgets/login.php');
+        include('widgets/register.php');
+    }
+    include('widgets/adverts.php');
+?>
                 </sidebar>

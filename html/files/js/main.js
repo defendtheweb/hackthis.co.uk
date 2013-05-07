@@ -42,6 +42,7 @@ $(function() {
         }
     }
 
+    // Update timestamps
     (function updateTimes() {
         $('time').each(function(index, value) {
             $this = $(this);
@@ -51,6 +52,32 @@ $(function() {
 
         setTimeout(updateTimes, 10000);
     })();
+
+
+    // Update notifications
+    (function updateTimes() {
+        uri = '/files/ajax/notifications.php';
+        $.getJSON(uri, function(data) {
+            if (data.events > 0) {
+                $('.nav-extra-events').addClass('alert');
+                $('#event-counter').fadeIn(500).text(data.events);
+            } else {
+                $('.nav-extra-events').removeClass('alert');
+                $('#event-counter').fadeOut(200);
+            }
+
+            if (data.pm > 0) {
+                $('.nav-extra-pm').addClass('alert');
+                $('#pm-counter').fadeIn(500).text(data.pm);
+            } else {
+                $('.nav-extra-pm').removeClass('alert');
+                $('#pm-counter').fadeOut(200);
+            }
+        });
+
+        setTimeout(updateTimes, 20000);
+    })();
+
 
     var notificationsTmpl = '<tmpl>'+
                            '{{if seen == 0}}'+
@@ -104,24 +131,34 @@ $(function() {
         if ($(this).hasClass('nav-extra-pm')) {
             uri += '?pm';
             icons.removeClass('active-events');
-            parent.removeClass('alert').addClass('active active-pm');
+            parent.addClass('active active-pm');
         } else if ($(this).hasClass('nav-extra-events')) {
             uri += '?events';
             icons.removeClass('active-pm');
-            parent.removeClass('alert').addClass('active active-events');
+            $(this).removeClass('alert');
+            $('#event-counter').fadeOut(200);
+            parent.addClass('active active-events');
         } else {
             return false;
         }
 
         $.getJSON(uri, function(data) {
-            var html = '';
-            $.each(data, function(index, item) {
-                var d = new Date(item.timestamp*1000);
-                item.time = timeSince(d, true);
-                item.timestamp = d.toISOString();
-            });
+            if (data.length) {
+                $.each(data, function(index, item) {
+                    var d = new Date(item.timestamp*1000);
+                    item.time = timeSince(d, true);
+                    item.timestamp = d.toISOString();
+                });
 
-            html = $(notificationsTmpl).tmpl(data);
+                var html = $(notificationsTmpl).tmpl(data);
+            } else {
+                if (parent.hasClass('active-events'))
+                    var html = '<div class="center empty"><i class="icon-globe icon-4x"></i>No notifications available</div>';
+                else
+                    var html = '<div class="center empty"><i class="icon-envelope-alt icon-4x"></i>No messages available</div>';
+            }
+
+            
             dropdown.html(html).slideDown(200);
         });
 
@@ -136,6 +173,7 @@ $(function() {
            $(document).unbind('click.extra-hide');
         });
     });
+
 });
 
 if (!Date.prototype.toISOString) {

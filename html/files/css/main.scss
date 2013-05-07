@@ -1,36 +1,3 @@
-$black: #000;
-$white: #FFF;
-$link: #FFF;
-
-$bg: #111;
-$light_bg: #151515;
-
-$text: #AAA;
-$text_dark: #555;
-$dark: #404040;
-
-$green: green;
-$green_hover: lighten($green, 5%);
-$bright_green: #0F0;
-
-@mixin font($font) {
-    font-family: $font,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
-}
-
-@mixin default_font {
-    @include font('Ubuntu');
-    font-size: 1em;
-    color: $text;
-}
-
-@mixin title_font {
-    @include font('Orbitron');
-    letter-spacing: 0.1em;
-    font-size: 1.5em;
-    color: $white;
-    font-weight: bold;
-}
-
 html {
     background: {
         image: url("/files/images/bg.png");
@@ -86,8 +53,22 @@ h1 a:hover {
     float: left;
 }
 
+.center {
+    width: 100%;
+    text-align: center;
+}
+
 .right {
     float: right;
+}
+
+.clearfix:after,
+.widget:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .strong {
@@ -143,13 +124,27 @@ header .banner a {
             color: $dark;
         }
 
+        .empty {
+            padding: 6px;
+            color: $lighter_bg;
+            font-weight: bold;
+            i {
+                display: block;
+                margin-bottom: 6px;
+            }
+        }
+
         li {
             list-style: none;
             padding: 6px;
             overflow: hidden;
 
-            &.new, &:hover {
-                background: $light_bg;
+            &.new {
+                border-left: 2px solid $white;
+            }
+
+            &:hover {
+                background: $bg;
             }
 
             &:last-child {
@@ -164,6 +159,7 @@ header .banner a {
                 font-size: 0.9em;
                 color: $text_dark;
                 float: right;
+                padding-left: 4px;
             }
         }
     }
@@ -178,10 +174,10 @@ header .banner a {
             margin: 0 auto;
             padding: 0px;
             font-size: 11px;
+            height: 23px;
 
             li {
                 float: left;
-                height: 23px;
 
                 &:hover {
                     background: $bg;
@@ -207,13 +203,18 @@ header .banner a {
                     }
                 }
 
+                li a {
+                    line-height: 1.1em;
+                    font-size: 11px;
+                }
+
                 &.right {
                     font-size: 15px;
                     margin-right: 0px;
                     margin-left: 1px;
                     float: right;
 
-                    a {
+                    > a {
                         display: block;
                         margin-top: -1px;
                         padding: 2px;
@@ -224,6 +225,23 @@ header .banner a {
                             color: $white;
                         }
                     }
+
+                    .notification-counter {
+                        display: none;
+                        background: $black;
+                        color: $white;
+                        position: absolute;
+                        padding: 0 2px;
+                        font-size: 0.7em;
+                        margin-left: -11px;
+                        margin-top: 7px;
+                        border-radius: 3px;
+                    }
+
+                    ul {
+                        right: 0px;
+                        z-index: 1;
+                    }
                 }
 
                 &.right.active {
@@ -233,14 +251,14 @@ header .banner a {
                     }
                 }
 
-                &.right.alert a {
+                &.right a.alert {
                     color: $bright_green;
                 }
 
                 ul {
                     display: none;
                     position: absolute;
-                    top: 23px;
+                    top: 100%;
                     background: black;
                     width: auto;
 
@@ -277,7 +295,7 @@ header .banner a {
 }
 
 /* MAIN CONTENT */
-#content-wrap {
+#main-content {
     text-align: justify;
 }
 
@@ -286,19 +304,22 @@ header .banner a {
 
 /* QUOTES */
 blockquote {
-    border-left: 1px solid $white;
-    font-size: 1.2em;
+    border-left: 5px solid $light_bg;
     font-style: italic;
-    line-height: 1.2em;
-    margin: 30px 30px 30px 0;
+    margin: 20px 20px 20px 0;
     padding: 0 0 0 10px;
-    color: $white;
+    color: $text_dark;
 }
 
 blockquote span {
     display: block;
-    font-size: 0.7em;
+    margin-top: 10px;
     color: $text;
+    font-style: normal;
+
+    &:before {
+        content: "- ";
+    }
 }
 
 
@@ -387,8 +408,10 @@ sidebar h1 {
             width: 100%;
             border-width: 1px;
         }
-        
+
         ul {
+            height: auto;
+
             li {
                 float: none;
                 display: block;

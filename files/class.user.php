@@ -3,6 +3,11 @@
 		public $loggedIn = false;
 
 		public function __construct() {
+			//Check if user is logging in
+			if (isset($_GET['logout'])) {
+				$this->logout();
+			}
+
 			// Check if user is logged in
 			if (isset($_SESSION['uid'])) {
 				// Quick hijacking check
@@ -12,6 +17,13 @@
 					$this->loggedIn = true;
 					$this->uid = $_SESSION['uid'];
 					$this->get_details();
+				}
+			} else {
+				//Check if user is logging in
+				if (isset($_GET['login'])) {
+					$user = $_POST['username'];
+					$pass = $_POST['password'];
+					$this->login($user, $pass);
 				}
 			}
 		}
@@ -42,10 +54,10 @@
 			// Check if users details exist
 			if ($row) {
 				$this->loggedIn = true;
-				$this->uid = $row['user_id'];
+				$this->uid = $row->user_id;
 
 				//session_regenerate_id();
-				$_SESSION['uid'] = $row['user_id'];
+				$_SESSION['uid'] = $this->uid;
 
 				// Basic hijacking prevention
 				$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];

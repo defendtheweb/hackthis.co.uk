@@ -1,0 +1,67 @@
+label {
+    font-weight: bold;
+}
+
+textarea,
+input,
+select {
+    border: 1px solid $dark;
+    background: $black;
+    color: $white;
+    padding: 2px;
+    margin: 2px 2px 8px 0;
+    width: 100%;
+    box-sizing: content-box;
+        
+    -webkit-transition: -webkit-box-shadow .3s ease-in-out;
+    -moz-transition: -moz-box-shadow .3s ease-in-out;
+    -o-transition: box-shadow .3s ease-in-out;
+      
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+
+    &.error {
+        -webkit-box-shadow: 0px 0px 5px #CC0000;
+        -moz-box-shadow: 0px 0px 5px #CC0000;
+        box-shadow: 0px 0px 5px #CC0000;
+        border-color: #990000 !important;
+    }
+
+    &:focus {
+        -webkit-box-shadow: 0px 0px 5px $bright_green;
+        -moz-box-shadow: 0px 0px 5px $bright_green;
+        box-shadow: 0px 0px 5px $bright_green;
+        border-color: $text_dark;     
+    }
+
+    &:-webkit-autofill {
+        color: black !important;
+    }
+}
+
+form input.button,
+form input.button:visited {
+    background: $light_bg;
+    border: none;
+    width: auto;
+    font-size: 1.1em;
+    margin: 0px;
+    margin-left: 8px;
+    padding: 2px 8px;
+    
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+
+    &:hover {
+        background: $lighter_bg;
+        color: #00FF00;
+    }
+}

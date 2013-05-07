@@ -1,5 +1,11 @@
 <?php
     require_once('init.php');
+
+    if ($user->loggedIn) {
+
+    } else {
+        array_push($minifier->custom_js, 'guest.js');
+    }
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -34,5 +40,5 @@
 <?php include('elements/navigation.php'); ?>
 
         <div id="body-wrap" class="container row">
-        <section id="content-wrap" class="row">
-            <article class="col span_9 clr">
+            <section id="content-wrap" class="row">
+                <article id="main-content" class="col span_9 clr">

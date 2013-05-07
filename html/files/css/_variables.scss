@@ -1,0 +1,33 @@
+$black: #000;
+$white: #FFF;
+$link: #FFF;
+
+$bg: #111;
+$light_bg: #202020;
+$lighter_bg: #252525;
+
+$text: #AAA;
+$text_dark: #555;
+$dark: #404040;
+
+$green: green;
+$green_hover: lighten($green, 5%);
+$bright_green: #0F0;
+
+@mixin font($font) {
+    font-family: $font,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+}
+
+@mixin default_font {
+    @include font('Ubuntu');
+    font-size: 1em;
+    color: $text;
+}
+
+@mixin title_font {
+    @include font('Orbitron');
+    letter-spacing: 0.1em;
+    font-size: 1.5em;
+    color: $white;
+    font-weight: bold;
+}

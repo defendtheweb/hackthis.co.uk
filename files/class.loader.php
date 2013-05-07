@@ -50,8 +50,8 @@ class loader {
      * across the application. These will be generated seperately to any
      * files that are specific to portions of the application
      */
-    var $default_js = Array('jquery.tmpl.js', 'iso8601.js', 'main.js');
-    var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-12col.css', 'h5dp.css', 'main.scss');
+    var $default_js = Array( 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'main.js');
+    var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-12col.css', 'h5dp.css', 'main.scss', 'interaction.scss');
 
     function __construct($custom_css=Array(), $custom_js=Array()) {
         $this->custom_css = $custom_css;
@@ -66,6 +66,9 @@ class loader {
         if ($type == "css") {
             // Create scss compiler
             $this->scss = new scssc();
+
+            // Load scss variables
+            $this->scss_variables = file_get_contents($this->php_base . $this->css_base . "_variables.scss");
 
             //Build default CSS file
             $path = "{$this->css_base}min/main.css";
@@ -162,6 +165,7 @@ class loader {
 
                     // do we need to compile with scss compiler?
                     if (substr($filepath, -4) === 'scss') {
+                        $tmp_contents = $this->scss_variables . $tmp_contents;
                         $tmp_contents = $this->scss->compile($tmp_contents);
                     }
 
