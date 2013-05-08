@@ -23,6 +23,10 @@
 
         <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
+        <!--[if lt IE 9]>
+            <script src="/files/js/respond.min.js"></script>
+            <script src="/files/js/html5shiv.js"></script>
+        <![endif]-->
     </head>
     <body>
         <div id="header-wrap" class="container">
