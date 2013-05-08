@@ -1,5 +1,9 @@
 <?php
     require_once('header.php');
+
+    if ($user->loggedIn) {
+        require_once("news.php");
+    } else {
 ?>
 
                     <h1 class='title'>About</h1>
@@ -29,5 +33,6 @@
                     </blockquote>
 
 <?php
+    }
     require_once('footer.php');
 ?>
