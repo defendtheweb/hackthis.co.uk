@@ -1,0 +1,8 @@
+database:
+  override:
+    - mysql -u ubuntu < schema.sql
+    - mysql -u ubuntu < testdata.sql
+
+test:
+  override:
+    - phpunit phpunit
