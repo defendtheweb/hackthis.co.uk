@@ -5,6 +5,7 @@
         color: $dark;
     }
     margin: 0px;
+    margin-bottom: 18px;
 
     background: #000000;
     background: rgb(0,0,0);
@@ -82,6 +83,7 @@
 
             li {
                 float: left;
+                height: 23px;
 
                 &:hover {
                     background: $bg;
