@@ -11,16 +11,16 @@ class DBTest extends PHPUnit_Framework_TestCase {
             die($e->getMessage());
         }
 
-        $st = $conn->prepare("INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', 'pass');");
+        $st = $db->prepare("INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', 'pass');");
         $st->execute();
-        $st = $conn->prepare("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
+        $st = $db->prepare("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
         $st->execute();
 
-        $st = $conn->prepare("SELECT count(user_id) AS count FROM users");
+        $st = $db->prepare("SELECT count(user_id) AS count FROM users");
         $row = $st->fetch();
         $this->assertEquals(2, $row->count);
 
-        $st = $conn->prepare("SELECT password, score, status FROM users WHERE username = 'flabbyrabbit'");
+        $st = $db->prepare("SELECT password, score, status FROM users WHERE username = 'flabbyrabbit'");
         $row = $st->fetch();
         $this->assertEquals('pass', $row->password);
         $this->assertEquals(0, $row->score);
