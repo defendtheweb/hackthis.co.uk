@@ -15,6 +15,7 @@ class DBTest extends PHPUnit_Framework_TestCase {
         $st = $db->prepare("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
         $st->execute();
 
+        echo "== User tests ==";
         $st = $db->prepare("SELECT count(user_id) AS count FROM users");
         $row = $st->fetch();
         if ($row) {
