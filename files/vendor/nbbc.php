@@ -854,7 +854,7 @@ function DoYoutube($bbcode, $action, $name, $default, $params, $content) {
 	if ($action == BBCODE_CHECK) return true;
 	$content = preg_replace("/[^A-Za-z0-9-_ ]/", '', $content);
 
-	$template = "\n<div style='width: 100%; text-align: center'>\n<object style=\"height: 380px; width: 675px\">\n
+	$template = "\n<div class='bbcode-youtube' style='width: 100%; text-align: center'>\n<object style=\"height: 380px; width: 95%\">\n
 	<param name=\"movie\" value=\"http://www.youtube.com/v/{$content}?version=3&autohide=1&fs=1&rel=0&showinfo=0&feature=player_embedded\">\n
 	<param name=\"allowFullScreen\" value=\"true\">\n
 	<param name=\"allowScriptAccess\" value=\"always\">\n
@@ -868,7 +868,7 @@ function DoVimeo($bbcode, $action, $name, $default, $params, $content) {
 	if ($action == BBCODE_CHECK) return true;
 	$content = preg_replace("/[^A-Za-z0-9- ]/", '', $content);
 
-	$template = "\n<div style='width: 100%; text-align: center'>\n<iframe src='http://player.vimeo.com/video/{$content}?title=0&amp;byline=0&amp;portrait=0&amp;color=008000' width='675' height='380' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>\n</div>\n";
+	$template = "\n<div class='bbcode-vimeo' style='width: 100%; text-align: center'>\n<iframe src='http://player.vimeo.com/video/{$content}?title=0&amp;byline=0&amp;portrait=0&amp;color=008000' width='675' height='380' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>\n</div>\n";
 
 	return $template;
 }
