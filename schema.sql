@@ -7,7 +7,7 @@ USE hackthis;
 CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
 	`username` varchar(16) NOT NULL,
-	`password` varchar(256) NOT NULL,
+	`password` varchar(64) NOT NULL,
 	`score` mediumint(6) NOT NULL DEFAULT 0,
 	`status` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`user_id`),
@@ -41,8 +41,7 @@ CREATE TABLE users_priv (
 	`user_id` int(7) NOT NULL,
 	`site_priv` tinyint(1) NOT NULL DEFAULT 1,
 	`pm_priv` tinyint(1) NOT NULL DEFAULT 1,
-	`forum_priv` tinyint(1) NOT NULL DEFAULT 1,
-	`comments_priv` tinyint(1) NOT NULL DEFAULT 1,
+	`forum_priv` tinyint(1) NOT NULL DEFAULT 1
 	PRIMARY KEY (`user_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
