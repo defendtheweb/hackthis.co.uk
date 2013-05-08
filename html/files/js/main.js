@@ -1,5 +1,13 @@
 $(function() {
 
+    // Confirmation box
+    $('.confirmation').on('click', function(e) {
+        if ($(this).attr('data-confirm'))
+            return confirm($(this).attr('data-confirm') + ", are you sure?");
+        else
+            return confirm("Are you sure?");
+    });
+
     function timeSince(oldD, short) {
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
@@ -109,7 +117,7 @@ $(function() {
                            '    </li>'+
                            '</tmpl>';
 
-    $('.nav-extra').bind('click', function(e) {
+    $('.nav-extra').on('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
