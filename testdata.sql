@@ -42,6 +42,8 @@ INSERT INTO pm_messages (`pm_id`, `user_id`, `message`) VALUES (1, 1, 'Hello you
 
 
 -- Add a New article
+INSERT INTO articles_categories (title) VALUES ("News");
+UPDATE articles_categories SET category_id = 0;
 INSERT INTO articles_categories (category_id, title) VALUES (1, "TEST");
 INSERT INTO articles_categories (category_id, title) VALUES (2, "TESTING");
 
@@ -64,6 +66,12 @@ UPDATE articles SET
 	, body = "REDACTED"
 	, thumbnail = "safe.jpg"
 	, featured = 1;
+
+
+INSERT INTO articles (user_id, title, slug, category_id, body) 
+    VALUES(3, "Meep capital", "meep-capital", 0, "I am news, everybody love me!!!
+[youtube]KmugVwYT7j0[/youtube]
+Hello and goodbye");
 
 -- Check The Data.
 SELECT '== USER ==';
