@@ -275,6 +275,7 @@ CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
 		END IF;
 	END;
 
+-- MEDALS
 DROP TRIGGER IF EXISTS insert_medal;
 CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 	BEGIN
@@ -284,6 +285,15 @@ CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 		UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
 
 		CALL user_notify(NEW.user_id, 3, null, NEW.medal_id);
+	END;
+
+DROP TRIGGER IF EXISTS delete_medal;
+CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
+	BEGIN
+		DECLARE REWARD INT;
+		SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = OLD.medal_id LIMIT 1);
+
+		UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
 	END;
 
 
