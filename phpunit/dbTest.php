@@ -53,7 +53,7 @@ class DBTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(300, $row['score']);
 
         // Remove medal and check user score
-        $this->db->query("DELETE FROM users_medals (`user_id`, `medal_id`) VALUES (2, 2)");
+        $this->db->query("DELETE FROM users_medals WHERE `user_id` = 2 AND `medal_id` = 2");
 
         $st = $this->db->query("SELECT score FROM users WHERE user_id = 2");
         $row = $st->fetch();
