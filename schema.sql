@@ -41,7 +41,7 @@ CREATE TABLE users_priv (
 	`user_id` int(7) NOT NULL,
 	`site_priv` tinyint(1) NOT NULL DEFAULT 1,
 	`pm_priv` tinyint(1) NOT NULL DEFAULT 1,
-	`forum_priv` tinyint(1) NOT NULL DEFAULT 1
+	`forum_priv` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`user_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
