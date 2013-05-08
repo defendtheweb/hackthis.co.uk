@@ -40,4 +40,15 @@
 
 	// Import resource minifier
 	$minifier = new loader($app->custom_css, $app->custom_js);
+
+
+	if ($user->loggedIn) {
+
+    } else {
+        array_push($minifier->custom_js, 'guest.js');
+
+        if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
+	        require_once('error.php');
+	    }
+    }
 ?>
