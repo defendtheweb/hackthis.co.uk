@@ -6,7 +6,6 @@ class DBTest extends PHPUnit_Framework_TestCase {
             $dsn .= ";dbname=hackthis";
             $db = new PDO($dsn, 'ubuntu');
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
         } catch(PDOException $e) {
             die($e->getMessage());
         }
@@ -18,13 +17,14 @@ class DBTest extends PHPUnit_Framework_TestCase {
 
         $st = $db->prepare("SELECT count(user_id) AS count FROM users");
         $row = $st->fetch();
-        $this->assertEquals(2, $row->count);
+        print_r($row);
+        $this->assertEquals(2, $row['count']);
 
         $st = $db->prepare("SELECT password, score, status FROM users WHERE username = 'flabbyrabbit'");
         $row = $st->fetch();
-        $this->assertEquals('pass', $row->password);
-        $this->assertEquals(0, $row->score);
-        $this->assertEquals(1, $row->status);
+        $this->assertEquals('pass', $row['password']);
+        $this->assertEquals(0, $row['score']);
+        $this->assertEquals(1, $row['status']);
     }
 }
 ?>
