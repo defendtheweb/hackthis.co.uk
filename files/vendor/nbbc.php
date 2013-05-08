@@ -2114,6 +2114,12 @@ $result = preg_replace("/(?:[\\x20]*\\n){2,}[\\x20]*/", "\n\n", $result);
 $result = trim($result);
 }
 
+
+// trim white space
+$result = trim($result);
+$result = preg_replace('{^(<br(\s*/)?>|&nbsp;)+}i', '', $result); //from start
+$result = preg_replace('{(<br(\s*/)?>|&nbsp;)+$}i', '', $result);
+
 return $result;
 }
 }
