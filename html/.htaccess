@@ -4,6 +4,16 @@ ErrorDocument 404 /error.php
 php_value include_path ".:/home/flabbyrabbit/git/hackthis/hackthis.co.uk/files/"
 
 
+# ------------------------------------------------------------------------------
+# | Redirects |
+# ------------------------------------------------------------------------------
+RewriteEngine On
+RewriteRule ^news/?$ /news.php?%{QUERY_STRING}
+RewriteRule ^news/(.+)$ /news.php?slug=$1&%{QUERY_STRING}
+
+
+
+
 
 # ------------------------------------------------------------------------------
 # | Proper MIME types for all files |
