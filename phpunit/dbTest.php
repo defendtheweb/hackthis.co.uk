@@ -4,7 +4,7 @@ class DBTest extends PHPUnit_Framework_TestCase {
         try {
             $dsn = "mysql:host=localhost";
             $dsn .= ";dbname=hackthis";
-            $this->db = new PDO($dsn, 'root', 'meow');
+            $this->db = new PDO($dsn, 'ubuntu');
         } catch(PDOException $e) {
             die($e->getMessage());
         }
