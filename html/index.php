@@ -1,4 +1,6 @@
 <?php
+    define("PAGE_PUBLIC", true);
+
     require_once('header.php');
 
     if ($user->loggedIn) {
@@ -15,7 +17,7 @@
                         to extract sensitive information from dummy pages. The levels range from very easy to highly perplexing, but help is on hand from staff members and the HackThis forum 24/7.
                         Most of the levels also have tips and spoilers that can be uncovered if you are too overwhelmed by the task at hand.
                     </p>
-                    <p class='center'>
+                    <p class='center spacer'>
                         <img alt="hackthis hack tshirt" src="/files/images/tshirt.jpg">
                     </p>
                     <p>
