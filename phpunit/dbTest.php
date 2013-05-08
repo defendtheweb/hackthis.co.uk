@@ -1,34 +1,53 @@
 <?php
 class DBTest extends PHPUnit_Framework_TestCase {
-    public function testUser() {
+    public function __construct() {
         try {
             $dsn = "mysql:host=localhost";
             $dsn .= ";dbname=hackthis";
-            $db = new PDO($dsn, 'ubuntu');
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->db = new PDO($dsn, 'root', 'meow');
         } catch(PDOException $e) {
             die($e->getMessage());
         }
+    }
 
-        $st = $db->prepare("INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', 'pass');");
-        $st->execute();
-        $st = $db->prepare("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
-        $st->execute();
+    public function testInsertUser() {
+        $this->db->query("INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', 'pass');");
+        $this->db->query("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
 
-        echo "== User tests ==";
-        $st = $db->prepare("SELECT count(user_id) AS count FROM users");
+        $st = $this->db->query("SELECT count(user_id) AS count FROM users;");
         $row = $st->fetch();
-        if ($row) {
-            $this->assertEquals(2, $row['count']);
-        }
+        $this->assertEquals(2, $row['count']);
 
-        $st = $db->prepare("SELECT password, score, status FROM users WHERE username = 'flabbyrabbit'");
+        $st = $this->db->query("SELECT password, score, status FROM users WHERE username = 'flabbyrabbit'");
         $row = $st->fetch();
-        if ($row) {
-            $this->assertEquals('pass', $row['password']);
-            $this->assertEquals(0, $row['score']);
-            $this->assertEquals(1, $row['status']);
-        }
+        $this->assertEquals('pass', $row['password']);
+        $this->assertEquals(0, $row['score']);
+        $this->assertEquals(1, $row['status']);
+    }
+
+    /**
+     * @depends testInsertUser
+     */
+    public function testMedals() {
+        // Medals
+        $this->db->query("INSERT INTO medals_colours (`reward`, `colour`) VALUES (100, 'bronze')");
+        $this->db->query("INSERT INTO medals_colours (`reward`, `colour`) VALUES (200, 'silver')");
+        $this->db->query("INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Test')");
+        $this->db->query("INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test')");
+
+        // Award medal
+        $this->db->query("INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (1, 1)");
+        $this->db->query("INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (2, 1)");
+        $this->db->query("INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (2, 2)");
+
+        // Check user scores
+        $st = $this->db->query("SELECT score FROM users WHERE user_id = 1");
+        $row = $st->fetch();
+        $this->assertEquals(100, $row['score']);
+
+        $st = $this->db->query("SELECT score FROM users WHERE user_id = 2");
+        $row = $st->fetch();
+        $this->assertEquals(300, $row['score']);
     }
 }
 ?>
