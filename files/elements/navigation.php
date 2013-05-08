@@ -7,19 +7,19 @@
 ?>
                     <li><a href='/'>levels</a>
                         <ul>
-                            <li><a href='/'>Main</a>
+                            <li><a href='/'>Main <i class='icon-caret-right'></i></a>
                                 <ul>
-                                    <li><a href='/'>Main</a></li>
-                                    <li><a href='/'>Basic+</a></li>
-                                    <li><a href='/'>Javascript</a></li>
+                                    <li><a href='/'>Level 1</a></li>
+                                    <li><a href='/'>Level 2</a></li>
+                                    <li><a href='/'>Level 3</a></li>
                                 </ul>
                             </li>
-                            <li><a href='/'>Basic+</a>
+                            <li><a href='/'>Basic+ <i class='icon-caret-right'></i></a>
                                 <ul>
                                     <li><a href='/'>Level 1</a></li>
                                 </ul>
                             </li>
-                            <li><a href='/'>Javascript</a></li>
+                            <li><a href='/'>Javascript <i class='icon-caret-right'></i></a></li>
                         </ul>
                     </li>
 <?php
@@ -42,7 +42,7 @@
                     <li class='right'><a href='/'><i class="icon-cog"></i></a>
                         <ul>
                             <li><a href='/settings/'>Settings</a></li>
-                            <li><a href='/?logout'>Logout</a></li>
+                            <li class='seperator'><a href='/?logout'>Logout</a></li>
                         </ul>
                     </li>
                     <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>

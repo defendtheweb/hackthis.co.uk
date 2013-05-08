@@ -43,7 +43,7 @@ select {
 
 form input.button,
 form input.button:visited {
-    background: $light_bg;
+    background: $bg;
     border: none;
     width: auto;
     font-size: 1.1em;
@@ -51,17 +51,16 @@ form input.button:visited {
     margin-left: 8px;
     padding: 2px 8px;
     
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    border-radius: 2px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -khtml-border-radius: 0px;
+    border-radius: 0px;
 
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
 
     &:hover {
-        background: $lighter_bg;
-        color: #00FF00;
+        background: $light_bg;
     }
 }

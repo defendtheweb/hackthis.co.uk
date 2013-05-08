@@ -158,7 +158,6 @@ $(function() {
                     var html = '<div class="center empty"><i class="icon-envelope-alt icon-4x"></i>No messages available</div>';
             }
 
-            
             dropdown.html(html).slideDown(200);
         });
 
