@@ -205,3 +205,48 @@
         }
     }
 }
+
+
+/* MEDIA QUERIES */
+@media (max-width: 1000px) {
+    #global-nav nav {
+        height: auto;
+
+        > ul {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    #global-nav nav {
+        #nav-extra-dropdown {
+            width: 100%;
+            border-width: 1px;
+        }
+
+        > ul {
+            height: auto;
+
+            li {
+                float: none;
+                display: block;
+
+                &.right {
+                    float: right;
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+
+                    &.nav-extra-events-cont {
+                        right: 23px;
+                    }
+                }
+
+                ul {
+                    display: none !important;
+                }
+            }
+        }
+    }
+}

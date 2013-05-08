@@ -39,15 +39,17 @@
 <?php
     if ($user->loggedIn) {
 ?>
-                    <li class='right'><a href='/'><i class="icon-cog"></i></a>
+                    <li class='right mobile-hide'><a href='/'><i class="icon-cog"></i></a>
                         <ul>
                             <li><a href='/settings/'>Settings</a></li>
                             <li class='seperator'><a href='/?logout'>Logout</a></li>
                         </ul>
                     </li>
+                    <li class='mobile-only'><a href='/settings/'>Settings</a></li>
+                    <li class='mobile-only'><a href='/?logout'>Logout</a></li>
                     <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
-                    <li class='right'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
-                    <li class='right'><a href='/'><i class="icon-search"></i></a></li>
+                    <li class='right nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
+                    <li class='right mobile-hide'><a href='/'><i class="icon-search"></i></a></li>
 <?php
     }
 ?>

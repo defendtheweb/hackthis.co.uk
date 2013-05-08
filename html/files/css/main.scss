@@ -36,6 +36,7 @@ a {
 h1 {
     margin: 0.3em 0;
     @include title_font;
+    text-transform: capitalize;
 }
 
 h1 a:hover {
@@ -168,8 +169,8 @@ sidebar h1 {
 
 /* FOOTER */
 #page-footer {
-    border-top: 2px solid $bg;
-    background: $light_bg;
+    border-top: 2px solid $light_bg;
+    background: $bg;
 }
 
 #page-footer footer {
@@ -178,22 +179,14 @@ sidebar h1 {
 }
 
 
-
-
-
-
 /* MEDIA QUERIES */
+.mobile-only {
+    display: none !important;
+}
+
 @media (max-width: 1000px) {
     html {
         background-position: -175px -50px;
-    }
-
-    #global-nav nav {
-        height: auto;
-
-        ul {
-            width: 100%;
-        }
     }
 }
 
@@ -202,23 +195,11 @@ sidebar h1 {
         display: none;
     }
 
-    #global-nav nav {
-        #nav-extra-dropdown {
-            width: 100%;
-            border-width: 1px;
-        }
+    .mobile-hide {
+        display: none !important;
+    }
 
-        ul {
-            height: auto;
-
-            li {
-                float: none;
-                display: block;
-
-                ul {
-                    display: none !important;
-                }
-            }
-        }
+    .mobile-only {
+        display: block !important;
     }
 }
