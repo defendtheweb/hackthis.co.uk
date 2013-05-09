@@ -896,7 +896,7 @@ else $title = htmlspecialchars(trim($default));
 . $title . "</div>\n<div class=\"bbcode_quote_body\">"
 . $content . "</div>\n</div>\n";*/
 
-return "\n<br/>\n<blockquote>\n\t<p>".$content."</p>\n\t<small>".$title."</small>\n</blockquote>";
+return "\n<blockquote>\n\t".$content."\n\t<span>".$title."</span>\n</blockquote>";
 }
 function DoList($bbcode, $action, $name, $default, $params, $content) {
 $list_styles = Array(
