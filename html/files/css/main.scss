@@ -78,8 +78,20 @@ h1 a:hover {
     visibility: hidden;
 }
 
+.underline {
+    text-decoration: underline !important;
+}
+
+.italic {
+    font-style: italic;
+}
+
 .strong {
     font-weight: bold;
+}
+
+.strike {
+    text-decoration: line-through !important;
 }
 
 .spacer {
@@ -158,20 +170,19 @@ blockquote {
     font-style: italic;
     margin: 20px 20px 20px 0;
     padding: 0 0 0 10px;
-    color: $text_dark;
-}
 
-blockquote span {
-    display: block;
-    margin-top: 10px;
-    color: $text;
-    font-style: normal;
+    span {
+        display: block;
+        margin-top: 10px;
+        font-style: normal;
+        font-size: 0.9em;
+        color: $text_dark;
 
-    &:before {
-        content: "- ";
+        &:before {
+            content: "- ";
+        }
     }
 }
-
 
 
 

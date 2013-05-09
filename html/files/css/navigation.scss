@@ -125,9 +125,13 @@
                     > a {
                         display: block;
                         margin-top: -1px;
-                        padding: 2px;
+                        padding: 3px;
                         color: $dark;
                         font-size: 15px;
+
+                        i {
+                            font-size: 17px;
+                        }
                     }
 
                     .notification-counter {
@@ -137,9 +141,9 @@
                         position: absolute;
                         padding: 0 2px;
                         font-size: 0.7em;
-                        margin-left: -11px;
-                        margin-top: 7px;
-                        border-radius: 3px;
+                        margin-left: -9px;
+                        margin-top: 5px;
+                        @include border-radius(3px);
                     }
 
                     ul {

@@ -1,5 +1,7 @@
 $(function() {
 
+    $('textarea').autosize();
+
     // Confirmation box
     $('.confirmation').on('click', function(e) {
         if ($(this).attr('data-confirm'))
