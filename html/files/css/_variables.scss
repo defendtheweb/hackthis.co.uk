@@ -14,20 +14,39 @@ $green: green;
 $green_hover: lighten($green, 5%);
 $bright_green: #0F0;
 
+$msg_error: #800000;
+$msg_info: #3DBDD7;
+$msg_warning: #C2C200;
+
 @mixin font($font) {
     font-family: $font,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
 }
 
 @mixin default_font {
     @include font('Ubuntu');
-    font-size: 1em;
     color: $text;
 }
 
 @mixin title_font {
     @include font('Orbitron');
     letter-spacing: 0.1em;
-    font-size: 1.9em;
     color: $white;
     font-weight: bold;
+}
+
+
+
+
+
+
+@mixin box-shadow($color, $top: 0, $left: 0, $blur: 5) {
+  -webkit-box-shadow:$top $left $blur $color;
+  -moz-box-shadow:$top $left $blur $color;
+  box-shadow:$top $left $blur $color;
+}
+
+@mixin border-radius($amount: 2px) {
+    border-radius: $amount;
+    -moz-border-radius: $amount;
+    -webkit-border-radius: $amount;
 }

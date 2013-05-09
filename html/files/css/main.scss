@@ -11,6 +11,7 @@ html {
 body {
     margin: 0px; padding: 0px;
     @include default_font;
+    font-size: 1.2em;
 }
 
 
@@ -37,6 +38,7 @@ h1 {
     margin: 0.3em 0;
     @include title_font;
     text-transform: capitalize;
+    font-size: 1.4em;
 }
 
 h1 a:hover {
@@ -48,6 +50,10 @@ h1 a:hover {
     border-bottom: 1px solid $text;
     padding-bottom: 2px;
     margin-bottom: 10px;
+}
+
+.small {
+    font-size: 0.8em;
 }
 
 .left {
@@ -99,11 +105,50 @@ header .banner a {
     text-decoration: none;
 }
 
-/* MAIN CONTENT */
-#main-content {
-    text-align: justify;
+header .advert {
+    text-align: right;
+    padding-top: 7px;
 }
 
+
+
+/* MAIN CONTENT */
+#main-content {
+    text-align: justify; 
+}
+
+
+
+/* ALERTS */
+.msg {
+    border {
+        width: 1px;
+        style: solig;
+    }
+    color: $black;
+    padding: 6px;
+    margin: 4px auto;  
+    font-weight: bold;
+
+    i {
+        color: $black;
+        float: right;
+        font-size: 1.6em;
+        margin-top: -3px;
+    }
+
+    &.msg-error {
+        background: $msg_error;
+    }
+
+    &.msg-info {
+        background: $msg_info;
+    }
+
+    &.msg-warning {
+        background: $msg_warning;
+    }
+}
 
 
 
@@ -137,7 +182,9 @@ blockquote span {
 /* MEDALS */
 .medal {
     background-color: #BFBFBF;
-    border-radius: 3px 3px 3px 3px;
+
+    @include border-radius();
+
     color: #000000;
     display: inline-block;
     font-size: 9.75px;
@@ -196,7 +243,7 @@ sidebar h1 {
 }
 
 @media (max-width: 768px) {
-    header .adverts {
+    header .advert {
         display: none;
     }
 
