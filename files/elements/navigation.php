@@ -39,7 +39,7 @@
 <?php
     if ($user->loggedIn) {
 ?>
-                    <li class='right mobile-hide'><a href='/'><i class="icon-cog"></i></a>
+                    <li class='right mobile-hide'><a href='/'><i class="icon-tasks"></i></a>
                         <ul>
                             <li><a href='/settings/'>Settings</a></li>
                             <li class='seperator'><a href='/?logout'>Logout</a></li>

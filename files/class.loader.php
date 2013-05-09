@@ -41,7 +41,6 @@ class loader {
      * when all files reside within a common directory. A min folder
      * will be generated at these locations to store generated files
      */
-    var $php_base = '../html';
     var $js_base = '/files/js/';
     var $css_base = '/files/css/';
 
@@ -51,9 +50,12 @@ class loader {
      * files that are specific to portions of the application
      */
     var $default_js = Array( 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'main.js');
-    var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-12col.css', 'h5dp.css', 'main.scss', 'navigation.scss', 'interaction.scss');
+    var $default_css = Array('normalize.css', 'font-awesome.min.css', 'responsive-gs-24col.css', 'h5dp.css', 'main.scss', 'navigation.scss', 'interaction.scss');
 
     function __construct($custom_css=Array(), $custom_js=Array()) {
+        global $app;
+        $this->php_base = $app->config('path') . "/html";
+
         $this->custom_css = $custom_css;
         $this->custom_js = $custom_js;
     }

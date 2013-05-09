@@ -22,11 +22,19 @@
     <body>
         <div id="header-wrap" class="container">
             <header>
-                <div class="col span_8 banner">
+                <div class="col span_11 banner">
                     <a href='/'>&nbsp;</a>
                 </div>
-                <div class="col span_4 adverts">
-                    ADVERTS
+                <div class="col span_13 advert">
+                    <script type="text/javascript"><!--
+                        google_ad_client = "ca-pub-1120564121036240";
+                        /* Header */
+                        google_ad_slot = "5947620469";
+                        google_ad_width = 468;
+                        google_ad_height = 60;
+                        //-->
+                    </script>
+                    <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
                 </div>
                 <br style='clear: both'/>
             </header>
@@ -36,4 +44,4 @@
 
         <div id="body-wrap" class="container row">
             <section id="content-wrap" class="row">
-                <article id="main-content" class="col span_9 clr">
+                <article id="main-content" class="col span_18 clr">

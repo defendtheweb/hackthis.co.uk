@@ -1,4 +1,4 @@
-                <sidebar class="col span_3 clr">
+                <sidebar class="col span_6 clr">
 <?php
     if ($user->loggedIn) {
         include('widgets/feed.php');
