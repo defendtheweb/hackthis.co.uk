@@ -18,12 +18,14 @@
                         <article>
                             <header class='title'>
                                 <?php if ($user->news_priv): ?>
-                                    <a href='/news/<?=$article->slug;?>?delete' class='button right confirmation' data-confirm='Delete news post'><i class='icon-trash'></i></a>
-                                    <a href='/news/<?=$article->slug;?>?edit' class='button right'><i class='icon-pencil'></i></a>
+                                    <a href='/admin/news.php?action=delete&slug=<?=$article->slug;?>' class='button right'><i class='icon-trash'></i></a>
+                                    <a href='/admin/news.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                 <?php endif; ?>
                                 <h1><a href='/news/<?=$article->slug;?>'><?=$article->title;?></a></h1>
-                                <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=date('d/m/Y', strtotime($article->submitted));?></time> - <?=$app->utils->username_link($article->username);?>
-                                <a href='/news/<?=$article->slug;?>#comments' class='right'><?=$article->comments;?> comment<?=($article->comments == 1)?'':'s';?></a>
+                                <span class='small'>
+                                    <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=date('d/m/Y', strtotime($article->submitted));?></time> - <?=$app->utils->username_link($article->username);?>
+                                </span>
+                                <a href='/news/<?=$article->slug;?>#comments' class='small right'><?=$article->comments;?> comment<?=($article->comments == 1)?'':'s';?></a>
                             </header>
                             <?php
                                 echo $app->bbcode->Parse($article->body);
