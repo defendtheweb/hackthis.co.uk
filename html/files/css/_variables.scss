@@ -3,7 +3,8 @@ $white: #FFF;
 $link: #FFF;
 
 $bg: #141414;
-$light_bg: #202020;
+$light_bg: lighten($bg, 10%);
+$lighter_bg: lighten($light_bg, 10%);
 
 $text: #AAA;
 $text_dark: #555;

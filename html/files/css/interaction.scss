@@ -27,7 +27,7 @@ select {
 
     &:focus { 
         @include box-shadow($bright_green);
-        border-color: lighten($light_bg, 10%);
+        border-color: $lighter_bg;
     }
 
     &:-webkit-autofill {
@@ -46,9 +46,22 @@ textarea {
 }
 
 .wysiwyg {
+    border: 1px solid $light_bg;
+    position: relative;
+    margin: 0 0 8px;
+
+    &.focus {
+        border-color: $lighter_bg;
+
+        ul.controls {
+            background: $lighter_bg;
+        }
+    }
+
     ul.controls {
-        background: $white;
-        overflow: hidden;
+        background: $light_bg;
+        padding: 0 4px;
+        height: 28px;
 
         li {
             float: left;
@@ -56,23 +69,8 @@ textarea {
             font-size: 1em;
             margin: 4px;
 
-            a {
-                display: inline-block;
-                color: $black;
-                width: 18px;
-                font-size: 16px;
-
-                &.strong,
-                &.italic,
-                &.underline,
-                &.strike {
-                    width: 10px;
-                }
-
-                &:hover {
-                    color: $green;
-                    text-decoration: none;
-                }
+            &.right {
+                float: right;
             }
 
             &.seperator {
@@ -84,17 +82,62 @@ textarea {
             &:last-child {
                 border: none;
             }
+
+            a {
+                display: inline-block;
+                color: $black;
+                font-size: 16px;
+
+                &.strong,
+                &.italic,
+                &.underline,
+                &.strike {
+                    width: 10px;
+                }
+
+                &:hover {
+                    color: $white;
+                    text-decoration: none;
+                }
+            }
+
+            &.active a {
+                color: $white;
+            }
         }
     }
 
-    textarea {
-        border-color: $light_bg;
+    textarea, .preview {
+        border: 0px;
+        padding: 6px;
+        margin: 0px;
+    }
+
+    .preview {
+        display: none;
+    }
+
+    .smilies {
+        display: none;
+    }
+
+    .overlay {
+        display: none;
+        position: absolute;
+        top: 20px;
+        left: 0;
+        margin: 25px;
+        padding: 8px;
+        width: 93%;
+        height: 100px;
+        background: $black;
+        border: 1px solid $light_bg;
     }
 }
 
 form input.button,
 form input.button:visited {
-    background: $bg;
+    background: $light_bg;
     border: none;
     width: auto;
     font-size: 1.1em;
@@ -108,8 +151,10 @@ form input.button:visited {
     -moz-box-shadow: none !important;
     box-shadow: none !important;
 
+    float: right;
+
     &:hover {
-        background: $light_bg;
+        background: $lighter_bg;
     }
 }
 
