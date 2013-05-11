@@ -144,7 +144,7 @@ you can use the generic selector below, but it's slower:
 .icon-books:before {
 	content: "\45";
 }
-.icon-ok-sign:before {
+.icon-good:before {
 	content: "\46";
 }
 .icon-settings:before {

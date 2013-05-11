@@ -34,26 +34,33 @@ a {
     }
 }
 
-h1 {
-    margin: 0.3em 0;
+h1, h2 {
+    margin: 0 0 0.5em 0;
     @include title_font;
     text-transform: capitalize;
     font-size: 1.5em;
+
+    a:hover {
+        text-decoration: none;
+    }
 }
 
-h1 a:hover {
-    text-decoration: none;
-}
+h2 {
+   font-size: 1.3em; 
+} 
 
 .title {
-    @include font('Orbitron');
     border-bottom: 1px solid $text;
     padding-bottom: 2px;
     margin-bottom: 10px;
+
+    h1 {
+        margin: 0;
+    }
 }
 
 .small {
-    font-size: 0.8em;
+    font-size: 0.9em;
 }
 
 .left {
@@ -67,6 +74,10 @@ h1 a:hover {
 
 .right {
     float: right;
+}
+
+.hide {
+    display: none;
 }
 
 .clearfix:after,
@@ -92,6 +103,12 @@ h1 a:hover {
 
 .strike {
     text-decoration: line-through !important;
+}
+
+
+img.icon {
+    vertical-align: top;
+    margin: 0 2px;
 }
 
 .spacer {
@@ -139,7 +156,7 @@ header .advert {
     }
     color: $black;
     padding: 6px;
-    margin: 4px auto;  
+    margin: 4px auto 12px auto;  
     font-weight: bold;
 
     i {
@@ -151,6 +168,10 @@ header .advert {
 
     &.msg-error {
         background: $msg_error;
+    }
+
+    &.msg-good {
+        background: $green;
     }
 
     &.msg-info {
@@ -170,13 +191,14 @@ blockquote {
     font-style: italic;
     margin: 20px 20px 20px 0;
     padding: 0 0 0 10px;
+    color: $text_dark;
 
     span {
         display: block;
         margin-top: 10px;
         font-style: normal;
         font-size: 0.9em;
-        color: $text_dark;
+        color: $text;
 
         &:before {
             content: "- ";
