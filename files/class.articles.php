@@ -41,5 +41,33 @@
 
             return $result;
         }
+
+        public function update_article($id, $changes, $updated=true) {
+            if (!is_array($changes)) return false;
+
+            global $db;
+
+            // Get field list
+            $fields = '';
+            $values = array();
+
+            foreach ($changes as $field=>$change) {
+                $fields .= "`$field` = ?,";
+                $values[] = $change;
+            }
+
+            $fields = rtrim($fields, ',');
+
+            $query  = "UPDATE articles SET ".$fields;
+            if ($updated)
+                $query .= ",updated=NOW()";
+            $query .= " WHERE article_id=?";
+            $values[] = $id;
+
+            $st = $db->prepare($query);
+            $res = $st->execute($values); 
+
+            return $res;
+        }
     }
 ?>

@@ -50,14 +50,6 @@ textarea {
     position: relative;
     margin: 0 0 8px;
 
-    &.focus {
-        border-color: $lighter_bg;
-
-        ul.controls {
-            background: $lighter_bg;
-        }
-    }
-
     ul.controls {
         background: $light_bg;
         padding: 0 4px;
@@ -133,6 +125,43 @@ textarea {
         background: $black;
         border: 1px solid $light_bg;
     }
+}
+
+.comments .wysiwyg textarea {
+    min-height: 100px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    display:none;
+
+    + label {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+
+        &:before {
+            font-family: 'icomoon';
+            padding-right: 6px;
+            font-size: 13px;   
+        }    
+    }
+}
+
+input[type="radio"] + label:before {
+  content: "\f10c"; /* circle-blank */
+}
+
+input[type="radio"]:checked + label:before {
+  content: "\f111"; /* circle */
+}
+
+input[type="checkbox"] + label:before {
+  content: "\7c"; /* check-empty */
+}
+
+input[type="checkbox"]:checked + label:before {
+  content: "\7b"; /* check */
 }
 
 form input.button,

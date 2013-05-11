@@ -51,12 +51,6 @@ $(function() {
         }
     });
 
-    $('.wysiwyg').on('focusin', function() {
-        $(this).addClass('focus');
-    }).on('focusout', function() {
-        $(this).removeClass('focus');
-    });
-
     $.fn.setCursorPosition = function(pos) {
         this.each(function(index, elem) {
             if (elem.setSelectionRange) {

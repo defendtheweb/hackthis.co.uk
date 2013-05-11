@@ -35,6 +35,10 @@ blockquote {
 	color:#999;
 }
 
+pre {
+	margin: 0px;
+}
+
 ol.linenums {
 	margin-top:0;
 	margin-bottom:0;
