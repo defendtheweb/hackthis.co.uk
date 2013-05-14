@@ -69,5 +69,27 @@
 
             return $res;
         }
+
+        public function get_comments($article_id, $parent_id=0) {
+            global $db;
+
+            // Group by required for count
+            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
+                    FROM articles_comments comments
+                    LEFT JOIN users
+                    ON users.user_id = comments.user_id
+                    WHERE article_id = :article_id AND parent_id = :parent_id
+                    ORDER BY `time` ASC');
+            $st->execute(array(':article_id' => $article_id, ':parent_id' => $parent_id));
+            $result = $st->fetchAll();
+
+            foreach($result as $comment) {
+                $replies = $this->get_comments($article_id, $comment->id);
+                if ($replies)
+                    $comment->replies = $replies;
+            }
+
+            return $result;
+        }
     }
 ?>

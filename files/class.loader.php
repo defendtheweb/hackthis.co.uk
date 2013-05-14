@@ -50,7 +50,7 @@ class loader {
      * files that are specific to portions of the application
      */
     var $default_js = Array( 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'jquery.autosize.js', 'main.js');
-    var $default_css = Array('normalize.css', 'icomoon.css', 'responsive-gs-24col.css', 'h5dp.css', 'hint.css', 'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss');
+    var $default_css = Array('normalize.css', 'icomoon.css', 'responsive-gs-24col.css', 'h5dp.css', 'hint.css', 'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss', 'comments.scss');
 
     function __construct($custom_css=Array(), $custom_js=Array()) {
         global $app;

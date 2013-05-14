@@ -1,5 +1,7 @@
 $(function() {
     $('.wysiwyg .controls a').on('click', function(e) {
+        e.preventDefault();
+
         var $this = $(this);
         var $container = $this.closest('.wysiwyg');
 

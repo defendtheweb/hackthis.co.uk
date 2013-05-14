@@ -1,0 +1,28 @@
+#comments {
+
+    form {
+        margin-bottom: 16px;
+    }
+
+    article {
+        margin-bottom: 4px;
+        border: 1px solid $bg;
+
+        header {
+            background: $bg;
+            padding: 6px;
+        }
+
+        .body {
+            padding: 6px;
+        }
+
+        article {
+            margin: {
+                top: 12px;
+                bottom: 0;
+                left: 30px;
+            }
+        }
+    }
+}
