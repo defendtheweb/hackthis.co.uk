@@ -1,5 +1,15 @@
                     <article class="widget">
                         <h1>Login</h1>
+<?php
+    if (isset($user->login_error)):
+?>
+                        <div class='msg msg-error'>
+                            <i class='icon-error'></i>
+                            <?=$user->login_error;?>
+                        </div>
+<?php
+    endif;
+?>
                         <form id="login_form" action="?login" method="POST">
                             <label>Username:</label>
                             <input type="text" name="username" id="username">

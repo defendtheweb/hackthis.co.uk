@@ -17,6 +17,8 @@
 			$this->bbcode = new BBCode;
 			array_push($this->custom_css, 'bbcode.css');
 			$this->bbcode->SetDetectURLs(true);
+
+			$this->stats = new stats();
 		}
 
 		public function config($key) {

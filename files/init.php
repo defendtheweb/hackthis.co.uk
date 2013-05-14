@@ -10,6 +10,7 @@
 
 	//Set timezone
 	date_default_timezone_set("Europe/London");
+	putenv("TZ=Europe/London");
 
 	function __autoload($class) {
 		require_once 'class.'.$class.'.php';
@@ -29,7 +30,7 @@
 		$dsn .= (!empty($db['port'])) ? ';port=' . $db['port'] : '';
 		$dsn .= ";dbname={$db['database']}";
 		$db = new PDO($dsn, $db['username'], $db['password']);
-		//$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 		$db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
 	} catch(PDOException $e) {
@@ -44,7 +45,9 @@
 
 
 	if ($user->loggedIn) {
-
+        if (defined('PAGE_PRIV') && !$user->{PAGE_PRIV."_priv"}) {
+	        require_once('error.php');
+	    }		
     } else {
         array_push($minifier->custom_js, 'guest.js');
 
