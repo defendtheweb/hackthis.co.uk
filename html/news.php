@@ -35,6 +35,7 @@
                         </article>
 <?php
         if ($single) {
+            $comments = array("id"=>$article->id);
             include('elements/comments.php');
         }
 

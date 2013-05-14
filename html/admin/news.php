@@ -1,4 +1,6 @@
 <?php
+    define("PAGE_PRIV", "pub");
+
     require_once('header.php');
 
     $articles = new articles();
