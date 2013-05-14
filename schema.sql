@@ -19,7 +19,6 @@ CREATE TABLE users (
 CREATE TABLE users_profile (
 	`user_id` int(7) NOT NULL,
 	`name` varchar(32),
-	`joined` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`gravatar` tinyint(1) DEFAULT 1,
 	`country` tinyint(3) UNSIGNED,
 	`dob` DATE,
