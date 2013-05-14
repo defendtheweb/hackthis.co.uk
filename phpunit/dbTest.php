@@ -11,8 +11,8 @@ class DBTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testInsertUser() {
-        $this->db->query("INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', 'pass');");
-        $this->db->query("INSERT INTO users (`username`, `password`) VALUES ('osaka', 'pass2');");
+        $this->db->query("INSERT INTO users (`username`, `password`, `email`) VALUES ('flabbyrabbit', 'pass', 'test@test.com');");
+        $this->db->query("INSERT INTO users (`username`, `password`, `email`) VALUES ('osaka', 'pass2', 'test2@test.com');");
 
         $st = $this->db->query("SELECT count(user_id) AS count FROM users;");
         $row = $st->fetch();
