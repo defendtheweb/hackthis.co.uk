@@ -11,6 +11,10 @@ RewriteEngine On
 RewriteRule ^news/?$ /news.php?%{QUERY_STRING}
 RewriteRule ^news/(.+)$ /news.php?slug=$1&%{QUERY_STRING}
 
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^user/(.+)$ /user/index.php?user=$1&%{QUERY_STRING}
+
 
 
 
