@@ -8,10 +8,12 @@ CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
 	`username` varchar(16) NOT NULL,
 	`password` varchar(64) NOT NULL,
+	`email` varchar(128) NOT NULL,
 	`score` mediumint(6) NOT NULL DEFAULT 0,
 	`status` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`user_id`),
-	UNIQUE KEY (`username`)
+	UNIQUE KEY (`username`),
+	UNIQUE KEY (`email`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE users_profile (
@@ -42,6 +44,7 @@ CREATE TABLE users_priv (
 	`site_priv` tinyint(1) NOT NULL DEFAULT 1,
 	`pm_priv` tinyint(1) NOT NULL DEFAULT 1,
 	`forum_priv` tinyint(1) NOT NULL DEFAULT 1,
+	`pub_priv` tinyint(1) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`user_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
@@ -76,7 +79,8 @@ CREATE TABLE users_blocks (
 
 CREATE TABLE users_activity (
 	`user_id` int(7) NOT NULL,
-	`last_active` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`joined` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`last_active` timestamp,
 	`last_login` timestamp,
 	`current_login` timestamp,
 	`login_count` int(5) DEFAULT 0,
@@ -220,7 +224,7 @@ CREATE TABLE articles_comments (
 	`comment_id` int(6) NOT NULL AUTO_INCREMENT,
 	`article_id` int(6) NOT NULL,
 	`user_id` int(7) NOT NULL,
-	`parent_id` int(6),
+	`parent_id` int(6) NOT NULL DEFAULT 0,
 	`comment` text NOT NULL,
 	`reported` tinyint(1), -- Number of times this comment has been reported
 	`time` timestamp,
@@ -239,6 +243,12 @@ CREATE TABLE articles_comments (
 	TRIGGERS
 */
 delimiter |
+DROP TRIGGER IF EXISTS insert_user;
+CREATE TRIGGER nsert_user AFTER INSERT ON users FOR EACH ROW
+	BEGIN
+		INSERT INTO users_activity (`user_id`) VALUES (NEW.user_id);
+	END;
+
 DROP TRIGGER IF EXISTS delete_user;
 CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
 	BEGIN

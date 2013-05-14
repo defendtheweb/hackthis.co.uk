@@ -9,12 +9,12 @@ DELETE FROM articles_draft;
 DELETE FROM articles_audit;
 
 -- Add a new user.
-INSERT INTO users (`username`, `password`) VALUES ('Osaka', SHA1('pass'));
+INSERT INTO users (`username`, `password`, `email`) VALUES ('Osaka', '$2a$10$C5Ko0q9jlcTHKsZYvzYJxOD7DsxTsO9RFrihVdY3sGnkflf/e5XKe', 'test@gmail.com');
 INSERT INTO users_profile (`user_id`, `name`) VALUES (1, 'Pete');
 
-INSERT INTO users (`username`, `password`) VALUES ('flabbyrabbit', SHA1('pass') );
-INSERT INTO users (`username`, `password`) VALUES ('verath', SHA1('pass') );
-INSERT INTO users (`username`, `password`) VALUES ('daMage', SHA1('pass') );
+INSERT INTO users (`username`, `password`, `email`) VALUES ('flabbyrabbit', '$2a$10$C5Ko0q9jlcTHKsZYvzYJxOD7DsxTsO9RFrihVdY3sGnkflf/e5XKe', 'test2@gmail.com');
+INSERT INTO users (`username`, `password`, `email`) VALUES ('verath', '$2a$10$C5Ko0q9jlcTHKsZYvzYJxOD7DsxTsO9RFrihVdY3sGnkflf/e5XKe', 'test3@gmail.com');
+INSERT INTO users (`username`, `password`, `email`) VALUES ('daMage', '$2a$10$C5Ko0q9jlcTHKsZYvzYJxOD7DsxTsO9RFrihVdY3sGnkflf/e5XKe', 'test4@gmail.com');
 
 -- Medals
 INSERT INTO medals_colours (`reward`, `colour`) VALUES (100, 'bronze');
@@ -47,7 +47,6 @@ UPDATE articles_categories SET category_id = 0;
 INSERT INTO articles_categories (category_id, title) VALUES (1, "TEST");
 INSERT INTO articles_categories (category_id, title) VALUES (2, "TESTING");
 
-
 -- ARTICALS DRAFT
 INSERT INTO articles_draft (user_id, title, category_id, body) 
 	VALUES(1, "This is an Article", 1, "HERP DERP.");
@@ -72,6 +71,15 @@ INSERT INTO articles (user_id, title, slug, category_id, body)
     VALUES(3, "Meep capital", "meep-capital", 0, "I am news, everybody love me!!!
 [youtube]KmugVwYT7j0[/youtube]
 Hello and goodbye");
+
+
+-- Article comments
+INSERT INTO `articles_comments` (`comment_id`, `article_id`, `user_id`, `parent_id`, `comment`, `reported`, `time`) VALUES
+(1, 2, 2, 0, 'Hello world', NULL, '2013-05-13 18:01:04'),
+(2, 2, 4, 0, 'Awesome', NULL, '2013-05-13 18:01:04'),
+(4, 2, 3, 2, 'Meow cat', NULL, '2013-05-13 18:03:37'),
+(5, 2, 1, 4, 'LIES!!', NULL, '2013-05-13 18:03:51'),
+(6, 2, 4, 2, 'Me again...', NULL, '2013-05-13 19:34:34');
 
 -- Check The Data.
 SELECT '== USER ==';
