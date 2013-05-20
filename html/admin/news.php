@@ -1,5 +1,5 @@
 <?php
-    define("PAGE_PRIV", "pub");
+    define("PAGE_PRIV", "admin_pub");
 
     require_once('header.php');
 
@@ -20,12 +20,15 @@
             if (isset($_POST['body'])) {
                 $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body']);
 
+                $article->title = $_POST['title'];
+                $article->body = $_POST['body'];
+
                 $updated = $articles->update_article($article->id, $changes, isset($_POST['update']));
                 if ($updated):
 ?>
         <div class='msg msg-good'>
             <i class='icon-good'></i>
-            Post updated
+            Post updated, <a href='/news/<?=$article->slug;?>'>view post</a>
         </div>
 <?php
                 else:
