@@ -152,6 +152,12 @@
         }
 
         public function __get($property) {
+            // check for admin privilages
+            if (substr($property, 0, 6) === "admin_") {
+                $property = substr($property, 6);
+                return ($this->$property > 1);
+            }
+
             if (property_exists($this, $property))
                 return $this->$property;
         }
