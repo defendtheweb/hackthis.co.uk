@@ -1,5 +1,5 @@
 $(function() {
-    $('.wysiwyg .controls a').on('click', function(e) {
+    $('#main-content').on('click', '.wysiwyg .controls a', function(e) {
         e.preventDefault();
 
         var $this = $(this);
