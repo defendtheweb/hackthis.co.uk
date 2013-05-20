@@ -1,3 +1,7 @@
+form {
+    @include clearfix();
+}
+
 label {
     margin-bottom: 2px;
     display: inline-block;
@@ -41,10 +45,89 @@ textarea {
 
     font-size: 0.9em;
     padding: 6px;
+    margin-bottom: 6px;
 
     @include border-radius(0);
+
+    &:focus {
+        @include box-shadow($black, 0);
+    }
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+    display:none;
+
+    + label {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+
+        &:before {
+            font-family: 'icomoon';
+            padding-right: 6px;
+            font-size: 13px;   
+        }    
+    }
+}
+
+input[type="radio"] + label:before {
+  content: "\f10c"; /* circle-blank */
+}
+
+input[type="radio"]:checked + label:before {
+  content: "\f111"; /* circle */
+}
+
+input[type="checkbox"] + label:before {
+  content: "\7c"; /* check-empty */
+}
+
+input[type="checkbox"]:checked + label:before {
+  content: "\7b"; /* check */
+}
+
+form input.button,
+form input.button:visited {
+    background: $light_bg;
+    border: none;
+    width: auto;
+    font-size: 1.1em;
+    margin: 0px;
+    margin-left: 8px;
+    padding: 2px 8px;
+    
+    @include border-radius(0);
+
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+
+    float: right;
+
+    &:hover {
+        background: $lighter_bg;
+    }
+}
+
+
+/* BUTTONS */
+a.button { 
+    background: $light_bg;
+    padding: 2px 8px;
+    margin-left: 8px;
+
+    &:hover {
+        text-decoration: none;
+        background: $lighter_bg;
+    }
+}
+
+
+
+
+
+/* WYSIWYG */
 .wysiwyg {
     border: 1px solid $light_bg;
     position: relative;
@@ -53,7 +136,7 @@ textarea {
     ul.controls {
         background: $light_bg;
         padding: 0 4px;
-        height: 28px;
+        @include clearfix();
 
         li {
             float: left;
@@ -129,71 +212,4 @@ textarea {
 
 .comments .wysiwyg textarea {
     min-height: 100px;
-}
-
-input[type="radio"],
-input[type="checkbox"] {
-    display:none;
-
-    + label {
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-
-        &:before {
-            font-family: 'icomoon';
-            padding-right: 6px;
-            font-size: 13px;   
-        }    
-    }
-}
-
-input[type="radio"] + label:before {
-  content: "\f10c"; /* circle-blank */
-}
-
-input[type="radio"]:checked + label:before {
-  content: "\f111"; /* circle */
-}
-
-input[type="checkbox"] + label:before {
-  content: "\7c"; /* check-empty */
-}
-
-input[type="checkbox"]:checked + label:before {
-  content: "\7b"; /* check */
-}
-
-form input.button,
-form input.button:visited {
-    background: $light_bg;
-    border: none;
-    width: auto;
-    font-size: 1.1em;
-    margin: 0px;
-    margin-left: 8px;
-    padding: 2px 8px;
-    
-    @include border-radius(0);
-
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    box-shadow: none !important;
-
-    float: right;
-
-    &:hover {
-        background: $lighter_bg;
-    }
-}
-
-a.button { 
-    background: $bg;
-    padding: 2px 8px;
-    margin-left: 8px;
-
-    &:hover {
-        text-decoration: none;
-        background: $light_bg;
-    }
 }

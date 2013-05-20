@@ -121,7 +121,8 @@ you can use the generic selector below, but it's slower:
 	content: "\3c";
 }
 .icon-menu:before {
-	content: "\3d";
+	/* content: "\3d"; */
+	content: "\3c";
 }
 .icon-pencil:before {
 	content: "\3f";

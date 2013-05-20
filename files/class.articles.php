@@ -70,8 +70,8 @@
             return $res;
         }
 
-        public function get_comments($article_id, $parent_id=0) {
-            global $db;
+        public function get_comments($article_id, $parent_id=0, $bbcode=true) {
+            global $app, $db, $user;
 
             // Group by required for count
             $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
@@ -79,17 +79,59 @@
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
                     WHERE article_id = :article_id AND parent_id = :parent_id
-                    ORDER BY `time` ASC');
+                    ORDER BY `time` DESC');
             $st->execute(array(':article_id' => $article_id, ':parent_id' => $parent_id));
             $result = $st->fetchAll();
 
             foreach($result as $comment) {
+                if ($bbcode)
+                    $comment->comment = $app->bbcode->Parse($comment->comment);
+
+                if ($comment->username === $user->username)
+                    $comment->owner = true;
+
                 $replies = $this->get_comments($article_id, $comment->id);
                 if ($replies)
                     $comment->replies = $replies;
             }
 
             return $result;
+        }
+
+        public function get_comment($comment_id, $bbcode=true) {
+            global $app, $db, $user;
+
+            // Group by required for count
+            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
+                    FROM articles_comments comments
+                    LEFT JOIN users
+                    ON users.user_id = comments.user_id
+                    WHERE comment_id = :comment_id
+                    ORDER BY `time` DESC');
+            $st->execute(array(':comment_id' => $comment_id));
+            $result = $st->fetchAll();
+
+            foreach($result as $comment) {
+                if ($bbcode)
+                    $comment->comment = $app->bbcode->Parse($comment->comment);
+
+                if ($comment->username === $user->username)
+                    $comment->owner = true;
+            }
+
+            return $result;
+        }
+
+        public function add_comment($comment, $article_id, $parent_id=0) {
+            global $app, $db, $user;
+
+            $st = $db->prepare('INSERT INTO articles_comments (`article_id`, `parent_id`, `user_id`, `comment`) VALUES (:article_id, :parent_id, :user_id, :body);');
+            $result = $st->execute(array(':article_id' => $article_id,':parent_id' => $parent_id, ':user_id' => $user->uid, ':body' => $comment));
+            if (!$result)
+                return false;
+
+            return $this->get_comment($db->lastInsertId());
+
         }
     }
 ?>

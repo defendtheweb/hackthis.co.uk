@@ -9,11 +9,10 @@ html {
 }
 
 body {
-    margin: 0px; padding: 0px;
+    margin: 0px; padding: 0px; 
     @include default_font;
     font-size: 1.1em;
-}
-
+} 
 
 a {
     text-decoration: none;
@@ -116,6 +115,11 @@ img.icon {
     margin-bottom: 28px;
 }
 
+.no-js .no-js-hide,
+.js .js-hide {
+    display: none;
+}
+
 article {
     margin-bottom: 2.5em;
 }
@@ -150,39 +154,78 @@ header .advert {
 
 /* ALERTS */
 .msg {
-    border {
-        width: 1px;
-        style: solig;
-    }
-    color: $black;
+    color: $white;
     padding: 6px;
     margin: 4px auto 12px auto;  
     font-weight: bold;
 
+    border: 1px solid $black;
+
     i {
-        color: $black;
         float: right;
-        font-size: 1.6em;
-        margin-top: -3px;
+        font-size: 1.65em;
+        margin-top: -4px;
+    }
+
+    a {
+        text-decoration: underline;
     }
 
     &.msg-error {
-        background: $msg_error;
+        border-color: $msg_error;
+        i {
+            color: $msg_error;
+        }
     }
 
     &.msg-good {
-        background: $green;
+        border-color: $green;
+        i {
+            color: $green;
+        }
     }
 
     &.msg-info {
-        background: $msg_info;
+        border-color: $msg_info;
+        i {
+            color: $msg_info;
+        }
     }
 
     &.msg-warning {
-        background: $msg_warning;
+        border-color: $msg_warning;
+        i {
+            color: $msg_warning;
+        }
     }
 }
 
+
+/* Index page site feature bubbles */
+section.features {
+    margin: 15px 2px;
+    text-align: center;
+    color: $white;
+
+    .col {
+        margin: 15px 0;
+
+        i {
+            background: darken($green, 10%);
+            border-radius: 50%;
+            font-size: 5em;
+            line-height: 1.8em;
+            padding: 20px;
+            cursor: default;
+            @include transition(background-color, 200ms, ease-in-out);
+
+            &:hover {
+
+                background: $green;
+            }
+        }
+    }
+}
 
 
 /* QUOTES */

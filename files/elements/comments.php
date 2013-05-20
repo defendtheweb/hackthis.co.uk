@@ -1,43 +1,43 @@
 <?php
-	array_push($minifier->custom_js, 'comments.js');
+    array_push($minifier->custom_js, 'comments.js');
 ?>
 
-				<section id="comments" data-id="<?=$comments["id"];?>">
-					<h2>Comments</h2>
-					<form>
+                <section id="comments" data-id="<?=$comments["id"];?>">
+                    <h2>Comments</h2>
+                    <form class='no-js-hide'>
 <?php
-	if (!$user->loggedIn):
+    if (!$user->loggedIn):
 ?>
-				        <div class='msg msg-error'>
-				            <i class='icon-error'></i>
-				            You must be logged in to comment
-				        </div>
+                        <div class='msg msg-error'>
+                            <i class='icon-error'></i>
+                            You must be logged in to comment
+                        </div>
 <?php
-	endif;
-	if (!$user->forum_priv):
+    elseif (!$user->forum_priv):
 ?>
-				        <div class='msg msg-warning'>
-				            <i class='icon-warning'></i>
-				            You have been banned from posting comments
-				        </div>
+                        <div class='msg msg-warning'>
+                            <i class='icon-warning'></i>
+                            You have been banned from posting comments
+                        </div>
 <?php
-	else:
+    else:
 ?>
-				        <div class='hide msg msg-good'>
-				            <i class='icon-good'></i>
-				            Comment submitted
-				        </div>
-						<?php include('elements/wysiwyg.php'); ?>
-						Shift+enter to add a new line
-						<input id="comment_submit" type="submit" value="Submit" class="button right" <?php if (!$user->loggedIn) echo "disabled" ?>/>
+                        <?php include('elements/wysiwyg.php'); ?>
+                        Shift+enter to add a new line
+                        <input id="comment_submit" type="submit" value="Submit" class="submit button right"/>
 <?php
-	endif;
+    endif;
 ?>
-					</form>
-					<br/>
-					<div id="comments_container">
-						<div class="comments_loading center">
-								<img src='/files/images/icons/loading.gif' class='icon'/> Loading comments...
-						</div>
-					</div>
-				</section>
+                    </form>
+
+                    <div class='msg msg-warning js-hide'>
+                        <i class='icon-warning'></i>
+                        This feature requires JavaScript
+                    </div>
+                    <br/>
+                    <div id="comments_container" class='no-js-hide'>
+                        <div class="comments_loading center">
+                                <img src='/files/images/icons/loading.gif' class='icon'/> Loading comments...
+                        </div>
+                    </div>
+                </section>
