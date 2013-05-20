@@ -1,27 +1,86 @@
 #comments {
-
-    form {
-        margin-bottom: 16px;
-    }
-
     article {
         margin-bottom: 4px;
         border: 1px solid $bg;
-
-        header {
-            background: $bg;
-            padding: 6px;
-        }
-
-        .body {
-            padding: 6px;
-        }
 
         article {
             margin: {
                 top: 12px;
                 bottom: 0;
                 left: 30px;
+            }
+        }
+
+        header {
+            background: $bg;
+            padding: 6px;
+            padding-right: 0px;
+
+            img {
+                float: left;
+                margin: {
+                    top: -6px;
+                    left: -6px;
+                    right: 8px;
+                }
+            }
+
+            div.more {
+                display: inline-block;
+                margin: {
+                    top: -6px;
+                    left: 4px;
+                }
+                padding: 6px;
+                position: relative;
+
+                > ul {
+                    display: none;
+                    background: $light_bg;
+
+                    position: absolute;
+                    list-style: none;
+                    z-index: 10;
+
+                    top: 100%;
+                    right: 0;
+
+                    li a {
+                        width: 80px;
+                        color: $text;
+                        display: block;
+                        padding: 4px 8px;
+                        &:hover {
+                            color: $white;
+                            background: $bg;
+                            text-decoration: none;
+                        }
+                    }
+                }
+
+                &:hover {
+                    text-decoration: none;
+                    background: $light_bg;
+                    cursor: pointer;
+                    color: $white;
+
+                    > ul {
+                        display: block;
+                    }
+                }
+
+                i {
+                    vertical-align: text-bottom;
+                }
+            }
+        }
+
+        .body {
+            padding: 6px;
+
+            form {
+                margin-left: 30px;
+                margin-top: 16px;
             }
         }
     }

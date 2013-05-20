@@ -37,16 +37,30 @@ $msg_warning: #C2C200;
 
 
 
+@mixin transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
+}
 
-
-@mixin box-shadow($color, $top: 0, $left: 0, $blur: 5) {
-  -webkit-box-shadow:$top $left $blur $color;
-  -moz-box-shadow:$top $left $blur $color;
-  box-shadow:$top $left $blur $color;
+@mixin box-shadow($color, $size: 5px) {
+    -moz-box-shadow: 0 0 $size $color;
+    -webkit-box-shadow: 0 0 $size $color;
+    box-shadow: 0 0 $size $color;
 }
 
 @mixin border-radius($amount: 2px) {
     border-radius: $amount;
     -moz-border-radius: $amount;
     -webkit-border-radius: $amount;
+}
+
+@mixin clearfix() {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 }
