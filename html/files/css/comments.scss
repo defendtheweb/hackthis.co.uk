@@ -2,6 +2,15 @@
     article {
         margin-bottom: 4px;
         border: 1px solid $bg;
+        @include transition(border-color, 3000ms, ease-out);
+
+        &.highlight, &:target {
+            border-color: darken($green, 10%);
+
+            > header {
+                background-color: darken($green, 10%);
+            }
+        }
 
         article {
             margin: {
@@ -12,6 +21,8 @@
         }
 
         header {
+            @include transition(background-color, 3000ms, ease-out);
+
             background: $bg;
             padding: 6px;
             padding-right: 0px;
@@ -25,11 +36,14 @@
                 }
             }
 
+            time {
+                margin-right: 6px;
+            }
+
             div.more {
                 display: inline-block;
                 margin: {
                     top: -6px;
-                    left: 4px;
                 }
                 padding: 6px;
                 position: relative;

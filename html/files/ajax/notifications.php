@@ -5,19 +5,10 @@
 
     if (isset($_GET['events'])) {
         // Get items
-        $st = $db->prepare("SELECT notification_id AS id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username, label, colour, users_friends.status
+        $st = $db->prepare("SELECT notification_id AS id, users.user_id, item_id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username
             FROM users_notifications
             LEFT JOIN users
             ON (users_notifications.from_id = users.user_id)
-
-            LEFT JOIN users_friends
-            ON (users_friends.user_id = users.user_id AND friend_id = :user_id)
-
-            LEFT JOIN medals
-            ON (item_id = medal_id)
-            LEFT JOIN medals_colours
-            ON (medals.colour_id = medals_colours.colour_id)
-
             WHERE users_notifications.user_id = :user_id
             ORDER BY users_notifications.time DESC
             LIMIT 5");
@@ -25,8 +16,49 @@
         $st->execute(array(':user_id' => $userId));
         $result = $st->fetchAll();
 
-        // Loop items and create images
+        // Loop items, get details and create images
         foreach ($result as $res) {
+            if ($res->type == 1 || $res->type == 2) {
+                // status
+                $st = $db->prepare("SELECT status
+                    FROM users_friends
+                    WHERE user_id = :friend_id AND friend_id = :user_id
+                    LIMIT 1");
+                $st->execute(array(':user_id' => $userId, ':friend_id' => $res->user_id));
+                $st->setFetchMode(PDO::FETCH_INTO, $res);
+                $st->fetch();
+            } else if ($res->type == 3) {
+                // label, colour
+                $st = $db->prepare("SELECT medals.label, medals_colours.colour
+                    FROM medals
+                    LEFT JOIN medals_colours
+                    ON medals.colour_id = medals_colours.colour_id
+                    WHERE medal_id = :item_id
+                    LIMIT 1");
+                $st->execute(array(':item_id' => $res->item_id));
+                $st->setFetchMode(PDO::FETCH_INTO, $res);
+                $st->fetch();
+            } else if ($res->type == 6) {
+                // uri, title
+                $st = $db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    FROM articles_comments
+                    LEFT JOIN articles
+                    ON articles_comments.article_id = articles.article_id
+                    LEFT JOIN articles_categories
+                    ON articles_categories.category_id = articles.category_id
+                    WHERE comment_id = :item_id
+                    LIMIT 1");
+                $st->execute(array(':item_id' => $res->item_id));
+                $st->setFetchMode(PDO::FETCH_INTO, $res);
+                $st->fetch();
+
+                $res->slug = "/{$res->slug}#comment-{$res->item_id}";
+            }
+
+            unset($res->id);
+            unset($res->item_id);
+            unset($res->user_id);
+
             if (isset($res->username))
                 $res->img = md5($res->username);
         }

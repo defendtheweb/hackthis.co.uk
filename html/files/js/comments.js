@@ -1,10 +1,11 @@
 $(function() {
     var item_id = $("#comments").attr("data-id");
-    var commentsTmpl =  '<tmpl><article data-id="${id}">'+
+    var commentsTmpl =  '<article data-id="${id}" id="comment-${id}">'+
                         '    <header>'+
                         '        <div class="right">'+
-                        '            <time pubdate datetime="${time}">${timeSince(time)}</time>'+
-                        '            <div class="more"><i class="icon-menu"></i>'+
+                        '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
+    if (loggedIn) {
+        commentsTmpl += '            <div class="more"><i class="icon-menu"></i>'+
                         '                <ul>'+
                         '                    {{if owner}}<li><a href="#">Edit</a></li>{{/if}}'+
                         '                    {{if owner}}<li class="seperator"><a href="#">Delete</a></li>{{/if}}'+
@@ -12,8 +13,10 @@ $(function() {
                         '                    <li><a href="#">PM User</a></li>'+
                         '                    <li><a href="#" class="comment-report">Report</a></li>'+
                         '                </ul>'+
-                        '            </div>'+
-                        '        </div>'+
+                        '            </div>';
+    }
+
+    commentsTmpl +=     '        </div>'+
                         '        <span class="strong">'+
                         '            {{if owner}}'+
                         '                <img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> You'+
@@ -28,7 +31,9 @@ $(function() {
                         '        {{tmpl(replies) "commentsTmpl"}}'+
                         '    {{/if}}'+
                         '    </div>'+
-                        '</article></tmpl>';
+                        '</article>';
+    // Need to compile template so it can be used recursively
+    $.template("commentsTmpl", commentsTmpl);
 
     // $('#comment_submit').closest('form').submit(function(ev) {
     //     ev.preventDefault();
@@ -77,14 +82,29 @@ $(function() {
             var comments = json.comments;
             
             if (submit) {
-                $(commentsTmpl).tmpl(comments).hide().prependTo("#comments_container").slideDown();
+                $.tmpl("commentsTmpl", comments).hide().prependTo("#comments_container").slideDown();
             } else {
                 $('#comments_container .comments_loading').hide();
-                // Need to compile template so it can be used recursively
-                $.template("commentsTmpl", commentsTmpl);
                 $.tmpl("commentsTmpl", comments).prependTo("#comments_container");
+
+                if (document.location.hash && document.location.hash.substring(0, 10) == "#comments-") {
+                    highlight(document.location.hash);
+                    target = $(document.location.hash);
+                    var wheight = $(window).height();
+                    var pos = target.offset().top - (wheight / 2) + target.height();
+                    $('body, html').animate({ scrollTop: pos }, 400);
+                }
             }
         }
+    }
+
+    // Hash tag highlight
+    function highlight(elemId){
+        $(elemId).addClass('highlight');
+        setTimeout(function(){$(elemId).removeClass('highlight')}, 6000);
+    }
+    if (document.location.hash) {
+        highlight(document.location.hash);
     }
 
     // Menu handlers

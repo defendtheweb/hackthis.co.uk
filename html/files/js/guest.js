@@ -1,3 +1,5 @@
+var loggedIn = false;
+
 $(function() {
     var tests = {
         user: function (val) {

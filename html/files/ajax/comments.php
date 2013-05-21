@@ -12,7 +12,7 @@
 
             $result['status'] = true;
             $result['comments'] = $comments;
-        } else if ($_GET['action'] == "add") {
+        } else if ($_GET['action'] == "add" && $user->loggedIn) {
             $comment = $articles->add_comment($_POST['body'], $_POST['id'], $_POST['parent']);
 
             if ($comment) {

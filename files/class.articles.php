@@ -45,7 +45,11 @@
         public function update_article($id, $changes, $updated=true) {
             if (!is_array($changes)) return false;
 
-            global $db;
+            global $db, $user;
+
+            //Check privilages
+            if (!$user->loggedIn)
+                return false;
 
             // Get field list
             $fields = '';
@@ -125,13 +129,28 @@
         public function add_comment($comment, $article_id, $parent_id=0) {
             global $app, $db, $user;
 
-            $st = $db->prepare('INSERT INTO articles_comments (`article_id`, `parent_id`, `user_id`, `comment`) VALUES (:article_id, :parent_id, :user_id, :body);');
+            // Check privilages
+            if (!$user->loggedIn)
+                return false;
+
+            $st = $db->prepare('INSERT INTO articles_comments (`article_id`, `parent_id`, `user_id`, `comment`) VALUES (:article_id, :parent_id, :user_id, :body)');
             $result = $st->execute(array(':article_id' => $article_id,':parent_id' => $parent_id, ':user_id' => $user->uid, ':body' => $comment));
             if (!$result)
                 return false;
 
-            return $this->get_comment($db->lastInsertId());
+            $comment_id = $db->lastInsertId();
 
+            // Update parents author
+            if ($parent_id != 0) {
+                $st = $db->prepare('SELECT user_id AS author FROM articles_comments WHERE comment_id = :parent_id');
+                $st->execute(array(':parent_id' => $parent_id));
+                $result = $st->fetch();
+                
+                if ($result)
+                    $app->notifications->add($result->author, 6, $user->uid, $comment_id);
+            }
+
+            return $this->get_comment($comment_id);
         }
     }
 ?>

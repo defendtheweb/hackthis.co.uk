@@ -211,16 +211,19 @@ section.features {
         margin: 15px 0;
 
         i {
+            display: inline-block;
+            height: 108px;
+            width: 108px;
+
             background: darken($green, 10%);
             border-radius: 50%;
             font-size: 5em;
-            line-height: 1.8em;
-            padding: 20px;
+            padding: 19px;
             cursor: default;
             @include transition(background-color, 200ms, ease-in-out);
+            margin-bottom: 8px;
 
             &:hover {
-
                 background: $green;
             }
         }
