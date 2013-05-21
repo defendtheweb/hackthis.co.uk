@@ -172,6 +172,7 @@ CREATE TABLE articles_categories (
 	`category_id` int(3) NOT NULL AUTO_INCREMENT,
 	`parent_id` int(3),
 	`title` varchar(64),
+	`slug` varchar(64),
 	PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB;
 
