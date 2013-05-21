@@ -49,7 +49,7 @@ class loader {
      * across the application. These will be generated seperately to any
      * files that are specific to portions of the application
      */
-    var $default_js = Array( 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'jquery.autosize.js', 'main.js', 'notifications.js');
+    var $default_js = Array( 'utils.js', 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'jquery.autosize.js', 'main.js', 'notifications.js');
     var $default_css = Array('normalize.css', 'icomoon.css', 'responsive-gs-24col.css', 'h5dp.css', 'hint.css',
                              'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss', 'comments.scss');
 
@@ -102,7 +102,7 @@ class loader {
             if (isset($this->custom_js) && is_array($this->custom_js) && count($this->custom_js)) {
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_js)),0,10);
-                $path = "{$this->js_base}min/extra_{$id}.css";
+                $path = "{$this->js_base}min/extra_{$id}.js";
                 
                 if ($this->generate($path, $this->custom_js, 'js')) {
                     $js_includes .= "<script type='text/javascript' src='{$path}'></script>\n";

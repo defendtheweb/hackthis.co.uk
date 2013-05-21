@@ -1,5 +1,6 @@
 <?php
     array_push($minifier->custom_js, 'wysiwyg.js');
+    array_push($minifier->custom_js, 'autosuggest.js');
 ?>
 
 <div class='wysiwyg'>
@@ -41,7 +42,7 @@
         <li><a href='#' class='icon-wondering' data-value=':/'></a></li>
     </ul>
 
-    <textarea name='body' class='editor'><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
+    <textarea name='body' class='editor suggest'><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
     <div class='preview'>&nbsp;</div>
     <div class='overlay overlay-emoticon'>
         stuff here

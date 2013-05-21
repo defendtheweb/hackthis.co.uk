@@ -51,6 +51,8 @@ $(function() {
                            '            You have been awarded <a href="/medals/"><div class="medal medal-${colour}">${label}</div></a><br/>'+
                            '    {{else type == 6}}'+
                            '            <a href="/user/${username}">${username}<a/> replied to your comment on <a href="${slug}">${title}</a><br/>'+
+                           '    {{else type == 7}}'+
+                           '            <a href="/user/${username}">${username}<a/> mentioned you in a comment on <a href="${slug}">${title}</a><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
                            '    </li>'+

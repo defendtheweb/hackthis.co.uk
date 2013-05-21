@@ -87,7 +87,7 @@ $(function() {
                 $('#comments_container .comments_loading').hide();
                 $.tmpl("commentsTmpl", comments).prependTo("#comments_container");
 
-                if (document.location.hash && document.location.hash.substring(0, 10) == "#comments-") {
+                if (document.location.hash && document.location.hash.substring(0, 9) == "#comment-") {
                     highlight(document.location.hash);
                     target = $(document.location.hash);
                     var wheight = $(window).height();
@@ -123,6 +123,8 @@ $(function() {
             var submitButton = $('<input>', {class: 'submit button right', type: 'submit', value: 'Submit'});
             var cancelButton = $('<a>', {class: 'cancel right', href: '#', text: 'Cancel'});
             var $form = $("<form>").append(newEditor).append(submitButton).append(cancelButton);
+
+            newEditor.autosuggest();
 
             if (parent.find('article').length)
                 $(parent.find('article')[0]).before($form);

@@ -58,6 +58,27 @@
             return true;
         }
 
+        public function search_users($username, $limit=0) {
+            global $db, $user;
+
+            $username .= '%';
+
+            $sql = 'SELECT u.username, IFNULL(friends.status, 0) AS friends
+                    FROM users u
+                    LEFT JOIN users_friends friends
+                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                    WHERE u.username LIKE :username AND u.user_id != :user
+                    ORDER BY friends DESC, u.username
+                    LIMIT :limit';
+            $st = $db->prepare($sql);
+            $st->bindValue(':username', $username);
+            $st->bindValue(':user', $user->uid);
+            $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            $st->execute();
+
+            return $st->fetchAll();
+        }
+
         public function get_profile($username) {
             global $db, $user;
             $st = $db->prepare('SELECT u.user_id as uid, u.username, u.score, profile.name, activity.joined, activity.last_active, friends.status AS friends

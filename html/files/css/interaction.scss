@@ -212,3 +212,27 @@ a.button {
 .comments .wysiwyg textarea {
     min-height: 100px;
 }
+
+
+
+/* autosuggest */
+ul.autosuggest {
+    list-style: none;
+    border: 1px solid $light_bg;
+    border-width: 1px 0 0 0;
+
+    li a {
+        display: block;
+        padding: 4px;
+
+        &:hover {
+            text-decoration: none;
+            color: $white;
+            background: $bg;
+        }
+
+        i {
+            float: right;
+        }
+    }
+}

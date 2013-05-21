@@ -38,7 +38,7 @@
                 $st->execute(array(':item_id' => $res->item_id));
                 $st->setFetchMode(PDO::FETCH_INTO, $res);
                 $st->fetch();
-            } else if ($res->type == 6) {
+            } else if ($res->type == 6 || $res->type == 7) {
                 // uri, title
                 $st = $db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
                     FROM articles_comments

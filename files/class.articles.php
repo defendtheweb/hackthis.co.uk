@@ -89,7 +89,7 @@
 
             foreach($result as $comment) {
                 if ($bbcode)
-                    $comment->comment = $app->bbcode->Parse($comment->comment);
+                    $comment->comment = $app->parse($comment->comment);
 
                 if ($comment->username === $user->username)
                     $comment->owner = true;
@@ -116,8 +116,7 @@
             $result = $st->fetchAll();
 
             foreach($result as $comment) {
-                if ($bbcode)
-                    $comment->comment = $app->bbcode->Parse($comment->comment);
+                $comment->comment = $app->parse($comment->comment, $bbcode);
 
                 if ($comment->username === $user->username)
                     $comment->owner = true;
@@ -140,15 +139,37 @@
 
             $comment_id = $db->lastInsertId();
 
+            $notified = array($user->uid);
+
             // Update parents author
             if ($parent_id != 0) {
-                $st = $db->prepare('SELECT user_id AS author FROM articles_comments WHERE comment_id = :parent_id');
+                $st = $db->prepare('SELECT user_id AS author FROM articles_comments WHERE comment_id = :parent_id LIMIT 1');
                 $st->execute(array(':parent_id' => $parent_id));
                 $result = $st->fetch();
                 
-                if ($result)
-                    $app->notifications->add($result->author, 6, $user->uid, $comment_id);
+                if ($result) {
+                    if (!in_array($result->author, $notified)) {
+                        array_push($notified, $result->author);
+                        $app->notifications->add($result->author, 6, $user->uid, $comment_id);
+                    }
+                }
             }
+
+            // Check for mentions
+            preg_match_all("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", $comment, $mentions);
+            foreach($mentions[1] as $mention) {
+                $st = $db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
+                $st->execute(array(':username' => $mention));
+                $result = $st->fetch();
+                
+                if ($result) {
+                    if (!in_array($result->user_id, $notified)) {
+                        array_push($notified, $result->user_id);
+                        $app->notifications->add($result->user_id, 7, $user->uid, $comment_id);
+                    }
+                }
+            }
+
 
             return $this->get_comment($comment_id);
         }

@@ -26,5 +26,31 @@
 		public function config($key) {
 			return $this->config[$key];
 		}
+
+		public function parse($text, $bbcode=true, $mentions=true) {
+			if ($bbcode)
+				$text = $this->bbcode->Parse($text);
+			else
+				$text = htmlspecialchars($text);
+
+			if ($mentions) {
+				$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", array($this, 'mentions_callback'), $text);
+			}
+
+			return $text;
+		}
+
+		private function mentions_callback($matches) {
+			global $db;
+			$mention = $matches[1];
+
+            $st = $db->prepare('SELECT username FROM users WHERE username = :username LIMIT 1');
+            $st->execute(array(':username' => $mention));
+            
+            if ($res = $st->fetch())
+            	return "<a href='/user/{$res->username}'>{$res->username}</a>";
+
+            return $matches[0];
+		}
 	}
 ?>
