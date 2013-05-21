@@ -19,6 +19,8 @@
 			$this->bbcode->SetDetectURLs(true);
 
 			$this->stats = new stats();
+
+			$this->notifications = new notifications();
 		}
 
 		public function config($key) {
