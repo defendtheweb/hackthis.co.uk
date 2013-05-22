@@ -45,10 +45,10 @@ INSERT INTO pm_messages (`pm_id`, `user_id`, `message`) VALUES (1, 1, 'Hello you
 
 
 -- Add a New article
-INSERT INTO articles_categories (title) VALUES ("News");
+INSERT INTO articles_categories (title, slug) VALUES ("News", "news");
 UPDATE articles_categories SET category_id = 0;
-INSERT INTO articles_categories (category_id, title) VALUES (1, "TEST");
-INSERT INTO articles_categories (category_id, title) VALUES (2, "TESTING");
+INSERT INTO articles_categories (category_id, title, slug) VALUES (1, "TEST", "articles");
+INSERT INTO articles_categories (category_id, title, slug) VALUES (2, "TESTING", "articles");
 
 -- ARTICALS DRAFT
 INSERT INTO articles_draft (user_id, title, category_id, body) 
