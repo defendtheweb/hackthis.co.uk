@@ -23,7 +23,6 @@
     else:
 ?>
                         <?php include('elements/wysiwyg.php'); ?>
-                        Shift+enter to add a new line
                         <input id="comment_submit" type="submit" value="Submit" class="submit button right"/>
 <?php
     endif;

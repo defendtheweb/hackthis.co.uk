@@ -5,28 +5,32 @@ $(function() {
                         '        <div class="right">'+
                         '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
     if (loggedIn) {
-        commentsTmpl += '            <div class="more"><i class="icon-menu"></i>'+
+        commentsTmpl += '            {{if username}}<div class="more"><i class="icon-menu"></i>'+
                         '                <ul>'+
                         '                    {{if owner}}<li><a href="#">Edit</a></li>{{/if}}'+
-                        '                    {{if owner}}<li class="seperator"><a href="#">Delete</a></li>{{/if}}'+
+                        '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
                         '                    <li><a href="#" class="comment-reply">Reply</a></li>'+
                         '                    <li><a href="#">PM User</a></li>'+
                         '                    <li><a href="#" class="comment-report">Report</a></li>'+
                         '                </ul>'+
-                        '            </div>';
+                        '            </div>{{/if}}';
     }
 
     commentsTmpl +=     '        </div>'+
                         '        <span class="strong">'+
                         '            {{if owner}}'+
                         '                <img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> You'+
-                        '            {{else}}'+
+                        '            {{else username}}'+
                         '                <a href=\'/user/${username}\'><img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> ${username}</a>'+
+                        '            {{else}}'+
+                        '                [comment removed]'+
                         '            {{/if}}'+
                         '        </span>'+
                         '    </header>'+
                         '    <div class="body">'+
-                        '        {{html comment}}'+
+                        '        {{if comment}}'+
+                        '            {{html comment}}'+
+                        '        {{/if}}'+
                         '    {{if replies}}'+
                         '        {{tmpl(replies) "commentsTmpl"}}'+
                         '    {{/if}}'+
@@ -137,7 +141,23 @@ $(function() {
         var wheight = $(window).height();
         var pos = newEditor.offset().top - (wheight / 2) + newEditor.height();
         $('body, html').animate({ scrollTop: pos }, 400);
-    }).on('click', '.cancel', function(e) {
+    }).on('click', '.comment-delete', function(e) {
+        e.preventDefault();
+        $article = $(this).closest('article');
+        var comment_id = $article.attr('data-id');
+
+        $.post('/files/ajax/comments.php?action=delete', {"id": comment_id}, function(data) {
+            if (data.status) {
+                $article.slideUp(function() { $(this).remove(); });
+            } else {
+                alert("There appears to be a problem deleting this comment");
+            }
+        });
+    });
+
+
+    // WYSIYG controls
+    $('#comments').on('click', '.cancel', function(e) {
         e.preventDefault();
         var parent = $(this).closest('form').slideUp(200, function() { $(this).remove() });
     }).on('click', '.submit', function(e) {
@@ -171,7 +191,7 @@ $(function() {
                         $parent.remove();
                     }
                 } else {
-                    alert("error or something");
+                    alert("An error!");
                 }
             },
             'json');

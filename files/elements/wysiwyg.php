@@ -44,7 +44,4 @@
 
     <textarea name='body' class='editor suggest'><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
     <div class='preview'>&nbsp;</div>
-    <div class='overlay overlay-emoticon'>
-        stuff here
-    </div>
 </div>
