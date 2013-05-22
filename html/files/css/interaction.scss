@@ -71,19 +71,19 @@ input[type="checkbox"] {
 }
 
 input[type="radio"] + label:before {
-  content: "\f10c"; /* circle-blank */
+  content: "\e054"; /* circle-blank */
 }
 
 input[type="radio"]:checked + label:before {
-  content: "\f111"; /* circle */
+  content: "\e053"; /* circle */
 }
 
 input[type="checkbox"] + label:before {
-  content: "\7c"; /* check-empty */
+  content: "\e052"; /* check-empty */
 }
 
 input[type="checkbox"]:checked + label:before {
-  content: "\7b"; /* check */
+  content: "\e051"; /* check */
 }
 
 form input.button,
@@ -201,6 +201,7 @@ a.button {
         top: 20px;
         left: 0;
         margin: 25px;
+
         padding: 8px;
         width: 93%;
         height: 100px;
