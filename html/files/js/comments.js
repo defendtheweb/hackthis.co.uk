@@ -20,7 +20,7 @@ $(function() {
                         '        <span class="strong">'+
                         '            {{if owner}}'+
                         '                <img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> You'+
-                        '            {{else username}}'+
+                        '            {{else comment}}'+
                         '                <a href=\'/user/${username}\'><img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> ${username}</a>'+
                         '            {{else}}'+
                         '                [comment removed]'+
@@ -128,7 +128,7 @@ $(function() {
             var cancelButton = $('<a>', {class: 'cancel right', href: '#', text: 'Cancel'});
             var $form = $("<form>").append(newEditor).append(submitButton).append(cancelButton);
 
-            newEditor.autosuggest();
+            newEditor.children('textarea').autosuggest();
 
             if (parent.find('article').length)
                 $(parent.find('article')[0]).before($form);
