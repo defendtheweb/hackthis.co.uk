@@ -30,7 +30,7 @@ $.fn.share = function() {
 
             e.preventDefault();
 
-            if ($this.hasClass('favourite')) {
+            if (loggedIn && $this.hasClass('favourite')) {
                 var count = parseInt($this.children('span').text());
 
                 if (!$this.children('i').hasClass('icon-heart')) {
