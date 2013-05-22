@@ -77,16 +77,16 @@ you can use the generic selector below, but it's slower:
 .icon-conversation:before {
 	content: "\e00d";
 }
-.icon-info-sign:before {
+.icon-info:before {
 	content: "\e00e";
 }
-.icon-question-sign:before {
+.icon-help:before {
 	content: "\e00f";
 }
-.icon-exclamation-sign:before {
+.icon-warning:before {
 	content: "\e010";
 }
-.icon-remove-sign:before {
+.icon-error:before {
 	content: "\e011";
 }
 .icon-envelope-alt:before {
