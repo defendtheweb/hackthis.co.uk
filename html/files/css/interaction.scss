@@ -237,3 +237,50 @@ ul.autosuggest {
         }
     }
 }
+
+
+
+/* share */
+ul.share {
+    list-style: none;
+    overflow: hidden;
+    margin-top: -2px;
+
+    li {
+        float: left;
+
+        a {
+            display: inline-block;
+            padding: 3px 6px 2px 6px;
+
+            span {
+                margin-left: 2px;
+            }
+
+            i.icon-heart {
+                color: #FF0000;
+            }
+
+            &:hover {
+                i {
+                    color: $bright_green;
+                }
+
+                &.favourite i {
+                    color: #FF0000;
+                }
+
+                &.facebook i {
+                    color: #3B5999;
+                }
+
+                &.twitter i {
+                    color: #4099FF;
+                }
+
+                background: $bg;
+                text-decoration: none;
+            }
+        }
+    }
+}

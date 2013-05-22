@@ -81,6 +81,7 @@ class loader {
             
             //Build custom CSS file, if required
             if (isset($this->custom_css) && is_array($this->custom_css) && count($this->custom_css)) {
+                $this->custom_css = array_unique($this->custom_css);
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_css)),0,10);
                 $path = "{$this->css_base}min/extra_{$id}.css";
@@ -100,6 +101,7 @@ class loader {
 
             //Build custom JS, if required
             if (isset($this->custom_js) && is_array($this->custom_js) && count($this->custom_js)) {
+                $this->custom_js = array_unique($this->custom_js);
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_js)),0,10);
                 $path = "{$this->js_base}min/extra_{$id}.js";

@@ -5,38 +5,58 @@
         }
 
         public function get_articles($category_id) {
-            global $db;
+            global $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated, count(comments.comment_id) as comments
+            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated,
+                        COALESCE(comments.count, 0) AS comments,
+                        COALESCE(favourites.count, 0) AS favourites,
+                        COALESCE(user_favourites.count, 0) AS favourited
                     FROM articles a
                     LEFT JOIN users
                     ON users.user_id = a.user_id
-                    LEFT JOIN articles_comments as comments
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
                     ON a.article_id = comments.article_id
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
+                    ON a.article_id = favourites.article_id
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
+                    ON a.article_id = user_favourites.article_id
                     WHERE a.category_id = :cat_id
                     GROUP BY a.article_id
                     ORDER BY submitted DESC');
-            $st->execute(array(':cat_id' => $category_id));
+            $st->execute(array(':cat_id' => $category_id, ':uid' => $user->uid));
             $result = $st->fetchAll();
 
             return $result;
         }
 
         public function get_article($slug) {
-            global $db;
+            global $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated, count(comments.comment_id) as comments
+            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated,
+                        COALESCE(comments.count, 0) AS comments,
+                        COALESCE(favourites.count, 0) AS favourites,
+                        COALESCE(user_favourites.count, 0) AS favourited
                     FROM articles a
                     LEFT JOIN users
                     ON users.user_id = a.user_id
-                    LEFT JOIN articles_comments as comments
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
                     ON a.article_id = comments.article_id
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
+                    ON a.article_id = favourites.article_id
+                    LEFT JOIN 
+                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
+                    ON a.article_id = user_favourites.article_id
                     WHERE a.slug = :slug
                     GROUP BY a.article_id
                     ORDER BY submitted DESC');
-            $st->execute(array(':slug' => $slug));
+            $st->execute(array(':slug' => $slug, ':uid' => $user->uid));
             $result = $st->fetch();
 
             return $result;
@@ -78,7 +98,7 @@
             global $app, $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
+            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, MD5(users.username) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
@@ -87,16 +107,26 @@
             $st->execute(array(':article_id' => $article_id, ':parent_id' => $parent_id));
             $result = $st->fetchAll();
 
-            foreach($result as $comment) {
-                if ($bbcode)
-                    $comment->comment = $app->parse($comment->comment);
+            foreach($result as $key=>$comment) {
+                if (!$comment->deleted) {
+                    if ($bbcode)
+                        $comment->comment = $app->parse($comment->comment);
 
-                if ($comment->username === $user->username)
-                    $comment->owner = true;
+                    if ($comment->username === $user->username)
+                        $comment->owner = true;
+                } else {
+                    unset($comment->username);
+                    unset($comment->comment);
+                    unset($comment->image);
+                    unset($comment->score);
+                }
 
                 $replies = $this->get_comments($article_id, $comment->id);
-                if ($replies)
+                if ($replies) {
                     $comment->replies = $replies;
+                } else if ($comment->deleted) {
+                    array_splice($result, $key, 1);
+                }
             }
 
             return $result;
@@ -172,6 +202,43 @@
 
 
             return $this->get_comment($comment_id);
+        }
+
+        public function delete_comment($comment_id) {
+            global $app, $db, $user;
+
+            // Check privilages
+            if (!$user->loggedIn)
+                return false;
+
+            $st = $db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id AND user_id = :uid LIMIT 1');
+            $st->execute(array(':id' => $comment_id, ':uid' => $user->uid));
+
+            return ($st->rowCount() > 0);
+        }
+
+        public function favourite($article_id) {
+            global $db, $user;
+
+            // Check privilages
+            if (!$user->loggedIn)
+                return false;
+
+            $st = $db->prepare('INSERT INTO articles_favourites (`article_id`, `user_id`) VALUES (:article_id, :uid)');
+            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $user->uid));
+            return $result;
+        }
+
+        public function unfavourite($article_id) {
+            global $db, $user;
+
+            // Check privilages
+            if (!$user->loggedIn)
+                return false;
+
+            $st = $db->prepare('DELETE FROM articles_favourites WHERE `article_id` = :article_id AND `user_id` = :uid LIMIT 1');
+            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $user->uid));
+            return $result;
         }
     }
 ?>

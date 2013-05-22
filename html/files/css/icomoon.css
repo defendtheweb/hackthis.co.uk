@@ -74,7 +74,7 @@ you can use the generic selector below, but it's slower:
 .icon-star-half:before {
 	content: "\e00c";
 }
-.icon-comments:before {
+.icon-conversation:before {
 	content: "\e00d";
 }
 .icon-info-sign:before {
@@ -432,7 +432,7 @@ you can use the generic selector below, but it's slower:
 .icon-twitter-2:before {
 	content: "\e083";
 }
-.icon-chat-2:before {
+.icon-comments:before {
 	content: "\e084";
 }
 .icon-menu:before {
