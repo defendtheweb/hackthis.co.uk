@@ -105,6 +105,19 @@ CREATE TABLE users_notifications (
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+/*
+ * Feed types:
+ * see https://github.com/HackThis/hackthis.co.uk/wiki/Database#feed-types
+ */
+CREATE TABLE users_feed (
+	`feed_id` int(6) NOT NULL AUTO_INCREMENT,
+	`user_id` int(7) NOT NULL,
+	`type` tinyint(1) NOT NULL,
+	`item_id` int(7),
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`feed_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
 
 /*
 	MEDALS
@@ -227,12 +240,22 @@ CREATE TABLE articles_comments (
 	`parent_id` int(6) NOT NULL DEFAULT 0,
 	`comment` text NOT NULL,
 	`reported` tinyint(1), -- Number of times this comment has been reported
-	`time` timestamp,
+	`deleted` int(7),
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`comment_id`),
+	FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+	FOREIGN KEY (`deleted`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE articles_favourites (
+	`article_id` int(6) NOT NULL,
+	`user_id` int(7) NOT NULL,
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`article_id`, `user_id`),
 	FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
-
 
 
 
