@@ -125,7 +125,7 @@
                 if ($replies) {
                     $comment->replies = $replies;
                 } else if ($comment->deleted) {
-                    array_splice($result, $key, 1);
+                    //array_splice($result, $key, 1);
                 }
             }
 

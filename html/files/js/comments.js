@@ -152,7 +152,7 @@ $(function() {
             } else {
                 alert("There appears to be a problem deleting this comment");
             }
-        });
+        }, 'json');
     });
 
 

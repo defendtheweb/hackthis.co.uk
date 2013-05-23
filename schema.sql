@@ -96,7 +96,7 @@ CREATE TABLE users_activity (
 CREATE TABLE users_notifications (
 	`notification_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`type` tinyint(1) NOT NULL,
+	`type` enum('friend','medal','forum_reply','forum_mention','comment_reply','comment_mention','article') NOT NULL,
 	`from_id` int(7),
 	`item_id` int(7),
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -112,7 +112,7 @@ CREATE TABLE users_notifications (
 CREATE TABLE users_feed (
 	`feed_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`type` tinyint(1) NOT NULL,
+	`type` enum('join','level','friend','medal','thread','post','karma','comment','favourite','article','image') NOT NULL,
 	`item_id` int(7),
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`feed_id`),
@@ -266,10 +266,12 @@ CREATE TABLE articles_favourites (
 	TRIGGERS
 */
 delimiter |
+-- USERS
 DROP TRIGGER IF EXISTS insert_user;
-CREATE TRIGGER nsert_user AFTER INSERT ON users FOR EACH ROW
+CREATE TRIGGER insert_user AFTER INSERT ON users FOR EACH ROW
 	BEGIN
 		INSERT INTO users_activity (`user_id`) VALUES (NEW.user_id);
+		CALL user_feed(NEW.user_id, 'join', NULL);
 	END;
 
 DROP TRIGGER IF EXISTS delete_user;
@@ -287,23 +289,36 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
 
 -- NOTIFICATIONS
 DROP PROCEDURE IF EXISTS user_notify;
-CREATE PROCEDURE user_notify(user_id INT, type INT, from_id INT, item_id INT)
+CREATE PROCEDURE user_notify(user_id INT, type TEXT, from_id INT, item_id INT)
   BEGIN
   	INSERT INTO users_notifications (`user_id`, `type`, `from_id`, `item_id`) VALUES (user_id, type, from_id, item_id);
+  END;
+
+DROP PROCEDURE IF EXISTS user_feed;
+CREATE PROCEDURE user_feed(user_id INT, type TEXT, item_id INT)
+  BEGIN
+  	INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (user_id, type, item_id);
+  END;
+
+DROP PROCEDURE IF EXISTS user_feed_remove;
+CREATE PROCEDURE user_feed_remove(_user_id INT, _type TEXT, _item_id INT)
+  BEGIN
+  	DELETE FROM users_feed WHERE `user_id` = _user_id AND `type` = _type AND `item_id` = _item_id LIMIT 1;
   END;
 
 
 DROP TRIGGER IF EXISTS insert_friend;
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
 	BEGIN
-		CALL user_notify(NEW.friend_id, 1, NEW.user_id, null);
+		CALL user_notify(NEW.friend_id, 'friend', NEW.user_id, null);
 	END;
 
 DROP TRIGGER IF EXISTS update_friend;
 CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
 	BEGIN
 		IF NEW.status = 1 THEN
-			CALL user_notify(NEW.user_id, 2, NEW.friend_id, null);
+			CALL user_notify(NEW.user_id, 'friend', NEW.friend_id, null);
+			CALL user_feed(NEW.user_id, 'friend', NEW.friend_id);
 		END IF;
 	END;
 
@@ -316,7 +331,8 @@ CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 
 		UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
 
-		CALL user_notify(NEW.user_id, 3, null, NEW.medal_id);
+		CALL user_notify(NEW.user_id, 'medal', null, NEW.medal_id);
+		CALL user_feed(NEW.user_id, 'medal', NEW.medal_id);
 	END;
 
 DROP TRIGGER IF EXISTS delete_medal;
@@ -326,6 +342,8 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 		SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = OLD.medal_id LIMIT 1);
 
 		UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
+
+		CALL user_feed_remove(OLD.user_id, 'medal', OLD.medal_id);
 	END;
 
 
@@ -392,5 +410,32 @@ CREATE TRIGGER articales_update_audit BEFORE UPDATE ON articles FOR EACH ROW
 		END IF;
 
 	END;
+
+DROP TRIGGER IF EXISTS insert_article_comment;
+CREATE TRIGGER insert_article_comment AFTER INSERT ON articles_comments FOR EACH ROW
+	BEGIN
+		CALL user_feed(NEW.user_id, 'comment', NEW.comment_id);
+	END;
+
+DROP TRIGGER IF EXISTS delete_article_comment;
+CREATE TRIGGER delete_article_comment AFTER UPDATE ON articles_comments FOR EACH ROW
+	BEGIN
+		IF NEW.deleted IS NOT NULL THEN
+			CALL user_feed_remove(OLD.user_id, 'comment', OLD.comment_id);
+		END IF;
+	END;
+
+DROP TRIGGER IF EXISTS insert_article_favourites;
+CREATE TRIGGER insert_article_favourites AFTER INSERT ON articles_favourites FOR EACH ROW
+	BEGIN
+		CALL user_feed(NEW.user_id, 'favourite', NEW.article_id);
+	END;
+
+DROP TRIGGER IF EXISTS delete_article_favourites;
+CREATE TRIGGER delete_article_favourites AFTER DELETE ON articles_favourites FOR EACH ROW
+	BEGIN
+		CALL user_feed_remove(OLD.user_id, 'favourite', OLD.article_id);
+	END;
+
 |
 delimiter ;

@@ -1,26 +1,62 @@
 $(function() {
+    var feedTmpl = '<tmpl>'+
+                   '    <li>'+
+                   '        {{if type == "join"}}'+
+                   '            <div class="col span_19"><i class="icon-user"></i><a href="/user/${username}">${username}</a></div>'+
+                   '        {{else type == "friend"}}'+
+                   '            <div class="col span_19"><i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="extra">and</span> <a href="/user/${username_2}">${username_2}</a></div>'+
+                   '        {{else type == "medal"}}'+
+                   '            <div class="col span_19"><i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="extra">awarded</span> <a href="/settings/medals.php">${label}</a></div>'+
+                   '        {{else type == "comment"}}'+
+                   '            <div class="col span_19"><i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
+                   '        {{else type == "favourite"}}'+
+                   '            <div class="col span_19"><i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
+                   '        {{/if}}'+
+                   '        <div class="col span_5"><time class="short" datetime="${timestamp}">${time}</time></div>'+
+                   '    </li>'+
+                   '</tmpl>';
+
     // Update notifications
+    var lastUpdate = 0;
     (function updateTimes() {
         uri = '/files/ajax/notifications.php';
-        $.getJSON(uri, function(data) {
-            if (data.events > 0) {
+        $.post(uri, {last: lastUpdate}, function(data) {
+            if (data.counts.events > 0) {
                 $('.nav-extra-events').addClass('alert');
-                $('#event-counter').fadeIn(500).text(data.events);
+                $('#event-counter').fadeIn(500).text(data.counts.events);
             } else {
                 $('.nav-extra-events').removeClass('alert');
                 $('#event-counter').fadeOut(200);
             }
 
-            if (data.pm > 0) {
+            if (data.counts.pm > 0) {
                 $('.nav-extra-pm').addClass('alert');
-                $('#pm-counter').fadeIn(500).text(data.pm);
+                $('#pm-counter').fadeIn(500).text(data.counts.pm);
             } else {
                 $('.nav-extra-pm').removeClass('alert');
                 $('#pm-counter').fadeOut(200);
             }
-        });
 
-        setTimeout(updateTimes, 20000);
+            if (data.feed.length) {
+                lastUpdate = data.feed[0].timestamp;
+
+                $.each(data.feed, function(index, item) {
+                    var d = new Date(item.timestamp*1000);
+                    item.time = timeSince(d, true);
+                    item.timestamp = d.toISOString();
+                });
+
+                var items = $(feedTmpl).tmpl(data.feed);
+                if ($('sidebar .feed ul').length) {
+                    items.hide().prependTo($('sidebar .feed ul')).slideDown();
+                } else {
+                    var html = $('<ul>').append(items);
+                    $('sidebar .feed .feed_loading').replaceWith(html);
+                }
+            }
+        }, 'json');
+
+        setTimeout(updateTimes, 10000);
     })();
 
 
@@ -40,18 +76,18 @@ $(function() {
                            '            <a class="strong" href="/inbox/${pm_id}">${title}<a/><br/>'+
                            '            ${message}'+
                            '{{else}}'+
-                           '    {{if type == 1}}'+
+                           '    {{if type == "friend"}}'+
                            '            <a href="/user/${username}">${username}<a/> sent you a friend request'+
                            '            {{if status == 0}}'+
                            '                <a href="#">Accept</a> | <a href="#">Decline</a>'+
                            '            {{/if}}'+
-                           '    {{else type == 2}}'+
+                           '    {{else type == "friend"}}'+
                            '            <a href="/user/${username}">${username}<a/> accepted your friend request<br/>'+
-                           '    {{else type == 3}}'+
+                           '    {{else type == "medal"}}'+
                            '            You have been awarded <a href="/medals/"><div class="medal medal-${colour}">${label}</div></a><br/>'+
-                           '    {{else type == 6}}'+
+                           '    {{else type == "comment_reply"}}'+
                            '            <a href="/user/${username}">${username}<a/> replied to your comment on <a href="${slug}">${title}</a><br/>'+
-                           '    {{else type == 7}}'+
+                           '    {{else type == "comment_mention"}}'+
                            '            <a href="/user/${username}">${username}<a/> mentioned you in a comment on <a href="${slug}">${title}</a><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
@@ -92,6 +128,7 @@ $(function() {
         }
 
         $.getJSON(uri, function(data) {
+            data = data.items;
             if (data.length) {
                 $.each(data, function(index, item) {
                     var d = new Date(item.timestamp*1000);
@@ -99,7 +136,8 @@ $(function() {
                     item.timestamp = d.toISOString();
                 });
 
-                var html = $(notificationsTmpl).tmpl(data);
+                var items = $(notificationsTmpl).tmpl(data);
+                var html = $('<ul>').append(items);
             } else {
                 if (parent.hasClass('active-events'))
                     var html = '<div class="center empty"><i class="icon-globe icon-4x"></i>No notifications available</div>';

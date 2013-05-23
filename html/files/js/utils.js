@@ -37,6 +37,10 @@ function timeSince(oldD, short) {
             var n = Math.floor(diff/3600);
             return n + " hour" + (n==1?'':'s') + (!short ? " ago" : '');
         }
+    } else if (short) {
+        var day = oldD.getDate();
+        var month = oldD.getMonth()+1;
+        return ((day < 10) ? '0':'') + day + "/" + ((month < 10) ? '0':'') + month;
     } else {
         newD.setDate(newD.getDate() - 1);
 
@@ -51,13 +55,7 @@ function timeSince(oldD, short) {
             if (oldD > newD)
                 return days[oldD.getDay()];
             else {
-                if (short) {
-                    var day = oldD.getDate();
-                    var month = oldD.getMonth()+1;
-                    return ((day < 10) ? '0':'') + day + "/" + ((month < 10) ? '0':'') + month;
-                } else {
-                    return months[oldD.getMonth()] + ' ' + oldD.getDate() + ', ' + oldD.getFullYear();
-                }
+                return months[oldD.getMonth()] + ' ' + oldD.getDate() + ', ' + oldD.getFullYear();
             }
         }
     }
