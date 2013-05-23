@@ -5,7 +5,7 @@ $(function() {
                         '        <div class="right">'+
                         '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
     if (loggedIn) {
-        commentsTmpl += '            {{if username}}<div class="more"><i class="icon-menu"></i>'+
+        commentsTmpl += '            {{if username}}{{if username != 0}}<div class="more"><i class="icon-menu"></i>'+
                         '                <ul>'+
                         '                    {{if owner}}<li><a href="#">Edit</a></li>{{/if}}'+
                         '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
@@ -13,22 +13,26 @@ $(function() {
                         '                    <li><a href="#">PM User</a></li>'+
                         '                    <li><a href="#" class="comment-report">Report</a></li>'+
                         '                </ul>'+
-                        '            </div>{{/if}}';
+                        '            </div>{{/if}}{{/if}}';
     }
 
     commentsTmpl +=     '        </div>'+
                         '        <span class="strong">'+
                         '            {{if owner}}'+
                         '                <img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> You'+
-                        '            {{else comment}}'+
-                        '                <a href=\'/user/${username}\'><img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> ${username}</a>'+
+                        '            {{else username}}'+
+                        '                {{if username == 0}}'+
+                        '                    [deleted user]'+
+                        '                {{else}}'+
+                        '                    <a href=\'/user/${username}\'><img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> ${username}</a>'+
+                        '                {{/if}}'+
                         '            {{else}}'+
                         '                [comment removed]'+
                         '            {{/if}}'+
                         '        </span>'+
                         '    </header>'+
                         '    <div class="body">'+
-                        '        {{if comment}}'+
+                        '        {{if username}}'+
                         '            {{html comment}}'+
                         '        {{/if}}'+
                         '    {{if replies}}'+

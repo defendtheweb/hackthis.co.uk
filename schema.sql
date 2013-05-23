@@ -160,7 +160,7 @@ CREATE TABLE pm (
 CREATE TABLE pm_messages (
 	`message_id` int(7) NOT NULL AUTO_INCREMENT,
 	`pm_id` int(7) NOT NULL,
-	`user_id` int(7) NOT NULL,
+	`user_id` int(7),
 	`message` text NOT NULL,
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`message_id`),
@@ -192,7 +192,7 @@ CREATE TABLE articles_categories (
 -- TODO: Timestamps man TIME!!
 CREATE TABLE articles (
 	`article_id` int(6) NOT NULL AUTO_INCREMENT,
-	`user_id` int(7) NOT NULL,
+	`user_id` int(7),
 	`title` varchar(128) NOT NULL,
 	`slug` varchar(64) NOT NULL,
 	`category_id` int(3) NOT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE articles_audit (
 CREATE TABLE articles_comments (
 	`comment_id` int(6) NOT NULL AUTO_INCREMENT,
 	`article_id` int(6) NOT NULL,
-	`user_id` int(7) NOT NULL,
+	`user_id` int(7),
 	`parent_id` int(6) NOT NULL DEFAULT 0,
 	`comment` text NOT NULL,
 	`reported` tinyint(1), -- Number of times this comment has been reported
@@ -244,8 +244,7 @@ CREATE TABLE articles_comments (
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`comment_id`),
 	FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
-	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
-	FOREIGN KEY (`deleted`) REFERENCES users (`user_id`)
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE articles_favourites (
@@ -284,7 +283,16 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
 		DELETE FROM users_activity WHERE OLD.user_id = user_id;
 		DELETE FROM users_notifications WHERE OLD.user_id = user_id;
 		DELETE FROM users_medals WHERE OLD.user_id = user_id;
+		DELETE FROM users_feed WHERE OLD.user_id = user_id;
+		DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
+		DELETE FROM articles_draft WHERE OLD.user_id = user_id;
+		DELETE FROM pm_users WHERE OLD.user_id = user_id;
 		-- Add other tables to be removed.
+
+		-- Update other contributions to NULL so they aren't lost
+		UPDATE articles_comments SET user_id = NULL WHERE user_id = OLD.user_id;
+		UPDATE articles SET user_id = NULL WHERE user_id = OLD.user_id;
+		UPDATE pm_messages SET user_id = NULL WHERE user_id = OLD.user_id;
 	END;
 
 -- NOTIFICATIONS
@@ -339,6 +347,9 @@ DROP TRIGGER IF EXISTS delete_medal;
 CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 	BEGIN
 		DECLARE REWARD INT;
+		DECLARE _e INT;
+		DECLARE CONTINUE HANDLER FOR 1442 SET _e = 1;
+
 		SET REWARD = (SELECT medals_colours.reward FROM `medals` INNER JOIN `medals_colours` on medals.colour_id = medals_colours.colour_id WHERE medals.medal_id = OLD.medal_id LIMIT 1);
 
 		UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;

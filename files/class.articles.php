@@ -98,7 +98,9 @@
             global $app, $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, MD5(users.username) as `image`
+            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted,
+                               DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`,
+                               coalesce(users.username, 0) as username, MD5(users.username) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
@@ -124,10 +126,15 @@
                 $replies = $this->get_comments($article_id, $comment->id);
                 if ($replies) {
                     $comment->replies = $replies;
+                    unset($comment->deleted);
                 } else if ($comment->deleted) {
                     //array_splice($result, $key, 1);
+                    unset($result[$key]);
                 }
             }
+
+            //unset can make non-consequative associated array which gets converted to an object in JSON
+            $result = array_values($result);
 
             return $result;
         }

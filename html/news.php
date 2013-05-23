@@ -29,7 +29,7 @@
                                 <h1><a href='/news/<?=$article->slug;?>'><?=$article->title;?></a></h1>
                                 <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=date('d/m/Y', strtotime($article->submitted));?></time>
                                 <?php if ($article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=date('d/m/Y', strtotime($article->updated));?></time><?php endif; ?>
-                                &#183; <?=$app->utils->username_link($article->username);?>
+                                <?php if (isset($article->username)) { echo "&#183; {$app->utils->username_link($article->username)}"; }?>
 
                                 <?php
                                     $share = new stdClass();
