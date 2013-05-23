@@ -85,3 +85,11 @@
 	.span_24 { width: 100%; }
 }
 
+/* CLEARFIX HACK */
+.row,
+.clr,
+.group							{ zoom: 1; } /* IE6 */
+
+*:first-child+html .row,
+*:first-child+html .clr,
+*:first-child+html .group		{ zoom: 1; } /* IE7 */
