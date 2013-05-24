@@ -23,6 +23,10 @@
                         </ul>
                     </li>
 <?php
+    } else {
+?>
+                    <li><a href='/news/'>news</a></li>
+<?php
     }
 ?>
                     <li><a href='/'>articles</a></li>
