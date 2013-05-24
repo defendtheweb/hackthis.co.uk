@@ -359,6 +359,12 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 
 
 -- ARTICLES
+DROP TRIGGER IF EXISTS insert_article;
+CREATE TRIGGER insert_article AFTER INSERT ON articles FOR EACH ROW
+	BEGIN
+		CALL user_feed(NEW.user_id, 'article', NEW.article_id);
+	END;
+
 -- TODO: Pull the user id and a comment made to the new version.
 DROP TRIGGER IF EXISTS articles_draft_update_audit;
 CREATE TRIGGER articles_draft_update_audit BEFORE UPDATE ON articles_draft FOR EACH ROW
