@@ -11,6 +11,8 @@ $(function() {
                    '            <div class="col span_19"><i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
                    '        {{else type == "favourite"}}'+
                    '            <div class="col span_19"><i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
+                   '        {{else type == "article"}}'+
+                   '            <div class="col span_19"><i class="icon-books"></i><a href="${slug}">${title}</a></div>'+
                    '        {{/if}}'+
                    '        <div class="col span_5"><time class="short" datetime="${timestamp}">${time}</time></div>'+
                    '    </li>'+

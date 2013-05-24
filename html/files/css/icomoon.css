@@ -234,7 +234,7 @@ you can use the generic selector below, but it's slower:
 .icon-man:before {
 	content: "\e041";
 }
-.icon-newspaper:before {
+.icon-article:before {
 	content: "\e042";
 }
 .icon-lock-2:before {
