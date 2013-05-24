@@ -199,6 +199,12 @@ header .advert {
         }
     }
 }
+.icon-info {
+    color: darken($msg_info, 25%);
+    &:hover {
+        color: $msg_info;
+    }
+}
 
 
 /* Index page site feature bubbles */

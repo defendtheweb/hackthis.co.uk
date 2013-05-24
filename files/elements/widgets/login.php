@@ -11,12 +11,11 @@
     endif;
 ?>
                         <form id="login_form" action="?login" method="POST">
-                            <label>Username:</label>
+                            <label for="username">Username:</label>
                             <input type="text" name="username" id="username">
-                            <label>Password:</label>
+                            <label for="password">Password:</label>
                             <input type="password" name="password" id="password">
-                            <span class="right">
-                                <a class="white" href="/?request">Request Details</a> <input type="submit" value="Login" class="button">
-                            </span>
+                            <a class="white" href="/?request">Forgot details?</a>
+                            <input type="submit" value="Login" class="button">
                         </form>
                     </article>
