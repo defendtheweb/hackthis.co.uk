@@ -115,7 +115,7 @@
                 return "Invalid username";
 
             $pass = $_POST['reg_password'];
-            if (!isset($pass) || strlen($pass) < 3)
+            if (!isset($pass) || strlen($pass) < 6)
                 return "Invalid password";
             if ($pass !== $_POST['reg_password_2'])
                 return "Passwords don't match";

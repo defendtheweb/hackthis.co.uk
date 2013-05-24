@@ -180,14 +180,17 @@
 
             // Update parents author
             if ($parent_id != 0) {
-                $st = $db->prepare('SELECT user_id AS author FROM articles_comments WHERE comment_id = :parent_id LIMIT 1');
+                $st = $db->prepare('SELECT comments.user_id AS author FROM articles_comments comments
+                                   INNER JOIN users
+                                   ON users.user_id = comments.user_id
+                                   WHERE comments.comment_id = :parent_id LIMIT 1');
                 $st->execute(array(':parent_id' => $parent_id));
                 $result = $st->fetch();
                 
                 if ($result) {
                     if (!in_array($result->author, $notified)) {
                         array_push($notified, $result->author);
-                        $app->notifications->add($result->author, 6, $user->uid, $comment_id);
+                        $app->notifications->add($result->author, 'comment_reply', $user->uid, $comment_id);
                     }
                 }
             }
@@ -202,7 +205,7 @@
                 if ($result) {
                     if (!in_array($result->user_id, $notified)) {
                         array_push($notified, $result->user_id);
-                        $app->notifications->add($result->user_id, 7, $user->uid, $comment_id);
+                        $app->notifications->add($result->user_id, 'comment_mention', $user->uid, $comment_id);
                     }
                 }
             }

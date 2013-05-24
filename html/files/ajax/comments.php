@@ -1,4 +1,5 @@
 <?php
+    header('Content-Type: application/json');
     define("PAGE_PUBLIC", true);
     require_once('init.php');
 

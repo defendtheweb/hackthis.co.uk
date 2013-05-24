@@ -5,15 +5,14 @@ $(function() {
                         '        <div class="right">'+
                         '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
     if (loggedIn) {
-        commentsTmpl += '            {{if username}}{{if username != 0}}<div class="more"><i class="icon-menu"></i>'+
+        commentsTmpl += '            {{if username}}<div class="more"><i class="icon-menu"></i>'+
                         '                <ul>'+
-                        '                    {{if owner}}<li><a href="#">Edit</a></li>{{/if}}'+
                         '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
                         '                    <li><a href="#" class="comment-reply">Reply</a></li>'+
-                        '                    <li><a href="#">PM User</a></li>'+
+                        '                    {{if username != 0}}<li><a href="#">PM User</a></li>{{/if}}'+
                         '                    <li><a href="#" class="comment-report">Report</a></li>'+
                         '                </ul>'+
-                        '            </div>{{/if}}{{/if}}';
+                        '            </div>{{/if}}';
     }
 
     commentsTmpl +=     '        </div>'+
@@ -42,44 +41,6 @@ $(function() {
                         '</article>';
     // Need to compile template so it can be used recursively
     $.template("commentsTmpl", commentsTmpl);
-
-    // $('#comment_submit').closest('form').submit(function(ev) {
-    //     ev.preventDefault();
-        
-    //     var text = $("#comment_submit_text").val();
-    //     if (!text) return false;
-                  
-    //     $.post("/files/ajax/comments.php", {"action": "comment_submission", "comment": text, "item_type": item_type, "item_id": item_id}, function(data, textStatus) {
-    //         renderComment(data, true);
-    //     });
-    // });
-    
-    // $('.comment_delete').live('click', function(ev) {
-    //     ev.preventDefault();
-        
-    //     var comment_cont = $(this).closest('.comment');
-    //     var comment_id = $(this).closest('.comment').attr('id').replace(/\D/g,'');
-                  
-    //     $.post("/files/ajax/comments.php", {"action": "delete_comment", "comment_id": comment_id}, function(data) {
-    //         if (data.status)
-    //             comment_cont.slideUp();
-    //         else
-    //             alert("Error deleting comment");
-    //     }, "json");
-    // });
-    
-    // $('.comment_report').live('click', function(ev) {
-    //     ev.preventDefault();
-    //     var target = $(this);
-    //     var comment_id = $(this).closest('.comment').attr('id').replace(/\D/g,'');
-    //     $.post("/files/ajax/comments.php", {"action": "report_comment", "comment_id": comment_id}, function(data) {
-    //         console.log(data);
-    //         if (!data.status)
-    //             alert("Error reporting comment, please contact administration");
-    //         else
-    //             target.replaceWith('Reported');
-    //     }, "json");
-    // });
 
     $.get("/files/ajax/comments.php", {"action": "get", "id": item_id}, function(data) {
         renderComment(data);

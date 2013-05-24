@@ -1,4 +1,5 @@
 <?php
+    header('Content-Type: application/json');
     require_once('init.php');
 
     $result = array("status"=>false);
@@ -12,5 +13,6 @@
         }
     }
 
-    echo json_encode($result);
+    $json = json_encode($result);
+    echo htmlspecialchars($json, ENT_NOQUOTES);
 ?>

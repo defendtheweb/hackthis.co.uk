@@ -19,6 +19,8 @@
                     <section class='news'>
 <?php
     foreach ($news_articles as $article):
+        $article->title = $app->parse($article->title, false);
+        $article->body = $app->parse($article->body);
 ?>
                         <article>
                             <header class='title clearfix'>
@@ -44,7 +46,7 @@
                                 ?>
                             </header>
                             <?php
-                                echo $app->bbcode->Parse($article->body);
+                                echo $article->body;
                             ?>
                         </article>
 <?php

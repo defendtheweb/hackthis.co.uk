@@ -1,4 +1,9 @@
 .widget.feed {
+    .feed_loading {
+        height: 110px;
+        margin-top: 70px;
+    }
+
     ul {
         height: 170px;
         overflow-y: hidden;

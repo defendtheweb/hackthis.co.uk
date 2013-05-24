@@ -35,7 +35,7 @@
         }
 
         public function getEvents() {
-            global $db, $user;
+            global $app, $db, $user;
 
             // Get items
             $st = $db->prepare("SELECT notification_id AS id, users.user_id, item_id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username
@@ -88,6 +88,11 @@
                     $res->slug = "/{$res->slug}#comment-{$res->item_id}";
                 }
 
+                // Parse title
+                if (isset($res->title)) {
+                    $res->title = $app->parse($res->title, false);
+                }
+
                 unset($res->id);
                 unset($res->item_id);
                 unset($res->user_id);
@@ -108,7 +113,7 @@
         public function getPms() {
             global $db, $user;
             // Get items
-            $st = $db->prepare("SELECT pm.pm_id, title, username, message, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen
+            $st = $db->prepare("SELECT pm.pm_id, title, username, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen
                 FROM pm
                 INNER JOIN pm_users
                 ON pm.pm_id = pm_users.pm_id
@@ -126,6 +131,8 @@
             foreach ($result as $res) {
                 if (isset($res->username))
                     $res->img = md5($res->username);
+
+                $res->title = $app->parse($res->title, false);
             }
 
             return $result;

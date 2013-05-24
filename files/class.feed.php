@@ -1,7 +1,7 @@
 <?php
     class feed {
         public function get($last=0) {
-            global $db, $user;
+            global $app, $db, $user;
             $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
                     FROM users_feed feed
                     LEFT JOIN users
@@ -62,6 +62,11 @@
                     $st->fetch();
 
                     $res->slug = "/{$res->slug}";
+                }
+
+                // Parse title
+                if (isset($res->title)) {
+                    $res->title = $app->parse($res->title, false);
                 }
 
                 unset($res->id);

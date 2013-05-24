@@ -1,5 +1,7 @@
 <?php
 	class app {
+		private $bbcode;
+
 		function __construct() {
 			//load configuration file
 			require('config.php');
@@ -28,13 +30,14 @@
 		}
 
 		public function parse($text, $bbcode=true, $mentions=true) {
-			if ($bbcode)
+			if ($bbcode) {
 				$text = $this->bbcode->Parse($text);
-			else
+				if ($mentions) {
+					$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", array($this, 'mentions_callback'), $text);
+				}
+			} else {
+				$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
 				$text = htmlspecialchars($text);
-
-			if ($mentions) {
-				$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", array($this, 'mentions_callback'), $text);
 			}
 
 			return $text;
