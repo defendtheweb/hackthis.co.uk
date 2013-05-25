@@ -93,12 +93,12 @@ $(function() {
             var cancelButton = $('<a>', {class: 'cancel right', href: '#', text: 'Cancel'});
             var $form = $("<form>").append(newEditor).append(submitButton).append(cancelButton);
 
-            newEditor.children('textarea').autosuggest();
-
             if (parent.find('article').length)
                 $(parent.find('article')[0]).before($form);
             else
                 parent.append($form);
+
+            $('.suggest').autosuggest();
         }
         
         newEditor.children('textarea').focus();
