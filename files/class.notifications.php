@@ -86,6 +86,19 @@
                     $st->fetch();
 
                     $res->slug = "/{$res->slug}#comment-{$res->item_id}";
+                } else if ($res->type == 'article') {
+                    // uri, title
+                    $st = $db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                        FROM articles
+                        LEFT JOIN articles_categories
+                        ON articles_categories.category_id = articles.category_id
+                        WHERE article_id = :item_id
+                        LIMIT 1");
+                    $st->execute(array(':item_id' => $res->item_id));
+                    $st->setFetchMode(PDO::FETCH_INTO, $res);
+                    $st->fetch();
+
+                    $res->slug = "/{$res->slug}";
                 }
 
                 // Parse title
