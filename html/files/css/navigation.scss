@@ -51,6 +51,10 @@
                 border-left: 2px solid $white;
             }
 
+            &.new {
+                background: $bg;
+            }
+
             &:hover {
                 background: $bg;
             }
@@ -245,8 +249,12 @@
                     top: 0px;
                     right: 0px;
 
+                    a {
+                        font-size: 2em;
+                    }
+
                     &.nav-extra-events-cont {
-                        right: 23px;
+                        right: 35px;
                     }
                 }
 
