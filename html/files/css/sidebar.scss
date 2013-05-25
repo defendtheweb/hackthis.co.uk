@@ -52,3 +52,11 @@
         }
     }
 }
+
+
+
+@media ( max-width : 768px ) {
+    .widget.feed ul li .col {
+        width: auto;
+    }
+}
