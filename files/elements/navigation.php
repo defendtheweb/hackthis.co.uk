@@ -3,7 +3,7 @@
                 <ul>
                     <li><a href='/'>home</a></li>
 <?php
-    if ($user->loggedIn) {
+    if ($user->loggedIn):
 ?>
                     <li><a href='/'>levels</a>
                         <ul>
@@ -23,11 +23,11 @@
                         </ul>
                     </li>
 <?php
-    } else {
+    else:
 ?>
                     <li><a href='/news/'>news</a></li>
 <?php
-    }
+    endif;
 ?>
                     <li><a href='/'>articles</a></li>
                     <li><a href='/'>forum</a></li>
@@ -41,7 +41,7 @@
                     <li><a href='/'>contact us</a></li>
 
 <?php
-    if ($user->loggedIn) {
+    if ($user->loggedIn):
 ?>
                     <li class='right mobile-hide'><a href='/'><i class="icon-menu"></i></a>
                         <ul>
@@ -51,11 +51,41 @@
                     </li>
                     <li class='mobile-only'><a href='/settings/'>Settings</a></li>
                     <li class='mobile-only'><a href='/?logout'>Logout</a></li>
+<?php
+        if ($user->admin):
+?>
+                    <li class='right mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
+                        <ul>
+<?php
+            if ($user->admin_site_priv):
+?>
+                            <li><a href='/admin/levels.php'>Levels</a></li>
+                            <li><a href='/admin/users.php'>Users</a></li>
+<?php
+            endif;
+            if ($user->admin_pub_priv):
+?>
+                            <li><a href='/admin/articles.php'>Articles</a></li>
+<?php
+            endif;
+            if ($user->admin_forum_priv):
+?>
+                            <li><a href='/admin/forum.php'>Forum</a></li>
+<?php
+            endif;
+?>
+                            <li><a href='/admin/tickets.php'>Tickets</a></li>
+                            <li><a href='/admin/misc.php'>Misc</a></li>
+                        </ul>
+                    </li>
+<?php
+        endif;
+?>
                     <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
                     <li class='right nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
                     <li class='right mobile-hide'><a href='/'><i class="icon-search"></i></a></li>
 <?php
-    }
+    endif;
 ?>
                 </ul>
                 <div id='nav-extra-dropdown'>

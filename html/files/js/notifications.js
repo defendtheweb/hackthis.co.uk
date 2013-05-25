@@ -1,22 +1,33 @@
 $(function() {
     var feedTmpl = '<tmpl>'+
                    '    <li>'+
+                   '      <div class="col span_18">'+
                    '        {{if type == "join"}}'+
-                   '            <div class="col span_19"><i class="icon-user"></i><a href="/user/${username}">${username}</a></div>'+
+                   '            <i class="icon-user"></i><a href="/user/${username}">${username}</a>'+
                    '        {{else type == "friend"}}'+
-                   '            <div class="col span_19"><i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="extra">and</span> <a href="/user/${username_2}">${username_2}</a></div>'+
+                   '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="extra">and</span> <a href="/user/${username_2}">${username_2}</a>'+
                    '        {{else type == "medal"}}'+
-                   '            <div class="col span_19"><i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="extra">awarded</span> <a href="/settings/medals.php">${label}</a></div>'+
+                   '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="extra">awarded</span> <a href="/settings/medals.php">${label}</a>'+
                    '        {{else type == "comment"}}'+
-                   '            <div class="col span_19"><i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
+                   '            <i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a>'+
                    '        {{else type == "favourite"}}'+
-                   '            <div class="col span_19"><i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a></div>'+
+                   '            <i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a>'+
                    '        {{else type == "article"}}'+
-                   '            <div class="col span_19"><i class="icon-books"></i><a href="${slug}">${title}</a></div>'+
+                   '            <i class="icon-books"></i><a href="${slug}">${title}</a>'+
                    '        {{/if}}'+
-                   '        <div class="col span_5"><time class="short" datetime="${timestamp}">${time}</time></div>'+
+                   '        </div>'+
+                   '        <div class="col span_6 time right"><time class="short" datetime="${timestamp}">${time}</time></div>'+
                    '    </li>'+
                    '</tmpl>';
+
+    // Feed handlers
+    $('sidebar .feed').on('mouseenter', 'li', function(e) {
+        $(this).children('.span_18').removeClass('span_18').addClass('span_24');
+        $(this).children('.span_6').hide();
+    }).on('mouseleave', 'li', function(e) {
+        $(this).children('.span_24').addClass('span_18').removeClass('span_24');
+        $(this).children('.span_6').show();
+    });
 
     // Update notifications
     var lastUpdate = 0;
@@ -91,6 +102,8 @@ $(function() {
                            '            <a href="/user/${username}">${username}<a/> replied to your comment on <a href="${slug}">${title}</a><br/>'+
                            '    {{else type == "comment_mention"}}'+
                            '            <a href="/user/${username}">${username}<a/> mentioned you in a comment on <a href="${slug}">${title}</a><br/>'+
+                           '    {{else type == "article"}}'+
+                           '            Your article has been published <a href="${slug}">${title}</a><br/>'+
                            '    {{/if}}'+
                            '{{/if}}'+
                            '    </li>'+
@@ -139,7 +152,14 @@ $(function() {
                 });
 
                 var items = $(notificationsTmpl).tmpl(data);
-                var html = $('<ul>').append(items);
+                var more = $("<li>", {class: "more"});
+
+                if (parent.hasClass('active-events'))
+                  $('<a>', {text: "View More", href: "/alerts.php"}).appendTo(more);
+                else 
+                  $('<a>', {text: "View More", href: "/inbox/"}).appendTo(more);
+
+                var html = $('<ul>').append(items).append(more);
             } else {
                 if (parent.hasClass('active-events'))
                     var html = '<div class="center empty"><i class="icon-globe icon-4x"></i>No notifications available</div>';

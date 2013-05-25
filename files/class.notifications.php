@@ -124,7 +124,7 @@
         }
 
         public function getPms() {
-            global $db, $user;
+            global $db, $user, $app;
             // Get items
             $st = $db->prepare("SELECT pm.pm_id, title, username, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen
                 FROM pm

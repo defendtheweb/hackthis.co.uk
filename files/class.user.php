@@ -1,6 +1,7 @@
 <?php
     class user {
         public $loggedIn = false;
+        public $admin = false;
 
         public function __construct() {
             //Check if user is logging in
@@ -46,6 +47,12 @@
             $st->fetch();
 
             $app->stats->users_activity($this);
+
+            if ($this->site_priv > 1 ||
+                $this->pm_priv > 1 ||
+                $this->forum_priv > 1 ||
+                $this->pub_priv > 1)
+                    $this->admin = true;
         }
 
         private function salt() {
