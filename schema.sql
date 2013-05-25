@@ -362,6 +362,7 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 DROP TRIGGER IF EXISTS insert_article;
 CREATE TRIGGER insert_article AFTER INSERT ON articles FOR EACH ROW
 	BEGIN
+		CALL user_notify(NEW.user_id, 'article', null, NEW.article_id);
 		CALL user_feed(NEW.user_id, 'article', NEW.article_id);
 	END;
 
