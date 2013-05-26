@@ -34,7 +34,7 @@
             return array("events"=>$eventCount, "pm"=>$pmCount);
         }
 
-        public function getEvents() {
+        public function getEvents($limit=5, $offset=0) {
             global $app, $db, $user;
 
             // Get items
@@ -44,9 +44,12 @@
                 ON (users_notifications.from_id = users.user_id)
                 WHERE users_notifications.user_id = :user_id
                 ORDER BY users_notifications.time DESC
-                LIMIT 5");
+                LIMIT :offset, :limit");
 
-            $st->execute(array(':user_id' => $user->uid));
+            $st->bindParam(":user_id", $user->uid);
+            $st->bindParam(":offset", $offset, PDO::PARAM_INT);
+            $st->bindParam(":limit", $limit, PDO::PARAM_INT);
+            $st->execute();
             $result = $st->fetchAll();
 
             // Loop items, get details and create images
@@ -149,6 +152,39 @@
             }
 
             return $result;
+        }
+
+        public function getText($event) {
+            global $app;
+            if ($event->type === 'comment_reply') {
+                $icon = 'comments';
+                $text = $app->utils->username_link($event->username) . ' replied to your comment on ';
+            } else if ($event->type === 'comment_mention') {
+                $icon = 'comments';
+                $text = $app->utils->username_link($event->username) . ' mentioned you in a comment on ';
+            } else if ($event->type === 'article') {
+                $icon = 'books';
+                $text = 'Your article has been published ';
+            } else if ($event->type === 'medal') {
+                $icon = 'trophy colour-' . $event->colour;
+                $text = "You have been awarded
+                         <a href='/medals.php'><div class='medal medal-{$event->colour}'>{$event->label}</div></a>";
+            } else if ($event->type === 'friend') {
+                $icon = 'user';
+                $text = $app->utils->username_link($event->username) . ' sent you a friend request';
+            } else if ($event->type === 'friend_accepted') {
+                $icon = 'addfriend';
+                $text = $app->utils->username_link($event->username) . ' accepted your friend request';
+            }
+
+            if (isset($event->slug)) {
+                $text .= "<a href='{$event->slug}'>{$event->title}</a>";
+            }
+
+
+            $return = "<i class='icon-{$icon}'></i> {$text}";
+
+            return $return;
         }
     }
 ?>

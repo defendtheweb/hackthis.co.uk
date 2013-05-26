@@ -40,8 +40,7 @@
 	// Create user object
 	$user = new user();
 
-	// Import resource minifier
-	$minifier = new loader($app->custom_css, $app->custom_js);
+	$minifier = new loader($custom_css, $custom_js);
 
 	if ($user->loggedIn) {
         if (defined('PAGE_PRIV') && !$user->{PAGE_PRIV.'_priv'}) {

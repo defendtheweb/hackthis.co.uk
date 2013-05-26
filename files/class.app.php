@@ -3,6 +3,8 @@
 		private $bbcode;
 
 		function __construct() {
+			global $custom_css, $custom_js;
+
 			//load configuration file
 			require('config.php');
 			if (!isset($config) || !is_array($config))
@@ -12,12 +14,14 @@
 
 			$this->utils = new utils();
 
-			$this->custom_css = Array();
-			$this->custom_js = Array();
+			if (!is_array($custom_css))
+				$custom_css = Array();
+			if (!is_array($custom_js))
+				$custom_js = Array();
 
 			require('vendor/nbbc.php');
 			$this->bbcode = new BBCode;
-			array_push($this->custom_css, 'bbcode.css');
+			array_push($custom_css, 'bbcode.css');
 			$this->bbcode->SetDetectURLs(true);
 
 			$this->stats = new stats();

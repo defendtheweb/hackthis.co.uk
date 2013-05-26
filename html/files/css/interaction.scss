@@ -284,3 +284,15 @@ ul.share {
         }
     }
 }
+
+
+/* PAGINATION */
+div.pagination {
+    margin-top: 16px;
+    background: $bg;
+    padding: 4px;
+
+    &.lite-pagination {
+        text-align: right;
+    }
+}

@@ -75,6 +75,10 @@ h2 {
     float: right;
 }
 
+.text-right {
+    text-align: right;
+}
+
 .hide {
     display: none;
 }
@@ -104,6 +108,13 @@ h2 {
     text-decoration: line-through !important;
 }
 
+.white {
+    color: $white;
+}
+
+.dark {
+    color: $text_dark;
+}
 
 img.icon {
     vertical-align: top;
@@ -127,6 +138,10 @@ article {
 ul {
     padding: 0;
     margin: 0;
+
+    &.plain {
+        list-style: none;
+    }
 }
 
 

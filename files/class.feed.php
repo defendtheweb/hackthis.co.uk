@@ -1,16 +1,28 @@
 <?php
     class feed {
-        public function get($last=0) {
+        public function get($last=0, $user_id=null) {
             global $app, $db, $user;
-            $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
-                    FROM users_feed feed
-                    LEFT JOIN users
-                    ON feed.user_id = users.user_id
-                    WHERE feed.time > FROM_UNIXTIME(:last)
-                    ORDER BY time DESC');
-            $st->bindValue(':last', $last);
-            $st->execute();
-            $result = $st->fetchAll();
+
+            if (!isset($user_id)) {
+                $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
+                        FROM users_feed feed
+                        LEFT JOIN users
+                        ON feed.user_id = users.user_id
+                        WHERE feed.type != "friend" AND feed.time > FROM_UNIXTIME(:last)
+                        ORDER BY time DESC');
+                $st->bindValue(':last', $last);
+                $st->execute();
+                $result = $st->fetchAll();
+            } else {
+                $st = $db->prepare('SELECT feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
+                        FROM users_feed feed
+                        WHERE user_id = :user_id AND feed.time > FROM_UNIXTIME(:last)
+                        ORDER BY time DESC');
+                $st->bindValue(':last', $last);
+                $st->bindValue(':user_id', $user_id);
+                $st->execute();
+                $result = $st->fetchAll();                
+            }
 
             // Loop items, get details and create images
             foreach ($result as $res) {

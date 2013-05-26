@@ -1,0 +1,14 @@
+.events ul li {
+    overflow: hidden;
+    margin: 2px 0;
+    padding: 0 8px;
+
+    &.new {
+        padding-left: 7px; /* Box sizing */
+        border-left: 1px solid white;
+    }
+
+    i {
+        margin-right: 6px;
+    }
+}
