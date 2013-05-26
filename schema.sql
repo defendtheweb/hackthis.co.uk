@@ -96,7 +96,7 @@ CREATE TABLE users_activity (
 CREATE TABLE users_notifications (
 	`notification_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`type` enum('friend','medal','forum_reply','forum_mention','comment_reply','comment_mention','article') NOT NULL,
+	`type` enum('friend','friend_accepted', 'medal','forum_reply','forum_mention','comment_reply','comment_mention','article') NOT NULL,
 	`from_id` int(7),
 	`item_id` int(7),
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -325,8 +325,12 @@ DROP TRIGGER IF EXISTS update_friend;
 CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
 	BEGIN
 		IF NEW.status = 1 THEN
-			CALL user_notify(NEW.user_id, 'friend', NEW.friend_id, null);
+			-- Alert user who sent request
+			CALL user_notify(NEW.user_id, 'friend_accepted', NEW.friend_id, null);
+
+			-- Add to both users feeds
 			CALL user_feed(NEW.user_id, 'friend', NEW.friend_id);
+			CALL user_feed(NEW.friend_id, 'friend', NEW.user_id);
 		END IF;
 	END;
 

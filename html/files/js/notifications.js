@@ -5,13 +5,13 @@ $(function() {
                    '        {{if type == "join"}}'+
                    '            <i class="icon-user"></i><a href="/user/${username}">${username}</a>'+
                    '        {{else type == "friend"}}'+
-                   '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="extra">and</span> <a href="/user/${username_2}">${username_2}</a>'+
+                   '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="dark">and</span> <a href="/user/${username_2}">${username_2}</a>'+
                    '        {{else type == "medal"}}'+
-                   '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="extra">awarded</span> <a href="/settings/medals.php">${label}</a>'+
+                   '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php">${label}</a>'+
                    '        {{else type == "comment"}}'+
-                   '            <i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a>'+
+                   '            <i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
                    '        {{else type == "favourite"}}'+
-                   '            <i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="extra">by</span> <a href="/user/${username}">${username}</a>'+
+                   '            <i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
                    '        {{else type == "article"}}'+
                    '            <i class="icon-books"></i><a href="${slug}">${title}</a>'+
                    '        {{/if}}'+
@@ -94,8 +94,8 @@ $(function() {
                            '            {{if status == 0}}'+
                            '                <a href="#">Accept</a> | <a href="#">Decline</a>'+
                            '            {{/if}}'+
-                           '    {{else type == "friend"}}'+
-                           '            <a href="/user/${username}">${username}<a/> accepted your friend request<br/>'+
+                           '    {{else type == "friend_accepted"}}'+
+                           '            <a href="/user/${username}">${username}<a/> accepted your friend request'+
                            '    {{else type == "medal"}}'+
                            '            You have been awarded <a href="/medals/"><div class="medal medal-${colour}">${label}</div></a><br/>'+
                            '    {{else type == "comment_reply"}}'+
