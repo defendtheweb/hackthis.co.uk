@@ -4,7 +4,7 @@ $(function() {
     $('textarea').autosize();
 
     // Open external links in new tab
-    $('body').on('click', 'a[href^="http://"], a[href^="https://"]', function(e) {
+    $('body').on('click', 'a[href^="http://"]:not(.stop-external), a[href^="https://"]:not(.stop-external)', function(e) {
         window.open($(this).attr('href'));
         return false;
     });

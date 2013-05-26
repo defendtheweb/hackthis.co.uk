@@ -1,5 +1,5 @@
-a[href^="http://"]:after,
-a[href^="https://"]:after {
+a[href^="http://"]:not(.hide-external):not(.stop-external):after,
+a[href^="https://"]:not(.hide-external):not(.stop-external):after {
     content: "\e072";
 
     font-family: 'icomoon';
