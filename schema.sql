@@ -7,7 +7,8 @@ USE hackthis;
 CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
 	`username` varchar(16) NOT NULL,
-	`password` varchar(64) NOT NULL,
+	`password` varchar(64),
+	`oauth_id` int(7),
 	`email` varchar(128) NOT NULL,
 	`score` mediumint(6) NOT NULL DEFAULT 0,
 	`status` tinyint(1) NOT NULL DEFAULT 1,
@@ -15,6 +16,13 @@ CREATE TABLE users (
 	UNIQUE KEY (`username`),
 	UNIQUE KEY (`email`)
 ) ENGINE=InnoDB;
+
+CREATE TABLE users_oauth (
+	id int(7) AUTO_INCREMENT,
+	uid text,
+	provider text,
+	PRIMARY KEY (`id`)
+);
 
 CREATE TABLE users_profile (
 	`user_id` int(7) NOT NULL,
