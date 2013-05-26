@@ -1,14 +1,22 @@
-.events ul li {
-    overflow: hidden;
-    margin: 2px 0;
-    padding: 0 8px;
+.events li {
+    margin-bottom: 16px;
 
-    &.new {
-        padding-left: 7px; /* Box sizing */
-        border-left: 1px solid white;
+    h3 {
+        margin-top: 0px;
     }
 
-    i {
-        margin-right: 6px;
+    ul li {
+        overflow: hidden;
+        margin: 2px 0;
+        padding: 0 8px;
+
+        &.new {
+            padding-left: 7px; /* Box sizing */
+            border-left: 1px solid white;
+        }
+
+        i {
+            margin-right: 6px;
+        }
     }
 }
