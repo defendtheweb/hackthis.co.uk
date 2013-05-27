@@ -196,7 +196,7 @@
             }
 
             // Check for mentions
-            preg_match_all("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", $comment, $mentions);
+            preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $comment, $mentions);
             foreach($mentions[1] as $mention) {
                 $st = $db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
                 $st->execute(array(':username' => $mention));

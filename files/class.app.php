@@ -27,6 +27,7 @@
 			$this->stats = new stats();
 
 			$this->notifications = new notifications();
+			$this->feed = new feed();
 		}
 
 		public function config($key) {
@@ -37,7 +38,7 @@
 			if ($bbcode) {
 				$text = $this->bbcode->Parse($text);
 				if ($mentions) {
-					$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[A-Za-z_]+\w*)/", array($this, 'mentions_callback'), $text);
+					$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
 				}
 			} else {
 				$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
