@@ -1,18 +1,50 @@
 a[href^="http://"]:not(.hide-external):not(.stop-external):after,
 a[href^="https://"]:not(.hide-external):not(.stop-external):after {
-    content: "\e072";
-
-    font-family: 'icomoon';
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    -webkit-font-smoothing: antialiased;
+    @include icon("\e072");
 
     vertical-align: top;
     font-size: 0.8em;
     padding-left: 2px;
+}
+
+a.facebook-login,
+a.facebook-connect {
+    margin-top: 12px;
+    display: block;
+    background: darken(#3B5999, 5%);
+    padding: 4px 10px;
+
+    &:before {
+        @include icon("\e082");
+        padding-right: 7px;
+    }
+
+    &:hover {
+        background: #3B5999;
+        text-decoration: none;
+    }
+}
+
+a.facebook-connect {
+    margin-top: 0px;
+    margin-bottom: 8px;
+}
+
+a.twitter-login {
+    margin-top: 4px;
+    display: block;
+    background: darken(#409FFF, 5%);
+    padding: 4px 6px;
+
+    &:before {
+        @include icon("\e083");
+        padding-right: 4px;
+    }
+
+    &:hover {
+        background: #409FFF;
+        text-decoration: none;
+    }
 }
 
 form {

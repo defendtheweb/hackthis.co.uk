@@ -19,9 +19,10 @@ CREATE TABLE users (
 
 CREATE TABLE users_oauth (
 	id int(7) AUTO_INCREMENT,
-	uid text,
-	provider text,
-	PRIMARY KEY (`id`)
+	uid varchar(128),
+	provider enum('facebook','twitter'),
+	PRIMARY KEY (`id`),
+	UNIQUE (`uid`, `provider`)
 );
 
 CREATE TABLE users_profile (
@@ -31,7 +32,7 @@ CREATE TABLE users_profile (
 	`country` tinyint(3) UNSIGNED,
 	`dob` DATE,
 	`show_dob` tinyint(1),
-	`gender` char(1),
+	`gender` enum('male','female'),
 	`show_email` tinyint(1),
 	`website` varchar(256),
 	`about` text,

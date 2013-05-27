@@ -31,21 +31,22 @@
                     $pass = $_POST['password'];
                     $this->login($user, $pass);
                 }
+            }
 
-                //Login or register via facebook
-                if (isset($_GET['facebook'])) {
-                    if (isset($_GET['code'])) {
-                        $this->oauth('facebook', $_GET['code']);
-                    } else if ($_GET['error_code'] == '200') {
-                        $this->login_error = 'Request declined';
-                    }
+            //Login, register or connect via facebook
+            if (isset($_GET['facebook'])) {
+                if (isset($_GET['code'])) {
+                    $this->oauth('facebook', $_GET['code']);
+                } else if ($_GET['error_code'] == '200') {
+                    $this->login_error = 'Request declined';
+                    $this->connect_msg = 'Request declined';
                 }
             }
         }
 
         private function get_details() {
             global $db, $app;
-            $st = $db->prepare('SELECT username, score, status,
+            $st = $db->prepare('SELECT username, score, status, oauth_id as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv
                     FROM users u
                     LEFT JOIN users_priv priv
@@ -114,6 +115,7 @@
                 $content = @file_get_contents($uri);
                 if (!$content) {
                     $this->login_error = 'Request declined';
+                    $this->connect_error = 'Request declined';
                     return false;
                 }
 
@@ -126,90 +128,111 @@
                 $content = file_get_contents($uri);
                 if (!$content) {
                     $this->login_error = 'Request declined';
+                    $this->connect_msg = 'Request declined';
                     return false;
                 }
                 $token_details = json_decode($content);
 
                 $fid = $token_details->id;
 
-                //lookup fid
-                $st = $db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
-                        FROM users_oauth oauth
-                        INNER JOIN users u
-                        ON oauth.id = u.oauth_id
-                        LEFT JOIN users_priv priv
-                        ON u.user_id = priv.user_id
-                        WHERE oauth.uid = :fid AND oauth.provider = "facebook"');
-                $st->execute(array(':fid' => $fid));
-                $row = $st->fetch();   
-
-                if ($row) {
-                    print_r($row);
-                    if (!$row->site_priv) {
-                        $this->login_error = 'Account has been banned';
-                        return false;
-                    }
-
-                    $this->loggedIn = true;
-                    $this->uid = $row->user_id;
-                    $this->create_session();
-                } else {
-                    //Assume this is a registration
-                    $this->login_error = 'Registration needed - ' . $fid;                 
-
-                    // name - $token_details->name;
-                    // username - $token_details->username;
-                    // gender - $token_details->gender;
-                    // email - $token_details->email;
-
-                    // Add to DB - create oauth entry
+                //Is user logged in?
+                if ($this->loggedIn) {
+                    //Connect to existing account
                     $st = $db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
                             VALUES (:fid, "facebook")');
                     $result = $st->execute(array(':fid' => $fid));
                     if (!$result) {
-                        $this->login_error = 'Error registering';
+                        $this->connect_msg = 'Facebook account already connected to another user';
                         return false;
                     }
                     $oauth_id = $db->lastInsertId();
 
-                    // Create user
-                    $st = $db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`)
-                            VALUES (:u, :oid, :email)');
-                    $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
-                    if (!$result) {
-                        $this->login_error = 'Error registering';
+                    $st = $db->prepare('UPDATE users SET oauth_id = :oauth
+                            WHERE user_id = :uid LIMIT 1');
+                    $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
+                    $this->connect_msg = 'Connected, you can now login using your Facebook account';
+                    $this->connected = true;
+                } else { 
+                    //Login or register
+                    //lookup fid
+                    $st = $db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
+                            FROM users_oauth oauth
+                            INNER JOIN users u
+                            ON oauth.id = u.oauth_id
+                            LEFT JOIN users_priv priv
+                            ON u.user_id = priv.user_id
+                            WHERE oauth.uid = :fid AND oauth.provider = "facebook"');
+                    $st->execute(array(':fid' => $fid));
+                    $row = $st->fetch();   
+
+                    if ($row) {
+                        print_r($row);
+                        if (!$row->site_priv) {
+                            $this->login_error = 'Account has been banned';
+                            return false;
+                        }
+
+                        $this->loggedIn = true;
+                        $this->uid = $row->user_id;
+                        $this->create_session();
+                    } else {
+                        //Assume this is a registration
+                        $this->login_error = 'Registration needed - ' . $fid;                 
+
+                        // name - $token_details->name;
+                        // username - $token_details->username;
+                        // gender - $token_details->gender;
+                        // email - $token_details->email;
+
+                        // Add to DB - create oauth entry
+                        $st = $db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
+                                VALUES (:fid, "facebook")');
+                        $result = $st->execute(array(':fid' => $fid));
+                        if (!$result) {
+                            $this->login_error = 'Error registering';
+                            return false;
+                        }
+                        $oauth_id = $db->lastInsertId();
+
+                        // Create user
+                        $st = $db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`)
+                                VALUES (:u, :oid, :email)');
+                        $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
+                        if (!$result) {
+                            $this->login_error = 'Error registering';
+                            return false;
+                        }
+                        $uid = $db->lastInsertId();
+
+                        // Create profile
+                        switch($token_details->gender) {
+                            case "male":
+                                $gender = 'male';
+                                break;
+                            case "female":
+                                $gender = 'female';
+                                break;
+                            default:
+                                $gender = NULL;
+                        }
+
+                        $st = $db->prepare('INSERT INTO users_profile (`user_id`, `name`, `gender`)
+                                VALUES (:uid, :name, :gender)');
+                        $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
+                        if (!$result) {
+                            $this->login_error = 'Error registering';
+                            return false;
+                        }
+
+                        // Login user
+                        $this->loggedIn = true;
+                        $this->uid = $uid;
+
+                        $this->create_session();
+
                         return false;
                     }
-                    $uid = $db->lastInsertId();
-
-                    // Create profile
-                    switch($token_details->gender) {
-                        case "male":
-                            $gender = 'm';
-                            break;
-                        case "female":
-                            $gender = 'f';
-                            break;
-                        default:
-                            $gender = NULL;
-                    }
-
-                    $st = $db->prepare('INSERT INTO users_profile (`user_id`, `name`, `gender`)
-                            VALUES (:uid, :name, :gender)');
-                    $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
-                    if (!$result) {
-                        $this->login_error = 'Error registering';
-                        return false;
-                    }
-
-                    // Login user
-                    $this->loggedIn = true;
-                    $this->uid = $uid;
-
-                    $this->create_session();
-
-                    return false;
-                }          
+                }     
             }
         }
 
