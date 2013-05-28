@@ -150,7 +150,7 @@
                     $st = $db->prepare('UPDATE users SET oauth_id = :oauth
                             WHERE user_id = :uid LIMIT 1');
                     $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
-                    $this->connect_msg = 'Connected, you can now login using your Facebook account';
+                    $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
                     $this->connected = true;
                 } else { 
                     //Login or register
@@ -166,7 +166,6 @@
                     $row = $st->fetch();   
 
                     if ($row) {
-                        print_r($row);
                         if (!$row->site_priv) {
                             $this->login_error = 'Account has been banned';
                             return false;
@@ -262,7 +261,7 @@
                 return "Invalid username";
 
             $pass = $_POST['reg_password'];
-            if (!isset($pass) || strlen($pass) < 6)
+            if (!isset($pass))
                 return "Invalid password";
             if ($pass !== $_POST['reg_password_2'])
                 return "Passwords don't match";
