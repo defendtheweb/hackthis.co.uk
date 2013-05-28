@@ -23,7 +23,16 @@ CREATE TABLE users_oauth (
 	provider enum('facebook','twitter'),
 	PRIMARY KEY (`id`),
 	UNIQUE (`uid`, `provider`)
-);
+) ENGINE=InnoDB;
+
+CREATE TABLE users_levels (
+	`user_id` int(7) NOT NULL,
+	`level_id` int(3) NOT NULL,
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`user_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+	-- FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
+) ENGINE=InnoDB;
 
 CREATE TABLE users_profile (
 	`user_id` int(7) NOT NULL,
@@ -323,6 +332,19 @@ CREATE PROCEDURE user_feed_remove(_user_id INT, _type TEXT, _item_id INT)
   	DELETE FROM users_feed WHERE `user_id` = _user_id AND `type` = _type AND `item_id` = _item_id LIMIT 1;
   END;
 
+-- When a user completes a level and an item is added to users_levels
+-- Give user the relevant score and add to users feed
+DROP TRIGGER IF EXISTS insert_user_level;
+CREATE TRIGGER insert_user_level AFTER INSERT ON users_levels FOR EACH ROW
+	BEGIN
+		CALL user_feed(NEW.user_id, 'level', NEW.level_id);
+	END;
+
+DROP TRIGGER IF EXISTS delete_user_level;
+CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
+	BEGIN
+		CALL user_feed_remove(OLD.user_id, 'level', OLD.level_id);
+	END;
 
 DROP TRIGGER IF EXISTS insert_friend;
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW

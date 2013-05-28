@@ -14,6 +14,8 @@ $(function() {
                    '            <i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
                    '        {{else type == "article"}}'+
                    '            <i class="icon-books"></i><a href="${slug}">${title}</a>'+
+                   '        {{else type == "level"}}'+
+                   '            <i class="icon-good"></i><a href="/user/${username}">${username}</a> <span class="dark">·</span> <a href="${slug}">Main 1${title}</a>'+
                    '        {{/if}}'+
                    '        </div>'+
                    '        <div class="col span_6 time right"><time class="short" datetime="${timestamp}">${time}</time></div>'+

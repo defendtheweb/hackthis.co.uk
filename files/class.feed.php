@@ -9,7 +9,8 @@
                         LEFT JOIN users
                         ON feed.user_id = users.user_id
                         WHERE feed.type != "friend" AND feed.time > FROM_UNIXTIME(:last)
-                        ORDER BY time DESC');
+                        ORDER BY time DESC
+                        LIMIT 10');
                 $st->bindValue(':last', $last);
                 $st->execute();
                 $result = $st->fetchAll();
