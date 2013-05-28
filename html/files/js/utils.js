@@ -23,6 +23,9 @@ function timeSince(oldD, short) {
     newD = new Date();
     diff = Math.round((newD.getTime() - oldD.getTime()) / 1000);
     
+    if (!diff)
+        return 'N/A';
+
     isSameDay = (oldD.getDate() == newD.getDate() 
                  && oldD.getMonth() == newD.getMonth()
                  && oldD.getFullYear() == newD.getFullYear());
