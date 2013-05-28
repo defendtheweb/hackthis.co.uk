@@ -10,9 +10,8 @@
     } else if (isset($_GET['pm'])) {
         $result['items'] = $app->notifications->getPms();
     } else {
-        $feed = new feed();
         $last = isset($_POST['last'])?$_POST['last']:0;
-        $result['feed'] = $feed->get($last);
+        $result['feed'] = $app->feed->get($last);
         $result['counts'] = $app->notifications->getCounts();
     }
 

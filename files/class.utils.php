@@ -80,8 +80,8 @@
         }
 
         public function get_profile($username) {
-            global $db, $user;
-            $st = $db->prepare('SELECT u.user_id as uid, u.username, u.score, profile.name, activity.joined, activity.last_active, friends.status AS friends
+            global $db, $user, $app;
+            $st = $db->prepare('SELECT u.user_id as uid, u.username, u.score, profile.*, activity.joined, activity.last_active, friends.status AS friends
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -102,6 +102,8 @@
                     WHERE users_medals.user_id = :uid');
             $st->execute(array(':uid' => $result->uid));
             $result->medals = $st->fetchAll();
+
+            $result->feed = $app->feed->get(0, $result->user_id);
 
             return $result;
         }
