@@ -1,0 +1,48 @@
+.profile {
+    .progress-container {
+        width: 100%;
+        background: $bg;
+
+        .progress {
+            background: $green;
+            color: $white;
+            text-align: right;
+            padding: 1px 3px;
+            font-weight: bold;
+        }
+    }
+
+    ul {
+        list-style: none;
+
+        &.medals {
+            margin-top: 6px;
+
+            li {
+                display: block;
+                padding: 2px 5px;
+                float: left;
+                margin: 0 4px 3px 0;
+            }
+        }
+
+        &.social {
+            margin-top: 8px;
+            li {
+                float: left;
+                margin-right: 2px;
+                font-size: 1.1em;
+                
+                a {
+                    padding: 0 2px;
+                    color: $text_dark;
+
+                    &:hover {
+                        text-decoration: none;
+                        color: $white;
+                    }
+                }
+            }
+        }
+    }
+}
