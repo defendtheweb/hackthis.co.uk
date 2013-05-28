@@ -1,1 +1,9 @@
-[![Build Status](https://travis-ci.org/HackThis/hackthis.co.uk.png?branch=dev)](https://travis-ci.org/HackThis/hackthis.co.uk)
+HackThis
+========
+
+This repository contains all code for http://www.hackthis.co.uk. 
+
+
+## Usage
+* Import schema.sql into MySQL database
+* Copy `files/example.config.php` to `files/config.php` and edit details
