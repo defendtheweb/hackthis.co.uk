@@ -80,6 +80,7 @@ select {
     &:focus { 
         @include box-shadow($bright_green);
         border-color: $lighter_bg;
+        outline: none;
     }
 
     &:-webkit-autofill {
