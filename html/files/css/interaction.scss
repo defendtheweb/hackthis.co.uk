@@ -163,12 +163,16 @@ form input.button:visited {
 /* BUTTONS */
 a.button { 
     background: $light_bg;
-    padding: 2px 8px;
+    padding: 4px 8px;
     margin-left: 8px;
 
     &:hover {
         text-decoration: none;
         background: $lighter_bg;
+    }
+
+    i {
+        padding-right: 4px;
     }
 }
 
