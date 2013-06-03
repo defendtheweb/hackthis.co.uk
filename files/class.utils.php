@@ -1,7 +1,14 @@
 <?php
     class utils {
-        function __construct() {
 
+        public function repairUri($uri) {
+            if ($ret = parse_url($uri)) {
+                if (!isset($ret["scheme"]))
+                   $uri = "http://{$uri}";
+            } else {
+                $uri = false;
+            }
+            return $uri;
         }
 
         public function username_link($username) {
@@ -77,35 +84,6 @@
             $st->execute();
 
             return $st->fetchAll();
-        }
-
-        public function get_profile($username) {
-            global $db, $user, $app;
-            $st = $db->prepare('SELECT u.user_id as uid, u.username, u.score, profile.*, activity.joined, activity.last_active, friends.status AS friends
-                    FROM users u
-                    LEFT JOIN users_profile profile
-                    ON u.user_id = profile.user_id
-                    LEFT JOIN users_activity activity
-                    ON u.user_id = activity.user_id
-                    LEFT JOIN users_friends friends
-                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE u.username = :profile');
-            $st->execute(array(':profile' => $username, ':user' => $user->uid));
-            $result = $st->fetch();
-
-            $st = $db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
-                    FROM users_medals
-                    INNER JOIN medals
-                    ON users_medals.medal_id = medals.medal_id
-                    INNER JOIN medals_colours
-                    ON medals.colour_id = medals_colours.colour_id
-                    WHERE users_medals.user_id = :uid');
-            $st->execute(array(':uid' => $result->uid));
-            $result->medals = $st->fetchAll();
-
-            $result->feed = $app->feed->get(0, $result->user_id);
-
-            return $result;
         }
     }
 ?>

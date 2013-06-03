@@ -1,4 +1,9 @@
 .profile {
+
+    h1 {
+        margin-bottom: 2px;
+    }
+
     .progress-container {
         width: 100%;
         background: $bg;
@@ -26,22 +31,47 @@
             }
         }
 
-        &.social {
-            margin-top: 8px;
-            li {
+        &.profile-details {
+            margin-bottom: 8px;
+            > li {
                 float: left;
-                margin-right: 2px;
-                font-size: 1.1em;
-                
-                a {
-                    padding: 0 2px;
-                    color: $text_dark;
 
-                    &:hover {
-                        text-decoration: none;
-                        color: $white;
+                &:not(:last-child):after {
+                    margin: 0 6px;
+                    content: '·';
+                }
+            }
+
+            &.social {
+                margin-top: 8px;
+                li {
+                    float: left;
+                    margin-right: 2px;
+                    font-size: 1.1em;
+                    
+                    a {
+                        padding: 0 2px;
+                        color: $text_dark;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: $white;
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    .profile-feed {
+        height: 218px;
+        overflow: hidden;
+
+        li {
+            padding: 2px;
+
+            i {
+                margin-right: 3px;
             }
         }
     }
