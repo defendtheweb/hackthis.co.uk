@@ -173,7 +173,10 @@
                          <a href='/medals.php'><div class='medal medal-{$event->colour}'>{$event->label}</div></a>";
             } else if ($event->type === 'friend') {
                 $icon = 'user';
-                $text = $app->utils->username_link($event->username) . ' sent you a friend request';
+                if ($event->status == 0)
+                    $text = $app->utils->username_link($event->username) . ' sent you a friend request';
+                else
+                    $text = 'You accepted a friend request from ' . $app->utils->username_link($event->username);
             } else if ($event->type === 'friend_accepted') {
                 $icon = 'addfriend';
                 $text = $app->utils->username_link($event->username) . ' accepted your friend request';
