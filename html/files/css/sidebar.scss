@@ -1,52 +1,58 @@
-.widget.feed {
-    .feed_loading {
-        height: 110px;
-        margin-top: 70px;
+.widget {
+    h1 a:hover {
+        text-decoration: underline !important;
     }
 
-    ul {
-        height: 170px;
-        overflow-y: hidden;
+    &.feed {
+        .feed_loading {
+            height: 110px;
+            margin-top: 70px;
+        }
 
-        li {
-            list-style: none;
-            overflow: hidden;
-            margin: 2px 0;
-            font-size: 0.9em;
+        ul {
+            height: 170px;
+            overflow-y: hidden;
 
-            time {
-                float: right;
-                color: darken($text, 20%);
-            }
-
-            div {
+            li {
+                list-style: none;
                 overflow: hidden;
-                o-text-overflow: ellipsis;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                height: 15px;
-            }
+                margin: 2px 0;
+                font-size: 0.9em;
 
-            i {
-                color: $white;
-                margin-right: 6px;
-                display: inline-block;
-                width: 12px;
-                text-align: center;
-            }
+                time {
+                    float: right;
+                    color: darken($text, 20%);
+                }
 
-            a {
-                color: darken($text, 5%);
-            }
+                div {
+                    overflow: hidden;
+                    o-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    height: 15px;
+                }
 
-            a.user {
-                display: inline-block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                width: 85px;
-                height: 16px;
-                margin-right: 12px;
-                float: left;
+                i {
+                    color: $white;
+                    margin-right: 6px;
+                    display: inline-block;
+                    width: 12px;
+                    text-align: center;
+                }
+
+                a {
+                    color: darken($text, 5%);
+                }
+
+                a.user {
+                    display: inline-block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 85px;
+                    height: 16px;
+                    margin-right: 12px;
+                    float: left;
+                }
             }
         }
     }

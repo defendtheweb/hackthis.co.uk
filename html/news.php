@@ -1,6 +1,6 @@
 <?php
     if(!defined('PAGE_PUBLIC'))
-        define('PAGE_PUBLIC', true);
+        define('PAGE_PUBLIC', false);
 
     require_once('header.php');
 
