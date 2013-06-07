@@ -111,9 +111,8 @@
             if ($provider === 'facebook') {
                 $redirect = urlencode('http://dev.hackthis/?facebook');
 
-                $fb_pub = $app->config('facebook')['public'];
-                $fb_sec = $app->config('facebook')['secret'];
-                $uri = "https://graph.facebook.com/oauth/access_token?client_id={$fb_pub}&redirect_uri={$redirect}&client_secret={$fb_sec}&code={$id}";
+                $fb = $app->config('facebook');
+                $uri = "https://graph.facebook.com/oauth/access_token?client_id={$fb['public']}&redirect_uri={$redirect}&client_secret={$fb['secret']}&code={$id}";
 
                 $content = @file_get_contents($uri);
                 if (!$content) {
