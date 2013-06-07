@@ -1,14 +1,26 @@
 <?php
     $custom_css = array('profile.scss');
+    $custom_js = array('profile.js');
     require_once('header.php');
     $profile = new profile($_GET['user']);
-    //print_r($profile);
+
+    if (!isset($profile->uid)):
+?>
+    User not found
+<?php
+        require_once('footer.php');
+        die();
+    endif;
 ?>
     <article class='profile'>
 <?php if ($profile->friends):?>
-        <a href='#' class='button right'><i class='icon-user'></i> Friends</a>
+        <a href='#' class='button button-blank right removefriend' data-uid='<?=$profile->uid;?>'><i class='icon-user'></i> Friends</a>
+<?php elseif ($profile->friends !== NULL && $profile->friend != $profile->uid): ?>
+        <a href='#' class='button right button-disabled'>Pending</a>
+<?php elseif ($profile->friends !== NULL && $profile->friend == $profile->uid): ?>
+        <a href='#' class='button right acceptfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Accept</a>
 <?php else: ?>
-        <a href='#' class='button right'><i class='icon-addfriend'></i> Add friend</a>
+        <a href='#' class='button right addfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Add friend</a>
 <?php endif; ?>
 
         <a href='#' class='button right'><i class='icon-envelope-alt'></i> PM user</a>
@@ -55,7 +67,7 @@
 ?>
                 </ul>
             </div>
-            <div class='col span_17 clr profile-feed nano'>
+            <div class='col span_17 clr profile-feed scroll'>
                 <ul class='content'>
 <?php
     foreach($profile->feed as $item):

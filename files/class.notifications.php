@@ -38,29 +38,29 @@
             global $app, $db, $user;
 
             // Get items
-            $st = $db->prepare("SELECT notification_id AS id, users.user_id, item_id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username
+            $st = $db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username
                 FROM users_notifications
                 LEFT JOIN users
                 ON (users_notifications.from_id = users.user_id)
-                WHERE users_notifications.user_id = :user_id
+                WHERE users_notifications.user_id = :uid
                 ORDER BY users_notifications.time DESC
                 LIMIT :offset, :limit");
 
-            $st->bindParam(":user_id", $user->uid);
+            $st->bindParam(":uid", $user->uid);
             $st->bindParam(":offset", $offset, PDO::PARAM_INT);
             $st->bindParam(":limit", $limit, PDO::PARAM_INT);
             $st->execute();
             $result = $st->fetchAll();
 
             // Loop items, get details and create images
-            foreach ($result as $res) {
+            foreach ($result as &$res) {
                 if ($res->type == 'friend') {
                     // status
                     $st = $db->prepare("SELECT status
                         FROM users_friends
-                        WHERE user_id = :friend_id AND friend_id = :user_id
+                        WHERE user_id = :friend_id AND friend_id = :uid
                         LIMIT 1");
-                    $st->execute(array(':user_id' => $user->uid, ':friend_id' => $res->user_id));
+                    $st->execute(array(':uid' => $user->uid, ':friend_id' => $res->uid));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
                 } else if ($res->type == 'medal') {
@@ -111,7 +111,9 @@
 
                 unset($res->id);
                 unset($res->item_id);
-                unset($res->user_id);
+
+                if ($res->type != 'friend')
+                    unset($res->uid);
 
                 if (isset($res->username))
                     $res->img = md5($res->username);
@@ -120,8 +122,8 @@
             // Mark items as seen
             $st = $db->prepare("UPDATE users_notifications
                 SET seen = '1'
-                WHERE user_id = :user_id");
-            $st->execute(array(':user_id' => $user->uid));
+                WHERE user_id = :uid");
+            $st->execute(array(':uid' => $user->uid));
 
             return $result;
         }

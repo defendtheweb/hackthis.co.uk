@@ -1,8 +1,14 @@
 <?php
     class profile {
-        public function __construct($username) {
+        public function __construct($username, $uid=false) {
             global $db, $user, $app;
-            $st = $db->prepare('SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined, activity.last_active, friends.status AS friends
+
+            if ($uid) {
+                $where = 'u.user_id';
+            } else
+                $where = 'u.username';
+
+            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined, activity.last_active, friends.status AS friends, friends.user_id AS friend
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -10,10 +16,16 @@
                     ON u.user_id = activity.user_id
                     LEFT JOIN users_friends friends
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE u.username = :profile');
+                    WHERE {$where} = :profile");
             $st->execute(array(':profile' => $username, ':user' => $user->uid));
             $st->setFetchMode(PDO::FETCH_INTO, $this);
-            $st->fetch();
+            $res = $st->fetch();
+
+            if (!$res)
+                return false;
+
+            if ($uid)
+                return true;
 
             $st = $db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
                     FROM users_medals
@@ -115,6 +127,35 @@
                 return date('jS M', $dob);
 
             return date('jS M, Y', $dob);
+        }
+
+        public function addFriend() {
+            global $db, $user;
+            $status = ($user->uid === $this->uid);
+
+            $st = $db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
+                    VALUES (:uid, :uid2, :status)');
+            $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid, ':status' => $status));
+
+            // check if row created, else it already exists
+            if (!$st->rowCount()) {
+                $st = $db->prepare('UPDATE users_friends SET `status` = 1
+                                    WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
+                $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
+            }
+
+            return $st->rowCount();
+        }
+
+        public function removeFriend() {
+            global $db, $user;
+
+            $st = $db->prepare('DELETE FROM users_friends
+                                WHERE (user_id = :uid AND friend_id = :uid2) OR
+                                (user_id = :uid2 AND friend_id = :uid)');
+            $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
+
+            return $st->rowCount();
         }
     }
 ?>
