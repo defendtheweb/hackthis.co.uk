@@ -1,4 +1,17 @@
 .profile {
+
+    h1 {
+        margin-bottom: 2px;
+    }
+
+    .button:first-child {
+        width: 100px;
+        text-align: center;
+        &.removefriend:hover {
+            background: $msg_error;
+        }
+    }
+
     .progress-container {
         width: 100%;
         background: $bg;
@@ -26,23 +39,118 @@
             }
         }
 
-        &.social {
-            margin-top: 8px;
-            li {
+        &.profile-details {
+            margin-bottom: 8px;
+            > li {
                 float: left;
-                margin-right: 2px;
-                font-size: 1.1em;
-                
-                a {
-                    padding: 0 2px;
-                    color: $text_dark;
 
-                    &:hover {
-                        text-decoration: none;
-                        color: $white;
+                &:not(:last-child):after {
+                    margin: 0 6px;
+                    content: '·';
+                }
+            }
+
+            &.social {
+                margin-top: 8px;
+                li {
+                    float: left;
+                    margin-right: 2px;
+                    font-size: 1.1em;
+                    
+                    a {
+                        padding: 0 2px;
+                        color: $text_dark;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: $white;
+                        }
                     }
                 }
             }
         }
     }
+
+    .profile-feed {
+        height: 218px;
+        overflow: hidden;
+
+        li {
+            padding: 2px;
+
+            i {
+                margin-right: 3px;
+            }
+        }
+    }
+}
+
+/* basic scrollbar styling */
+/* vertical scrollbar */
+.mCSB_container{
+    width:auto;
+    margin-right:30px;
+    overflow:hidden;
+}
+.mCSB_container.mCS_no_scrollbar{
+    margin-right:0;
+}
+.mCS_disabled>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar,
+.mCS_destroyed>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar{
+    margin-right:30px;
+}
+.mCustomScrollBox>.mCSB_scrollTools{
+    width:10px;
+    height:100%;
+    top:0;
+    right:0;
+}
+.mCSB_scrollTools .mCSB_draggerContainer{
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0; 
+    height:auto;
+}
+.mCSB_scrollTools a+.mCSB_draggerContainer{
+    margin:20px 0;
+}
+.mCSB_scrollTools .mCSB_draggerRail{
+    width:2px;
+    height:100%;
+    margin:0 auto;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+}
+.mCSB_scrollTools .mCSB_dragger{
+    cursor:pointer;
+    width:100%;
+    height:30px;
+}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    width:4px;
+    height:100%;
+    margin:0 auto;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+    text-align:center;
+}
+.mCSB_scrollTools .mCSB_buttonUp,
+.mCSB_scrollTools .mCSB_buttonDown{
+    display:block;
+    position:relative;
+    height:20px;
+    overflow:hidden;
+    margin:0 auto;
+    cursor:pointer;
+}
+.mCSB_scrollTools .mCSB_buttonDown{
+    top:100%;
+    margin-top:-40px;
+}
+.mCustomScrollBox{
+    -ms-touch-action:none; /*MSPointer events - direct all pointer events to js*/
 }

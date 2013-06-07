@@ -80,6 +80,7 @@ select {
     &:focus { 
         @include box-shadow($bright_green);
         border-color: $lighter_bg;
+        outline: none;
     }
 
     &:-webkit-autofill {
@@ -162,12 +163,26 @@ form input.button:visited {
 /* BUTTONS */
 a.button { 
     background: $light_bg;
-    padding: 2px 8px;
+    padding: 4px 8px;
     margin-left: 8px;
+    margin-top: -4px;
 
     &:hover {
         text-decoration: none;
         background: $lighter_bg;
+    }
+
+    &.button-blank {
+        background: none;
+    }
+
+    &.button-disabled {
+        background: $bg !important;
+        cursor: default;
+    }
+
+    i {
+        padding-right: 4px;
     }
 }
 
@@ -344,4 +359,58 @@ div.pagination {
     &.lite-pagination {
         text-align: right;
     }
+}
+
+
+
+
+/*scrollbar themes*/
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_draggerRail{
+    width:4px;
+    background: darken($bg, 2%);
+    -webkit-border-radius:1px;
+    -moz-border-radius:1px;
+    border-radius:1px;
+}
+.mCustomScrollBox:hover>.mCSB_scrollTools .mCSB_draggerRail {
+    background: $bg;
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    width:4px;
+    background: darken($white, 35%);
+    -webkit-border-radius:1px;
+    -moz-border-radius:1px;
+    border-radius:1px;
+}
+.mCustomScrollBox:hover>.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    background: $white;
+}
+.mCustomScrollBox.mCSB_horizontal>.mCSB_scrollTools .mCSB_draggerRail{
+    width:100%;
+    height:4px;
+    margin:6px 0;
+}
+.mCustomScrollBox.mCSB_horizontal>.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    width:100%;
+    height:4px;
+    margin:6px auto;
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
+    background:rgba(255,255,255,0.85);
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
+    background:rgba(255,255,255,0.9);
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_buttonUp{
+    background-position:-32px 0;
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_buttonDown{
+    background-position:-32px -20px;
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_buttonLeft{
+    background-position:-40px -40px;
+}
+.mCustomScrollBox>.mCSB_scrollTools .mCSB_buttonRight{
+    background-position:-40px -56px;
 }

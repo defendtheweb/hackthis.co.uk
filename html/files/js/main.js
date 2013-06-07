@@ -2,6 +2,7 @@ var loggedIn = true; // overwritten in guest.js
 
 $(function() {
     $('textarea').autosize();
+    $('.scroll').mCustomScrollbar();
 
     // Open external links in new tab
     $('body').on('click', 'a[href^="http://"]:not(.stop-external), a[href^="https://"]:not(.stop-external)', function(e) {

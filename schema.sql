@@ -320,6 +320,16 @@ CREATE PROCEDURE user_notify(user_id INT, type TEXT, from_id INT, item_id INT)
   	INSERT INTO users_notifications (`user_id`, `type`, `from_id`, `item_id`) VALUES (user_id, type, from_id, item_id);
   END;
 
+DROP PROCEDURE IF EXISTS user_notify_remove;
+CREATE PROCEDURE user_notify_remove(_user_id INT, _type TEXT, _from_id INT, _item_id INT)
+  BEGIN
+  	IF _item_id IS NULL THEN
+  		DELETE FROM users_notifications WHERE `user_id` = _user_id AND `type` = _type AND `from_id` = _from_id LIMIT 1;
+  	ELSE
+  		DELETE FROM users_notifications WHERE `user_id` = _user_id AND `type` = _type AND `from_id` = _from_id AND `item_id` = _item_id LIMIT 1;
+  	END IF;
+  END;
+
 DROP PROCEDURE IF EXISTS user_feed;
 CREATE PROCEDURE user_feed(user_id INT, type TEXT, item_id INT)
   BEGIN
@@ -346,6 +356,18 @@ CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
 		CALL user_feed_remove(OLD.user_id, 'level', OLD.level_id);
 	END;
 
+DROP TRIGGER IF EXISTS insert_friend_before;
+CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
+    BEGIN
+        declare alreadyexists integer;
+        SELECT count(*) > 0 into alreadyexists FROM users_friends
+            WHERE user_id = NEW.friend_id AND friend_id = NEW.user_id;
+
+        IF alreadyexists = 1 THEN
+            SELECT `erroorororororor` INTO alreadyexists FROM users_friends;
+        END IF;
+    END;
+
 DROP TRIGGER IF EXISTS insert_friend;
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
 	BEGIN
@@ -363,6 +385,15 @@ CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
 			CALL user_feed(NEW.user_id, 'friend', NEW.friend_id);
 			CALL user_feed(NEW.friend_id, 'friend', NEW.user_id);
 		END IF;
+	END;
+
+DROP TRIGGER IF EXISTS delete_friend;
+CREATE TRIGGER delete_friend AFTER DELETE ON users_friends FOR EACH ROW
+	BEGIN
+		CALL user_notify_remove(OLD.friend_id, 'friend', OLD.user_id, null);
+		CALL user_notify_remove(OLD.user_id, 'friend_accepted', OLD.friend_id, null);
+		CALL user_feed_remove(OLD.user_id, 'friend', OLD.friend_id);
+		CALL user_feed_remove(OLD.friend_id, 'friend', OLD.user_id);
 	END;
 
 -- MEDALS

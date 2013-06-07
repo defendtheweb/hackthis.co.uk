@@ -15,6 +15,7 @@
                 $st->execute();
                 $result = $st->fetchAll();
             } else {
+
                 $st = $db->prepare('SELECT feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
                         FROM users_feed feed
                         WHERE user_id = :user_id AND feed.time > FROM_UNIXTIME(:last)
@@ -26,7 +27,7 @@
             }
 
             // Loop items, get details and create images
-            foreach ($result as $res) {
+            foreach ($result as &$res) {
                 if ($res->type == 'friend') {
                     // status
                     $st = $db->prepare("SELECT username as username_2

@@ -92,9 +92,11 @@ $(function() {
                            '            ${message}'+
                            '{{else}}'+
                            '    {{if type == "friend"}}'+
-                           '            <a href="/user/${username}">${username}<a/> sent you a friend request'+
-                           '            {{if status == 0}}'+
-                           '                <a href="#">Accept</a> | <a href="#">Decline</a>'+
+                           '            {{if status == 1}}'+
+                           '                You accepted a friend request from <a href="/user/${username}">${username}<a/>'+
+                           '            {{else}}'+
+                           '                <a href="/user/${username}">${username}<a/> sent you a friend request'+
+                           '                <a href="#" class="addfriend" data-uid="${uid}">Accept</a> | <a href="#" class="removefriend" data-uid="${uid}">Decline</a>'+
                            '            {{/if}}'+
                            '    {{else type == "friend_accepted"}}'+
                            '            <a href="/user/${username}">${username}<a/> accepted your friend request'+
@@ -181,6 +183,23 @@ $(function() {
            dropdown.slideUp(200);
            icons.removeClass('active');
            $(document).unbind('click.extra-hide');
+        });
+    });
+
+
+    $('#global-nav').on('click', '.addfriend, .removefriend', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+
+        if ($this.hasClass('addfriend'))
+            var uri = '/files/ajax/user.php?action=add&uid=';
+        else
+            var uri = '/files/ajax/user.php?action=remove&uid=';
+        uri += $(this).attr('data-uid');
+
+        $.getJSON(uri, function(data) {
+            if (data.status)
+                $this.closest('li').slideUp();
         });
     });
 });
