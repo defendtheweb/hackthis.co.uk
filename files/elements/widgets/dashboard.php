@@ -11,7 +11,7 @@
     endif;
     if (!$user->connected):
 ?>
-                        <a class='stop-external facebook-connect' href='https://www.facebook.com/dialog/oauth?client_id=<?=$app->config('facebook')['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
+                        <a class='stop-external facebook-connect' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
                             Connect to Facebook
                         </a>
 <?php
