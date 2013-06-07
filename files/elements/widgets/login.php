@@ -19,7 +19,7 @@
                             <input type="submit" value="Login" class="button">
                         </form>
 
-                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?=$app->config('facebook')['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
+                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
                             Login with Facebook
                         </a>
                         <a class='stop-external twitter-login' href='#'>
