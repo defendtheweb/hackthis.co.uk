@@ -3,7 +3,7 @@
 ?>
 
                 <section id="comments" data-id="<?=$comments["id"];?>">
-                    <h2>Comments</h2>
+                    <h2><?=$comments["count"];?> responses to "<?=$comments["title"];?>"</h2>
                     <form class='no-js-hide'>
 <?php
     if (!$user->loggedIn):

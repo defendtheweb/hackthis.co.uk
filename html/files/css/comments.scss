@@ -1,4 +1,12 @@
 #comments {
+    > h2 {
+        background: $light_bg;
+        padding: 8px;
+        padding-top: 12px;
+        margin-bottom: 16px;
+        text-transform: none;
+    }
+
     article {
         margin-bottom: 4px;
         border: 1px solid $bg;

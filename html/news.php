@@ -51,7 +51,7 @@
                         </article>
 <?php
         if ($single) {
-            $comments = array("id"=>$article->id);
+            $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
             include('elements/comments.php');
         }
 
