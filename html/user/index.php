@@ -54,7 +54,7 @@
 
         <section class='row fluid'>
             <div class='col span_7 clr'>
-                <img src='https://www.hackthis.co.uk/users/images/198/1:1/<?=md5($profile->username);?>.jpg' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
+                <img src='http://www.hackthis.co.uk/users/images/198/1:1/<?=md5($profile->username);?>.jpg' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
                 <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>
 
                 <ul class='medals'>
