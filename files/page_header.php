@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link href='//fonts.googleapis.com/css?family=Ubuntu|Orbitron' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 
         <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>

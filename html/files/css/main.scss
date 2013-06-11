@@ -2,35 +2,17 @@ html {
     background: {
         image: url("/files/images/bg.png");
         color: $black;
-        repeat: no-repeat;
+        repeat: no-repeat; 
         position: center -50px;
     }
-    font-size: 12px;
+    font-size: 12px; 
 }
 
 body {
     margin: 0px; padding: 0px; 
     @include default_font;
-    font-size: 1.1em;
-} 
-
-a {
-    text-decoration: none;
-    color: $link;
-    outline: 0;
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &:active {
-        outline: none;
-    }
-
-    &:focus {
-        outline: none;
-        -moz-outline-style: none;
-    }
+    font-size: 1.12em;
+    letter-spacing: 0.01em;
 }
 
 h1, h2 {
@@ -38,10 +20,6 @@ h1, h2 {
     @include title_font;
     text-transform: capitalize;
     font-size: 1.5em;
-
-    a:hover {
-        text-decoration: none;
-    }
 }
 
 h2 {

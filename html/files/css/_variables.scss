@@ -4,7 +4,7 @@ $link: #FFF;
 
 $bg: #141414;
 $light_bg: lighten($bg, 10%);
-$lighter_bg: lighten($light_bg, 10%);
+$lighter_bg: lighten($light_bg, 15%);
 
 $text: #AAA;
 $text_dark: #555;
@@ -23,7 +23,7 @@ $msg_warning: #C2C200;
 }
 
 @mixin default_font {
-    @include font('Ubuntu');
+    @include font('Lato');
     color: $text;
 }
 
