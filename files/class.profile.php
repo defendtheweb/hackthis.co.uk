@@ -53,6 +53,10 @@
                         $icon = 'comments';
                         $string = "Commented on <a href='{$item->slug}'>{$item->title}</a>";
                         break;
+                    case 'comment_mention':
+                        $icon = 'comments';
+                        $string = "Mentioned by <a href='/user/{$item->username}'>{$item->username}</a> on <a href='{$item->slug}'>{$item->title}</a>";
+                        break;
                     case 'favourite':
                         $icon = 'heart';
                         $string = "Favourited <a href='{$item->slug}'>{$item->title}</a>";
