@@ -22,15 +22,6 @@ $(function() {
                    '    </li>'+
                    '</tmpl>';
 
-    // Feed handlers
-    $('sidebar .feed').on('mouseenter', 'li', function(e) {
-        $(this).children('.span_18').removeClass('span_18').addClass('span_24');
-        $(this).children('.span_6').hide();
-    }).on('mouseleave', 'li', function(e) {
-        $(this).children('.span_24').addClass('span_18').removeClass('span_24');
-        $(this).children('.span_6').show();
-    });
-
     // Update notifications
     var lastUpdate = 0;
     (function updateTimes() {

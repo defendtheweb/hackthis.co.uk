@@ -1,8 +1,4 @@
 .widget {
-    h1 a:hover {
-        text-decoration: underline !important;
-    }
-
     &.feed {
         .feed_loading {
             height: 110px;
@@ -46,12 +42,25 @@
 
                 a.user {
                     display: inline-block;
+
                     overflow: hidden;
                     text-overflow: ellipsis;
                     width: 85px;
                     height: 16px;
                     margin-right: 12px;
                     float: left;
+                }
+
+                &:hover {
+                    div.span_18 {
+                        width: auto;
+                        position: absolute;
+                        background: $black;
+
+                        -moz-box-shadow: 12px 0 6px 1px $black;
+                        -webkit-box-shadow: 12px 0 6px 1px $black;
+                        box-shadow: 12px 0 6px 1px $black;
+                    }
                 }
             }
         }
