@@ -130,7 +130,7 @@ CREATE TABLE users_notifications (
 CREATE TABLE users_feed (
 	`feed_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7) NOT NULL,
-	`type` enum('join','level','friend','medal','thread','post','karma','comment','favourite','article','image') NOT NULL,
+	`type` enum('join','level','friend','medal','thread','post','post_mention','karma','comment','comment_mention','favourite','article','image') NOT NULL,
 	`item_id` int(7),
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`feed_id`),
