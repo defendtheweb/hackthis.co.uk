@@ -22,8 +22,8 @@
 <?php
     else:
 ?>
-                        <?php include('elements/wysiwyg.php'); ?>
-                        <input id="comment_submit" type="submit" value="Submit" class="submit button right"/>
+                        <?php $wysiwyg_placeholder = 'Add your comment here...'; include('elements/wysiwyg.php'); ?>
+                        <input id="comment_submit" type="submit" value="Post Comment" class="submit button right"/>
 <?php
     endif;
 ?>

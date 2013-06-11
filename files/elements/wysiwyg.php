@@ -42,6 +42,6 @@
         <li><a href='#' class='icon-wondering' data-value=':/'></a></li>
     </ul>
 
-    <textarea name='body' class='editor suggest'><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
+    <textarea name='body' class='editor suggest' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
     <div class='preview'>&nbsp;</div>
 </div>
