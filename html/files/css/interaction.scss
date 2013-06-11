@@ -1,3 +1,22 @@
+a {
+    text-decoration: none;
+    color: $link;
+    outline: 0;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:active {
+        outline: none;
+    }
+
+    &:focus {
+        outline: none;
+        -moz-outline-style: none;
+    }
+}
+
 a[href^="http://"]:not(.hide-external):not(.stop-external):after,
 a[href^="https://"]:not(.hide-external):not(.stop-external):after {
     @include icon("\e072");
