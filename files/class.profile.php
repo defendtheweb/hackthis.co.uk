@@ -8,15 +8,19 @@
             } else
                 $where = 'u.username';
 
-            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined, activity.last_active, friends.status AS friends, friends.user_id AS friend
-                    FROM users u
-                    LEFT JOIN users_profile profile
-                    ON u.user_id = profile.user_id
-                    LEFT JOIN users_activity activity
-                    ON u.user_id = activity.user_id
-                    LEFT JOIN users_friends friends
-                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE {$where} = :profile");
+            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
+                                activity.last_active, friends.status AS friends, friends.user_id AS friend,
+                                IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                                FROM users u
+                                LEFT JOIN users_profile profile
+                                ON u.user_id = profile.user_id
+                                LEFT JOIN users_activity activity
+                                ON u.user_id = activity.user_id
+                                LEFT JOIN users_friends friends
+                                ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                                LEFT JOIN users_priv priv
+                                ON u.user_id = priv.user_id
+                                WHERE {$where} = :profile");
             $st->execute(array(':profile' => $username, ':user' => $user->uid));
             $st->setFetchMode(PDO::FETCH_INTO, $this);
             $res = $st->fetch();

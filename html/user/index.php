@@ -26,6 +26,13 @@
         <a href='#' class='button right'><i class='icon-envelope-alt'></i> PM user</a>
 
         <h1><?=$profile->username;?></h1>
+<?php if ($profile->admin): ?>
+        <strong>Administrator</strong>
+<?php elseif ($profile->moderator): ?>
+        <strong>Moderator</strong>
+<?php endif; ?>
+
+        <br/>
         <ul class='profile-details clr'>
 <?php
     echo $profile->printItem("Name", $profile->name);
