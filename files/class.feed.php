@@ -8,7 +8,7 @@
                         FROM users_feed feed
                         LEFT JOIN users
                         ON feed.user_id = users.user_id
-                        WHERE feed.type != "friend" AND feed.time > FROM_UNIXTIME(:last)
+                        WHERE feed.type != "friend" AND feed.type != "comment_mention" AND feed.time > FROM_UNIXTIME(:last)
                         ORDER BY time DESC
                         LIMIT 10');
                 $st->bindValue(':last', $last);
@@ -48,14 +48,16 @@
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
-                } else if ($res->type == 'comment') {
+                } else if ($res->type == 'comment' || $res->type == 'comment_mention') {
                     // uri, title
-                    $st = $db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    $st = $db->prepare("SELECT users.username, articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
                         FROM articles_comments
                         LEFT JOIN articles
                         ON articles_comments.article_id = articles.article_id
                         LEFT JOIN articles_categories
                         ON articles_categories.category_id = articles.category_id
+                        LEFT JOIN users
+                        ON articles_comments.user_id = users.user_id
                         WHERE comment_id = :item_id
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
@@ -88,6 +90,15 @@
                 unset($res->user_id);
             }
 
+            return $result;
+        }
+
+        public function add($to, $type, $item) {
+            global $db;
+
+            $st = $db->prepare('INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (:to, :type, :item)');
+            $result = $st->execute(array(':to' => $to, ':type' => $type, ':item' => $item));
+           
             return $result;
         }
     }
