@@ -156,6 +156,39 @@
                     ul {
                         right: 0px;
                     }
+
+
+                    &.nav-search {
+                        border: 1px solid $dark;
+                        border-width: 0 1px;
+                        margin: 4px;
+                        height: 15px;
+                        padding: 0 4px;
+
+                        &:hover {
+                            background: none;
+                        }
+
+                        i {
+                            color: $dark;
+                            font-size: 15px;
+                            margin-top: -2px;
+                            display: inline-block;
+                        }
+
+                        input {
+                            width: 165px;
+                            border: 0px;
+                            height: 100%;
+                            padding: 0px;
+                            padding-right: 6px;
+                            float: left;
+
+                            &:focus {
+                                @include box-shadow($black, 0);
+                            }
+                        }
+                    }
                 }
 
                 &.right.active {

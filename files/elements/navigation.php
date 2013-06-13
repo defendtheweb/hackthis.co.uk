@@ -83,7 +83,10 @@
 ?>
                     <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
                     <li class='right nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
-                    <li class='right mobile-hide'><a href='/'><i class="icon-search"></i></a></li>
+                    <li class='right mobile-hide nav-search'>
+                        <input placeholder='Search: topic, user, level..'/>
+                        <i class='icon-search'></i>
+                    </li>
 <?php
     endif;
 ?>

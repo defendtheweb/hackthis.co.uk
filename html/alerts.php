@@ -23,7 +23,7 @@
                 else if (date('Ymd') == date('Ymd', strtotime('-1 day', $event->timestamp)))
                     $day = "Yesterday";
                 else
-                    $day = date('jS M', $event->timestamp);
+                    $day = date('jS F', $event->timestamp);
 
                 if (isset($prev_day)):
 ?>
