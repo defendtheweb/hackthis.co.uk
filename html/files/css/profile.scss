@@ -83,8 +83,23 @@
         li {
             padding: 2px;
 
+            &:hover {
+                .remove {
+                    display: block;
+                }
+            }
+
             i {
                 margin-right: 3px;
+            }
+
+            .remove {
+                color: $text_dark;
+
+                &:hover {
+                    text-decoration: none;
+                    color: $red;
+                }
             }
         }
     }
@@ -94,7 +109,7 @@
 /* vertical scrollbar */
 .mCSB_container{
     width:auto;
-    margin-right:30px;
+    margin-right:12px;
     overflow:hidden;
 }
 .mCSB_container.mCS_no_scrollbar{
@@ -102,7 +117,7 @@
 }
 .mCS_disabled>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar,
 .mCS_destroyed>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar{
-    margin-right:30px;
+    margin-right:12px;
 }
 .mCustomScrollBox>.mCSB_scrollTools{
     width:10px;

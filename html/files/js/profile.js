@@ -6,14 +6,39 @@ $(function() {
     });
 
 
+ $('.remove').click(function(){
+        var fid = $(this).attr('data-fid');
+        var $elem = $(this).closest('li');
+
+        $.confirm({
+            title   : 'Delete Confirmation',
+            message : 'Are you sure you want to remove this activity from your feed? <br />It cannot be restored at a later time! Continue?',
+            buttons : {
+                No  : {},
+                Yes : {
+                    action: function(){
+                        // Remove item from feed
+                        var uri = '/files/ajax/user.php?action=feed.remove&id=' + fid;
+                        $.getJSON(uri, function(data) {
+                            if (data.status) {
+                                $elem.slideUp();
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+    });
+
     $('.profile').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
         e.preventDefault();
         var $this = $(this);
 
         if ($this.hasClass('addfriend') || $this.hasClass('acceptfriend'))
-            var uri = '/files/ajax/user.php?action=add&uid=';
+            var uri = '/files/ajax/user.php?action=friend.add&uid=';
         else
-            var uri = '/files/ajax/user.php?action=remove&uid=';
+            var uri = '/files/ajax/user.php?action=friend.remove&uid=';
         uri += $(this).attr('data-uid');
 
         $.getJSON(uri, function(data) {

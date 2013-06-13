@@ -4,17 +4,25 @@
 
     $result = array("status"=>false);
 
-    if (isset($_GET['action']) && isset($_GET['uid'])) {
-        $profile = new profile($_GET['uid'], true);
-        if (isset($profile->uid)) {
-            if ($_GET['action'] == 'add')
-                $res = $profile->addFriend();
-            else if ($_GET['action'] == 'remove')
-                $res = $profile->removeFriend();
-            else
-                $res = false;
+    if (isset($_GET['action'])) {
+        $action = $_GET['action'];
+        $subject = substr($action, 0, strrpos($action,"."));
 
-            $result['status'] = (bool) $res;
+        if ($action == 'feed.remove' && isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $result['status'] = (bool) $app->feed->remove($id);
+        } else if ($subject == 'friend' && isset($_GET['uid'])) {
+            $profile = new profile($_GET['uid'], true);
+            if (isset($profile->uid)) {
+                if ($action == 'friend.add')
+                    $res = $profile->addFriend();
+                else if ($action == 'friend.remove')
+                    $res = $profile->removeFriend();
+                else
+                    $res = false;
+
+                $result['status'] = (bool) $res;
+            }
         }
     }
 

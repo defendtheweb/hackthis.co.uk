@@ -43,6 +43,8 @@
 
             $this->feed = $this->getFeed();
             $this->social = $this->getSocial();
+
+            $this->owner = ($user->uid === $this->uid);
         }
 
         public function getFeed() {
@@ -90,7 +92,7 @@
                         $string = 'N/A';
                 }
 
-                array_push($return, array('icon'=>$icon, 'string'=>$string, 'time'=>$item->timestamp));
+                array_push($return, array('id'=>$item->feed_id, 'icon'=>$icon, 'string'=>$string, 'time'=>$item->timestamp));
             }
             return $return;
         }

@@ -1,6 +1,6 @@
 <?php
-    $custom_css = array('profile.scss');
-    $custom_js = array('profile.js');
+    $custom_css = array('profile.scss', 'confirm.css');
+    $custom_js = array('jquery.confirm.js', 'profile.js');
     require_once('header.php');
     $profile = new profile($_GET['user']);
 
@@ -82,6 +82,13 @@
                     <li>
                         <i class='icon-<?=$item['icon'];?>'></i> <?=$item['string'];?>
                         <span class='dark'>· <time datetime="<?=date('c', $item['time']);?>"><?=date('d/m/Y', $item['time']);?></time></span>
+<?php
+        if ($profile->owner):
+?>
+                        <a class='right hide remove' data-fid='<?=$item['id'];?>' href='#'><i class='icon-remove'></i></a>
+<?php
+        endif;
+?>
                     </li>
 <?php
     endforeach;

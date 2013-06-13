@@ -14,7 +14,9 @@ $green: green;
 $green_hover: lighten($green, 5%);
 $bright_green: #0F0;
 
-$msg_error: #800000;
+$red: #800000;
+
+$msg_error: $red;
 $msg_info: #3DBDD7;
 $msg_warning: #C2C200;
 
