@@ -155,6 +155,13 @@ $(function() {
                         $parent.after(newComment);
                         $parent.remove();
                     }
+
+                    //update counter
+                    var $responses = $('#comments > h2');
+                    var tmp = $responses.text().replace(/(\d+)+/g, function(match, number) {
+                        return parseInt(number)+1;
+                    });
+                    $responses.text(tmp);
                 } else {
                     alert("An error!");
                 }
