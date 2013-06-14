@@ -28,7 +28,6 @@
         <li class='right seperator active'><a href='#' class='edit-button hint--top' data-hint='Edit post'><i class='icon-code'></i></a></li>
     </ul>
     <ul class='controls smilies'>
-        <li><a href='#' class='icon-grin' data-value=':))'></a></li>
         <li><a href='#' class='icon-happy' data-value=':D'></a></li>
         <li><a href='#' class='icon-smiley' data-value=':)'></a></li>
         <li><a href='#' class='icon-tongue' data-value=':p'></a></li>

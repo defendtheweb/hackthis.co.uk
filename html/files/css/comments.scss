@@ -100,6 +100,12 @@
         .body {
             padding: 6px;
 
+            > i {
+                font-size: 1.2em;
+                color: $text_dark;
+                vertical-align: top;
+            }
+
             form {
                 margin-left: 30px;
                 margin-top: 16px;
