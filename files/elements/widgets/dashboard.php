@@ -22,11 +22,13 @@
                                 <img class='profile-pic' src='https://www.hackthis.co.uk/users/images/60/1:1/<?=md5($user->username);?>.jpg' width='100%'/>
                             </div>
                             <div class='col span_17 user-profile'>
-                                Score: <?=$user->score;?>
+                                Score: <?=$user->score;?><br/>
+                                Posts: 419<br/>
+                                9 consecutive, best 163
                             </div>
                         </section>
                         <div class='progress-group-container'>
-                            <div class='progress-container'><div class='progress' style='width: 90%'></div></div>
-                            <div class='progress-container'><div class='progress progress-blue' style='width: 65%'></div></div>
+                            <div class='progress-container hint--left' data-hint='90% level progress'><div class='progress' style='width: 90%'></div></div>
+                            <div class='progress-container hint--left' data-hint='65% of next medal'><div class='progress progress-blue' style='width: 65%'></div></div>
                         </div>
                     </article>
