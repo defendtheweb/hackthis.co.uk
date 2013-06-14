@@ -24,7 +24,7 @@ function timeSince(oldD, short) {
     diff = Math.round((newD.getTime() - oldD.getTime()) / 1000);
     
     if (!diff)
-        return 'N/A';
+        return 'secs ago';
 
     isSameDay = (oldD.getDate() == newD.getDate() 
                  && oldD.getMonth() == newD.getMonth()
