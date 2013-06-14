@@ -46,7 +46,7 @@
 
         private function get_details() {
             global $db, $app;
-            $st = $db->prepare('SELECT username, score, status, oauth_id as connected,
+            $st = $db->prepare('SELECT username, score, status, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv
                     FROM users u
                     LEFT JOIN users_priv priv
