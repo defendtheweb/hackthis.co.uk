@@ -99,7 +99,7 @@
 
                     $this->loggedIn = true;
                     $this->uid = $row->user_id;
-                    $this->create_session();
+                    $this->createSession();
                 }
             }
 
@@ -175,7 +175,7 @@
 
                         $this->loggedIn = true;
                         $this->uid = $row->user_id;
-                        $this->create_session();
+                        $this->createSession();
                     } else {
                         //Assume this is a registration
                         $this->login_error = 'Registration needed - ' . $fid;                 
@@ -229,7 +229,7 @@
                         $this->loggedIn = true;
                         $this->uid = $uid;
 
-                        $this->create_session();
+                        $this->createSession();
 
                         return false;
                     }
@@ -237,7 +237,7 @@
             }
         }
 
-        private function create_session() {
+        private function createSession() {
             global $app;
             if ($this->loggedIn && isset($this->uid)) {
                 //session_regenerate_id();
@@ -288,7 +288,7 @@
             $this->loggedIn = true;
             $this->uid = $uid;
 
-            $this->create_session();
+            $this->createSession();
         }
 
         public function logout() {
@@ -297,6 +297,16 @@
             
             // Redirect user back to index page
             header("Location: /");
+        }
+
+        /* MISC */
+        public function hideConnect() {
+            global $db;
+
+            $st = $db->prepare('UPDATE users SET `oauth_id` = 0 WHERE `user_id` = :uid');
+            $result = $st->execute(array(':uid' => $this->uid));
+           
+            return $result;
         }
 
         public function __get($property) {

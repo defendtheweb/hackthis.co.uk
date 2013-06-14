@@ -11,6 +11,8 @@
         if ($action == 'feed.remove' && isset($_GET['id'])) {
             $id = $_GET['id'];
             $result['status'] = (bool) $app->feed->remove($id);
+        } else if ($action == 'connect.hide') {
+            $result['status'] = (bool) $user->hideConnect();
         } else if ($subject == 'friend' && isset($_GET['uid'])) {
             $profile = new profile($_GET['uid'], true);
             if (isset($profile->uid)) {

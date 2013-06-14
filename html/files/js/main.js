@@ -28,4 +28,17 @@ $(function() {
 
         setTimeout(updateTimes, 10000);
     })();
+
+
+    // Hide facebook connect link
+    $('.dashboard .facebook-connect .remove').on('click', function(e) {
+        var uri = '/files/ajax/user.php?action=connect.hide';
+        var $elem = $(this).parent();
+        $.getJSON(uri, function(data) {
+            if (data.status) {
+                $elem.slideUp();
+            }
+        });
+        e.preventDefault();
+    });
 });

@@ -6,7 +6,7 @@ $(function() {
     });
 
 
- $('.remove').click(function(){
+    $('.profile-feed .remove').click(function(){
         var fid = $(this).attr('data-fid');
         var $elem = $(this).closest('li');
 
