@@ -41,6 +41,18 @@
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
 
+            $st = $db->prepare('SELECT users.username
+                    FROM users_friends as friends
+                    INNER JOIN users
+                    ON users.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
+                    WHERE friends.status = 1 AND (friends.user_id = :uid OR friends.friend_id = :uid)
+                    ORDER BY users.username');
+            $st->execute(array(':uid' => $this->uid));
+            $this->friendsList = $st->fetchAll();
+
+            if (isset($this->about))
+                $this->about = $app->parse($this->about);
+
             $this->feed = $this->getFeed();
             $this->social = $this->getSocial();
 
