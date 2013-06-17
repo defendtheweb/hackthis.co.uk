@@ -1,6 +1,6 @@
 <?php
-    $custom_css = array('profile.scss');
-    $custom_js = array('profile.js');
+    $custom_css = array('profile.scss', 'confirm.css');
+    $custom_js = array('jquery.confirm.js', 'profile.js');
     require_once('header.php');
     $profile = new profile($_GET['user']);
 
@@ -26,6 +26,13 @@
         <a href='#' class='button right'><i class='icon-envelope-alt'></i> PM user</a>
 
         <h1><?=$profile->username;?></h1>
+<?php if ($profile->admin): ?>
+        <strong>Administrator</strong>
+<?php elseif ($profile->moderator): ?>
+        <strong>Moderator</strong>
+<?php endif; ?>
+
+        <br/>
         <ul class='profile-details clr'>
 <?php
     echo $profile->printItem("Name", $profile->name);
@@ -54,32 +61,76 @@
 
         <section class='row fluid'>
             <div class='col span_7 clr'>
-                <img src='http://www.hackthis.co.uk/users/images/198/1:1/<?=md5($profile->username);?>.jpg' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
-                <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>
+                <section class='row'>
+                    <img src='http://www.hackthis.co.uk/users/images/198/1:1/<?=md5($profile->username);?>.jpg' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
+                    <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>
 
-                <ul class='medals'>
+                    <ul class='medals clr'>
 <?php
     foreach ($profile->medals as $medal):
 ?>
-                <li class="medal medal-<?=$medal->colour;?>"><?=$medal->label;?></li>
+                        <li class="medal medal-<?=$medal->colour;?>"><?=$medal->label;?></li>
 <?php
     endforeach;
 ?>
-                </ul>
+                    </ul>
+                </section>
+<?php
+    $friendCount = count($profile->friendsList);
+    if ($friendCount):
+?>
+                <section>
+                    <h2><a href='?friends'><?=$friendCount;?> Friend<?=($friendCount==1?'':'s');?></a></h2>
+
+                    <ul class='friends-list'>
+<?php     
+        $i = 0;
+        foreach($profile->friendsList as $friend):
+            $i++;
+            if ($i > 8)
+                break;
+?>
+                        <li>
+                            <a href='/user/<?=$friend->username;?>'>
+                                <img src='http://www.hackthis.co.uk/users/images/48/1:1/<?=md5($friend->username);?>.jpg' width='100%' alt='<?=$friend->username;?> profile picture'/>
+                            </a>
+                        </li>
+<?php   endforeach; ?>
+                    </ul>
+                </section>
+<?php
+    endif;
+?>
             </div>
-            <div class='col span_17 clr profile-feed scroll'>
-                <ul class='content'>
+
+            <div class='col span_17 clr'>
+                <div class='profile-feed scroll row'>
+                    <ul class='content'>
 <?php
     foreach($profile->feed as $item):
 ?>
-                    <li>
-                        <i class='icon-<?=$item['icon'];?>'></i> <?=$item['string'];?>
-                        <span class='dark'>· <time datetime="<?=date('c', $item['time']);?>"><?=date('d/m/Y', $item['time']);?></time></span>
-                    </li>
+                        <li>
+                            <i class='icon-<?=$item['icon'];?>'></i> <?=$item['string'];?>
+                            <span class='dark'>· <time datetime="<?=date('c', $item['time']);?>"><?=date('d/m/Y', $item['time']);?></time></span>
+<?php
+        if ($profile->owner):
+?>
+                            <a class='right hide remove' data-fid='<?=$item['id'];?>' href='#'><i class='icon-remove'></i></a>
+<?php
+        endif;
+?>
+                        </li>
 <?php
     endforeach;
 ?>
-                </ul>
+                    </ul>
+                </div>
+<?php if (isset($profile->about)): ?>
+                <h2>About</h2>
+<?php
+        echo $profile->about;
+?>
+<?php endif; ?>
             </div>
         </section>
     </article>

@@ -183,9 +183,9 @@ $(function() {
         var $this = $(this);
 
         if ($this.hasClass('addfriend'))
-            var uri = '/files/ajax/user.php?action=add&uid=';
+            var uri = '/files/ajax/user.php?action=friend.add&uid=';
         else
-            var uri = '/files/ajax/user.php?action=remove&uid=';
+            var uri = '/files/ajax/user.php?action=friend.remove&uid=';
         uri += $(this).attr('data-uid');
 
         $.getJSON(uri, function(data) {

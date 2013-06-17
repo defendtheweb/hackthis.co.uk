@@ -1,0 +1,32 @@
+#confirmOverlay {
+    width:100%;
+    height:100%;
+    position:fixed;
+    top:0;
+    left:0;
+    background: rgba(0,0,0,0.6);
+    z-index:100000;
+}
+
+#confirmBox {
+    background: #FFFFFF;
+    width:440px;
+    position:fixed;
+    left:50%;
+    top:50%;
+    margin: -200px 0 0 -220px;
+    border: 2px solid #333;
+    padding: 20px;
+}
+
+#confirmBox h1 {
+    color: #000000;
+}
+
+#confirmBox p {
+    color: #555;
+}
+
+#confirmButtons {
+    float: right;
+}

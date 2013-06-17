@@ -10,6 +10,8 @@ $(function() {
         return false;
     });
 
+    $('a[href^="http://"]:has(img), a[href^="https://"]:has(img)').addClass('hide-external');
+
     // Confirmation box
     $('.confirmation').on('click', function(e) {
         if ($(this).attr('data-confirm'))
@@ -28,4 +30,17 @@ $(function() {
 
         setTimeout(updateTimes, 10000);
     })();
+
+
+    // Hide facebook connect link
+    $('.dashboard .facebook-connect .remove').on('click', function(e) {
+        var uri = '/files/ajax/user.php?action=connect.hide';
+        var $elem = $(this).parent();
+        $.getJSON(uri, function(data) {
+            if (data.status) {
+                $elem.slideUp();
+            }
+        });
+        e.preventDefault();
+    });
 });

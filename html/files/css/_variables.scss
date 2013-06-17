@@ -14,8 +14,11 @@ $green: green;
 $green_hover: lighten($green, 5%);
 $bright_green: #0F0;
 
-$msg_error: #800000;
-$msg_info: #3DBDD7;
+$red: #800000;
+$blue: #3DBDD7;
+
+$msg_error: $red;
+$msg_info: $blue;
 $msg_warning: #C2C200;
 
 @mixin font($font) {

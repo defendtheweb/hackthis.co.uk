@@ -2,6 +2,8 @@
 
     h1 {
         margin-bottom: 2px;
+        margin-right: 4px;
+        display: inline-block;
     }
 
     .button:first-child {
@@ -33,12 +35,21 @@
 
         &.medals {
             margin-top: 6px;
+            margin-bottom: 10px;
 
             li {
                 display: block;
                 padding: 2px 5px;
                 float: left;
                 margin: 0 4px 3px 0;
+            }
+        }
+
+        &.friends-list {
+            li {
+                width: 24%;
+                margin-right: 1%;
+                float: left;
             }
         }
 
@@ -75,14 +86,29 @@
     }
 
     .profile-feed {
-        height: 218px;
+        height: 220px;
         overflow: hidden;
 
         li {
             padding: 2px;
 
+            &:hover {
+                .remove {
+                    display: block;
+                }
+            }
+
             i {
                 margin-right: 3px;
+            }
+
+            .remove {
+                color: $text_dark;
+
+                &:hover {
+                    text-decoration: none;
+                    color: $red;
+                }
             }
         }
     }
@@ -92,7 +118,7 @@
 /* vertical scrollbar */
 .mCSB_container{
     width:auto;
-    margin-right:30px;
+    margin-right:12px;
     overflow:hidden;
 }
 .mCSB_container.mCS_no_scrollbar{
@@ -100,7 +126,7 @@
 }
 .mCS_disabled>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar,
 .mCS_destroyed>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar{
-    margin-right:30px;
+    margin-right:12px;
 }
 .mCustomScrollBox>.mCSB_scrollTools{
     width:10px;
