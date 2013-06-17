@@ -27,8 +27,4 @@
                                 9 consecutive, best 163
                             </div>
                         </section>
-                        <div class='progress-group-container'>
-                            <div class='progress-container hint--left' data-hint='90% level progress'><div class='progress' style='width: 90%'></div></div>
-                            <div class='progress-container hint--left' data-hint='65% of next medal'><div class='progress progress-blue' style='width: 65%'></div></div>
-                        </div>
                     </article>
