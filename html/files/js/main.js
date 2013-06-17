@@ -10,6 +10,8 @@ $(function() {
         return false;
     });
 
+    $('a[href^="http://"]:has(img), a[href^="https://"]:has(img)').addClass('hide-external');
+
     // Confirmation box
     $('.confirmation').on('click', function(e) {
         if ($(this).attr('data-confirm'))
