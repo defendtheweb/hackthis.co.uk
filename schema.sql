@@ -275,7 +275,19 @@ CREATE TABLE articles_favourites (
 ) ENGINE=InnoDB;
 
 
-
+/*
+	MODERATOR TABLES
+*/
+CREATE TABLE reports (
+	`report_id` int(6) NOT NULL AUTO_INCREMENT,
+	`user_id` int(7) NOT NULL,
+	`type` enum('comment', 'article', 'user', 'forum', 'level') NOT NULL,
+	`about` int(7) NOT NULL,
+	`subject` varchar(64),
+	`body` text,
+	PRIMARY KEY (`report_id`),
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
 
 
 
@@ -422,7 +434,6 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 
 		CALL user_feed_remove(OLD.user_id, 'medal', OLD.medal_id);
 	END;
-
 
 -- ARTICLES
 DROP TRIGGER IF EXISTS insert_article;
