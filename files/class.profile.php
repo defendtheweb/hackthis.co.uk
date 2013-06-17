@@ -8,15 +8,19 @@
             } else
                 $where = 'u.username';
 
-            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined, activity.last_active, friends.status AS friends, friends.user_id AS friend
-                    FROM users u
-                    LEFT JOIN users_profile profile
-                    ON u.user_id = profile.user_id
-                    LEFT JOIN users_activity activity
-                    ON u.user_id = activity.user_id
-                    LEFT JOIN users_friends friends
-                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE {$where} = :profile");
+            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
+                                activity.last_active, friends.status AS friends, friends.user_id AS friend,
+                                IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                                FROM users u
+                                LEFT JOIN users_profile profile
+                                ON u.user_id = profile.user_id
+                                LEFT JOIN users_activity activity
+                                ON u.user_id = activity.user_id
+                                LEFT JOIN users_friends friends
+                                ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                                LEFT JOIN users_priv priv
+                                ON u.user_id = priv.user_id
+                                WHERE {$where} = :profile");
             $st->execute(array(':profile' => $username, ':user' => $user->uid));
             $st->setFetchMode(PDO::FETCH_INTO, $this);
             $res = $st->fetch();
@@ -37,8 +41,22 @@
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
 
+            $st = $db->prepare('SELECT users.username
+                    FROM users_friends as friends
+                    INNER JOIN users
+                    ON users.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
+                    WHERE friends.status = 1 AND (friends.user_id = :uid OR friends.friend_id = :uid)
+                    ORDER BY users.username');
+            $st->execute(array(':uid' => $this->uid));
+            $this->friendsList = $st->fetchAll();
+
+            if (isset($this->about))
+                $this->about = $app->parse($this->about);
+
             $this->feed = $this->getFeed();
             $this->social = $this->getSocial();
+
+            $this->owner = ($user->uid === $this->uid);
         }
 
         public function getFeed() {
@@ -86,7 +104,7 @@
                         $string = 'N/A';
                 }
 
-                array_push($return, array('icon'=>$icon, 'string'=>$string, 'time'=>$item->timestamp));
+                array_push($return, array('id'=>$item->feed_id, 'icon'=>$icon, 'string'=>$string, 'time'=>$item->timestamp));
             }
             return $return;
         }

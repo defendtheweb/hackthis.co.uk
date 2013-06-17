@@ -15,15 +15,14 @@
                 $st->execute();
                 $result = $st->fetchAll();
             } else {
-
-                $st = $db->prepare('SELECT feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
+                $st = $db->prepare('SELECT feed.feed_id, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
                         FROM users_feed feed
                         WHERE user_id = :user_id AND feed.time > FROM_UNIXTIME(:last)
                         ORDER BY time DESC');
                 $st->bindValue(':last', $last);
                 $st->bindValue(':user_id', $user_id);
                 $st->execute();
-                $result = $st->fetchAll();                
+                $result = $st->fetchAll();
             }
 
             // Loop items, get details and create images
@@ -85,8 +84,7 @@
                     $res->title = $app->parse($res->title, false);
                 }
 
-                unset($res->id);
-                unset($res->item_id);
+                unset($res->item_id);                
                 unset($res->user_id);
             }
 
@@ -99,6 +97,17 @@
             $st = $db->prepare('INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (:to, :type, :item)');
             $result = $st->execute(array(':to' => $to, ':type' => $type, ':item' => $item));
            
+            return $result;
+        }
+
+        public function remove($id) {
+            global $db, $user;
+
+            $st = $db->prepare("DELETE FROM users_feed
+                WHERE user_id = :user_id AND feed_id = :item_id
+                LIMIT 1");
+            $result = $st->execute(array(':item_id' => $id, ':user_id' => $user->uid));
+
             return $result;
         }
     }
