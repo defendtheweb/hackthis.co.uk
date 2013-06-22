@@ -441,3 +441,30 @@ you can use the generic selector below, but it's slower:
 .icon-tasks:before {
 	content: "\e086";
 }
+.icon-flag:before {
+	content: "\e087";
+}
+.icon-edit:before {
+	content: "\f044";
+}
+.icon-caret-left:before {
+	content: "\f0d9";
+}
+.icon-caret-right:before {
+	content: "\f0da";
+}
+.icon-caret-up:before {
+	content: "\f0d8";
+}
+.icon-caret-down:before {
+	content: "\f0d7";
+}
+.icon-sort:before {
+	content: "\f0dc";
+}
+.icon-quote:before {
+	content: "\e021";
+}
+.icon-beaker:before {
+	content: "\f0c3";
+}

@@ -166,6 +166,15 @@ a.button {
 }
 
 
+/* ICON LINKS */
+a.icon-hover {
+    text-decoration: none;
+    color: $text_dark;
+
+    &:hover .icon-lastfm {
+        color: #D51007;
+    }
+}
 
 
 

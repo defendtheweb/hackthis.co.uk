@@ -18,7 +18,7 @@
         <li><a href='#' class='hint--top' data-hint='Insert link' data-tag='url'><i class='icon-link'></i></a></li>
         <li><a href='#' class='hint--top' data-hint='Insert image' data-tag='img'><i class='icon-image'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top' data-hint='Upload image'><i class='icon-upload'></i></a></li>
-        <li><a href='#' class='hint--top' data-hint='Quote' data-tag='quote' data-value='author'><i class='icon-chat-2'></i></a></li>
+        <li><a href='#' class='hint--top' data-hint='Quote' data-tag='quote' data-value='author'><i class='icon-quote'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top' data-hint='Code' data-tag='code'><i class='icon-console'></i></a></li>
         <li><a href='#' class='hint--top' data-hint='youtube' data-hint='YouTube' data-tag='youtube'><i class='icon-youtube'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top' data-hint='Vimeo' data-tag='vimeo'><i class='icon-vimeo'></i></a></li>
