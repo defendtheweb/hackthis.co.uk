@@ -25,6 +25,13 @@
 
                 $result['status'] = (bool) $res;
             }
+        } else if ($action == 'music' && isset($_GET['id'])) {
+            $res = profile::getMusic($_GET['id']);
+
+            $result['status'] = (bool) $res;
+
+            if ($res)
+                $result['music'] = $res;
         }
     }
 

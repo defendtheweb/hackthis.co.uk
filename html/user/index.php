@@ -11,6 +11,16 @@
         require_once('footer.php');
         die();
     endif;
+
+    // FRIENDS LIST
+    if (isset($_GET['friends'])):
+?>
+    <a href='/user/<?=$profile->username;?>'><i class='icon-caret-left'></i> <?=$profile->username;?>'s profile</a>
+
+<?php
+        require_once('footer.php');
+        die();
+    endif;
 ?>
     <article class='profile'>
 <?php if ($profile->friends):?>
@@ -59,52 +69,15 @@
 ?>
         </ul>
 
-        <section class='row fluid'>
+
+        <section class='fluid clr'>
             <div class='col span_7 clr'>
-                <section class='row'>
-                    <img src='http://www.hackthis.co.uk/users/images/198/1:1/<?=md5($profile->username);?>.jpg' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
-                    <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>
-
-                    <ul class='medals clr'>
-<?php
-    foreach ($profile->medals as $medal):
-?>
-                        <li class="medal medal-<?=$medal->colour;?>"><?=$medal->label;?></li>
-<?php
-    endforeach;
-?>
-                    </ul>
-                </section>
-<?php
-    $friendCount = count($profile->friendsList);
-    if ($friendCount):
-?>
-                <section>
-                    <h2><a href='?friends'><?=$friendCount;?> Friend<?=($friendCount==1?'':'s');?></a></h2>
-
-                    <ul class='friends-list'>
-<?php     
-        $i = 0;
-        foreach($profile->friendsList as $friend):
-            $i++;
-            if ($i > 8)
-                break;
-?>
-                        <li>
-                            <a href='/user/<?=$friend->username;?>'>
-                                <img src='http://www.hackthis.co.uk/users/images/48/1:1/<?=md5($friend->username);?>.jpg' width='100%' alt='<?=$friend->username;?> profile picture'/>
-                            </a>
-                        </li>
-<?php   endforeach; ?>
-                    </ul>
-                </section>
-<?php
-    endif;
-?>
+                <img src='<?=$profile->image;?>' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
+                <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>            
             </div>
 
             <div class='col span_17 clr'>
-                <div class='profile-feed scroll row'>
+                <div class='profile-feed scroll'>
                     <ul class='content'>
 <?php
     foreach($profile->feed as $item):
@@ -125,12 +98,92 @@
 ?>
                     </ul>
                 </div>
-<?php if (isset($profile->about)): ?>
-                <h2>About</h2>
+            </div>
+        </section>
+
+        <section class='profile-extra row fluid'>
+            <div class='col span_7 clr'>
 <?php
+    /* MEDALS */
+
+    $medalCount = count($profile->medals);
+    if ($medalCount):
+?>
+                <section class='row'>
+                    <ul class='medals clr'>
+<?php
+        foreach ($profile->medals as $medal):
+?>
+                        <li class="medal medal-<?=$medal->colour;?>"><?=$medal->label;?></li>
+<?php
+        endforeach;
+?>
+                    </ul>
+                </section>
+<?php
+    endif;
+
+
+    /* FRIENDS */
+
+    $friendCount = count($profile->friendsList);
+    if ($friendCount):
+?>
+                <section class='row'>
+                    <h2><a href='/user/<?=$profile->username;?>/friends'><?=$friendCount;?> Friend<?=($friendCount==1?'':'s');?></a></h2>
+
+                    <ul class='friends-list'>
+<?php     
+        $i = 0;
+        foreach($profile->friendsList as $friend):
+            $i++;
+            if ($i > 8)
+                break;
+
+            if (isset($friend->image)) {
+                $gravatar = isset($friend->gravatar) && $friend->gravatar == 1;
+                $friend->image = profile::getImg($friend->image, 48, $gravatar);
+            } else
+                $friend->image = profile::getImg(null, 48);
+?>
+                        <li>
+                            <figure>
+                                <a href='/user/<?=$friend->username;?>'>
+                                    <img src='<?=$friend->image;?>' width='100%' alt='<?=$friend->username;?> profile picture'/>
+                                </a>
+                                <figcaption>
+                                    <a href='/user/<?=$friend->username;?>'><?=$friend->username;?></a><br/>
+                                    Score: <?=$friend->score;?><br/>
+                                    <?=($friend->status)?'Friends':'';?>
+                                </figcaption>
+                            </firgure>
+                        </li>
+<?php   endforeach; ?>
+                    </ul>
+                </section>
+<?php
+    endif;
+
+    if ($profile->lastfm):
+?>
+                <section class='row'>
+                    <a class='right hide-external icon-hover' href='http://www.last.fm/'><i class='icon-lastfm'></i></a>
+                    <h2><a href='http://www.last.fm/user/<?=$profile->lastfm;?>'>Music</a></h2>
+                    <div data-user="<?=$profile->lastfm;?>" class="profile-music loading">
+                        <img src='/files/images/icons/loading.gif' class='icon'/>
+                    </div>
+                </section>
+<?php
+    endif;
+?>
+                &nbsp;
+            </div>
+
+            <div class='col span_17 clr'>
+<?php
+    if (isset($profile->about))
         echo $profile->about;
 ?>
-<?php endif; ?>
             </div>
         </section>
     </article>

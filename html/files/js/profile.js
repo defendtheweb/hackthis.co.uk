@@ -54,4 +54,25 @@ $(function() {
             }
         });
     });
+
+    var $music = $('.profile-music');
+    if ($music.length) {
+        var lastfm = $music.attr('data-user');
+        var uri = '/files/ajax/user.php?action=music&id=' + lastfm;
+
+        $.getJSON(uri, function(data) {
+            $music.removeClass('loading');
+            if (data.status) {
+                var ul = $("<ul>");
+                $.each(data.music, function(index, value) {
+                    var li = $("<li>").html('<a class="hide-external" href="http://www.last.fm/music/' + value.artist + '">' + value.artist + '</a> · ' + value.song);
+                    ul.append(li);
+                });
+
+                $music.html(ul);
+            } else {
+                $music.text('Error loading data');
+            }
+        });
+    }
 });
