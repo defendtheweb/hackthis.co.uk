@@ -18,12 +18,12 @@ $(function() {
     commentsTmpl +=     '        </div>'+
                         '        <span class="strong">'+
                         '            {{if owner}}'+
-                        '                <img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> You'+
+                        '                <img src="${image}"/> You'+
                         '            {{else username}}'+
                         '                {{if username == 0}}'+
                         '                    [deleted user]'+
                         '                {{else}}'+
-                        '                    <a href=\'/user/${username}\'><img src="http://www.hackthis.co.uk/users/images/28/1:1/${image}.jpg"/> ${username}</a>'+
+                        '                    <a href=\'/user/${username}\'><img src="${image}"/> ${username}</a>'+
                         '                {{/if}}'+
                         '            {{else}}'+
                         '                [comment removed]'+

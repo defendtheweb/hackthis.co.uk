@@ -19,7 +19,7 @@
 ?>
                         <section class="fluid clr">
                             <div class='col span_7'>
-                                <img class='profile-pic' src='https://www.hackthis.co.uk/users/images/60/1:1/<?=md5($user->username);?>.jpg' width='100%'/>
+                                <img class='profile-pic' src='<?=$user->image;?>' width='100%'/>
                             </div>
                             <div class='col span_17 user-profile'>
                                 Score: <?=$user->score;?><br/>

@@ -75,7 +75,7 @@ $(function() {
                            '        <time class="short" datetime="${timestamp}">${time}</time>'+
                            '{{if username}}'+
                            '        <a href="/user/${username}">'+
-                           '            <img class="left" width="28" height="28" src="http://www.hackthis.co.uk/users/images/28/1:1/${img}.jpg"/>'+
+                           '            <img class="left" width="28" height="28" src="${img}"/>'+
                            '        </a>'+
                            '{{/if}}'+
                            '{{if pm_id}}'+
