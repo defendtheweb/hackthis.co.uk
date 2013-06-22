@@ -100,10 +100,13 @@
             // Group by required for count
             $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted,
                                DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`,
-                               coalesce(users.username, 0) as username, MD5(users.username) as `image`
+                               coalesce(users.username, 0) as username, users_profile.gravatar,
+                               IF (users_profile.gravatar = 1, users.email , users_profile.img) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
+                    LEFT JOIN users_profile
+                    ON users_profile.user_id = users.user_id
                     WHERE article_id = :article_id AND parent_id = :parent_id
                     ORDER BY `time` DESC');
             $st->execute(array(':article_id' => $article_id, ':parent_id' => $parent_id));
@@ -131,6 +134,16 @@
                     //array_splice($result, $key, 1);
                     unset($result[$key]);
                 }
+                unset($comment->deleted);
+
+                // Set image
+                if (isset($comment->image)) {
+                    $gravatar = isset($comment->gravatar) && $comment->gravatar == 1;
+                    $comment->image = profile::getImg($comment->image, 28, $gravatar);
+                } else
+                    $comment->image = profile::getImg(null, 28);
+
+                unset($comment->gravatar);
             }
 
             //unset can make non-consequative associated array which gets converted to an object in JSON

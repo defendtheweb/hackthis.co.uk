@@ -38,14 +38,17 @@
             global $app, $db, $user;
 
             // Get items
-            $st = $db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type, UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username
-                FROM users_notifications
-                LEFT JOIN users
-                ON (users_notifications.from_id = users.user_id)
-                WHERE users_notifications.user_id = :uid
-                ORDER BY users_notifications.time DESC
-                LIMIT :offset, :limit");
-
+            $st = $db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type,
+                               UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username,
+                               profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
+                               FROM users_notifications
+                               LEFT JOIN users
+                               ON users_notifications.from_id = users.user_id
+                               LEFT JOIN users_profile profile
+                               ON profile.user_id = users.user_id
+                               WHERE users_notifications.user_id = :uid
+                               ORDER BY users_notifications.time DESC
+                               LIMIT :offset, :limit");
             $st->bindParam(":uid", $user->uid);
             $st->bindParam(":offset", $offset, PDO::PARAM_INT);
             $st->bindParam(":limit", $limit, PDO::PARAM_INT);
@@ -109,14 +112,21 @@
                     $res->title = $app->parse($res->title, false);
                 }
 
+                // Profile images
+                if (isset($res->image)) {
+                    $gravatar = isset($res->gravatar) && $res->gravatar == 1;
+                    $res->img = profile::getImg($res->image, 28, $gravatar);
+                } else
+                    $res->img = profile::getImg(null, 28);
+
+                unset($res->image);
+                unset($res->gravatar);
+
                 unset($res->id);
                 unset($res->item_id);
 
                 if ($res->type != 'friend')
                     unset($res->uid);
-
-                if (isset($res->username))
-                    $res->img = md5($res->username);
             }
 
             // Mark items as seen
@@ -131,17 +141,20 @@
         public function getPms() {
             global $db, $user, $app;
             // Get items
-            $st = $db->prepare("SELECT pm.pm_id, title, username, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen
-                FROM pm
-                INNER JOIN pm_users
-                ON pm.pm_id = pm_users.pm_id
-                INNER JOIN pm_messages
-                ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm.pm_id ORDER BY time DESC LIMIT 1)
-                INNER JOIN users
-                ON pm_messages.user_id = users.user_id
-                WHERE pm_users.user_id = :user_id
-                ORDER BY time DESC
-                LIMIT 5");
+            $st = $db->prepare("SELECT pm.pm_id, title, username, UNIX_TIMESTAMP(time) as timestamp, IF (time < seen, 1, 0) AS seen,
+                               profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
+                               FROM pm
+                               INNER JOIN pm_users
+                               ON pm.pm_id = pm_users.pm_id
+                               INNER JOIN pm_messages
+                               ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm.pm_id ORDER BY time DESC LIMIT 1)
+                               INNER JOIN users
+                               ON pm_messages.user_id = users.user_id
+                               LEFT JOIN users_profile profile
+                               ON profile.user_id = users.user_id
+                               WHERE pm_users.user_id = :user_id
+                               ORDER BY time DESC
+                               LIMIT 5");
             $st->execute(array(':user_id' => $user->uid));
             $result = $st->fetchAll();
 
@@ -151,6 +164,16 @@
                     $res->img = md5($res->username);
 
                 $res->title = $app->parse($res->title, false);
+
+                // Profile images
+                if (isset($res->image)) {
+                    $gravatar = isset($res->gravatar) && $res->gravatar == 1;
+                    $res->img = profile::getImg($res->image, 28, $gravatar);
+                } else
+                    $res->img = profile::getImg(null, 28);
+
+                unset($res->image);
+                unset($res->gravatar);
             }
 
             return $result;

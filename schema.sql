@@ -37,6 +37,7 @@ CREATE TABLE users_levels (
 CREATE TABLE users_profile (
 	`user_id` int(7) NOT NULL,
 	`name` varchar(32),
+	`img` varchar(32),
 	`gravatar` tinyint(1) DEFAULT 1,
 	`country` tinyint(3) UNSIGNED,
 	`dob` DATE,

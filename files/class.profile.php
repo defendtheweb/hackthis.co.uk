@@ -4,32 +4,54 @@
             global $db, $user, $app;
 
             if ($uid) {
-                $where = 'u.user_id';
-            } else
-                $where = 'u.username';
-
-            $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
-                                activity.last_active, friends.status AS friends, friends.user_id AS friend,
-                                IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
-                                FROM users u
-                                LEFT JOIN users_profile profile
-                                ON u.user_id = profile.user_id
-                                LEFT JOIN users_activity activity
-                                ON u.user_id = activity.user_id
-                                LEFT JOIN users_friends friends
-                                ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                                LEFT JOIN users_priv priv
-                                ON u.user_id = priv.user_id
-                                WHERE {$where} = :profile");
-            $st->execute(array(':profile' => $username, ':user' => $user->uid));
-            $st->setFetchMode(PDO::FETCH_INTO, $this);
-            $res = $st->fetch();
+                $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.forum_signature,
+                                    friends.status AS friends, friends.user_id AS friend, profile.gravatar,
+                                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
+                                    IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                                    FROM users u
+                                    LEFT JOIN users_profile profile
+                                    ON u.user_id = profile.user_id
+                                    LEFT JOIN users_friends friends
+                                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                                    LEFT JOIN users_priv priv
+                                    ON u.user_id = priv.user_id
+                                    WHERE u.user_id = :profile");
+                $st->execute(array(':profile' => $username, ':user' => $user->uid));
+                $st->setFetchMode(PDO::FETCH_INTO, $this);
+                $res = $st->fetch();
+            } else {
+                $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
+                                    activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
+                                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
+                                    IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                                    FROM users u
+                                    LEFT JOIN users_profile profile
+                                    ON u.user_id = profile.user_id
+                                    LEFT JOIN users_activity activity
+                                    ON u.user_id = activity.user_id
+                                    LEFT JOIN users_friends friends
+                                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                                    LEFT JOIN users_priv priv
+                                    ON u.user_id = priv.user_id
+                                    WHERE u.username = :profile");
+                $st->execute(array(':profile' => $username, ':user' => $user->uid));
+                $st->setFetchMode(PDO::FETCH_INTO, $this);
+                $res = $st->fetch();
+            }
 
             if (!$res)
                 return false;
 
+            if (isset($this->image)) {
+                $gravatar = isset($this->gravatar) && $this->gravatar == 1;
+                $this->image = profile::getImg($this->image, 198, $gravatar);
+            } else
+                $this->image = profile::getImg(null, 198);
+
+
             if ($uid)
                 return true;
+
 
             $st = $db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
                     FROM users_medals
@@ -41,17 +63,23 @@
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
 
-            $st = $db->prepare('SELECT users.username
+            $st = $db->prepare('SELECT u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users_friends as friends
-                    INNER JOIN users
-                    ON users.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
+                    INNER JOIN users u
+                    ON u.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
+                    LEFT JOIN users_profile profile
+                    ON u.user_id = profile.user_id
+                    LEFT JOIN users_friends
+                    ON (users_friends.user_id = u.user_id AND users_friends.friend_id = :user) OR (users_friends.user_id = :user AND users_friends.friend_id = u.user_id)
                     WHERE friends.status = 1 AND (friends.user_id = :uid OR friends.friend_id = :uid)
-                    ORDER BY users.username');
-            $st->execute(array(':uid' => $this->uid));
+                    ORDER BY u.username');
+            $st->execute(array(':uid' => $this->uid, ':user' => $user->uid));
             $this->friendsList = $st->fetchAll();
 
             if (isset($this->about))
                 $this->about = $app->parse($this->about);
+
+            $this->lastfm = $app->parse($this->lastfm,false);
 
             $this->feed = $this->getFeed();
             $this->social = $this->getSocial();
@@ -178,6 +206,49 @@
             $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
 
             return $st->rowCount();
+        }
+
+        public static function getMusic($id) {
+            global $app;
+
+            if (!isset($id))
+                return false;
+
+            $lfm = $app->config('lastfm');
+            $uri = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={$id}&limit=5&api_key={$lfm['public']}&format=json";
+
+            $data = @file_get_contents($uri);
+            if (!$data)
+                return false;
+
+            $data = json_decode($data);
+            if (isset($data->error))
+                return false;
+
+            $tracks = $data->recenttracks->track;
+            $return = array();
+            foreach($tracks as $track) {
+                $tmp = array();
+                $tmp['artist'] = $track->artist->{'#text'};
+                $tmp['song'] = $track->name;
+                array_push($return, $tmp);
+            }
+
+
+            return $return;
+        }
+
+        public static function getImg($img, $size, $gravatar=false) {
+            $default = "http://www.hackthis.co.uk/users/images/{$size}/1:1/a.jpg";
+
+            if (!$img)
+                return $default;
+
+            if ($gravatar) {
+                return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=http://www.hackthis.co.uk/users/images/no_pic.jpg&s=" . $size;
+            } else {
+                return "http://www.hackthis.co.uk/users/images/{$size}/1:1/{$img}.jpg";
+            }
         }
     }
 ?>

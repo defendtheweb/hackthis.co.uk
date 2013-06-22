@@ -47,8 +47,11 @@
         private function get_details() {
             global $db, $app;
             $st = $db->prepare('SELECT username, score, status, (oauth_id IS NOT NULL) as connected,
-                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv
+                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
+                    profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users u
+                    LEFT JOIN users_profile profile
+                    ON u.user_id = profile.user_id
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
                     WHERE u.user_id = :user_id');
@@ -63,6 +66,12 @@
                 $this->forum_priv > 1 ||
                 $this->pub_priv > 1)
                     $this->admin = true;
+
+            if (isset($this->image)) {
+                $gravatar = isset($this->gravatar) && $this->gravatar == 1;
+                $this->image = profile::getImg($this->image, 60, $gravatar);
+            } else
+                $this->image = profile::getImg(null, 60);
         }
 
         private function salt() {
