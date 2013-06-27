@@ -40,8 +40,16 @@
             </header>
         </div>
 
-<?php include('elements/navigation.php'); ?>
+<?php
+    include('elements/navigation.php');
+
+    //Calculate document width
+    if (!defined('_SIDEBAR') || _SIDEBAR)
+        $span = '18';
+    else
+        $span = '24';
+?>
 
         <div id="body-wrap" class="container row">
             <section id="content-wrap" class="row">
-                <article id="main-content" class="col span_18 clr">
+                <article id="main-content" class="col span_<?=$span;?> clr">
