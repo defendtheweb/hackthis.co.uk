@@ -18,12 +18,12 @@ $(function() {
     commentsTmpl +=     '        </div>'+
                         '        <span class="strong">'+
                         '            {{if owner}}'+
-                        '                <img src="${image}"/> You'+
+                        '                <img src="${image}" width="28px"/> You'+
                         '            {{else username}}'+
                         '                {{if username == 0}}'+
                         '                    [deleted user]'+
                         '                {{else}}'+
-                        '                    <a href=\'/user/${username}\'><img src="${image}"/> ${username}</a>'+
+                        '                    <a href=\'/user/${username}\'><img src="${image}" width="28px"/> ${username}</a>'+
                         '                {{/if}}'+
                         '            {{else}}'+
                         '                [comment removed]'+
@@ -70,7 +70,6 @@ $(function() {
     // Hash tag highlight
     function highlight(elemId){
         $(elemId).addClass('highlight');
-        setTimeout(function(){$(elemId).removeClass('highlight')}, 6000);
     }
     if (document.location.hash) {
         highlight(document.location.hash);
