@@ -44,9 +44,9 @@ along with this program.  If not, see http://www.gnu.org/licenses/lgpl.html.
 				},
 				advanced:{
 					updateOnBrowserResize:true, /*update scrollbars on browser resize (for layouts based on percentages): boolean*/
-					updateOnContentResize:false, /*auto-update scrollbars on content resize (for dynamic content): boolean*/
+					updateOnContentResize:true, /*auto-update scrollbars on content resize (for dynamic content): boolean*/
 					autoExpandHorizontalScroll:false, /*auto-expand width for horizontal scrolling: boolean*/
-					autoScrollOnFocus:true, /*auto-scroll on focused elements: boolean*/
+					autoScrollOnFocus:false, /*auto-scroll on focused elements: boolean*/
 					normalizeMouseWheelDelta:false /*normalize mouse-wheel delta (-1/1)*/
 				},
 				contentTouchScroll:true, /*scrolling by touch-swipe content: boolean*/
@@ -650,6 +650,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/lgpl.html.
 							target=$this.find(".mCSB_container").find(":last");
 						}else{ /*scroll to element position*/
 							target=$this.find(scrollTo);
+							console.log(target);
 						}
 						if(target.length===1){ /*if such unique element exists, scroll to it*/
 							if($this.data("horizontalScroll")){
