@@ -42,6 +42,133 @@
             }
         }
 
+        .more {
+            text-align: center;
+            background: $bg;
+            display: block;
+            padding: 6px;
+
+            a {
+                display: block;
+            }
+        }
+
+        > div {
+            position: relative;
+            height: 264px;
+            overflow: hidden;
+
+            &.empty {
+                height: auto;
+            }
+
+            .messages, .extra {
+                -webkit-transition: left 0.5s ease-in-out;
+                -moz-transition: left 0.5s ease-in-out;
+                -o-transition: left 0.5s ease-in-out;
+                transition: left 0.5s ease-in-out;
+
+                width: 100%;
+            }
+
+            .extra > form,
+            .extra > ul,
+            .messages > ul,
+            .messages > div {
+                height: 210px;
+                overflow: hidden;
+            }
+
+            form {
+                padding: 12px;
+                overflow: hidden;
+
+                textarea {
+                    height: 90px;
+                    min-height: 90px;
+                    max-height: 90px;
+                    padding: 2px;
+                }
+
+                ul.autosuggest {
+                    border: 1px solid $lighter_bg;
+                    border-top: none;
+                    background: black;
+                    margin-top: -9px;
+
+                    a {
+                        padding: 0px;
+                    }
+                }
+            }
+
+            .messages {
+                position: absolute;
+                left: 0px;
+
+                ul li {
+                    padding: 0px;
+
+                    a {
+                        display: block;
+                        padding: 6px;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+
+                    span {
+                        display: block;
+                        overflow: hidden;
+                        o-text-overflow: ellipsis;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            &.compose {
+                height: auto;
+            }
+
+            .extra {
+                top: 0;
+                left: 100%;
+                position: absolute;
+
+                > ul {
+                    overflow: auto;
+                    li {
+                        &:hover {
+                            background: $black;
+                        }
+
+                        form {
+                            padding: 0px;
+
+                            textarea {
+                                height: 70px;
+                                min-height: 70px;
+                                max-height: 70px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.show-extra {
+                .messages {
+                    left: -100%;
+                }
+
+                .extra {
+                    left: 0px;
+                }
+            }
+        }
+
+
         li {
             list-style: none;
             padding: 6px;
@@ -49,15 +176,6 @@
 
             &.new {
                 border-left: 2px solid $white;
-            }
-
-            &.more {
-                text-align: center;
-                background: $bg;
-
-                a {
-                    display: block;
-                }
             }
 
             &:hover {
@@ -270,7 +388,7 @@
 @media (max-width: 768px) {
     #global-nav nav {
         #nav-extra-dropdown {
-            width: 100%;
+            width: 80%;
             border-width: 1px;
         }
 

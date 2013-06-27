@@ -5,7 +5,12 @@
     $result = array("status"=>false);
 
     if (isset($_GET['user'])) {
-        $users = $app->utils->search_users($_GET['user'], 5);
+        if (isset($_GET['max']))
+            $max = $_GET['max'];
+        else
+            $max = 5;
+
+        $users = $app->utils->search_users($_GET['user'], $max);
 
         if ($users) {
             $result['status'] = true;

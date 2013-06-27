@@ -4,18 +4,32 @@ $.fn.autosuggest = function() {
 
         $self.keyup(function(event) {
             $this = $(this);
+            var auto = $this.attr('data-suggest-at')==='false'?false:true;
+
+            
             var caret = $this.getCursorPosition().end;
             var val = this.value + ' ';
             var word = /\S+$/.exec(val.slice(0, val.indexOf(' ', caret)));
-            if (!word || word[0].substr(0,1) !== '@') {
+
+            if (!word) {
                 $this.siblings('.autosuggest').remove();
                 return;
             }
 
-            word = word[0].substr(1);
+            word = word[0];
+
+            if (auto) {
+                if (word.substr(0,1) !== '@') {
+                    $this.siblings('.autosuggest').remove();
+                    return;
+                }
+                word = word.substr(1);
+            }
+
+            var max = $this.attr('data-suggest-max')?$this.attr('data-suggest-max'):5;
             
             //lookup word
-            $.get('/files/ajax/autosuggest.php', {user: word}, function(data) {
+            $.get('/files/ajax/autosuggest.php', {user: word, max: max}, function(data) {
                 $this.siblings('.autosuggest').remove();
                 
                 var list = $('<ul>', {class: 'autosuggest'});
@@ -34,16 +48,25 @@ $.fn.autosuggest = function() {
 
                 $this.after(list);
             }, 'json');
+
+            $(document).bind('click.suggest-hide', function(e) {
+                if ($(e.target).closest('.autosuggest').length != 0 || $(e.target).hasClass('suggest')) return true;
+                $('.autosuggest').remove();
+                $(document).unbind('click.suggest-hide');
+            });
         });
 
         $self.parent().on('click', '.autosuggest a', function(e) {
             $this = $(this);
             e.preventDefault();
+            e.stopPropagation();
 
-            $self = $this.closest('.autosuggest').siblings('textarea');
+            $self = $this.closest('.autosuggest').prev();
+            var auto = $self.attr('data-suggest-at')==='false'?false:true;
 
             $this.closest('.autosuggest').remove();
             var insert = this.hash.slice(1);
+            if (!auto) insert += ",";
 
             tmp = $self.val() + ' ';
 
@@ -51,7 +74,10 @@ $.fn.autosuggest = function() {
             var wordEnd = tmp.indexOf(' ', caret);
             var word = /\S+$/.exec(tmp.slice(0, wordEnd));
 
-            var start = tmp.substr(0, wordEnd-(word[0].length-1));
+            if (auto)
+                var start = tmp.substr(0, wordEnd-word[0].length+1);
+            else
+                var start = tmp.substr(0, wordEnd-word[0].length);
             var end = tmp.substr(wordEnd);
 
             var tmp = start + insert + end;

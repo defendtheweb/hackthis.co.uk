@@ -1,0 +1,120 @@
+.inbox {
+    max-height: 600px;
+    overflow: hidden;
+
+    > div {
+        max-height: 100%;
+        overflow: hidden;
+    }
+
+    .inbox-list li {
+        &:hover,
+        &.active {
+            background: $bg;
+        }
+
+        a {
+            display: block;
+            height: 42px;
+            position: relative;
+
+            &:hover {
+                text-decoration: none;
+            }
+
+            &.new:before {
+                content:"\a0";
+                display: block;
+                position: absolute;
+                left: 42px;
+                border-left: 3px solid $white; 
+                height: 42px;
+            }
+
+            div {
+                padding: 3px;
+                color: $text;
+
+                overflow: hidden;
+                o-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                time {
+                    padding-left: 4px;
+                }
+
+                span {
+                    display: block;
+                    color: $white;
+
+                    overflow: hidden;
+                    o-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            img {
+                margin-right: 6px;
+            }
+        }
+    }
+
+    .inbox-main {
+        .empty {
+            padding: 6px;
+            color: $lighter_bg;
+            font-weight: bold;
+            i {
+                display: block;
+                margin-bottom: 6px;
+                font-size: 3.5em;
+            }
+        }
+
+        ul.conversation {
+                li {
+                padding: 6px;
+
+                &:nth-child(2n-1) {
+                    background: darken($bg, 5%);
+                }
+
+                > a {
+                    font-weight: bold;
+                    time {
+                        font-weight: normal;
+                    }
+                    img {
+                        margin: 0 8px 8px 0;
+                    }
+                }
+
+                > div {
+                    margin-left: 36px;
+                }
+            }
+
+            margin-bottom: 12px;
+        }
+    }
+}
+
+
+.no-js .inbox > div {
+    height: 600px;
+    overflow: auto;
+}
+
+@media ( max-width : 768px ) {
+    .inbox > div.inbox-list {
+        max-height: 100px;
+        margin-bottom: 16px;
+    }
+
+    .inbox > div.inbox-main {
+        max-height: 300px;
+        margin-bottom: 16px;
+    }
+}
