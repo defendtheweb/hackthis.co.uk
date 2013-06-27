@@ -85,5 +85,48 @@
 
             return $st->fetchAll();
         }
+
+        public function fdate($datetimestring = '1970-01-01 00:00:00', $format = 'c') {
+            $dt = new DateTime($datetimestring);
+            return $dt->format($format);
+        }
+
+        public function timeSince($date, $short=false) {
+            $date = strtotime($date);
+            $diff = time() - $date;
+            
+            if (!$diff)
+                return "secs" . (!$short?' ago':'');
+
+            date('d-m-Y', $date);
+
+            $isSameDay = (date('d-m-Y', $date) === date('d-m-Y'));
+
+            if ($isSameDay) {
+                if ($diff < 60)
+                    return "secs" . (!$short?' ago':'');
+                else if ($diff < 3600) {
+                    $n = floor($diff/60);
+                    return "{$n} min" . ($n==1?'':'s') . (!$short?' ago':''); 
+                } else {
+                    $n = floor($diff/3600);
+                    return "{$n} hour" . ($n==1?'':'s') . (!$short?' ago':''); 
+                }
+            } else if ($short) {
+                return date('d/m', $date);
+            } else {
+                $yesterday = (date('d-m-Y', $date) === date('d-m-Y', strtotime("yesterday")));
+
+                if ($yesterday)
+                    return "Yesterday";
+                else {
+                    $thisWeek = ($date > strtotime("-6 days"));
+                    if ($thisWeek)
+                        return date('l', $date);
+                    else
+                        return date('F j, Y', $date);
+                }
+            }
+        }
     }
 ?>
