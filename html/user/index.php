@@ -33,7 +33,7 @@
         <a href='#' class='button right addfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Add friend</a>
 <?php endif; ?>
 
-        <a href='#' class='button right'><i class='icon-envelope-alt'></i> PM user</a>
+        <a href='/inbox/compose?to=<?=$profile->username;?>' class='messages-new button right' data-to="<?=$profile->username;?>"><i class='icon-envelope-alt'></i> PM user</a>
 
         <h1><?=$profile->username;?></h1>
 <?php if ($profile->admin): ?>
@@ -166,7 +166,7 @@
 
     if ($profile->lastfm):
 ?>
-                <section class='row'>
+                <section class='row music'>
                     <a class='right hide-external icon-hover' href='http://www.last.fm/'><i class='icon-lastfm'></i></a>
                     <h2><a href='http://www.last.fm/user/<?=$profile->lastfm;?>'>Music</a></h2>
                     <div data-user="<?=$profile->lastfm;?>" class="profile-music loading">
