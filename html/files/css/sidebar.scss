@@ -130,7 +130,10 @@
     }
 }
 
-
+.no-js .widget.feed,
+.no-js .widget.adverts {
+    display: none;
+}
 
 @media ( max-width : 768px ) {
     .widget.feed ul li .col {

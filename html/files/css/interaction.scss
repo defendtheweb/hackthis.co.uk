@@ -17,8 +17,8 @@ a {
     }
 }
 
-a[href^="http://"]:not(.hide-external):not(.stop-external):after,
-a[href^="https://"]:not(.hide-external):not(.stop-external):after {
+html:not(.no-js) a[href^="http://"]:not(.hide-external):not(.stop-external):after,
+html:not(.no-js) a[href^="https://"]:not(.hide-external):not(.stop-external):after {
     @include icon("\e072");
 
     vertical-align: top;
@@ -56,10 +56,13 @@ select {
         border-color: #990000 !important;
     }
 
-    &:focus { 
-        @include box-shadow($bright_green);
+    &:focus {
         border-color: $lighter_bg;
         outline: none;
+    }
+
+    &:not(.hide-shadow):focus { 
+        @include box-shadow($bright_green);
     }
 
     &:-webkit-autofill {
@@ -68,6 +71,7 @@ select {
 }
 
 textarea {
+    resize: none;
     min-height: 140px;
     max-height: 500px;
 
@@ -76,10 +80,6 @@ textarea {
     margin-bottom: 6px;
 
     @include border-radius(0);
-
-    &:focus {
-        @include box-shadow($black, 0);
-    }
 }
 
 input[type="radio"],
@@ -266,6 +266,10 @@ a.icon-hover {
     min-height: 100px;
 }
 
+.no-js .wysiwyg .controls {
+    display: none;
+}
+
 
 
 /* autosuggest */
@@ -337,6 +341,11 @@ ul.share {
     }
 }
 
+.no-js ul.share .facebook,
+.no-js ul.share .twitter {
+    display: none;
+}
+
 
 /* PAGINATION */
 div.pagination {
@@ -401,4 +410,75 @@ div.pagination {
 }
 .mCustomScrollBox>.mCSB_scrollTools .mCSB_buttonRight{
     background-position:-40px -56px;
+}
+
+
+/* basic scrollbar styling */
+/* vertical scrollbar */
+.mCSB_container{
+    width:auto;
+    margin-right:8px;
+    overflow:hidden;
+}
+.mCSB_container.mCS_no_scrollbar{
+    margin-right:0;
+}
+.mCS_disabled>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar,
+.mCS_destroyed>.mCustomScrollBox>.mCSB_container.mCS_no_scrollbar{
+    margin-right:12px;
+}
+.mCustomScrollBox>.mCSB_scrollTools{
+    width:4px;
+    height:100%;
+    top:0;
+    right:0;
+}
+.mCSB_scrollTools .mCSB_draggerContainer{
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0; 
+    height:auto;
+}
+.mCSB_scrollTools a+.mCSB_draggerContainer{
+    margin:20px 0;
+}
+.mCSB_scrollTools .mCSB_draggerRail{
+    width:2px;
+    height:100%;
+    margin:0 auto;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+}
+.mCSB_scrollTools .mCSB_dragger{
+    cursor:pointer;
+    width:100%;
+    height:30px;
+}
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    width:4px;
+    height:100%;
+    margin:0 auto;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+    text-align:center;
+}
+.mCSB_scrollTools .mCSB_buttonUp,
+.mCSB_scrollTools .mCSB_buttonDown{
+    display:block;
+    position:relative;
+    height:20px;
+    overflow:hidden;
+    margin:0 auto;
+    cursor:pointer;
+}
+.mCSB_scrollTools .mCSB_buttonDown{
+    top:100%;
+    margin-top:-40px;
+}
+.mCustomScrollBox{
+    -ms-touch-action:none; /*MSPointer events - direct all pointer events to js*/
 }

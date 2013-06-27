@@ -1,4 +1,4 @@
-                    <article class="widget">
+                    <article class="widget adverts">
                         <h1>Adverts</h1>
                         <div class="center">
                             <script type="text/javascript"><!--
