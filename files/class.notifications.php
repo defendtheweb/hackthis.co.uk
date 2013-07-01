@@ -21,15 +21,8 @@
 
             $eventCount = $result->count ? (int) $result->count : 0;
 
-            $st = $db->prepare("SELECT count(pm_users.pm_id) as count
-                FROM pm_users
-                INNER JOIN pm_messages
-                ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm_users.pm_id AND (seen IS NULL || time > seen) ORDER BY time DESC LIMIT 1)
-                WHERE pm_users.user_id = :user_id");
-            $st->execute(array(':user_id' => $user->uid));
-            $result = $st->fetch();
-
-            $pmCount = $result->count ? (int) $result->count : 0;
+            $messages = new messages();
+            $pmCount = $messages->getCount();
 
             return array("events"=>$eventCount, "pm"=>$pmCount);
         }

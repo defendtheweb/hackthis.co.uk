@@ -1,9 +1,23 @@
 <?php
 class messages {
+    public function getCount($unread=true) {
+        global $db, $user;
+
+        $st = $db->prepare("SELECT count(pm_users.pm_id) as count
+            FROM pm_users
+            INNER JOIN pm_messages
+            ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm_users.pm_id AND (seen IS NULL || time > seen) ORDER BY time DESC LIMIT 1)
+            WHERE pm_users.user_id = :user_id");
+        $st->execute(array(':user_id' => $user->uid));
+        $result = $st->fetch();
+
+        return $result ? (int) $result->count : 0;
+    }
+
     public function getAll($size=28, $limit=true) {
         global $db, $user, $app;
 
-        $sql = "SELECT pm.pm_id, message, time as timestamp, IF (time <= seen, 1, 0) AS seen
+        $sql = "SELECT pm.pm_id, pm_messages.user_id as lastSender, message, time as timestamp, IF (time <= seen, 1, 0) AS seen
                FROM pm
                INNER JOIN pm_users
                ON pm.pm_id = pm_users.pm_id
@@ -55,6 +69,11 @@ class messages {
 
             $res->message = $app->parse(substr($res->message, 0, 75), false);
 
+            if ($res->lastSender == $user->uid) {
+                $res->message = '<i class="icon-reply"></i> '. $res->message;
+            }
+            unset($res->lastSender);
+
             //time
             $res->timestamp = $app->utils->fdate($res->timestamp);
         }
@@ -76,8 +95,9 @@ class messages {
                ON profile.user_id = users.user_id
                WHERE messages.pm_id = :pm_id
                ORDER BY messages.time DESC";
-        if ($limit)
+        if ($limit) {
             $sql .= ' LIMIT 5';
+        }
 
         // Get items
         $st = $db->prepare($sql);
@@ -111,9 +131,27 @@ class messages {
         return $result;
     }
 
-    public function newMessage($to, $body, $pm_id) {
+    public function getConvoUsers($id) {
         global $db, $user;
 
+        $st = $db->prepare("SELECT username
+                           FROM pm_users
+                           INNER JOIN users
+                           ON pm_users.user_id = users.user_id
+                           WHERE pm_users.pm_id = :pm_id AND pm_users.user_id != :user_id
+                           ORDER BY username DESC");
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $st->execute(array(':pm_id' => $id, ':user_id' => $user->uid));
+        $result = $st->fetchAll();
+
+        if (!count($result))
+            $result = array(array("username"=>$user->username));
+
+        return $result;
+    }
+
+    public function newMessage($to, $body, $pm_id=null) {
+        global $db, $user;
 
         if ($to !== null) {
             $recipients = preg_split('/[\ \n\,]+/', $to);
@@ -125,7 +163,7 @@ class messages {
             $st = $db->prepare('INSERT INTO pm VALUES ()');
             $result = $st->execute();
             if (!$result) {
-                $pdo->rollBack();
+                $db->rollBack();
                 return false;
             }
 
@@ -138,26 +176,39 @@ class messages {
                 $st->bindParam(':pm_id', $pm_id);
                 $st->bindParam(':name', $name);
 
+                $count = 0;
+
                 foreach($recipients as $rec) {
                     $name = $rec;
                     $st->execute();
+                    $count += $st->rowCount();
+                }
 
-                    if ($st->rowCount() < 1) {
-                        $pdo->rollBack();
-                        return false;
-                    }
+                if ($count < 1) {
+                    $db->rollBack();
+                    return false;
                 }
             } catch(PDOException $e) {
-                $pdo->rollBack();
+                $db->rollBack();
                 return false;
-            }    
+            } 
+
+            //Add sender
+            $st = $db->prepare('INSERT INTO pm_users (`pm_id`, `user_id`, `seen`)
+                                VALUES (:pm_id, :uid, NOW())
+                                ON DUPLICATE KEY UPDATE `seen` = NOW()');
+            $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid,));
+            if (!$result) {
+                $db->rollBack();
+                return false;
+            }
 
             //Insert message
             $st = $db->prepare('INSERT INTO pm_messages (`pm_id`, `user_id`, `message`)
                                 VALUES (:pm_id, :uid, :body)');
             $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid, ':body' => $body));
             if (!$result) {
-                $pdo->rollBack();
+                $db->rollBack();
                 return false;
             }
 

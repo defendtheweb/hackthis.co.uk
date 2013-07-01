@@ -1,5 +1,5 @@
 .inbox {
-    max-height: 600px;
+    max-height: 500px;
     overflow: hidden;
 
     > div {
@@ -74,11 +74,15 @@
         }
 
         ul.conversation {
-                li {
+            li {
                 padding: 6px;
 
                 &:nth-child(2n-1) {
                     background: darken($bg, 5%);
+                }
+
+                &.new {
+                    border-left: 3px solid $white;
                 }
 
                 > a {
@@ -103,18 +107,21 @@
 
 
 .no-js .inbox > div {
-    height: 600px;
+    height: 588px;
     overflow: auto;
 }
 
 @media ( max-width : 768px ) {
     .inbox > div.inbox-list {
-        max-height: 100px;
-        margin-bottom: 16px;
+        height: 140px;
+        margin-bottom: 12px;
+
+        padding-bottom: 12px;
+        border-bottom: 1px solid $dark;
     }
 
     .inbox > div.inbox-main {
-        max-height: 300px;
+        height: 300px;
         margin-bottom: 16px;
     }
 }

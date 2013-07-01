@@ -17,13 +17,28 @@
         $convo->id = $_GET['view'];
         if ($convo->id) {
             $convo->messages = $messages->getConvo($_GET['view'], false);
+            $convo->users = $messages->getConvoUsers($_GET['view']);
 
             if (!$convo->messages)
                 unset($convo);
         }
     }
 ?>
-    <h1><a href='/inbox'>Inbox</a></h1>
+    <h1>
+        <a href='/inbox'>Inbox</a>
+<?php
+    if (isset($convo)) {
+        echo " - ";
+        $numItems = count($convo->users);
+        $i = 0;
+        foreach ($convo->users as $u) {
+            echo "<a href='/users/{$u['username']}'>{$u['username']}</a>";
+            if(++$i !== $numItems)
+                echo ', ';
+        }
+    }
+?>
+    </h1>
 
     <section class="inbox row">
         <div class="col span_6 inbox-list scroll">
@@ -78,7 +93,7 @@
             </ul>
             <form method="POST">
                 <?php $wysiwyg_placeholder = 'Add your comment here...'; include('elements/wysiwyg.php'); ?>
-                <input id="comment_submit" type="submit" value="Post Comment" class="submit button right"/>
+                <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
             </form>
 <?php
     else:
