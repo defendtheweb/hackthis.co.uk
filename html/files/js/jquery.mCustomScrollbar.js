@@ -650,7 +650,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/lgpl.html.
 							target=$this.find(".mCSB_container").find(":last");
 						}else{ /*scroll to element position*/
 							target=$this.find(scrollTo);
-							console.log(target);
 						}
 						if(target.length===1){ /*if such unique element exists, scroll to it*/
 							if($this.data("horizontalScroll")){
