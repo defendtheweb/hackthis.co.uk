@@ -43,3 +43,5 @@
     <textarea name='body' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
     <div class='preview'>&nbsp;</div>
 </div>
+<input type="checkbox" id="enter" name="enter" <?=(isset($_COOKIE["wysiwygEnter"]) && $_COOKIE["wysiwygEnter"] == 'true')?'checked':'';?>/>
+<label for="enter">Press Enter to send</label>

@@ -51,5 +51,16 @@ $(function() {
                 return before + tagBefore + middle + tagAfter + end;
             }).focus().setCursorPosition(pos.start + tagBefore.length + ((middle.length)?middle.length + tagAfter.length:0));
         }
+    }).on('keypress', '.wysiwyg textarea', function(e) {
+        if (e.which == 13) {
+            $form = $(this).closest('form');
+            if ($form.find('#enter').is(':checked')) {
+                e.preventDefault();
+                $form.submit();
+            }
+        }
+    }).on('change', '#enter', function(e) {
+        var state = $(this).is(':checked');
+        createCookie("wysiwygEnter", state);
     });
 });
