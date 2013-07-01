@@ -124,7 +124,7 @@ $(function() {
     $('#comments').on('click', '.cancel', function(e) {
         e.preventDefault();
         var parent = $(this).closest('form').slideUp(200, function() { $(this).remove() });
-    }).on('click', '.submit', function(e) {
+    }).on('submit', 'form', function(e) {
         e.preventDefault();
 
         var $article = $(this).closest('article');
