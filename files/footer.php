@@ -2,6 +2,7 @@
 <?php include("elements/sidebar.php"); ?>
             </section>
         </div>
+      </div>
         <div id="page-footer">
             <footer class="container row">
                 <div class='center'>

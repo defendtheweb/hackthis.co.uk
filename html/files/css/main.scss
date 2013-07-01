@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 html {
     background: {
         image: url("/files/images/bg.png");
@@ -5,15 +9,33 @@ html {
         repeat: no-repeat; 
         position: center -50px;
     }
-    font-size: 12px; 
+    font-size: 12px;
 }
 
 body {
-    margin: 0px; padding: 0px; 
+    margin: 0px;
+    padding: 0px; 
     @include default_font;
     font-size: 1.12em;
     letter-spacing: 0.01em;
 }
+
+.page-wrap {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -128px;
+}
+.page-wrap:after {
+    content: "";
+    display: block;
+}
+#page-footer, .page-wrap:after {
+    /* .push must be the same height as footer */
+    height: 128px;
+}
+
+
+
 
 h1, h2 {
     margin: 0 0 0.5em 0;

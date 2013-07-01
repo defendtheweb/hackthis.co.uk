@@ -20,6 +20,7 @@
         <![endif]-->
     </head>
     <body>
+      <div class="page-wrap">
         <div id="header-wrap" class="container">
             <header>
                 <div class="col span_11 banner">
