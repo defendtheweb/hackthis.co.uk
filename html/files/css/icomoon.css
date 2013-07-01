@@ -465,6 +465,12 @@ you can use the generic selector below, but it's slower:
 .icon-quote:before {
 	content: "\e021";
 }
-.icon-beaker:before {
-	content: "\f0c3";
+
+.icon-reply {
+	font-size: 0.8em;
+	color: #404040;
 }
+.icon-reply:before {
+	content: "\e088";
+}
+
