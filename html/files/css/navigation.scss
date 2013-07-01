@@ -74,9 +74,15 @@
             .extra > form,
             .extra > ul,
             .messages > ul,
-            .messages > div {
+            .messages > div{
                 height: 210px;
                 overflow: hidden;
+            }
+
+            .extra > div.fill {
+                height: 170px;
+                overflow: hidden;
+                margin-top: 40px;
             }
 
             form {
@@ -253,7 +259,7 @@
 
                     > a {
                         display: block;
-                        margin-top: -1px;
+                        margin-top: -2px;
                         padding: 3px 4px;;
                         color: $dark;
                         font-size: 15px;
@@ -290,7 +296,7 @@
                         i {
                             color: $dark;
                             font-size: 15px;
-                            margin-top: -2px;
+                            margin-top: 0px;
                             display: inline-block;
                         }
 
