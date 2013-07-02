@@ -23,7 +23,18 @@
                 unset($convo);
         }
     }
+
+
+    if (isset($convo)):
 ?>
+    <div id="conversation-search">
+        <input placeholder='Search conversation'/>
+        <i class='icon-search'></i>
+    </div>
+<?php
+    endif;
+?>
+
     <h1>
         <a href='/inbox'>Inbox</a>
 <?php
@@ -77,14 +88,23 @@
 ?>
             <ul class='plain conversation'>
 <?php
+        $lastDay = null;
         foreach($convo->messages as $message):
+            $today = date('d-m-Y', strtotime($message->timestamp));
+            if ($today != $lastDay):
+                $lastDay = $today;
+?>
+                <li class='clean'></li> <!-- Keep zebra stripes -->
+                <li class='new-day center'><span><?=date('F j, Y', strtotime($message->timestamp));?></span></li>
+<?php
+            endif;
 ?>
                 <li class='clr <?=$message->seen?'':'new';?>'>
                     <a href='/user/<?=$message->username;?>'>
                         <img width='28px' height='28px' class='left' src='<?=$message->img;?>'/>
                         <?=$message->username;?>
                     </a>
-                    <time class="right dark" datetime="<?=$message->timestamp;?>"><?=$app->utils->timeSince($message->timestamp);?></time><br/>
+                    <time class="right dark" datetime="<?=$message->timestamp;?>" data-timesince="false"><?=date('H:i', strtotime($message->timestamp));?></time><br/>
                     <div class='body'><?=$message->message;?></div>
                 </li>
 <?php
@@ -98,7 +118,7 @@
 <?php
     else:
 ?>
-            <div class="center empty"><i class="icon-envelope-alt icon-4x"></i><?=count($inbox)?'No message selected':'No messages available';?></div>
+            <div class="center empty"><i class="icon-envelope-alt icon-4x"></i><?=count($inbox)?'No conversation selected':'No messages available';?></div>
 <?php
     endif;
 ?>

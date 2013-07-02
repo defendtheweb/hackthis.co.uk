@@ -1,3 +1,30 @@
+#conversation-search {
+    border: 1px solid $dark;
+    height: 25px;
+    padding: 3px;
+    float: right;
+    font-size: 0.9em;
+
+    i {
+        color: $dark;
+        font-size: 15px;
+        margin-top: 0px;
+        display: inline-block;
+    }
+
+    input {
+        width: 180px;
+        border: 0px;
+        height: 100%;
+        padding: 0px;
+        padding-right: 6px;
+
+        &:focus {
+            @include box-shadow($black, 0);
+        }
+    }
+}
+
 .inbox {
     max-height: 500px;
     overflow: hidden;
@@ -74,10 +101,10 @@
         }
 
         ul.conversation {
-            li {
+            li:not(.clean):not(.new-day) {
                 padding: 6px;
 
-                &:nth-child(2n-1) {
+                &:nth-child(odd) {
                     background: darken($bg, 5%);
                 }
 
@@ -97,10 +124,37 @@
 
                 > div {
                     margin-left: 36px;
+
+                    .highlight {
+                        color: $green;
+                    }
                 }
             }
 
             margin-bottom: 12px;
+        }
+
+        li.new-day {
+            color: $dark;
+            margin-bottom: 4px;
+            position: relative;
+
+            &:before {
+                border-top: 1px solid $dark;
+                content: "";
+                margin: 0 auto;
+                position: absolute;
+                top: 9px;
+                left: 0;
+                right: 0;
+                width: 95%;
+                z-index: -1;
+            }
+
+            span {
+                background: $black;
+                padding: 0 10px;
+            }
         }
     }
 }
