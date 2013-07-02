@@ -111,22 +111,24 @@ $(function() {
                     '                ${user.username}{{if users.length-1 != i}},{{/if}}'+
                     '            {{/each}}'+
                     '            <br/>'+
-                    '            <span class="dark">${message}</span>'+
+                    '            <span class="dark">{{html message}}</span>'+
                     '        </a>'+
                     '    </li>'+
                     '</tmpl>';
 
 
-    var composeForm =   '<form><label for="to">To:</label>'+
+    var composeForm =   '<form class="send"><label for="to">To:</label>'+
                         '<input name="to" class="suggest hide-shadow" data-suggest-at="false" data-suggest-max="2" id="to" autocomplete="off"/><br/>'+
                         '<label for="message">Message:</label><br/>'+
                         '<textarea class="hide-shadow"></textarea>'+
-                        '<input type="submit" class="button" value="Send"/>';
+                        '<input type="submit" class="button" value="Send"/>'+
+                        '<span class="error"></span>';
 
-    var replyForm =     '<form>'+
+    var replyForm =     '<form class="send">'+
                         '<label for="message">Reply:</label><br/>'+
                         '<textarea class="hide-shadow"></textarea>'+
-                        '<input type="submit" class="button" value="Send"/>';
+                        '<input type="submit" class="button" value="Send"/>'+
+                        '<span class="error"></span>';
 
     var messagesTmpl =  '<tmpl>'+
                         '{{if seen == 0}}'+
@@ -140,6 +142,9 @@ $(function() {
                         '            <img class="left" width="28" height="28" src="${img}"/>'+
                         '            ${username}'+
                         '        </a><br/>'+
+                        '{{else}}'+
+                        '        <img class="left" width="28" height="28"/>'+
+                        '        <span class="white">You</span><br/>'+
                         '{{/if}}'+
                         '        {{html message}}'+
                         '    </li>'+
@@ -162,15 +167,13 @@ $(function() {
                     return false;
         }
 
-        var uri = '/files/ajax/notifications.php'
-
         icons.removeClass('active');
         if ($(this).hasClass('nav-extra-pm')) {
-            uri += '?pm';
+            var uri = '/files/ajax/inbox.php?list';
             icons.removeClass('active-events');
             parent.addClass('active active-pm');
         } else if ($(this).hasClass('nav-extra-events')) {
-            uri += '?events';
+            var uri = '/files/ajax/notifications.php?events';
             icons.removeClass('active-pm');
             $(this).removeClass('alert');
             $('#event-counter').fadeOut(200);
@@ -232,7 +235,7 @@ $(function() {
 
         //dropdown.html('<img src="/files/images/icons/loading_bg.gif"/>').show();
 
-        bindClose();
+        bindCloseNotifications();
     });
 
 
@@ -275,7 +278,7 @@ $(function() {
         var $this = $(this);
 
         var id = $this.attr('data-conversation');
-        var uri = '/files/ajax/notifications.php?pm&id=' + id;
+        var uri = '/files/ajax/inbox.php?view&id=' + id;
         $.getJSON(uri, function(data) {
             data = data.items;
             if (data.length) {
@@ -284,6 +287,7 @@ $(function() {
                 items = $('<ul>', {class: 'scroll'}).append($(messagesTmpl).tmpl(data));
 
                 items.append($('<li>').append(replyForm));
+                items.find('form').attr('data-conversation', id);
 
                 var messagesHTML = container.children('.extra');
                 messagesHTML.html('');
@@ -294,7 +298,7 @@ $(function() {
 
                 container.addClass('show-extra');
 
-                $('#global-nav .scroll').mCustomScrollbar();
+                $('#global-nav .scroll').mCustomScrollbar();hideNotifications
 
                 if (container.find('.new').length) {
                     $('#global-nav .scroll').mCustomScrollbar("scrollTo", "li.new:first");
@@ -305,8 +309,71 @@ $(function() {
                 $this.parent().removeClass('new');
             }
         });
-    });
+    }).on('click', 'form.send input.button', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
 
+        var data = {};
+
+        $form = $(this).closest('form');
+        $error = $form.find('span.error');
+        data.body = $form.find('textarea').val();
+
+        $error.text('');
+
+        if ($form.find('#to').length) {
+            data.to = $form.find('#to').val();
+
+            if (!data.to) {
+                $error.text("Missing recipient");
+                return;
+            }
+        } else if ($form.attr('data-conversation')) {
+            data.pm_id = $form.attr('data-conversation');
+        } else {
+            return;
+        }
+
+        if (!data.body) {
+            $error.text("Missing body");
+            return;
+        }
+
+        var uri = '/files/ajax/inbox.php?send';
+        $.post(uri, data, function(data) {
+            if (data.status) {
+                if (data.message) {
+                    //Add message to conversation
+                    data.seen = true;
+                    data.img = "";
+                    var $msg = $(messagesTmpl).tmpl(data);
+                    $msg.hide();
+                    $form.closest('li').before($msg);
+                    $msg.slideDown();
+
+                    //Clear reply textarea
+                    $form.find('textarea').val('');
+
+                    //Update conversation list
+                    var pm_id = $form.attr('data-conversation');
+                    $item = $('#nav-extra-dropdown .messages ul li > a[data-conversation="'+pm_id+'"]').parent();
+                    $item.detach();
+
+                    $item.find('span.dark').html('<i class="icon-reply"></i> ' + data.message);
+
+                    var date = new Date();
+                    $item.find('time').attr('datetime', date.toISOString()).text('secs');
+
+                    $item.prependTo($('#nav-extra-dropdown .messages ul'));
+                } else {
+                    $sent = $('<div class="center empty fill"><i class="icon-ok-sign icon-4x"></i>Message Sent</div>').hide();
+                    $form.replaceWith($sent);
+                    $sent.fadeIn();
+                }
+            } else
+                $error.text("Error sending message");
+        }, 'json');
+    });
 
     $('.messages-new').on('click', function(e) {
         e.preventDefault();
@@ -326,15 +393,19 @@ $(function() {
         $('#nav-extra-dropdown textarea').focus();
 
         icons.removeClass('active active-events active-pm');
-        bindClose();
+        bindCloseNotifications();
     });
 
-    function bindClose() {
+    function bindCloseNotifications() {
         $(document).bind('click.extra-hide', function(e) {
             if ($(e.target).closest('#nav-extra-dropdown').length != 0 && $(e.target).not('.nav-extra')) return true;
-            dropdown.slideUp(200);
-            icons.removeClass('active active-events active-pm');
-            $(document).unbind('click.extra-hide');
+            hideNotifications();
         });
+    }
+
+    function hideNotifications() {
+        dropdown.slideUp(200);
+        icons.removeClass('active active-events active-pm');
+        $(document).unbind('click.extra-hide');        
     }
 });
