@@ -153,8 +153,39 @@ class messages {
     public function newMessage($to, $body, $pm_id=null) {
         global $db, $user;
 
+        $body = trim($body);
+        if ($body === '')
+            return false;
+
         if ($to !== null) {
-            $recipients = preg_split('/[\ \n\,]+/', $to);
+            $recipients = array_unique(array_map("StrToLower", array_filter(preg_split('/[\ \n\,]+/', $to))));
+
+            $tmp = $recipients;
+            array_push($tmp, $user->username);
+
+            print_r($tmp);
+
+            //Check if conversation already exists
+            $plist = ':id_'.implode(',:id_', array_keys($tmp)); // placeholder list for IN
+            $sql = "SELECT COUNT(pm_users.user_id) as `count`, pm_id, pm_users_2.total AS `total`
+                    FROM pm_users
+                    LEFT JOIN (SELECT pm_id AS `id`, COUNT(*) as `total` FROM pm_users GROUP BY pm_id) as pm_users_2
+                    ON pm_users.pm_id = pm_users_2.id
+                    LEFT JOIN users
+                    ON users.user_id = pm_users.user_id
+                    WHERE username IN ($plist)
+                    GROUP BY pm_id
+                    HAVING `count` = :n AND `total` = :n";
+            $params = array_combine(explode(",", $plist), $tmp);
+            $params[':n'] = count($tmp);
+            $st = $db->prepare($sql);
+            $st->execute($params);
+            $result = $st->fetchAll();
+
+            print_r($result);
+
+            if (count($result) === 1)
+                return $this->newMessage(null, $body, $result[0]->pm_id);
 
             //Start transaction
             $db->beginTransaction();
@@ -197,7 +228,7 @@ class messages {
             $st = $db->prepare('INSERT INTO pm_users (`pm_id`, `user_id`, `seen`)
                                 VALUES (:pm_id, :uid, NOW())
                                 ON DUPLICATE KEY UPDATE `seen` = NOW()');
-            $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid,));
+            $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid));
             if (!$result) {
                 $db->rollBack();
                 return false;
