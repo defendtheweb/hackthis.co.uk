@@ -3,6 +3,14 @@ var loggedIn = true; // overwritten in guest.js
 $(function() {
     $('textarea').autosize();
     $('.scroll').mCustomScrollbar();
+    $("#global-nav-sticky").sticky({topSpacing:0});
+
+
+    // Show/hide navigation
+    $('#global-nav .show-nav').on('click', function(e) {
+        e.preventDefault();
+        $('#global-nav nav > ul').toggleClass('show');
+    });
 
     // Open external links in new tab
     $('body').on('click', 'a[href^="http://"]:not(.stop-external), a[href^="https://"]:not(.stop-external)', function(e) {
@@ -22,13 +30,13 @@ $(function() {
 
     // Update timestamps
     (function updateTimes() {
-        $('time').each(function(index, value) {
+        $('time:not([data-timesince="false"])').each(function(index, value) {
             $this = $(this);
             d = new Date($this.attr('datetime'));
             $this.text(timeSince(d, $this.hasClass('short')));
         });
 
-        setTimeout(updateTimes, 10000);
+        setTimeout(updateTimes, 1000);
     })();
 
 
