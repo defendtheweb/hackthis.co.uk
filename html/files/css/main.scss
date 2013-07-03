@@ -1,18 +1,22 @@
-html, body {
-    height: 100%;
+@media (min-width: 1000px) {
+    html, body {
+        height: 100%;
+    }
 }
 
 html {
+    background: $black;
+    font-size: 12px;
+}
+
+body {
     background: {
         image: url("/files/images/bg.png");
         color: $black;
         repeat: no-repeat; 
         position: center -50px;
     }
-    font-size: 12px;
-}
 
-body {
     margin: 0px;
     padding: 0px; 
     @include default_font;
@@ -20,18 +24,20 @@ body {
     letter-spacing: 0.01em;
 }
 
-.page-wrap {
-    min-height: 100%;
-    /* equal to footer height */
-    margin-bottom: -128px;
-}
-.page-wrap:after {
-    content: "";
-    display: block;
-}
-#page-footer, .page-wrap:after {
-    /* .push must be the same height as footer */
-    height: 128px;
+@media ( min-width : 1000px ) {
+    .page-wrap {
+        min-height: 100%;
+        /* equal to footer height */
+        margin-bottom: -128px;
+    }
+    .page-wrap:after {
+        content: "";
+        display: block;
+    }
+    #page-footer, .page-wrap:after {
+        /* .push must be the same height as footer */
+        height: 128px;
+    }
 }
 
 
@@ -264,7 +270,7 @@ blockquote {
     padding: 0 0 0 10px;
     color: $text_dark;
 
-    span {
+    > span:not(.highlight) {
         display: block;
         margin-top: 10px;
         font-style: normal;
@@ -276,10 +282,6 @@ blockquote {
         }
     }
 }
-
-
-
-
 
 
 
@@ -353,7 +355,7 @@ sidebar h1 {
 }
 
 @media (max-width: 1000px) {
-    html {
+    body {
         background-position: -175px -50px;
     }
 }
