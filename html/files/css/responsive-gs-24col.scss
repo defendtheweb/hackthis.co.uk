@@ -21,6 +21,10 @@
     }
 }
 @media (max-width: 1000px) {
+	html, body {
+		overflow-x: hidden;
+	}
+
 	.container {
     	width: 95%;
     }
@@ -32,7 +36,8 @@
 	display: block; 
 	height: 0; 
 	clear: both; 
-	visibility: hidden; }
+	visibility: hidden;
+}
 
 
 /* DEFAULT ROW STYLES */
@@ -55,7 +60,6 @@
 
 /* RESET MARGINS */
 .col:first-child { margin-left: 0; } /* all browsers except IE6 and lower */
-
 
 /* COLUMN WIDTH ON DISPLAYS +768px */
 @media ( min-width : 769px ) {
