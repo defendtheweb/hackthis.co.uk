@@ -52,7 +52,7 @@ $(function() {
             }).focus().setCursorPosition(pos.start + tagBefore.length + ((middle.length)?middle.length + tagAfter.length:0));
         }
     }).on('keypress', '.wysiwyg textarea', function(e) {
-        if (e.which == 13) {
+        if (e.which == 13 && !e.shiftKey) {
             $form = $(this).closest('form');
             if ($form.find('#enter').is(':checked')) {
                 e.preventDefault();
