@@ -26,7 +26,7 @@ RewriteRule ^user/(.+)$ /user/index.php?user=$1&%{QUERY_STRING}
 
 # INBOX
 RewriteRule ^inbox/([0-9]+)$ /inbox/?view=$1&%{QUERY_STRING} [L]
-RewriteRule ^inbox/compose$ /inbox/compose.php?%{QUERY_STRING} [L]
+RewriteRule ^inbox/compose$ /inbox/?compose&%{QUERY_STRING} [L]
 
 
 # ------------------------------------------------------------------------------

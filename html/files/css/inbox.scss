@@ -148,12 +148,13 @@
                 left: 0;
                 right: 0;
                 width: 95%;
-                z-index: -1;
             }
 
             span {
                 background: $black;
                 padding: 0 10px;
+                position: relative;
+                z-index: 1;
             }
         }
     }

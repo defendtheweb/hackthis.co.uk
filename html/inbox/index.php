@@ -9,6 +9,8 @@
 
     if (isset($_POST['body']) && isset($_GET['view']))
         $result = $messages->newMessage(null, $_POST['body'], $_GET['view']);
+    if (isset($_POST['body']) && isset($_POST['to']) && isset($_GET['compose']))
+        $result = $messages->newMessage($_POST['to'], $_POST['body']);
 
     $inbox = $messages->getAll(42, false);
 
@@ -32,6 +34,12 @@
         <i class='icon-search'></i>
     </div>
 <?php
+    else:
+?>
+    <a class='button right' href='/inbox/compose'>
+        <i class="icon-envelope-alt"></i> New Message
+    </a>
+<?php
     endif;
 ?>
 
@@ -43,7 +51,7 @@
         $numItems = count($convo->users);
         $i = 0;
         foreach ($convo->users as $u) {
-            echo "<a href='/users/{$u['username']}'>{$u['username']}</a>";
+            echo "<a href='/user/{$u['username']}'>{$u['username']}</a>";
             if(++$i !== $numItems)
                 echo ', ';
         }
@@ -95,7 +103,7 @@
                 $lastDay = $today;
 ?>
                 <li class='clean'></li> <!-- Keep zebra stripes -->
-                <li class='new-day center'><span><?=date('F j, Y', strtotime($message->timestamp));?></span></li>
+                <li class='new-day center'><span><?=date('jS F, Y', strtotime($message->timestamp));?></span></li>
 <?php
             endif;
 ?>
@@ -112,7 +120,17 @@
 ?>
             </ul>
             <form method="POST">
-                <?php $wysiwyg_placeholder = 'Add your comment here...'; include('elements/wysiwyg.php'); ?>
+                <?php include('elements/wysiwyg.php'); ?>
+                <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
+            </form>
+<?php
+    elseif (isset($_GET['compose'])):
+?>
+            <form method="POST">
+                <label for="to">To:</label><br/>
+                <input autocomplete="off" id="to" data-suggest-max="2" data-suggest-at="false" class="suggest hide-shadow short" name="to"><br/>
+                <label for="body">Message:</label><br/>
+                <?php include('elements/wysiwyg.php'); ?>
                 <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
             </form>
 <?php
