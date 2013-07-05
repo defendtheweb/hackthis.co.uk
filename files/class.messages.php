@@ -154,16 +154,16 @@ class messages {
         global $db, $user;
 
         $body = trim($body);
-        if ($body === '')
+        if ($body === '') {
+            $this->error = '1.1';
             return false;
+        }
 
         if ($to !== null) {
             $recipients = array_unique(array_map("StrToLower", array_filter(preg_split('/[\ \n\,]+/', $to))));
 
             $tmp = $recipients;
             array_push($tmp, $user->username);
-
-            print_r($tmp);
 
             //Check if conversation already exists
             $plist = ':id_'.implode(',:id_', array_keys($tmp)); // placeholder list for IN
@@ -182,8 +182,6 @@ class messages {
             $st->execute($params);
             $result = $st->fetchAll();
 
-            print_r($result);
-
             if (count($result) === 1)
                 return $this->newMessage(null, $body, $result[0]->pm_id);
 
@@ -195,6 +193,7 @@ class messages {
             $result = $st->execute();
             if (!$result) {
                 $db->rollBack();
+                $this->error = '1.2';
                 return false;
             }
 
@@ -217,10 +216,12 @@ class messages {
 
                 if ($count < 1) {
                     $db->rollBack();
+                    $this->error = '1.3';
                     return false;
                 }
             } catch(PDOException $e) {
                 $db->rollBack();
+                $this->error = '1.2';
                 return false;
             } 
 
@@ -231,6 +232,7 @@ class messages {
             $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid));
             if (!$result) {
                 $db->rollBack();
+                $this->error = '1.2';
                 return false;
             }
 
@@ -240,24 +242,51 @@ class messages {
             $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid, ':body' => $body));
             if (!$result) {
                 $db->rollBack();
+                $this->error = '1.2';
                 return false;
             }
 
             $db->commit();
         } else {
+            $body = trim($body);
+            if ($body === '') {
+                $this->error = '1.1';
+                return false;
+            }
+
             //Lookup privilages
             $st = $db->prepare('INSERT INTO pm_messages (`pm_id`, `user_id`, `message`)
                                 SELECT :pm_id, :uid, :body FROM pm_users
                                 WHERE user_id = :uid AND pm_id = :pm_id');
             $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $user->uid, ':body' => $body));
-            if (!$st->rowCount())
+            if (!$st->rowCount()) {
+                $this->error = '1.4';
                 return false;
+            }
 
             $st = $db->prepare("UPDATE pm_users SET `seen` = NOW() WHERE user_id = :uid AND pm_id = :pm_id LIMIT 1");
             $st->execute(array(':uid' => $user->uid, ':pm_id' => $pm_id));
         }
 
+        $this->lastInserted = $pm_id;
         return true;
+    }
+
+    function getError($code=null) {
+        if ($code == null)
+            return $this->error;
+
+        switch($code) {
+            case '1.1': return 'Missing message body';
+            case '1.2': return 'Error creating conversation';
+            case '1.3': return 'No valid recipients found';
+            case '1.3': return 'You do not have permission to reply to this conversation';
+            default: return 'Error';
+        }
+    }
+
+    function getLastInserted() {
+        return $this->lastInserted;
     }
 }
 ?>

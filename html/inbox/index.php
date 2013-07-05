@@ -7,10 +7,25 @@
 
     $messages = new messages();
 
-    if (isset($_POST['body']) && isset($_GET['view']))
+    if (isset($_POST['body']) && isset($_GET['view'])) {
         $result = $messages->newMessage(null, $_POST['body'], $_GET['view']);
-    if (isset($_POST['body']) && isset($_POST['to']) && isset($_GET['compose']))
+        if ($result) {
+            $uri = $_GET['view'] . "?sent";
+            header('Location: '.$uri);
+            die();
+        } else
+            $error = $messages->getError();
+    }
+
+    if (isset($_POST['body']) && isset($_POST['to']) && isset($_GET['compose'])) {
         $result = $messages->newMessage($_POST['to'], $_POST['body']);
+        if ($result) {
+            $uri = $messages->getLastInserted();
+            header('Location: '.$uri);
+            die();
+        } else
+            $error = $messages->getError();     
+    }
 
     $inbox = $messages->getAll(42, false);
 
@@ -119,18 +134,39 @@
         endforeach;
 ?>
             </ul>
+<?php
+        if (isset($error)):
+?>
+            <div class='msg msg-error'>
+                <i class='icon-error'></i>
+                <?=$messages->getError($error);?>
+            </div>
+<?php
+        endif;
+?>
             <form method="POST">
                 <?php include('elements/wysiwyg.php'); ?>
                 <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
             </form>
 <?php
     elseif (isset($_GET['compose'])):
+        if (isset($error)):
+?>
+        <div class='msg msg-error'>
+            <i class='icon-error'></i>
+            <?=$messages->getError($error);?>
+        </div>
+<?php
+        endif;
 ?>
             <form method="POST">
                 <label for="to">To:</label><br/>
-                <input autocomplete="off" id="to" data-suggest-max="2" data-suggest-at="false" class="suggest hide-shadow short" name="to"><br/>
+                <input autocomplete="off" id="to" data-suggest-max="2" data-suggest-at="false" class="suggest hide-shadow short" name="to" value="<?=(isset($_POST['to']))?htmlentities($_POST['to']):'';?>"><br/>
                 <label for="body">Message:</label><br/>
-                <?php include('elements/wysiwyg.php'); ?>
+                <?php
+                    $wysiwyg_text = htmlentities($_POST['body']);
+                    include('elements/wysiwyg.php');
+                ?>
                 <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
             </form>
 <?php
