@@ -1,7 +1,13 @@
+#global-nav-sticky-sticky-wrapper {  
+    margin-bottom: 18px;
+}
+
 #global-nav-sticky {
     width: 100%;
     position: relative;
-    z-index: 1000;
+    z-index: 5000;
+    margin-bottom: 18px;
+    
 }
 
 #global-nav {
@@ -11,7 +17,6 @@
         color: $dark;
     }
     margin: 0px;
-    margin-bottom: 18px;
 
     background: #000000;
     background: rgba(0,0,0,0.8);
@@ -23,7 +28,7 @@
         right: 0;
         top: 23px;
         display: none;
-        z-index: 50;
+        z-index: 5000;
         font-size: 0.9em;
  
         border: {
