@@ -13,6 +13,10 @@ $(function() {
     $('#conversation-search input').on('keyup', function(e) {
         container.find('.conversation .body span.highlight').contents().unwrap();
 
+        if (e.which == 27 || e.keyCode == 27) {
+            $(this).val("");
+        }
+
         var term = $(this).val().replace(/[^a-zA-Z 0-9]+/g,'');;
         if (term.length <= 1)
             return false;
