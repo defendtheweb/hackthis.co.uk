@@ -4,6 +4,7 @@ $(function() {
     $('textarea').autosize();
     $('.scroll').mCustomScrollbar();
     $("#global-nav-sticky").sticky({topSpacing:0});
+    $('.select-menu').selectMenu();
 
 
     // Show/hide navigation
