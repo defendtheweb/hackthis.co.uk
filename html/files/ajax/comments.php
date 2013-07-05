@@ -9,13 +9,13 @@
 
     if (isset($_GET['action'])) {
         if ($_GET['action'] == "get") {
-            $comments = $articles->get_comments($_GET['id']);
+            $comments = $articles->getComments($_GET['id']);
 
             $result['status'] = true;
             $result['comments'] = $comments;
         } else if ($user->loggedIn) {
             if ($_GET['action'] == "add") {
-                $comment = $articles->add_comment($_POST['body'], $_POST['id'], $_POST['parent']);
+                $comment = $articles->addComment($_POST['body'], $_POST['id'], $_POST['parent']);
 
                 if ($comment) {
                     $result['status'] = true;
@@ -23,7 +23,7 @@
                 } else
                     $result['status'] = false;
             } else if ($_GET['action'] == "delete") {
-                $result['status'] = $comment = $articles->delete_comment($_POST['id']);
+                $result['status'] = $comment = $articles->deleteComment($_POST['id']);
             } else if ($_GET['action'] == "favourite") {
                 $result['status'] = $comment = $articles->favourite($_POST['id']);
             } else if ($_GET['action'] == "unfavourite") {
