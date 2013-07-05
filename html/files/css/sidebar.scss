@@ -70,7 +70,8 @@
 
         ul {
             height: 170px;
-            overflow-y: hidden;
+            overflow: hidden;
+            position: relative;
 
             li {
                 list-style: none;
