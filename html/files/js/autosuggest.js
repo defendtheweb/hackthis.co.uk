@@ -3,10 +3,9 @@ $.fn.autosuggest = function() {
         $self = $(this);
 
         $self.keyup(function(event) {
-            $this = $(this);
+            var $this = $(this);
             var auto = $this.attr('data-suggest-at')==='false'?false:true;
 
-            
             var caret = $this.getCursorPosition().end;
             var val = this.value + ' ';
             var word = /\S+$/.exec(val.slice(0, val.indexOf(' ', caret)));
@@ -57,11 +56,11 @@ $.fn.autosuggest = function() {
         });
 
         $self.parent().on('click', '.autosuggest a', function(e) {
-            $this = $(this);
+            var $this = $(this);
             e.preventDefault();
             e.stopPropagation();
 
-            $self = $this.closest('.autosuggest').prev();
+            var $self = $this.closest('.autosuggest').prev();
             var auto = $self.attr('data-suggest-at')==='false'?false:true;
 
             $this.closest('.autosuggest').remove();
