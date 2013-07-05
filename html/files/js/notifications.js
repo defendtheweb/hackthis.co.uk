@@ -349,7 +349,9 @@ $(function() {
                     var $msg = $(messagesTmpl).tmpl(data);
                     $msg.hide();
                     $form.closest('li').before($msg);
-                    $msg.slideDown();
+                    $msg.slideDown(function() {
+                        $form.closest('.scroll').mCustomScrollbar("scrollTo", "bottom");
+                    });
 
                     //Clear reply textarea
                     $form.find('textarea').val('');
