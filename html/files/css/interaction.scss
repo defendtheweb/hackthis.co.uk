@@ -39,7 +39,7 @@ textarea,
 input,
 select {
     border: 1px solid $light_bg;
-    background: $black;
+    background: none;
     color: $white;
     padding: 2px; 
     margin: 0 0 8px 0;
@@ -56,14 +56,22 @@ select {
         border-color: #990000 !important;
     }
 
+    &.medium {
+        width: 75%;
+    }
+
+    &.short {
+        width: 50%;
+    }
+
     &:focus {
         border-color: $lighter_bg;
         outline: none;
     }
 
-    &:not(.hide-shadow):focus { 
+    /* &:not(.hide-shadow):focus { 
         @include box-shadow($bright_green);
-    }
+    } */
 
     &:-webkit-autofill {
         color: black !important;
@@ -162,6 +170,96 @@ a.button {
 
     i {
         padding-right: 4px;
+    }
+}
+
+
+/* SELECT MENU */
+div.select-menu {
+    position: relative;
+    display: inline-block;
+    color: $white;
+    margin-bottom: 2px;
+
+    width: 24%;
+
+    > label {
+        width: 100%;
+        background: $light_bg;
+        padding: 3px 8px 4px 8px;
+        margin-top: -1px;
+
+        -webkit-user-select: none; 
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+
+        &:after {
+            @include icon("\f0d7");
+            margin-top: 1px;
+            float: right;
+        }
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: none;
+            background: $lighter_bg;
+        }
+    }
+
+    ul {
+        position: absolute;
+        width: 100%;
+        z-index: 1000;
+        background: $light_bg;
+        list-style: none;
+
+        li {
+            padding: 4px;
+            &:hover {
+                background: $lighter_bg;
+                cursor: pointer;
+            }
+
+            &.sub:after {
+                @include icon("\f0da");
+                float: right;
+                margin-right: 4px;
+            }
+        }
+    }
+
+    > ul, > div > ul {
+        display: none;
+        -webkit-transition: left 0.1s ease-in-out;
+        -moz-transition: left 0.1s ease-in-out;
+        -o-transition: left 0.1s ease-in-out;
+        transition: left 0.1s ease-in-out;
+
+        ul {
+            top: 0;
+        }
+    }
+
+    > div {
+        position: absolute;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    &.active {
+        > label {
+            background: $lighter_bg;
+
+            &:after {
+                @include icon("\f0d8");
+            }
+        }
+
+        > div > ul {
+            display: block;
+        }
     }
 }
 

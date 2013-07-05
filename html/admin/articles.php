@@ -5,57 +5,97 @@
 
     $articles = new articles();
 
-    if (isset($_GET['action'])):
-        $article = $articles->get_article($_GET['slug']);
+    if (!isset($_GET['action'])):
+?>
 
-        if (!$article):
+
+<?php
+    else:
+        if ($_GET['action'] === 'edit'):
+            $article = $articles->getArticle($_GET['slug']);
+
+            if (!$article):
 ?>
         <div class='msg msg-error'>
             <i class='icon-error'></i>
-            News post not found
+            Article not found
         </div>
 <?php
-        else:
-            // Check for submission
-            if (isset($_POST['body'])) {
-                $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body']);
+            else:
+                // Check for submission
+                if (isset($_POST['body'])) {
+                    $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body'], 'category_id'=>$_POST['category']);
 
-                $article->title = $_POST['title'];
-                $article->body = $_POST['body'];
-
-                $updated = $articles->update_article($article->id, $changes, isset($_POST['update']));
-                if ($updated):
-?>
-        <div class='msg msg-good'>
-            <i class='icon-good'></i>
-            Post updated, <a href='/news/<?=$article->slug;?>'>view post</a>
-        </div>
-<?php
-                else:
+                    $updated = $articles->updateArticle($article->id, $changes, isset($_POST['update']));
+                    if ($updated) {
+                        $uri = "http://{$_SERVER[HTTP_HOST]}{$_SERVER[REQUEST_URI]}";
+                        if (!isset($_GET['update'])) $uri .= '&update';
+                        header('Location: '.$uri);
+                        die();
+                    } else {
 ?>
         <div class='msg msg-error'>
             <i class='icon-error'></i>
             Error updating post
         </div>
 <?php
+                        die();
+                    }
+                }
+
+                // Check for update
+                if (isset($_GET['update'])):
+?>
+        <div class='msg msg-good'>
+            <i class='icon-good'></i>
+            Post updated, <a href='<?=$article->uri;?>'>view post</a>
+        </div>
+<?php
                 endif;
-            }
 ?>
 
         <form method='POST'>
-            <label>Title:</label>
-            <input type="text" value="<?=htmlentities($article->title);?>" id='title' name='title'/>
+            <label>Title:</label><br/>
+            <input type="text" value="<?=htmlentities($article->title);?>" id='title' name='title' class='medium'/>
+            <div class='select-menu right' data-id="category" data-value="<?=$article->cat_id;?>">
+                <label><?=$article->cat_title;?></label>
+            
+                <ul>
 <?php
-            $wysiwyg_text = $article->body;
-            include('elements/wysiwyg.php');
+                $categories = $articles->getCategories();
+                foreach($categories as $cat) {
+                    printCategoryList($cat);
+                }
 ?>
+                </ul>
+            </div>
+<?php
+                $wysiwyg_text = $article->body;
+                include('elements/wysiwyg.php');
+?>
+            <input type='submit' class='button' value='Save'/>
+
             <input type="checkbox" id="update" name="update" checked/>
-            <label for="update">Mark as update</label>
-            <input type='submit' class='button' value='Submit'/>
+            <label class='right' for="update">Mark as update</label>
         </form>
 <?php
-        endif;
-    endif;
+            endif;
+        endif; //$action = 'edit'
+    endif; //isset $_GET['action']
 
     require_once('footer.php');
-?>           
+
+
+
+    function printCategoryList($cat) {
+        echo "<li data-value='{$cat->id}'>{$cat->title}\n";
+        if (isset($cat->children) && count($cat->children)) {
+            echo "<ul>\n";
+            foreach($cat->children AS $child) {
+                printCategoryList($child);
+            }
+            echo "</ul>\n";
+        }
+        echo "</li>\n";
+    }
+?>

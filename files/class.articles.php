@@ -4,7 +4,35 @@
 
         }
 
-        public function get_articles($category_id) {
+        public function getCategories($parent=null) {
+            global $db, $user;
+
+            if ($parent == null) {
+                $st = $db->prepare('SELECT category_id AS id, title, slug
+                                    FROM articles_categories
+                                    WHERE ISNULL(parent_id)
+                                    ORDER BY title ASC');
+                $st->execute(array(':parent'=>$parent));
+                $result = $st->fetchAll();
+            } else {
+                $st = $db->prepare('SELECT category_id AS id, title, slug
+                                    FROM articles_categories
+                                    WHERE parent_id = :parent
+                                    ORDER BY title ASC');
+                $st->execute(array(':parent'=>$parent));
+                $result = $st->fetchAll();
+            }
+
+            foreach($result as $res) {
+                $children = $this->getCategories($res->id);
+                if ($children)
+                    $res->children = $children;
+            }
+
+            return $result;
+        }
+
+        public function getArticles($category_id) {
             global $db, $user;
 
             // Group by required for count
@@ -33,36 +61,43 @@
             return $result;
         }
 
-        public function get_article($slug) {
+        public function getArticle($slug, $category=null) {
             global $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated,
-                        COALESCE(comments.count, 0) AS comments,
-                        COALESCE(favourites.count, 0) AS favourites,
-                        COALESCE(user_favourites.count, 0) AS favourited
-                    FROM articles a
-                    LEFT JOIN users
-                    ON users.user_id = a.user_id
-                    LEFT JOIN 
-                        ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
-                    ON a.article_id = comments.article_id
-                    LEFT JOIN 
-                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
-                    ON a.article_id = favourites.article_id
-                    LEFT JOIN 
-                        ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
-                    ON a.article_id = user_favourites.article_id
-                    WHERE a.slug = :slug
-                    GROUP BY a.article_id
-                    ORDER BY submitted DESC');
+            $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
+                                    submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
+                                    CONCAT(IF(a.category_id = 0, "/", "/articles/"), CONCAT_WS("/", categories.slug, a.slug)) AS uri,
+                                    COALESCE(comments.count, 0) AS comments,
+                                    COALESCE(favourites.count, 0) AS favourites,
+                                    COALESCE(user_favourites.count, 0) AS favourited
+                                FROM articles a
+                                LEFT JOIN articles_categories categories
+                                ON categories.category_id = a.category_id
+                                LEFT JOIN users
+                                ON users.user_id = a.user_id
+                                LEFT JOIN 
+                                    ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
+                                ON a.article_id = comments.article_id
+                                LEFT JOIN 
+                                    ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
+                                ON a.article_id = favourites.article_id
+                                LEFT JOIN 
+                                    ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
+                                ON a.article_id = user_favourites.article_id
+                                WHERE a.slug = :slug
+                                GROUP BY a.article_id
+                                ORDER BY submitted DESC');
             $st->execute(array(':slug' => $slug, ':uid' => $user->uid));
             $result = $st->fetch();
+
+            if (!$result || ($category !== null && $result->cat_id != $category))
+                return false;
 
             return $result;
         }
 
-        public function update_article($id, $changes, $updated=true) {
+        public function updateArticle($id, $changes, $updated=true) {
             if (!is_array($changes)) return false;
 
             global $db, $user;
@@ -94,7 +129,7 @@
             return $res;
         }
 
-        public function get_comments($article_id, $parent_id=0, $bbcode=true) {
+        public function getComments($article_id, $parent_id=0, $bbcode=true) {
             global $app, $db, $user;
 
             // Group by required for count
@@ -126,7 +161,7 @@
                     unset($comment->score);
                 }
 
-                $replies = $this->get_comments($article_id, $comment->id);
+                $replies = $this->getComments($article_id, $comment->id);
                 if ($replies) {
                     $comment->replies = $replies;
                     unset($comment->deleted);
@@ -152,7 +187,7 @@
             return $result;
         }
 
-        public function get_comment($comment_id, $bbcode=true) {
+        public function getComment($comment_id, $bbcode=true) {
             global $app, $db, $user;
 
             // Group by required for count
@@ -175,7 +210,7 @@
             return $result;
         }
 
-        public function add_comment($comment, $article_id, $parent_id=0) {
+        public function addComment($comment, $article_id, $parent_id=0) {
             global $app, $db, $user;
 
             // Check privilages
@@ -225,10 +260,10 @@
             }
 
 
-            return $this->get_comment($comment_id);
+            return $this->getComment($comment_id);
         }
 
-        public function delete_comment($comment_id) {
+        public function deleteComment($comment_id) {
             global $app, $db, $user;
 
             // Check privilages
