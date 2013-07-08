@@ -454,13 +454,13 @@ var $default_tag_rules = Array(
                                             ),
 
 
-                               'font' => Array(
-                                               'mode' => BBCODE_MODE_LIBRARY,
-                                               'allow' => Array('_default' => '/^[a-zA-Z0-9._ -]+$/'),
-                                               'method' => 'DoFont',
-                                               'class' => 'inline',
-                                               'allow_in' => Array('listitem', 'block', 'columns', 'inline', 'link'),
-                                               ),
+                               // 'font' => Array(
+                               //                 'mode' => BBCODE_MODE_LIBRARY,
+                               //                 'allow' => Array('_default' => '/^[a-zA-Z0-9._ -]+$/'),
+                               //                 'method' => 'DoFont',
+                               //                 'class' => 'inline',
+                               //                 'allow_in' => Array('listitem', 'block', 'columns', 'inline', 'link'),
+                               //                 ),
                                'color' => Array(
                                                 'mode' => BBCODE_MODE_ENHANCED,
                                                 'allow' => Array('_default' => '/^#?[a-zA-Z0-9._ -]+$/'),
@@ -487,12 +487,12 @@ var $default_tag_rules = Array(
                                               'class' => 'inline',
                                               'allow_in' => Array('listitem', 'block', 'columns', 'inline', 'link'),
                                               ),
-                               'spoiler' => Array(
-                                                  'simple_start' => "<span class=\"bbcode_spoiler\">",
-                                                  'simple_end' => "</span>",
-                                                  'class' => 'inline',
-                                                  'allow_in' => Array(),
-                                                  ),
+                               // 'spoiler' => Array(
+                               //                    'simple_start' => "<span class=\"bbcode_spoiler\">",
+                               //                    'simple_end' => "</span>",
+                               //                    'class' => 'inline',
+                               //                    'allow_in' => Array(),
+                               //                    ),
                                'acronym' => Array(
                                                   'mode' => BBCODE_MODE_ENHANCED,
                                                   'template' => '<span class="bbcode_acronym" title="{$_default/e}">{$_content/v}</span>',
@@ -676,16 +676,16 @@ var $default_tag_rules = Array(
                 ),
 'spoiler' => Array(
                    'mode' => BBCODE_MODE_ENHANCED,
-                   'template' => "\n<div class=\"bbcode_spoiler\">\n<div class=\"bbcode_spoiler_head\">Spoiler<a href='#' class=\"bbcode_spoiler_show right\">show</a></div>\n<div class='bbcode_spoiler_body'>{\$_content/v}</div>\n</div>\n",
-                   'class' => 'code',
+                   'template' => "\n<div class=\"bbcode_spoiler\">\n<div class=\"bbcode_spoiler_head\">Show spoiler</div>\n<div class='bbcode_spoiler_body'>{\$_content/v}</div>\n</div>\n",
                    'allow_in' => Array('listitem', 'block', 'columns'),
-                   'content' => BBCODE_VERBATIM,
+                   'content' => BBCODE_REQUIRED,
                    'before_tag' => "sns",
                    'after_tag' => "sn",
                    'before_endtag' => "sn",
                    'after_endtag' => "sns",
                    'plain_start' => "\n<b>Spoiler:</b>\n",
                    'plain_end' => "\n",
+                   'class' => 'block'
                    ),
 'quote' => Array(
                  'mode' => BBCODE_MODE_LIBRARY,
@@ -794,7 +794,7 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
             return strlen($name) > 0;
         $title = trim(@$params['title']);
         if (strlen($title) <= 0) $title = trim($default);
-        return "<a href=\"{$bbcode->wiki_url}$name\" class=\"bbcode_wiki\">"
+        return "<a href=\"$name\" class=\"bbcode_wiki\">"
         . htmlspecialchars($title) . "</a>";
     }
     function DoImage($bbcode, $action, $name, $default, $params, $content) {
@@ -1172,8 +1172,8 @@ class BBCode {
                                     return strtr($string, $trans_tbl);
                                 }
                                 function Wikify($string) {
-                                    return rawurlencode(str_replace(" ", "_",
-                                                        trim(preg_replace("/[!?;@#\$%\\^&*<>=+`~\\x00-\\x20_-]+/", " ", $string))));
+                                    return rawurlencode(str_replace(" ", "-",
+                                                        trim(preg_replace("/[!?;@#\$%\\^&*<>=+`~\\x00-\\x20_-]+/", "", $string))));
                                 }
                                 function IsValidURL($string, $email_too = true) {
                                     if (preg_match("/^
@@ -1486,7 +1486,7 @@ function Internal_GenerateOutput($pos) {
                 $this->Internal_CleanupWSByPoppingStack(@$rule['after_tag'], $output);
                 $tag_body = $this->Internal_CollectTextReverse($output, count($output)-1, $end);
                 $this->Internal_CleanupWSByPoppingStack(@$rule['before_tag'], $this->stack);
-                $this->Internal_UpdateParamsForMissingEndTag(@$token[BBCODE_STACK_TAG]);
+                @$this->Internal_UpdateParamsForMissingEndTag(@$token[BBCODE_STACK_TAG]);
                 $tag_output = $this->DoTag(BBCODE_OUTPUT, $name,
                                            @$token[BBCODE_STACK_TAG]['_default'], @$token[BBCODE_STACK_TAG], $tag_body);
                 $output = Array(Array(
