@@ -31,9 +31,9 @@
 <?php
     endif;
 ?>
-                        <li><a href='/'>articles</a></li>
-                        <li><a href='/'>forum</a></li>
-                        <li><a href='/'>irc</a>
+                        <li><a href='/articles/'>articles</a></li>
+                        <li><a href='/forum/'>forum</a></li>
+                        <li><a href='/irc/'>irc</a>
                             <ul>
                                 <li><a href='/'>Chat Online</a></li>
                                 <li><a href='/'>stats</a></li>
