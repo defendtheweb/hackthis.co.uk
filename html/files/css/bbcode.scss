@@ -1,0 +1,126 @@
+.bbcode_code,
+.bbcode_spoiler {
+	/* border: 1px solid #222;*/
+	margin: 10px 0;
+	width: 100%;
+	display: inline-block;
+	background: $bg;
+}
+.bbcode_code_head {
+	display: none;
+}
+.bbcode_spoiler_head {
+	background: $bg;
+	padding: 10px;
+	text-align: left;
+	color: $white;
+	cursor: pointer;
+
+	&.active {
+		display: none;
+
+		+ .bbcode_spoiler_body {
+			display: block;
+	    }
+	}
+}
+.bbcode_code_body,
+.bbcode_spoiler_body {
+	padding: 10px;
+	white-space: pre-wrap; /* css-3 */
+	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+	white-space: -pre-wrap; /* Opera 4-6 */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	word-wrap: break-word; /* Internet Explorer 5.5+ */
+	text-align: left;
+
+	.bbcode_spoiler_body,
+	.bbcode_code_body,
+	blockquote {
+		background: $black;
+	}
+}
+
+.bbcode_spoiler_body {
+	display: none;
+}
+
+// blockquote {
+// 	margin-top: 4px;
+// 	margin-bottom: 4px;
+// 	text-align: left;
+// }
+
+ul.bbcode_list {
+	margin: 0.5em 0;
+	padding: 0 0 0 20px;
+}
+
+.bbcode_acronym {
+	border-bottom: 1px dashed;
+}
+
+
+
+
+
+.pln {
+	color:#999;
+}
+
+pre {
+	margin: 0px;
+}
+
+ol.linenums {
+	margin-top:0;
+	margin-bottom:0;
+}
+
+li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 {
+	list-style-type:none;
+}
+
+li.L1,li.L3,li.L5,li.L7,li.L9 {
+	background:#eee;
+}
+
+@media screen{
+	.com {
+		color:#800;
+	}
+
+	.lit {
+		color:#066;
+	}
+
+	.pun,.opn,.clo {
+		color:#fff;
+	}
+
+	.fun {
+		color:red;
+	}
+
+	.str,.atv {
+		color:#FFF;
+	}
+
+	.kwd,.tag {
+		color:#fff;
+	}
+
+	.typ,.atn,.dec,.var {
+		color:#666;
+	}
+}
+
+
+.post_body .bbcode_list li {
+	background: none;
+}
+
+.bbcode-youtube,
+.bbcode-vimeo {
+	margin: 16px 0;
+}

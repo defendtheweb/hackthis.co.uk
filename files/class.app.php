@@ -23,6 +23,7 @@
 			require('vendor/nbbc.php');
 			$this->bbcode = new BBCode;
 			array_push($custom_css, 'bbcode.scss');
+			array_push($custom_js, 'bbcode.js');
 			//$this->bbcode->SetDetectURLs(true);
 
 			$this->stats = new stats();
