@@ -11,6 +11,7 @@
 				throw new Exception('Config error');
 
 			$this->config = $config;
+			$this->config['cache'] = $this->config['path'] . "/files/cache/";
 
 			$this->utils = new utils();
 
@@ -21,13 +22,17 @@
 
 			require('vendor/nbbc.php');
 			$this->bbcode = new BBCode;
-			array_push($custom_css, 'bbcode.css');
-			$this->bbcode->SetDetectURLs(true);
+			array_push($custom_css, 'bbcode.scss');
+			//$this->bbcode->SetDetectURLs(true);
 
 			$this->stats = new stats();
 
 			$this->notifications = new notifications();
 			$this->feed = new feed();
+
+			//get version number
+			$this->cache = new cache($this);
+			$this->version = substr($this->cache->get('version'), 1);
 		}
 
 		public function config($key) {

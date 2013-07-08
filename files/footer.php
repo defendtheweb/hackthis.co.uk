@@ -6,7 +6,7 @@
         <div id="page-footer">
             <footer class="container row">
                 <div class='center'>
-                    Current Version: <a href='/about/version'>5.4.4</a><br/>
+                    Current Version: <a href='https://github.com/HackThis/hackthis.co.uk/tree/<?=$app->version;?>'><?=$app->version;?></a><br/>
                     Copyright © 2008 - <?=date('Y');?> <a href='//www.hackthis.co.uk'>hackthis.co.uk</a> || Icons: <a href='http://fortawesome.github.io/Font-Awesome/'>Font Awesome</a>
                 </div>
                 <br/>
