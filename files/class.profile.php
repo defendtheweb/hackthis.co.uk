@@ -97,15 +97,15 @@
                 switch($item->type) {
                     case 'comment':
                         $icon = 'comments';
-                        $string = "Commented on <a href='{$item->slug}'>{$item->title}</a>";
+                        $string = "Commented on <a href='{$item->uri}'>{$item->title}</a>";
                         break;
                     case 'comment_mention':
                         $icon = 'comments';
-                        $string = "Mentioned by <a href='/user/{$item->username}'>{$item->username}</a> on <a href='{$item->slug}'>{$item->title}</a>";
+                        $string = "Mentioned by <a href='/user/{$item->username}'>{$item->username}</a> on <a href='{$item->uri}'>{$item->title}</a>";
                         break;
                     case 'favourite':
                         $icon = 'heart';
-                        $string = "Favourited <a href='{$item->slug}'>{$item->title}</a>";
+                        $string = "Favourited <a href='{$item->uri}'>{$item->title}</a>";
                         break;
                     case 'level':
                         $icon = 'good';
@@ -121,7 +121,11 @@
                         break;
                     case 'article':
                         $icon = 'books';
-                        $string = "<a href='{$item->slug}'>{$item->title}</a> was published";
+                        $string = "<a href='{$item->uri}'>{$item->title}</a> was published";
+                        break;
+                    case 'news':
+                        $icon = 'article';
+                        $string = "<a href='{$item->uri}'>{$item->title}</a> was published";
                         break;
                     case 'join':
                         $icon = 'user';

@@ -9,11 +9,13 @@ $(function() {
     '        {{else type == "medal"}}'+
     '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php">${label}</a>'+
     '        {{else type == "comment"}}'+
-    '            <i class="icon-comments"></i><a href="${slug}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
+    '            <i class="icon-comments"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "favourite"}}'+
-    '            <i class="icon-heart"></i><a href="${slug}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
+    '            <i class="icon-heart"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "article"}}'+
-    '            <i class="icon-books"></i><a href="${slug}">${title}</a>'+
+    '            <i class="icon-books"></i><a href="${uri}">${title}</a>'+
+    '        {{else type == "news"}}'+
+    '            <i class="icon-article"></i><a href="${uri}">${title}</a>'+
     '        {{else type == "level"}}'+
     '            <i class="icon-good"></i><a href="/user/${username}">${username}</a> <span class="dark">·</span> <a href="${slug}">Main 1${title}</a>'+
     '        {{/if}}'+
@@ -377,7 +379,7 @@ $(function() {
         }, 'json');
     });
 
-    $('.messages-new').on('click', function(e) {
+    $('body').on('click', '.messages-new', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
