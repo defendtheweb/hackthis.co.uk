@@ -84,7 +84,7 @@
 ?>
                         <li>
                             <i class='icon-<?=$item['icon'];?>'></i> <?=$item['string'];?>
-                            <span class='dark'>· <time datetime="<?=date('c', $item['time']);?>"><?=date('d/m/Y', $item['time']);?></time></span>
+                            <span class='dark'>· <time datetime="<?=date('c', strtotime($item['time']));?>"><?=$app->utils->timeSince($item['time']);?></time></span>
 <?php
         if ($profile->owner):
 ?>

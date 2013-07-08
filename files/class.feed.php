@@ -4,20 +4,20 @@
             global $app, $db, $user;
 
             if (!isset($user_id)) {
-                $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
+                $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
                         FROM users_feed feed
                         LEFT JOIN users
                         ON feed.user_id = users.user_id
-                        WHERE feed.type != "friend" AND feed.type != "comment_mention" AND feed.time > FROM_UNIXTIME(:last)
+                        WHERE feed.type != "friend" AND feed.type != "comment_mention" AND feed.time > :last
                         ORDER BY time DESC
                         LIMIT 10');
                 $st->bindValue(':last', $last);
                 $st->execute();
                 $result = $st->fetchAll();
             } else {
-                $st = $db->prepare('SELECT feed.feed_id, feed.user_id, feed.type, feed.item_id, UNIX_TIMESTAMP(feed.time) AS timestamp
+                $st = $db->prepare('SELECT feed.feed_id, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
                         FROM users_feed feed
-                        WHERE user_id = :user_id AND feed.time > FROM_UNIXTIME(:last)
+                        WHERE user_id = :user_id AND feed.time > :last
                         ORDER BY time DESC');
                 $st->bindValue(':last', $last);
                 $st->bindValue(':user_id', $user_id);
@@ -84,6 +84,8 @@
 
                 unset($res->item_id);                
                 unset($res->user_id);
+
+                $res->timestamp = $app->utils->fdate($res->timestamp);
             }
 
             return $result;

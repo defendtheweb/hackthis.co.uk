@@ -154,12 +154,13 @@
         }
 
         function printItem($key, $value, $time=false) {
+            global $app;
             if (!$key || !$value)
                 return;
 
             global $app;
             if ($time) {
-                $value = '<time datetime="' . date('c', strtotime($value)) . '">' . date('d/m/Y', strtotime($value)) . '</time>';
+                $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $app->utils->timeSince($value) . '</time>';
             } else {
                 $value = $app->parse($value, false, false);
             }

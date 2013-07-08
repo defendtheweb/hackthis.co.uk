@@ -49,7 +49,9 @@ $(function() {
                 lastUpdate = data.feed[0].timestamp;
 
                 $.each(data.feed, function(index, item) {
-                    var d = new Date(item.timestamp*1000);
+                    console.log(item.timestamp);
+                    var d = new Date(item.timestamp);
+                    console.log(d);
                     item.time = timeSince(d, true);
                     item.timestamp = d.toISOString();
                 });
