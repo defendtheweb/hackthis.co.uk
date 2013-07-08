@@ -49,12 +49,10 @@
                     $st->fetch();
                 } else if ($res->type == 'comment' || $res->type == 'comment_mention') {
                     // uri, title
-                    $st = $db->prepare("SELECT users.username, articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    $st = $db->prepare("SELECT users.username, articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
                         FROM articles_comments
                         LEFT JOIN articles
                         ON articles_comments.article_id = articles.article_id
-                        LEFT JOIN articles_categories
-                        ON articles_categories.category_id = articles.category_id
                         LEFT JOIN users
                         ON articles_comments.user_id = users.user_id
                         WHERE comment_id = :item_id
@@ -63,20 +61,20 @@
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
 
-                    $res->slug = "/{$res->slug}#comment-{$res->item_id}";
+                    $res->uri = "{$res->uri}#comment-{$res->item_id}";
                 } else if ($res->type == 'article' || $res->type == 'favourite') {
                     // uri, title
-                    $st = $db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    $st = $db->prepare("SELECT articles.title, articles.category_id, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
                         FROM articles
-                        LEFT JOIN articles_categories
-                        ON articles_categories.category_id = articles.category_id
                         WHERE article_id = :item_id
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
 
-                    $res->slug = "/{$res->slug}";
+                    if ($res->category_id == 0 && $res->type == 'article')
+                        $res->type = 'news';
+                    unset($res->category_id);
                 }
 
                 // Parse title
