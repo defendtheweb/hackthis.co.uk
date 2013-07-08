@@ -12,7 +12,7 @@
 <?php
     else:
         if ($_GET['action'] === 'edit'):
-            $article = $articles->getArticle($_GET['slug']);
+            $article = $articles->getArticle($_GET['slug'], 'all');
 
             if (!$article):
 ?>

@@ -9,11 +9,11 @@
     $single = false;
     if (isset($_GET['slug'])) {
         $single = true;
-        $news_article = $articles->getArticle($_GET['slug'], 0);
+        $news_article = $articles->getArticle($_GET['slug'], true);
         if ($news_article)
             $news_articles = array($news_article);
     } else {
-        $news_articles = $articles->getArticles(0);
+        $news_articles = $articles->getArticles(true);
     }
 ?>
                     <section class='news'>
@@ -36,7 +36,7 @@
                                     <a href='/admin/articles.php?action=delete&slug=<?=$article->slug;?>' class='button right'><i class='icon-trash'></i></a>
                                     <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                 <?php endif; ?>
-                                <h1><a href='/news/<?=$article->slug;?>'><?=$article->title;?></a></h1>
+                                <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
                                 <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
                                 <?php if ($article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
                                 <?php if (isset($article->username)) { echo "&#183; {$app->utils->username_link($article->username)}"; }?>

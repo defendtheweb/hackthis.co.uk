@@ -1,10 +1,11 @@
 <?php
     class articles {
-        function __construct() {
-
-        }
+        private $categories = null;
 
         public function getCategories($parent=null) {
+            if ($this->categories)
+                return $this->categories;
+
             global $db, $user;
 
             if ($parent == null) {
@@ -29,18 +30,22 @@
                     $res->children = $children;
             }
 
+            $this->categories = $result;
             return $result;
         }
 
-        public function getArticles($category_id) {
+        public function getArticles($news=false) {
             global $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, username, title, slug, body, submitted, updated,
+            $sql = 'SELECT a.article_id AS id, users.username, a.title, a.slug, a.body, a.submitted, a.updated,
+                        CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                         COALESCE(comments.count, 0) AS comments,
                         COALESCE(favourites.count, 0) AS favourites,
                         COALESCE(user_favourites.count, 0) AS favourited
                     FROM articles a
+                    LEFT JOIN articles_categories categories
+                    ON categories.category_id = a.category_id
                     LEFT JOIN users
                     ON users.user_id = a.user_id
                     LEFT JOIN 
@@ -51,23 +56,28 @@
                     ON a.article_id = favourites.article_id
                     LEFT JOIN 
                         ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
-                    ON a.article_id = user_favourites.article_id
-                    WHERE a.category_id = :cat_id
-                    GROUP BY a.article_id
-                    ORDER BY submitted DESC');
-            $st->execute(array(':cat_id' => $category_id, ':uid' => $user->uid));
+                    ON a.article_id = user_favourites.article_id';
+            if ($news)
+                $sql .= ' WHERE a.category_id = :cat_id ';
+            else
+                $sql .= ' WHERE a.category_id != :cat_id ';
+
+            $sql .= 'GROUP BY a.article_id
+                    ORDER BY submitted DESC';
+            $st = $db->prepare($sql);
+            $st->execute(array(':cat_id' => 0, ':uid' => $user->uid));
             $result = $st->fetchAll();
 
             return $result;
         }
 
-        public function getArticle($slug, $category=null) {
+        public function getArticle($slug, $news=false) {
             global $db, $user;
 
             // Group by required for count
             $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
                                     submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
-                                    CONCAT(IF(a.category_id = 0, "/", "/articles/"), CONCAT_WS("/", categories.slug, a.slug)) AS uri,
+                                    CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                                     COALESCE(comments.count, 0) AS comments,
                                     COALESCE(favourites.count, 0) AS favourites,
                                     COALESCE(user_favourites.count, 0) AS favourited
@@ -91,8 +101,18 @@
             $st->execute(array(':slug' => $slug, ':uid' => $user->uid));
             $result = $st->fetch();
 
-            if (!$result || ($category !== null && $result->cat_id != $category))
+            if (!$result || ($news !== 'all' && ($news && $result->cat_id != 0) || (!$news && $result->cat_id == 0)))
                 return false;
+
+            if (!$news) {
+                $st = $db->prepare('SELECT a.title, CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri
+                                    FROM articles a
+                                    WHERE a.category_id = :cat_id AND submitted < :sub
+                                    ORDER BY submitted DESC
+                                    LIMIT 1');
+                $st->execute(array(':cat_id' => $result->cat_id, ':sub' => $result->submitted));
+                $result->next = $st->fetch();
+            }
 
             return $result;
         }

@@ -175,6 +175,13 @@ header .advert {
     text-align: justify; 
 }
 
+.bbcode > {
+    h1, h2 {
+        display: inline-block;
+        margin: 0.5em 0 0.3em 0;
+    }
+}
+
 
 
 /* ALERTS */
@@ -266,9 +273,11 @@ section.features {
 blockquote {
     border-left: 5px solid $light_bg;
     font-style: italic;
-    margin: 20px 20px 20px 0;
-    padding: 0 0 0 10px;
+    margin: 20px;
+    padding: 0 60px 0 10px;
     color: $text_dark;
+    display: inline-block;
+    width: 100%;
 
     > span:not(.highlight) {
         display: block;
