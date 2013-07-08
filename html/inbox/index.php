@@ -164,7 +164,8 @@
                 <input autocomplete="off" id="to" data-suggest-max="2" data-suggest-at="false" class="suggest hide-shadow short" name="to" value="<?=(isset($_POST['to']))?htmlentities($_POST['to']):'';?>"><br/>
                 <label for="body">Message:</label><br/>
                 <?php
-                    $wysiwyg_text = htmlentities($_POST['body']);
+                    if (isset($_POST['body']))
+                        $wysiwyg_text = htmlentities($_POST['body']);
                     include('elements/wysiwyg.php');
                 ?>
                 <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
