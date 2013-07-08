@@ -30,7 +30,7 @@ $(function() {
                         '            {{/if}}'+
                         '        </span>'+
                         '    </header>'+
-                        '    <div class="body">'+
+                        '    <div class="body clearfix">'+
                         '        {{if username}}'+
                         '            {{html comment}}'+
                         '        {{/if}}'+
@@ -64,6 +64,8 @@ $(function() {
                     $('body, html').animate({ scrollTop: pos }, 400);
                 }
             }
+
+            $('a[href^="http://"]:has(img), a[href^="https://"]:has(img)').addClass('hide-external');
         }
     }
 

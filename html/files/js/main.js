@@ -6,7 +6,6 @@ $(function() {
     $("#global-nav-sticky").sticky({topSpacing:0});
     $('.select-menu').selectMenu();
 
-
     // Show/hide navigation
     $('#global-nav .show-nav').on('click', function(e) {
         e.preventDefault();
