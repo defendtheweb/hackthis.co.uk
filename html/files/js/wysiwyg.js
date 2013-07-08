@@ -31,11 +31,17 @@ $(function() {
             var tag = this.getAttribute('data-tag');
 
             var value = this.getAttribute('data-value');
+            var extra = this.getAttribute('data-extra');
 
             if (tag) {
                 value = (value)?'='+value:'';
                 tagBefore = '[' + tag + value + ']';
                 tagAfter = '[/' + tag + ']';
+
+                if (extra) {
+                    tagBefore += '\n[' + extra + '] ';
+                    tagAfter = '\n' + tagAfter;
+                }
             } else {
                 tagBefore = ' ' + value + ' ';
                 tagAfter = '';
