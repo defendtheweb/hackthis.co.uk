@@ -823,6 +823,10 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
 
     function DoYoutube($bbcode, $action, $name, $default, $params, $content) {
         if ($action == BBCODE_CHECK) return true;
+
+        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $content, $match)) {
+            $content = $match[1];
+        }
         $content = preg_replace("/[^A-Za-z0-9-_ ]/", '', $content);
 
         $template = "\n<div class='bbcode-youtube' style='width: 100%; text-align: center'>\n<object>\n
@@ -837,6 +841,10 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
 
     function DoVimeo($bbcode, $action, $name, $default, $params, $content) {
         if ($action == BBCODE_CHECK) return true;
+
+        if (preg_match('/\/\/(www\.)?vimeo.com\/(\d+)($|\/)/', $content, $match)) {
+            $content = $match[2];
+        }
         $content = preg_replace("/[^A-Za-z0-9- ]/", '', $content);
 
         $template = "\n<div class='bbcode-vimeo' style='width: 100%; text-align: center'>\n<iframe src='http://player.vimeo.com/video/{$content}?title=0&amp;byline=0&amp;portrait=0&amp;color=008000' width='100%' height='400' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>\n</div>\n";
