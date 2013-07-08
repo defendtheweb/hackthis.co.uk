@@ -1,0 +1,39 @@
+a.article-suggest {
+    display: none;
+    position: fixed;
+    right: 0;
+    bottom: 40px;
+    z-index: 600;
+
+    font-size: 1.1em;
+
+    background: darken($light_bg, 5%);
+    padding: 20px;
+    padding-right: 50px;
+
+    font-weight: bold;
+
+    span {
+        font-weight: normal;
+    }
+
+    &:before {
+        @include icon("\f0da");
+        margin-left: 10px;
+        position: absolute;
+        font-size: 4em;
+        top: 8px;
+        right: 10px;
+    }
+
+    &:hover {
+        background: $light_bg;
+        text-decoration: none;
+    }
+}
+
+@media ( max-width : 769px ) {
+    a.article-suggest {
+        display: none !important;
+    }
+}

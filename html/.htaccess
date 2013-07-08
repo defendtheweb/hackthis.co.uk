@@ -13,6 +13,11 @@ RewriteEngine On
 RewriteRule ^news/?$ /news.php?%{QUERY_STRING}
 RewriteRule ^news/(.+)$ /news.php?slug=$1&%{QUERY_STRING}
 
+#ARTICLES
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^articles/(.+)$ /articles/view.php?slug=$1&%{QUERY_STRING}
+
 
 # USERS
 RewriteCond %{REQUEST_FILENAME} !-d
