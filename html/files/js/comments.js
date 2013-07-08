@@ -9,7 +9,7 @@ $(function() {
                         '                <ul>'+
                         '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
                         '                    <li><a href="#" class="comment-reply">Reply</a></li>'+
-                        '                    {{if username != 0}}<li><a href="#">PM User</a></li>{{/if}}'+
+                        '                    {{if username != 0}}<li><a href="/inbox/compose?to=${username}" class="messages-new" data-to="${username}">PM User</a></li>{{/if}}'+
                         '                    <li><a href="#" class="comment-report">Report</a></li>'+
                         '                </ul>'+
                         '            </div>{{/if}}';
