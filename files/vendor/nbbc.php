@@ -605,7 +605,7 @@ var $default_tag_rules = Array(
                                                  'simple_start' => "\n<div class=\"bbcode_center\" style=\"text-align:center\">\n",
                                                  'simple_end' => "\n</div>\n",
                                                  'allow_in' => Array('listitem', 'block', 'columns'),
-                                                 'before_tag' => "sns",
+                                                 'before_tag' => "s",
                                                  'after_tag' => "sns",
                                                  'before_endtag' => "sns",
                                                  'after_endtag' => "sns",
@@ -617,6 +617,18 @@ var $default_tag_rules = Array(
                                                   'simple_end' => "\n</div>\n",
                                                   'allow_in' => Array('listitem', 'block', 'columns'),
                                                   'before_tag' => "sns",
+                                                  'after_tag' => "sns",
+                                                  'before_endtag' => "sns",
+                                                  'after_endtag' => "sns",
+                                                  'plain_start' => "\n",
+                                                  'plain_end' => "\n",
+                                                  ),
+                               'float' => Array(
+                                                  'mode' => BBCODE_MODE_ENHANCED,
+                                                  'allow' => Array('_default' => '/^(left|right)$/'),
+                                                  'template' => '<div class="bbcode_float_{$_default/tw} {$_default/tw}">{$_content}</div>',
+                                                  'allow_in' => Array('listitem', 'block', 'columns'),
+                                                  'before_tag' => "s",
                                                   'after_tag' => "sns",
                                                   'before_endtag' => "sns",
                                                   'after_endtag' => "sns",
@@ -800,7 +812,7 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
     function DoImage($bbcode, $action, $name, $default, $params, $content) {
         if ($action == BBCODE_CHECK) return true;
         $content = trim($bbcode->UnHTMLEncode(strip_tags($content)));
-        if (preg_match("/\\.(?:gif|jpeg|jpg|jpe|png)$/", $content)) {
+        //if (preg_match("/\\.(?:gif|jpeg|jpg|jpe|png)$/", $content)) {
             if (preg_match("/^[a-zA-Z0-9_][^:]+$/", $content)) {
                 if (!preg_match("/(?:\\/\\.\\.\\/)|(?:^\\.\\.\\/)|(?:^\\/)/", $content)) {
                     $info = @getimagesize("{$bbcode->local_img_dir}/{$content}");
@@ -817,7 +829,7 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
                 return "<a href=\"" . htmlspecialchars($content) . "\" target=\"_blank\"><img src=\"" . htmlspecialchars($content) . "\" alt=\""
                 . htmlspecialchars(basename($content)) . "\" class=\"bbcode_img\" /></a>";
             }
-        }
+        //}
         return htmlspecialchars($params['_tag']) . htmlspecialchars($content) . htmlspecialchars($params['_endtag']);
     }
 
