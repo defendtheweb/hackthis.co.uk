@@ -47,7 +47,8 @@
 					$text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
 				}
 			} else {
-				$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
+				//$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
+				$text = preg_replace('|[[\/\!]*?[^\[\]]*?]*?[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
 				$text = htmlspecialchars($text);
 			}
 
