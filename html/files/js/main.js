@@ -38,6 +38,11 @@ $(function() {
 
         setTimeout(updateTimes, 1000);
     })();
+    // $('time:not([data-timesince="false"])').each(function(index, value) {
+    //     $this = $(this);
+    //     d = new Date($this.attr('datetime'));
+    //     $this.addClass('hint--top').attr('data-hint', timeString(d, $this.hasClass('short')));
+    // });
 
 
     // Hide facebook connect link
