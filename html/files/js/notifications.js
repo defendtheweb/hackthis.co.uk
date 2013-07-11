@@ -49,9 +49,7 @@ $(function() {
                 lastUpdate = data.feed[0].timestamp;
 
                 $.each(data.feed, function(index, item) {
-                    console.log(item.timestamp);
                     var d = new Date(item.timestamp);
-                    console.log(d);
                     item.time = timeSince(d, true);
                     item.timestamp = d.toISOString();
                 });
@@ -167,7 +165,7 @@ $(function() {
             (($(this).hasClass('nav-extra-pm') && parent.hasClass('active-pm')) ||
              ($(this).hasClass('nav-extra-events') && parent.hasClass('active-events')))) {
                     dropdown.slideUp(200);
-                    icons.removeClass('active');time
+                    icons.removeClass('active');
                     return false;
         }
 

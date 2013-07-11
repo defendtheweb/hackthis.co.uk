@@ -254,7 +254,7 @@ section.features {
             width: 108px;
 
             background: darken($green, 10%);
-            border-radius: 50%;
+            @include border-radius(50%);
             font-size: 5em;
             padding: 19px;
             cursor: default;

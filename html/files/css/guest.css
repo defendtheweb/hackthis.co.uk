@@ -1,0 +1,12 @@
+.nav-extra-dropdown {
+	padding: 8px;
+	width: 250px !important;
+}
+
+.nav-extra-dropdown article {
+	margin-bottom: 0;
+}
+
+.nav-extra-dropdown h1 {
+	display: none;
+}

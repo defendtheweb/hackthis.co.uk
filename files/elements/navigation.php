@@ -9,19 +9,19 @@
 ?>
                         <li><a href='/'>levels</a>
                             <ul>
-                                <li><a href='/'>Main <i class='icon-caret-right'></i></a>
+                                <li><a href='/'><i class='icon-caret-right'></i>Main</a>
                                     <ul>
                                         <li><a href='/'>Level 1</a></li>
                                         <li><a href='/'>Level 2</a></li>
                                         <li><a href='/'>Level 3</a></li>
                                     </ul>
                                 </li>
-                                <li><a href='/'>Basic+ <i class='icon-caret-right'></i></a>
+                                <li><a href='/'><i class='icon-caret-right'></i>Basic+</a>
                                     <ul>
                                         <li><a href='/'>Level 1</a></li>
                                     </ul>
                                 </li>
-                                <li><a href='/'>Javascript <i class='icon-caret-right'></i></a></li>
+                                <li><a href='/'><i class='icon-caret-right'></i>Javascript</a></li>
                             </ul>
                         </li>
 <?php
@@ -30,8 +30,18 @@
                         <li><a href='/news/'>news</a></li>
 <?php
     endif;
+
+    $categories = articles::getCategories(null, false);
 ?>
-                        <li><a href='/articles/'>articles</a></li>
+                        <li><a href='/articles/'>articles</a>
+                            <ul>
+<?php
+    foreach($categories as $cat) {
+        articles::printCategoryList($cat, true);
+    }
+?>
+                            </ul>
+                        </li>
                         <li><a href='/forum/'>forum</a></li>
                         <li><a href='/irc/'>irc</a>
                             <ul>
@@ -45,7 +55,7 @@
 <?php
     if ($user->loggedIn):
 ?>
-                        <li class='right mobile-hide'><a href='/'><i class="icon-menu"></i></a>
+                        <li class='right icon mobile-hide'><a href='/'><i class="icon-menu"></i></a>
                             <ul>
                                 <li><a href='/settings/'>Settings</a></li>
                                 <li class='seperator'><a href='/?logout'>Logout</a></li>
@@ -56,7 +66,7 @@
 <?php
         if ($user->admin):
 ?>
-                        <li class='right mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
+                        <li class='right icon mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
                             <ul>
 <?php
             if ($user->admin_site_priv):
@@ -83,19 +93,39 @@
 <?php
         endif;
 ?>
-                        <li class='right'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
-                        <li class='right nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
-                        <li class='right mobile-hide nav-search'>
+                        <li class='right icon'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
+                        <li class='right icon nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
+                        <li class='right icon mobile-hide nav-search'>
                             <input placeholder='Search: topic, user, level..'/>
                             <a href='#'><i class='icon-search'></i></a>
                         </li>
 <?php
+    elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
+?>
+                        <li class='right <?=isset($user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($user->login_error))?"data-error='{$user->login_error}'":'';?>>Login</a></li>
+                        <li class='right <?=isset($user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($user->reg_error))?"data-error='{$user->reg_error}'":'';?>>Register</a></li>
+<?php
     endif;
 ?>
                     </ul>
+<?php
+    if ($user->loggedIn):
+?>
                     <div id='nav-extra-dropdown'>
-                        Hello I am some extra information
+                        Hey there :)
                     </div>
+<?php
+    elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
+?>
+                    <div id='nav-extra-login' class='nav-extra-dropdown'>
+                        <?php include('elements/widgets/login.php'); ?>
+                    </div>
+                    <div id='nav-extra-register' class='nav-extra-dropdown'>
+                        <?php include('elements/widgets/register.php'); ?>
+                    </div>
+<?php
+    endif;
+?>
                 </nav>
             </div>
         </div>

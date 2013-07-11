@@ -21,7 +21,8 @@
     background: #000000;
     background: rgba(0,0,0,0.8);
 
-    #nav-extra-dropdown {
+    #nav-extra-dropdown,
+    .nav-extra-dropdown {
         background: $black;
         width: 300px;
         position: absolute;
@@ -59,7 +60,7 @@
             }
         }
 
-        > div {
+        > div:not('.msg') {
             position: relative;
             height: 264px;
             overflow: hidden;
@@ -254,9 +255,12 @@
                 }
 
                 &.right {
+                    float: right;
+                }
+
+                &.right.icon {
                     margin-right: 0px;
                     margin-left: 1px;
-                    float: right;
 
                     &:hover > a {
                         text-decoration: none;
@@ -333,11 +337,14 @@
                 &.right.active {
                     background: $bg;
                     a {
+                        color: $bright_green;
+                    }
+                    &.icon a {
                         color: $white;
                     }
                 }
 
-                &.right a.alert {
+                &.right.icon a.alert {
                     color: $bright_green;
                 }
 
@@ -361,7 +368,7 @@
                     li {
                         float: none;
                         position: relative;
-                        width: 100px;
+                        min-width: 100px;
 
                         .seperator {
                             border-top: 1px solid $text;
@@ -372,6 +379,7 @@
                             font-weight: normal;
                             color: $text;
                             @include font('Lato');
+                            white-space: nowrap;
 
                             i {
                                 float: right;
