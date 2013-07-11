@@ -69,9 +69,9 @@
 
             if (isset($this->image)) {
                 $gravatar = isset($this->gravatar) && $this->gravatar == 1;
-                $this->image = profile::getImg($this->image, 60, $gravatar);
+                $this->image = profile::getImg($this->image, 100, $gravatar);
             } else
-                $this->image = profile::getImg(null, 60);
+                $this->image = profile::getImg(null, 100);
         }
 
         private function salt() {
@@ -271,6 +271,12 @@
             if (!$app->utils->check_user($username))
                 return "Invalid username";
 
+            $st = $db->prepare('SELECT username FROM users WHERE username=?');
+            $st->bindParam(1, $username);
+            $st->execute();
+            if ($st->fetch(PDO::FETCH_ASSOC))
+                return "Username already in use";
+
             $pass = $_POST['reg_password'];
             if (!isset($pass))
                 return "Invalid password";
@@ -282,6 +288,12 @@
             $email = $_POST['reg_email'];
             if (!$app->utils->check_email($email))
                 return "Invalid email address";
+
+            $st = $db->prepare('SELECT username FROM users WHERE email=?');
+            $st->bindParam(1, $email);
+            $st->execute();
+            if ($st->fetch(PDO::FETCH_ASSOC))
+                return "Email already in use";
 
             // Add to DB
             $st = $db->prepare('INSERT INTO users (`username`, `password`, `email`)
