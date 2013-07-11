@@ -32,7 +32,7 @@
 
             // Get items
             $st = $db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type,
-                               UNIX_TIMESTAMP(users_notifications.time) AS timestamp, seen, username,
+                               users_notifications.time AS timestamp, seen, username,
                                profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
                                FROM users_notifications
                                LEFT JOIN users
@@ -120,6 +120,8 @@
 
                 if ($res->type != 'friend')
                     unset($res->uid);
+
+                $res->timestamp = $app->utils->fdate($res->timestamp);
             }
 
             // Mark items as seen
