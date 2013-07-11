@@ -44,12 +44,18 @@ INSERT INTO pm_users (`pm_id`, `user_id`) VALUES (1, 2);
 INSERT INTO pm_messages (`pm_id`, `user_id`, `message`) VALUES (1, 1, 'Hello young sir');
 
 
--- Add a New article
+-- Add a New article categories
 INSERT INTO articles_categories (title, slug) VALUES ("News", "news");
 UPDATE articles_categories SET category_id = 0;
-INSERT INTO articles_categories (category_id, title, slug) VALUES (1, "TEST", "articles");
-INSERT INTO articles_categories (category_id, title, slug) VALUES (2, "TESTING", "articles");
+INSERT INTO articles_categories (category_id, title, slug) VALUES (1, "Hacking", "hacking");
+INSERT INTO articles_categories (parent_id, title, slug) VALUES (1, "Website Security", "web-security");
+INSERT INTO articles_categories (parent_id, title, slug) VALUES (1, "Application Security", "app-security");
+INSERT INTO articles_categories (parent_id, title, slug) VALUES (1, "Network Security", "network-security");
+INSERT INTO articles_categories (title, slug) VALUES ("Security", "security");
+INSERT INTO articles_categories (title, slug) VALUES ("Lock picking", "lock-picking");
+INSERT INTO articles_categories (title, slug) VALUES ("Phreaking", "phreaking");
 
+-- Add a New article
 -- ARTICALS DRAFT
 INSERT INTO articles_draft (user_id, title, category_id, body) 
 	VALUES(1, "This is an Article", 1, "HERP DERP.");

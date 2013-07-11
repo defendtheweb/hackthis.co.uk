@@ -1,3 +1,8 @@
+article.index {
+    max-height: 200px;
+    overflow: hidden;
+}
+
 a.article-suggest {
     display: none;
     position: fixed;
@@ -32,8 +37,48 @@ a.article-suggest {
     }
 }
 
+.article-sidebar {
+    a.button {
+        margin: 0;
+    }
+
+    ul {
+        list-style: none;
+        margin-left: 10px;
+        overflow: hidden;
+        display: none;
+    }
+
+    ul.categories {
+        margin-left: 0;
+        display: block;
+
+        > li.parent {
+            &:before {
+                @include icon("\f0da");
+                margin-left: -11px;
+                display: inline-block;
+                width: 11px;
+            }
+            &.active:before {
+                @include icon("\f0d7");
+            }
+        }
+
+        > li {
+            margin-left: 11px;
+        }
+    }
+
+    li.active ul {
+        display: block;
+    }
+}
+
+
 @media ( max-width : 769px ) {
-    a.article-suggest {
+    a.article-suggest,
+    .article-sidebar {
         display: none !important;
     }
 }

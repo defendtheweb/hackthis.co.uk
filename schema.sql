@@ -205,7 +205,8 @@ CREATE TABLE articles_categories (
 	`parent_id` int(3),
 	`title` varchar(64),
 	`slug` varchar(64),
-	PRIMARY KEY (`category_id`)
+	PRIMARY KEY (`category_id`),
+	UNIQUE (`slug`)
 ) ENGINE=InnoDB;
 
 -- TODO: Timestamps man TIME!!
@@ -220,7 +221,7 @@ CREATE TABLE articles (
 	`submitted` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`updated` timestamp,
 	`featured` int(1),
-	`views` int(5),
+	`views` int(5) DEFAULT 0,
 	PRIMARY KEY (`article_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
@@ -468,8 +469,8 @@ CREATE TRIGGER articles_draft_update_audit BEFORE UPDATE ON articles_draft FOR E
 		END IF;
 	END;
 
-DROP TRIGGER IF EXISTS articales_update_audit;
-CREATE TRIGGER articales_update_audit BEFORE UPDATE ON articles FOR EACH ROW
+DROP TRIGGER IF EXISTS articles_update_audit;
+CREATE TRIGGER articles_update_audit BEFORE UPDATE ON articles FOR EACH ROW
 	BEGIN
 		IF OLD.title <> NEW.title THEN
 			INSERT INTO articles_audit (article_id, draft, field, old_value, new_value) 
@@ -505,6 +506,14 @@ CREATE TRIGGER articales_update_audit BEFORE UPDATE ON articles FOR EACH ROW
 				VALUES(NEW.article_id, 0, 'featured', OLD.featured, NEW.featured);
 		END IF;
 
+	END;
+
+DROP TRIGGER IF EXISTS insert_article_categories;
+CREATE TRIGGER insert_article_categories BEFORE INSERT ON articles_categories FOR EACH ROW
+	BEGIN
+		IF NEW.parent_id IS NOT NULL THEN
+			SET NEW.slug = CONCAT_WS('/', (SELECT `slug` FROM articles_categories WHERE category_id = NEW.parent_id), NEW.slug);
+		END IF;
 	END;
 
 DROP TRIGGER IF EXISTS insert_article_comment;

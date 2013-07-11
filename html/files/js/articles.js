@@ -1,4 +1,13 @@
 $(function() {
+    $(".article-sidebar .sticky").sticky({topSpacing:45});
+    $(".article-sidebar ul.categories a").on('click', function(e) {
+        if (!$(this).siblings('ul').length)
+            return;
+        e.preventDefault();
+        $(this).parent().toggleClass('active');
+    });
+
+
     var $window = $(window);
     var $elem = $('article.body');
     var $target = $('.article-suggest');

@@ -1,18 +1,16 @@
 <?php
     class articles {
-        private $categories = null;
-
-        public function getCategories($parent=null) {
-            if ($this->categories)
-                return $this->categories;
-
+        public static function getCategories($parent=null, $news=true) {
             global $db, $user;
 
             if ($parent == null) {
-                $st = $db->prepare('SELECT category_id AS id, title, slug
-                                    FROM articles_categories
-                                    WHERE ISNULL(parent_id)
-                                    ORDER BY title ASC');
+                $sql =  "SELECT category_id AS id, title, slug
+                         FROM articles_categories
+                         WHERE ISNULL(parent_id)";
+                if (!$news)
+                    $sql .= " AND category_id != 0 ";
+                $sql .= "ORDER BY title ASC";
+                $st = $db->prepare($sql);
                 $st->execute(array(':parent'=>$parent));
                 $result = $st->fetchAll();
             } else {
@@ -25,27 +23,78 @@
             }
 
             foreach($result as $res) {
-                $children = $this->getCategories($res->id);
+                $children = articles::getCategories($res->id, $news);
                 if ($children)
                     $res->children = $children;
             }
 
-            $this->categories = $result;
             return $result;
         }
 
-        public function getArticles($news=false) {
+        public static function printCategoryList($cat, $menu = false, $parent_str = "", $current_section = null) {
+            if ($menu) {
+                if ($parent_str) {
+                    $cat->title = str_ireplace($parent_str, '', $cat->title);
+                }
+                $cat->title = ucfirst(trim($cat->title));
+
+                $c = '';
+                if ($current_section === $cat->id)
+                    $c = 'active';
+                if (isset($cat->children) && count($cat->children))
+                    $c .= ' parent';
+
+                echo "<li class='$c'><a href='/articles/{$cat->slug}'>";
+                echo "{$cat->title}</a>\n";
+                if (isset($cat->children) && count($cat->children)) {
+                    echo "<ul>\n";
+                    foreach($cat->children AS $child) {
+                        articles::printCategoryList($child, $menu, $cat->title);
+                    }
+                    echo "</ul>\n";
+                }
+                echo "</li>\n";
+            } else {
+                echo "<li data-value='{$cat->id}'>{$cat->title}\n";
+                if (isset($cat->children) && count($cat->children)) {
+                    echo "<ul>\n";
+                    foreach($cat->children AS $child) {
+                        articles::printCategoryList($child);
+                    }
+                    echo "</ul>\n";
+                }
+                echo "</li>\n";
+            }
+        }
+
+        public function getCategory($slug) { 
+            global $db;
+
+            //Get category id
+            $st = $db->prepare('SELECT category_id AS id, parent_id AS parent FROM articles_categories
+                                WHERE slug = :slug LIMIT 1');
+            $st->execute(array(':slug' => $slug));
+            $result = $st->fetch();
+
+            if (!$result)
+                return false;
+
+            return $result;
+        }
+
+        public function getArticles($cat_id=null) {
             global $db, $user;
 
             // Group by required for count
-            $sql = 'SELECT a.article_id AS id, users.username, a.title, a.slug, a.body, a.submitted, a.updated,
+            $sql = 'SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
+                        submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                         CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                         COALESCE(comments.count, 0) AS comments,
                         COALESCE(favourites.count, 0) AS favourites,
                         COALESCE(user_favourites.count, 0) AS favourited
                     FROM articles a
                     LEFT JOIN articles_categories categories
-                    ON categories.category_id = a.category_id
+                    ON a.category_id = categories.category_id
                     LEFT JOIN users
                     ON users.user_id = a.user_id
                     LEFT JOIN 
@@ -57,15 +106,17 @@
                     LEFT JOIN 
                         ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
                     ON a.article_id = user_favourites.article_id';
-            if ($news)
+            if ($cat_id !== null)
                 $sql .= ' WHERE a.category_id = :cat_id ';
-            else
+            else {
+                $cat_id = 0;
                 $sql .= ' WHERE a.category_id != :cat_id ';
+            }
 
             $sql .= 'GROUP BY a.article_id
                     ORDER BY submitted DESC';
             $st = $db->prepare($sql);
-            $st->execute(array(':cat_id' => 0, ':uid' => $user->uid));
+            $st->execute(array(':cat_id' => $cat_id, ':uid' => $user->uid));
             $result = $st->fetchAll();
 
             return $result;
@@ -83,7 +134,7 @@
                                     COALESCE(user_favourites.count, 0) AS favourited
                                 FROM articles a
                                 LEFT JOIN articles_categories categories
-                                ON categories.category_id = a.category_id
+                                ON a.category_id = categories.category_id
                                 LEFT JOIN users
                                 ON users.user_id = a.user_id
                                 LEFT JOIN 
@@ -113,6 +164,10 @@
                 $st->execute(array(':cat_id' => $result->cat_id, ':sub' => $result->submitted));
                 $result->next = $st->fetch();
             }
+
+            //increment read count
+            $st = $db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
+            $st->execute(array(':aid' => $result->id));
 
             return $result;
         }
