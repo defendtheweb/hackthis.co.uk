@@ -64,6 +64,17 @@ function timeSince(oldD, short) {
     }
 }
 
+function timeString(d) {
+    if (Object.prototype.toString.call(d) !== "[object Date]")
+        d = new Date(d);
+
+    var months = new Array("January", "February", "March", 
+                        "April", "May", "June", "July", "August", "September", 
+                        "October", "November", "December");
+
+    return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + d.getHours() + ":" + d.getMinutes();
+}
+
 
 $.fn.setCursorPosition = function(pos) {
     this.each(function(index, elem) {
