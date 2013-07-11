@@ -9,16 +9,16 @@
     $single = false;
     if (isset($_GET['slug'])) {
         $single = true;
-        $news_article = $articles->getArticle($_GET['slug'], true);
-        if ($news_article)
-            $news_articles = array($news_article);
+        $newsArticle = $articles->getArticle($_GET['slug'], true);
+        if ($newsArticle)
+            $newsArticles = array($newsArticle);
     } else {
-        $news_articles = $articles->getArticles(true);
+        $newsArticles = $articles->getArticles(0);
     }
 ?>
                     <section class='news'>
 <?php
-    if (!isset($news_articles) || !count($news_articles)):
+    if (!isset($newsArticles) || !count($newsArticles)):
 ?>
                         <div class='msg msg-error'>
                             <i class='icon-error'></i>
@@ -26,20 +26,19 @@
                         </div>
 <?php
     else:
-        foreach ($news_articles as $article):
+        foreach ($newsArticles as $article):
             $article->title = $app->parse($article->title, false);
             $article->body = $app->parse($article->body);
 ?>
-                        <article>
+                        <article class='bbcode body'>
                             <header class='title clearfix'>
                                 <?php if ($user->admin_pub_priv): ?>
-                                    <a href='/admin/articles.php?action=delete&slug=<?=$article->slug;?>' class='button right'><i class='icon-trash'></i></a>
                                     <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                 <?php endif; ?>
                                 <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
                                 <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
                                 <?php if ($article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
-                                <?php if (isset($article->username)) { echo "&#183; {$app->utils->username_link($article->username)}"; }?>
+                                <?php if (isset($article->username)) { echo "&#183; by {$app->utils->username_link($article->username)}"; }?>
 
                                 <?php
                                     $share = new stdClass();
