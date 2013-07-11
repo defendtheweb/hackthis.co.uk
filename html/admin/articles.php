@@ -62,9 +62,9 @@
             
                 <ul>
 <?php
-                $categories = $articles->getCategories();
+                $categories = articles::getCategories();
                 foreach($categories as $cat) {
-                    printCategoryList($cat);
+                    articles::printCategoryList($cat);
                 }
 ?>
                 </ul>
@@ -84,18 +84,4 @@
     endif; //isset $_GET['action']
 
     require_once('footer.php');
-
-
-
-    function printCategoryList($cat) {
-        echo "<li data-value='{$cat->id}'>{$cat->title}\n";
-        if (isset($cat->children) && count($cat->children)) {
-            echo "<ul>\n";
-            foreach($cat->children AS $child) {
-                printCategoryList($child);
-            }
-            echo "</ul>\n";
-        }
-        echo "</li>\n";
-    }
 ?>
