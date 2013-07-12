@@ -71,7 +71,7 @@
             global $db;
 
             //Get category id
-            $st = $db->prepare('SELECT category_id AS id, parent_id AS parent FROM articles_categories
+            $st = $db->prepare('SELECT category_id AS id, title, slug, parent_id AS parent FROM articles_categories
                                 WHERE slug = :slug LIMIT 1');
             $st->execute(array(':slug' => $slug));
             $result = $st->fetch();
@@ -82,7 +82,7 @@
             return $result;
         }
 
-        public function getArticles($cat_id=null) {
+        public function getArticles($cat_id=null, $limit=2, $page=1) {
             global $db, $user;
 
             // Group by required for count
@@ -114,9 +114,14 @@
             }
 
             $sql .= 'GROUP BY a.article_id
-                    ORDER BY submitted DESC';
+                    ORDER BY submitted DESC
+                    LIMIT :limit1, :limit2';
             $st = $db->prepare($sql);
-            $st->execute(array(':cat_id' => $cat_id, ':uid' => $user->uid));
+            $st->bindValue(':cat_id', $cat_id);
+            $st->bindValue(':uid', $user->uid);
+            $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
+            $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
+            $st->execute();
             $result = $st->fetchAll();
 
             return $result;
@@ -128,6 +133,7 @@
             // Group by required for count
             $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
                                     submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
+                                    categories.parent_id AS parent,
                                     CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                                     COALESCE(comments.count, 0) AS comments,
                                     COALESCE(favourites.count, 0) AS favourites,
@@ -203,6 +209,29 @@
 
             return $res;
         }
+
+        public function getHotArticles($limit=5) {
+            global $app, $db, $user;
+
+            $st = $db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
+                                CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug
+                                FROM articles a
+                                LEFT JOIN 
+                                    ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
+                                ON a.article_id = comments.article_id
+                                LEFT JOIN 
+                                    ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
+                                ON a.article_id = favourites.article_id
+                                WHERE a.category_id != 0
+                                GROUP BY a.article_id
+                                ORDER BY total DESC, submitted DESC
+                                LIMIT 5');
+            $st->execute();
+            $result = $st->fetchAll();
+
+            return $result;
+        }
+
 
         public function getComments($article_id, $parent_id=0, $bbcode=true) {
             global $app, $db, $user;

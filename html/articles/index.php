@@ -6,15 +6,18 @@
 
     require_once('header.php');
 
+    $limit = 5;
+    $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
+
 	$articles = new articles();
     if (isset($_GET['slug'])) {
     	$category = $articles->getCategory($_GET['slug']);
 		if (!$category)
 			header('Location: /articles');
-		$articleList = $articles->getArticles($category->id);
+		$articleList = $articles->getArticles($category->id, $limit, $page);
    	} else {
    		$category = null;
-   		$articleList = $articles->getArticles();
+   		$articleList = $articles->getArticles(null, $limit, $page);
    	}
 ?>
                     <section class="row">
@@ -23,6 +26,15 @@
 ?>    
                         <div class="col span_18 article-main">
 <?php
+	if ($category):
+?>
+							<h1><?=$category->title;?></h1>
+<?php
+	else:
+?>
+							<h1>Article Index</h1>
+<?php
+	endif;
     if (!isset($articleList) || !$articleList):
 ?>
                             <div class='msg msg-error'>
@@ -37,26 +49,7 @@
 ?>
 	                        <article class='bbcode body index'>
 	                            <header class='title clearfix'>
-	                                <?php if ($user->admin_pub_priv): ?>
-	                                    <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
-	                                <?php endif; ?>
 	                                <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
-	                                <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
-	                                <?php if ($article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
-	                                <?php if (isset($article->cat_title)) { echo "&#183; <a href='{$article->cat_slug}'>{$article->cat_title}</a>"; }?>
-	                                <?php if (isset($article->username)) { echo "&#183; by {$app->utils->username_link($article->username)}"; }?>
-
-	                                <?php
-	                                    $share = new stdClass();
-	                                    $share->item = $article->id;
-	                                    $share->right = true;
-	                                    $share->comments = $article->comments;
-	                                    $share->title = $article->title;
-	                                    $share->link = "/news/{$article->slug}";
-	                                    $share->favourites = $article->favourites;
-	                                    $share->favourited = $article->favourited;
-	                                    include("elements/share.php");
-	                                ?>
 	                            </header>
 	                            <?php
 	                                echo $article->body;

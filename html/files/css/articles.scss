@@ -1,6 +1,10 @@
 article.index {
     max-height: 200px;
     overflow: hidden;
+
+    h1 {
+        font-size: 1.2em;
+    }
 }
 
 a.article-suggest {
@@ -38,8 +42,20 @@ a.article-suggest {
 }
 
 .article-sidebar {
+    .sticky {
+        width: 210px;
+    }
+
     a.button {
         margin: 0;
+    }
+
+    h2 {
+        margin-bottom: 0.3em;
+    }
+
+    div > ul {
+        margin-bottom: 22px;
     }
 
     ul {
@@ -72,6 +88,18 @@ a.article-suggest {
 
     li.active ul {
         display: block;
+    }
+
+    ul.hot {
+        display: block;
+        margin-left: 0px;
+
+        li {
+            overflow: hidden;
+            o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 }
 
