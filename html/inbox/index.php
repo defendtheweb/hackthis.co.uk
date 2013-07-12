@@ -44,7 +44,7 @@
 
     if (isset($convo)):
 ?>
-    <div id="conversation-search">
+    <div class='mobile-hide' id="conversation-search">
         <input placeholder='Search conversation'/>
         <i class='icon-search'></i>
     </div>
