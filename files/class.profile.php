@@ -188,12 +188,17 @@
             global $db, $user;
             $status = ($user->uid === $this->uid);
 
-            $st = $db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
-                    VALUES (:uid, :uid2, :status)');
-            $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid, ':status' => $status));
+            $error = false;
+            try {
+                $st = $db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
+                        VALUES (:uid, :uid2, :status)');
+                $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid, ':status' => $status));
+            } catch (Exception $e) {
+                $error = true;
+            }
 
             // check if row created, else it already exists
-            if (!$st->rowCount()) {
+            if ($error || !$st->rowCount()) {
                 $st = $db->prepare('UPDATE users_friends SET `status` = 1
                                     WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
                 $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
