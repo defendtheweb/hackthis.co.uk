@@ -17,6 +17,7 @@
         <ul class='events plain'>
 <?php
         foreach ($events as $event):
+            $event->timestamp = strtotime($event->timestamp);
             if (!isset($prev_day) || $prev_day != date('Ymd', $event->timestamp)):
                 if (date('Ymd') == date('Ymd', $event->timestamp))
                     $day = "Today";
