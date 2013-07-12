@@ -30,7 +30,7 @@
 		$dsn .= (!empty($db['port'])) ? ';port=' . $db['port'] : '';
 		$dsn .= ";dbname={$db['database']}";
 		$db = new PDO($dsn, $db['username'], $db['password']);
-//		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 		$db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
 	} catch(PDOException $e) {
@@ -48,6 +48,7 @@
 	    }		
     } else {
         array_push($minifier->custom_js, 'guest.js');
+        array_push($minifier->custom_css, 'guest.css');
 
         if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
 	        require_once('error.php');
