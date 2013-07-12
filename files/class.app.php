@@ -48,7 +48,7 @@
 				}
 			} else {
 				//$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
-				$text = preg_replace('|[[\/\!]*?[^\[\]]*?]*?[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
+				$text = preg_replace('|[[\/\!]*?[^\[\]]*?].*?[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
 				$text = htmlspecialchars($text);
 			}
 
