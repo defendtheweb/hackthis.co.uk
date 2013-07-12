@@ -254,6 +254,13 @@
                     }
                 }
 
+                &.parent > a:before {
+                    @include icon("\f0da");
+                    float: right;
+                    margin-top: 1px;
+                    margin-right: -4px;
+                }
+
                 &.right {
                     float: right;
                 }

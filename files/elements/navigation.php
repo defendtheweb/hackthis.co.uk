@@ -9,19 +9,19 @@
 ?>
                         <li><a href='/'>levels</a>
                             <ul>
-                                <li><a href='/'><i class='icon-caret-right'></i>Main</a>
+                                <li class='parent'><a href='/'>Main</a>
                                     <ul>
                                         <li><a href='/'>Level 1</a></li>
                                         <li><a href='/'>Level 2</a></li>
                                         <li><a href='/'>Level 3</a></li>
                                     </ul>
                                 </li>
-                                <li><a href='/'><i class='icon-caret-right'></i>Basic+</a>
+                                <li class='parent'><a href='/'>Basic+</a>
                                     <ul>
                                         <li><a href='/'>Level 1</a></li>
                                     </ul>
                                 </li>
-                                <li><a href='/'><i class='icon-caret-right'></i>Javascript</a></li>
+                                <li><a href='/'>Javascript</a></li>
                             </ul>
                         </li>
 <?php
@@ -35,11 +35,21 @@
 ?>
                         <li><a href='/articles/'>articles</a>
                             <ul>
+                                <li class='parent'><a href='/articles/'>categories</a>
+                                    <ul>
 <?php
     foreach($categories as $cat) {
         articles::printCategoryList($cat, true);
     }
 ?>
+                                    </ul>
+                                </li>
+                                <li class='parent'><a href='/'>My Articles</a>
+                                    <ul>
+                                        <li><a href='/'>View all</a></li>
+                                        <li><a href='/'>Submit</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                         <li><a href='/forum/'>forum</a></li>
