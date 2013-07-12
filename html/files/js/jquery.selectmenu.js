@@ -14,7 +14,7 @@
             value = $this.attr('data-value')?$this.attr('data-value'):'';;
             var $field = $("<input/>", {type: 'hidden', id: id, name: id, value: value}).appendTo($this);
 
-            $list.wrap($('<div>', {class: 'select-menu-container', height: $list.outerHeight()}));
+            $list.wrap($('<div>', {class: 'select-menu-container', height: 0}));
             var $container = $list.parent();
 
             $list.find('ul').each(function() {
@@ -24,6 +24,7 @@
             $label.on('click', function(e) {
                 $list.css('left', 0);
                 $this.toggleClass('active');
+                $container.css('height', $list.outerHeight());
             });
 
             $items.each(function() {
@@ -40,6 +41,7 @@
                 } else {
                     //Select value and close menu
                     $this.removeClass('active');
+                    $container.css('height', 0);
 
                     text = $(this).attr('data-text')?$(this).attr('data-text'):$(this).text();
                     value = $(this).attr('data-value')?$(this).attr('data-value'):text;
@@ -52,6 +54,7 @@
             $(document).bind('click.selectMenu-hide', function(e) {
                 if ($(e.target).closest('.select-menu').length != 0 || $(e.target).hasClass('select-menu')) return true;
                 $this.removeClass('active');
+                $container.css('height', 0);
             });
         });
     }
