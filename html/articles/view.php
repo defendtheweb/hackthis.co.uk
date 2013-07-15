@@ -10,6 +10,10 @@
 
     if (isset($_GET['slug'])) {
         // check if it is a category
+        if ($_GET['slug'] == 'me') {
+            include('index.php');
+            die();
+        }
         $category = $articles->getCategory($_GET['slug']);
         if ($category) {
             include('index.php');

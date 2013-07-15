@@ -15,7 +15,7 @@
 		if (!$category)
 			header('Location: /articles');
 		$articleList = $articles->getArticles($category->id, $limit, $page);
-   	} else {
+	} else {
    		$category = null;
    		$articleList = $articles->getArticles(null, $limit, $page);
    	}

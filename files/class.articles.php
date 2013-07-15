@@ -68,6 +68,11 @@
         }
 
         public function getCategory($slug) { 
+            if ($slug == 'me') {
+                $category = (object) array('id' => 'me', 'title' => 'My Articles');
+                return $category;
+            }
+
             global $db;
 
             //Get category id
@@ -106,9 +111,12 @@
                     LEFT JOIN 
                         ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
                     ON a.article_id = user_favourites.article_id';
-            if ($cat_id !== null)
+            if ($cat_id !== null && $cat_id !== 'me')
                 $sql .= ' WHERE a.category_id = :cat_id ';
-            else {
+            else if ($cat_id == 'me') {
+                $cat_id = $user->uid;
+                $sql .= ' WHERE a.user_id = :cat_id ';
+            } else {
                 $cat_id = 0;
                 $sql .= ' WHERE a.category_id != :cat_id ';
             }

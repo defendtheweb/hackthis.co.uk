@@ -44,10 +44,10 @@
 ?>
                                     </ul>
                                 </li>
-                                <li class='parent'><a href='/'>My Articles</a>
+                                <li class='parent'><a href='/articles/me'>My Articles</a>
                                     <ul>
-                                        <li><a href='/'>View all</a></li>
-                                        <li><a href='/'>Submit</a></li>
+                                        <li><a href='/articles/me'>View all</a></li>
+                                        <li><a href='/articles/submit'>Submit</a></li>
                                     </ul>
                                 </li>
                             </ul>
