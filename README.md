@@ -55,3 +55,8 @@ Create and configure config file. Change path to the path of your hackthis.co.uk
 cp files/example.config.php files/config.php
 nano files/config.php
 ````
+
+Navigate to website
+````
+http://localhost/
+````
