@@ -30,8 +30,8 @@
                                 <li>Score <span class='right'><?=$user->score;?></span></li>
                                 <li class='progress progress-login'><span style='width: 40%'>40%</span></li>
                                 <li>
-                                    Logins <span class='hint--bottom' data-hint="Your number of consecutive logins.&#10;Consecutive days are calculated using UTC.&#10;Your personal best is highlighted."><i class='icon-info'></i></span>
-                                    <span class='right'>10 <span>35</span></span>
+                                    Activity <span class='hint--bottom' data-hint="Consecutive number of active days.&#10;Consecutive days are calculated using UTC.&#10;Your personal best is highlighted."><i class='icon-info'></i></span>
+                                    <span class='right'><?=$user->consecutive;?> <span><?=$user->consecutive_most;?></span></span>
                                 </li>
                             </ul>
                         </section>
