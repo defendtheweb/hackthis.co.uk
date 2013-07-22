@@ -510,6 +510,17 @@ var $default_tag_rules = Array(
                                               'plain_content' => Array('_content', '_default'),
                                               'plain_link' => Array('_default', '_content'),
                                               ),
+                               'source' => Array(
+                                              'mode' => BBCODE_MODE_LIBRARY,
+                                              'method' => 'DoSourceLink',
+                                              'class' => 'link',
+                                              'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
+                                              'content' => BBCODE_REQUIRED,
+                                              'plain_start' => "<a class='source' href=\"{\$link}\">",
+                                              'plain_end' => "</a>",
+                                              'plain_content' => Array('_content', '_default'),
+                                              'plain_link' => Array('_default', '_content'),
+                                              ),
                                'email' => Array(
                                                 'mode' => BBCODE_MODE_LIBRARY,
                                                 'method' => 'DoEmail',
@@ -675,7 +686,7 @@ var $default_tag_rules = Array(
                    ),
 'code' => Array(
                 'mode' => BBCODE_MODE_ENHANCED,
-                'template' => "\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
+                'template' => "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
                 'class' => 'code',
                 'allow_in' => Array('listitem', 'block', 'columns'),
                 'content' => BBCODE_VERBATIM,
@@ -688,7 +699,7 @@ var $default_tag_rules = Array(
                 ),
 'spoiler' => Array(
                    'mode' => BBCODE_MODE_ENHANCED,
-                   'template' => "\n<div class=\"bbcode_spoiler\">\n<div class=\"bbcode_spoiler_head\">Show spoiler</div>\n<div class='bbcode_spoiler_body'>{\$_content/v}</div>\n</div>\n",
+                   'template' => "<br/>\n<div class=\"bbcode_spoiler\">\n<div class=\"bbcode_spoiler_head\">Show spoiler</div>\n<div class='bbcode_spoiler_body'>{\$_content/v}</div>\n</div>\n",
                    'allow_in' => Array('listitem', 'block', 'columns'),
                    'content' => BBCODE_REQUIRED,
                    'before_tag' => "sns",
@@ -749,6 +760,22 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
             if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
                 $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
             return '<a href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
+        }
+        else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+    }
+function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
+    if ($action == BBCODE_CHECK) return true;
+    $url = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
+    if ($bbcode->IsValidURL($url)) {
+        if ($bbcode->debug)
+            print "ISVALIDURL<br />";
+        if ($bbcode->url_targetable !== false && isset($params['target']))
+            $target = " target=\"" . htmlspecialchars($params['target']) . "\"";
+        else $target = "";
+        if ($bbcode->url_target !== false)
+            if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
+                $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
+            return '<div class="source">Source: <a href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a></div>';
         }
         else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
     }
@@ -826,7 +853,7 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
                 }
             }
             else if ($bbcode->IsValidURL($content, false)) {
-                return "<a href=\"" . htmlspecialchars($content) . "\" target=\"_blank\"><img src=\"" . htmlspecialchars($content) . "\" alt=\""
+                return "<a href=\"" . htmlspecialchars($content) . "\" target=\"_blank\"><img src=\"http://www.hackthis.co.uk" . htmlspecialchars($content) . "\" alt=\""
                 . htmlspecialchars(basename($content)) . "\" class=\"bbcode_img\" /></a>";
             }
         //}
