@@ -7,6 +7,19 @@ article.index {
     }
 }
 
+
+div.contents {
+    float: right;
+    background: $bg;
+    padding: 8px;
+    margin-left: 16px;
+
+    ul {
+        list-style: none;
+    }
+}
+
+
 a.article-suggest {
     display: none;
     position: fixed;
@@ -83,6 +96,18 @@ a.article-suggest {
 
         > li {
             margin-left: 11px;
+        }
+
+        li.current {
+            &.active:before {
+                @include icon("\f0d7");
+                color: $green;
+            }
+
+            > a {
+                color: $green;
+                font-weight: bold;
+            }
         }
     }
 
