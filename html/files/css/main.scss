@@ -28,7 +28,7 @@ body {
     .page-wrap {
         min-height: 100%;
         /* equal to footer height */
-        margin-bottom: -128px;
+        margin-bottom: -120px;
     }
     .page-wrap:after {
         content: "";
@@ -36,7 +36,7 @@ body {
     }
     #page-footer, .page-wrap:after {
         /* .push must be the same height as footer */
-        height: 128px;
+        height: 120px;
     }
 }
 
@@ -341,20 +341,27 @@ sidebar h1 {
     @extend .title;
 }
 
-
+ 
 
 
 
 
 /* FOOTER */
 #page-footer {
-    border-top: 2px solid $light_bg;
     background: $bg;
 }
 
 #page-footer footer {
     margin-bottom: 0px;
-    padding: 12px 0;
+
+    div.container {
+        margin-bottom: 0;
+        padding: 10px 0;
+    }
+
+    #page-footer-2 {
+        background: $light_bg;
+    }
 }
 
 
