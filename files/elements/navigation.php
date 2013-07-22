@@ -44,12 +44,18 @@
 ?>
                                     </ul>
                                 </li>
+<?php
+    if ($user->loggedIn):
+?>
                                 <li class='parent'><a href='/articles/me'>My Articles</a>
                                     <ul>
                                         <li><a href='/articles/me'>View all</a></li>
                                         <li><a href='/articles/submit'>Submit</a></li>
                                     </ul>
                                 </li>
+<?php
+    endif;
+?>
                             </ul>
                         </li>
                         <li><a href='/forum/'>forum</a></li>
