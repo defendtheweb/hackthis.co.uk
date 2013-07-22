@@ -31,7 +31,7 @@
             return $result;
         }
 
-        public static function printCategoryList($cat, $menu = false, $parent_str = "", $current_section = null) {
+        public static function printCategoryList($cat, $menu = false, $parent_str = "", $current_section = null, $current_cat = null) {
             if ($menu) {
                 if ($parent_str) {
                     $cat->title = str_ireplace($parent_str, '', $cat->title);
@@ -40,16 +40,18 @@
 
                 $c = '';
                 if ($current_section === $cat->id)
-                    $c = 'active';
+                    $c = 'active ';
+                if ($current_cat === $cat->id)
+                    $c = 'current active ';
                 if (isset($cat->children) && count($cat->children))
-                    $c .= ' parent';
+                    $c .= 'parent';
 
                 echo "<li class='$c'><a href='/articles/{$cat->slug}'>";
                 echo "{$cat->title}</a>\n";
                 if (isset($cat->children) && count($cat->children)) {
                     echo "<ul>\n";
                     foreach($cat->children AS $child) {
-                        articles::printCategoryList($child, $menu, $cat->title);
+                        articles::printCategoryList($child, $menu, $cat->title, $current_section, $current_cat);
                     }
                     echo "</ul>\n";
                 }
@@ -410,6 +412,27 @@
             $st = $db->prepare('DELETE FROM articles_favourites WHERE `article_id` = :article_id AND `user_id` = :uid LIMIT 1');
             $result = $st->execute(array(':article_id' => $article_id, ':uid' => $user->uid));
             return $result;
+        }
+
+        public function setupTOC($body){
+            //Add href tags
+            $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
+            function process($matches) {
+                global $app;
+                $slug = $app->utils->generateSlug($matches[2]);
+                
+                $match = $matches[0];
+                $match = substr($matches[0],0,3) . " id='$slug'" . substr($matches[0],3);
+                return $match;
+            }
+
+            return preg_replace_callback($pattern, 'process', $body);
+        }
+
+        public function getTOC($body) {
+            $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
+            preg_match_all($pattern, $body, $matches);
+            return $matches;
         }
     }
 ?>

@@ -63,9 +63,36 @@
                                         include("elements/share.php");
                                     ?>
                                 </header>
-                                <?php
-                                    echo $article->body;
-                                ?>
+
+<?php
+    $matches = $articles->getTOC($article->body);
+    if (count($matches[0])):
+?>
+                                <div class="right contents">
+                                    <h2>Contents</h2>
+                                    <ul>
+<?php
+    $i = 0;
+    foreach($matches[2] as $match) {
+        $c = '>';
+        if ($matches[1][$i] == '2')
+        $c = " class='sub'>- ";
+
+        $slug = $app->utils->generateSlug($match);
+
+        echo "<li{$c}<a href='#{$slug}'>{$match}</a></li>";
+        $i++;
+    }
+?>
+                                    </ul>
+                                </div>
+<?php
+    endif; 
+    
+    $article->body = $articles->setupTOC($article->body);
+
+    echo $article->body;
+?>
                             </article>
 <?php
         $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
