@@ -2,25 +2,29 @@
 	<div class='sticky'>
 <?php if ($category || isset($article)): ?>
 		<a class='button' href='/articles/'><i class='icon-caret-left'></i> Article Index</a>
-<?php else: ?>
-        <a class='button' href='/articles/submit'><i class='icon-books'></i> Submit Article</a>
-<?php endif;
-if (!(isset($category) && $category && $category->id == 'me')): ?>
-        <a class='button' href='/articles/me'>My Articles</a>
-<?php endif; ?>
         <br/><br/>
+<?php elseif ($user->loggedIn): ?>
+        <a class='button' href='/articles/submit'><i class='icon-books'></i> Submit Article</a>
+        <a class='button' href='/articles/me'>My Articles</a>
+        <br/><br/>
+<?php endif; ?>
 		<h2>Categories</h2>
         <ul class='categories'>
 <?php
             $parent = null;
-            if (isset($category) && $category && isset($category->parent))
-                $parent = $category->parent;
-            else if (isset($article) && $article)
+            $cat_id = null;
+            if (isset($category) && $category) {
+                if (isset($category->parent))
+                    $parent = $category->parent;
+                $cat_id = $category->id;
+            } else if (isset($article) && $article) {
                 $parent = $article->parent;
+                $cat_id = $article->cat_id;
+            }
 
             $categories = articles::getCategories(null, false);
             foreach($categories as $cat) {
-                articles::printCategoryList($cat, true, '', $parent);
+                articles::printCategoryList($cat, true, '', $parent, $cat_id);
             }
 ?>
         </ul>
