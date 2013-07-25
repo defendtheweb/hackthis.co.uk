@@ -1,6 +1,35 @@
 <?php
     class utils {
 
+        public function parse($text, $bbcode=true, $mentions=true) {
+            global $app;
+            if ($bbcode) {
+                $text = $app->bbcode->Parse($text);
+                if ($mentions) {
+                    $text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
+                }
+            } else {
+                //$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
+                $text = preg_replace('|[[\/\!]*?[^\[\]]*?].*?[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
+                $text = htmlspecialchars($text);
+            }
+
+            return $text;
+        }
+
+        private function mentions_callback($matches) {
+            global $db;
+            $mention = $matches[1];
+
+            $st = $db->prepare('SELECT username FROM users WHERE username = :username LIMIT 1');
+            $st->execute(array(':username' => $mention));
+            
+            if ($res = $st->fetch())
+                return "<a href='/user/{$res->username}'>{$res->username}</a>";
+
+            return $matches[0];
+        }
+
         public function repairUri($uri) {
             if ($ret = parse_url($uri)) {
                 if (!isset($ret["scheme"]))
