@@ -123,6 +123,10 @@ input[type="checkbox"]:checked + label:before {
   content: "\e051"; /* check */
 }
 
+input[type="file"] {
+    width: auto;
+}
+
 form input.button,
 form input.button:visited {
     background: $light_bg;
@@ -143,6 +147,11 @@ form input.button:visited {
 
     &:hover {
         background: $lighter_bg;
+    }
+
+    &.left {
+        float: left;
+        margin: 0px;
     }
 }
 
