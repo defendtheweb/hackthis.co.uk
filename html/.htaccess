@@ -9,6 +9,9 @@ php_value include_path ".:/home/flabbyrabbit/git/hackthis/hackthis.co.uk/files/"
 # ------------------------------------------------------------------------------
 RewriteEngine On
 
+#IMAGES
+RewriteRule ^users/images/(.+)/(.+)/(.+)$ /files/vendor/slir/?h=$1&c=$2&i=$3 [L]
+
 #NEWS
 RewriteRule ^news/?$ /news.php?%{QUERY_STRING}
 RewriteRule ^news/(.+)$ /news.php?slug=$1&%{QUERY_STRING}

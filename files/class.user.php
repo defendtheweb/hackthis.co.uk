@@ -348,5 +348,11 @@
         public function __toString() {
             return (isset($this->username)) ? $this->username : '';
         }
+
+        public function setImagePath($path) {
+            global $db;
+            $st = $db->prepare('UPDATE users_profile SET img = :path WHERE user_id = :uid LIMIT 1');
+            $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));           
+        }
     }
 ?>

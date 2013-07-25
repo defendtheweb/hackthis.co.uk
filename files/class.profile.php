@@ -249,7 +249,7 @@
         }
 
         public static function getImg($img, $size, $gravatar=false) {
-            $default = "http://www.hackthis.co.uk/users/images/{$size}/1:1/a.jpg";
+            $default = "/users/images/{$size}/1:1/no_pic.jpg";
 
             if (!$img)
                 return $default;
@@ -257,7 +257,7 @@
             if ($gravatar) {
                 return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=http://www.hackthis.co.uk/users/images/no_pic.jpg&s=" . $size;
             } else {
-                return "http://www.hackthis.co.uk/users/images/{$size}/1:1/{$img}.jpg";
+                return "/users/images/{$size}/1:1/{$img}";
             }
         }
     }
