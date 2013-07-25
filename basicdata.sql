@@ -24,6 +24,7 @@ INSERT INTO medals_colours (`reward`, `colour`) VALUES (100, 'bronze');
 INSERT INTO medals_colours (`reward`, `colour`) VALUES (200, 'silver');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Test');
 INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test');
+INSERT INTO medals (`medal_id`, `label`, `colour_id`, `description`) VALUES (11, 'Cheese', 1, 'Upload a profile picture');
 
 -- Award medal
 INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (1, 1);
