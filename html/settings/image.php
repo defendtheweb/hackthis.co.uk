@@ -42,6 +42,8 @@
             Drop file here<br/>or click to browse
         </div>
     </div>
+    <br/>
+    By uploading a file you certify that you have the right to distribute this picture and does not violate the <a href='/terms.php'>Terms of Service</a>.
 
 <?php
     require_once('footer.php');
