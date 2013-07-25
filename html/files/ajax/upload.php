@@ -26,7 +26,7 @@
             return false;
             
         //Check file size
-        if ($_FILES['file']['size'] > 1048576)
+        if ($_FILES['file']['size'] > 5000000)
             return false;
 
         $id = uniqid('', true);

@@ -30,7 +30,7 @@ $(function() {
         },
         allowedfiletypes: ['image/jpeg','image/jpg','image/png','image/gif'],   // filetypes allowed by Content-Type.  Empty array means no restrictions
         maxfiles: 1,
-        maxfilesize: 2,    // max file size in MBs
+        maxfilesize: 5,    // max file size in MBs
         uploadFinished: function(i, file, response, time) {
             if (response == 'done')
                 window.location.replace("?done");
