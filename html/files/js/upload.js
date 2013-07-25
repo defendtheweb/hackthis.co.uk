@@ -9,9 +9,10 @@ $(function() {
         url: '/files/ajax/upload.php',              // upload handler, handles each file separately, can also be a function returning a url
         paramname: 'file',          // POST parameter name used on serverside to reference file
         error: function(err, file) {
-            console.log(err);
             switch(err) {
                 case 'BrowserNotSupported':
+                    $('#upload-drop').hide();
+                    $('#upload-form').addClass('visible');
                     break;
                 case 'FileTooLarge':
                     // program encountered a file whose size is greater than 'maxfilesize'
