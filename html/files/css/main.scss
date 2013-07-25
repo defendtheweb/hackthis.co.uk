@@ -28,7 +28,7 @@ body {
     .page-wrap {
         min-height: 100%;
         /* equal to footer height */
-        margin-bottom: -120px;
+        margin-bottom: -125px;
     }
     .page-wrap:after {
         content: "";
@@ -308,6 +308,8 @@ blockquote {
     padding: 1px 4px 1px;
     text-transform: uppercase;
     white-space: nowrap;
+    position: relative;
+    top: -1px;
 
     &.medal-bronze {
         background-color: #693909;
