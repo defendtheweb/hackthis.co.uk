@@ -37,6 +37,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^user/(.+)$ /user/index.php?user=$1&%{QUERY_STRING}
 
+# SETTINGS
+RewriteRule ^settings/image$ /settings/image.php?user=$1&friends&%{QUERY_STRING} [L]
 
 # INBOX
 RewriteRule ^inbox/([0-9]+)$ /inbox/?view=$1&%{QUERY_STRING} [L]
