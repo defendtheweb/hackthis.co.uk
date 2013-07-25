@@ -351,7 +351,7 @@
 
         public function setImagePath($path) {
             global $db;
-            $st = $db->prepare('UPDATE users_profile SET img = :path WHERE user_id = :uid LIMIT 1');
+            $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path');
             $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));           
         }
     }
