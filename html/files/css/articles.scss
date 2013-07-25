@@ -99,7 +99,7 @@ a.article-suggest {
         }
 
         li.current {
-            &.active:before {
+            &.parent.active:before {
                 @include icon("\f0d7");
                 color: $green;
             }
