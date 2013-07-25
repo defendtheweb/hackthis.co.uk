@@ -1,57 +1,57 @@
 <?php
-require_once('init.php');
+    require_once('init.php');
 
-$error = false;
-$id = uniqid('', true);
+    function upload() {
+        global $app, $user;
+        $allowedExtensions = array(".jpg", ".jpeg", ".png", ".gif", ".bmp");
 
-$allowedExts = array("gif", "jpeg", "jpg", "png");
-$temp = explode(".", $_FILES["file"]["name"]);
-$extension = end($temp);
-if ((($_FILES["file"]["type"] == "image/gif")
-|| ($_FILES["file"]["type"] == "image/jpeg")
-|| ($_FILES["file"]["type"] == "image/jpg")
-|| ($_FILES["file"]["type"] == "image/png"))
-&& ($_FILES["file"]["size"] < 2000000)
-&& in_array($extension, $allowedExts))
-  {
-  if ($_FILES["file"]["error"] > 0)
-    {
-   $error = true;
+        if (empty($_FILES) || empty($_FILES['file']['tmp_name']))
+            return false;
+
+        $ext = strtolower(strrchr($_FILES['file']['name'], "."));
+        $e = 0;
+        foreach($allowedExtensions as $extension) {
+            if ($ext == $extension)
+                $e++;
+        }
+        if ($e <= 0)
+            return false;
+        
+        $file_info = getimagesize($_FILES['file']['tmp_name']);
+        
+        if (empty($file_info))
+            return false;
+            
+        if ($file_info[3] == IMAGETYPE_GIF || $file_info[3] == IMAGETYPE_JPEG || $file_info[3] == IMAGETYPE_PNG)
+            return false;
+            
+        //Check file size
+        if ($_FILES['file']['size'] > 1048576)
+            return false;
+
+        $id = uniqid('', true);
+        $filename = $id . $ext;
+        $filepath = $app->config('path') . "/files/uploads/images/" . $filename;
+
+        if (move_uploaded_file($_FILES["file"]["tmp_name"], $filepath)) {
+            $user->setImagePath($filename);
+
+            return true;
+        }
+
+        return false;
     }
-  else
-    {
-      $filename = $id . '.' . $extension;
-      $filepath = $app->config('path') . "/files/uploads/images/" . $filename;
-      echo $filepath;
-    if (file_exists($filepath))
-      {
 
-   $error = true;
-      }
-    else
-      {
-      move_uploaded_file($_FILES["file"]["tmp_name"], $filepath);
-      }
+    if (upload()) {
+        if (isset($redirect) && $redirect)
+            header('Location: ?done');
+        else
+            echo "done";
+    } else {
+        if (isset($redirect) && $redirect)
+            header('Location: ?error');
+        else
+            echo "error";
     }
-  }
-else
-  {
-
-   $error = true;
-  }
-
-//update users image
-$user->setImagePath($filename);
-
-if ($error) {
-  if ($redirect)
-    header('Location: ?error');
-  else
-    echo "error";
-} else {
-  if ($redirect)
-    header('Location: ?done');
-  else
-    echo "done";
-}
+    die();
 ?>
