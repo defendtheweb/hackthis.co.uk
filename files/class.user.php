@@ -350,9 +350,11 @@
         }
 
         public function setImagePath($path) {
-            global $db;
+            global $db, $app;
             $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path');
-            $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));           
+            $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
+
+            $app->awardMedal(11, $this->uid);         
         }
     }
 ?>
