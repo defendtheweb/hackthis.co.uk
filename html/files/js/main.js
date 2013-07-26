@@ -46,7 +46,7 @@ $(function() {
 
 
     // Hide facebook connect link
-    $('.dashboard .facebook-connect .remove').on('click', function(e) {
+    $('.facebook-connect .remove').on('click', function(e) {
         var uri = '/files/ajax/user.php?action=connect.hide';
         var $elem = $(this).parent();
         $.getJSON(uri, function(data) {
