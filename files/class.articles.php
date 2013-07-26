@@ -92,6 +92,24 @@
         public function getArticles($cat_id=null, $limit=2, $page=1) {
             global $db, $user;
 
+            // Get totals
+            $sql = 'SELECT count(*) as `count` FROM articles';
+            if ($cat_id !== null && $cat_id !== 'me') {
+                $cat_id2 = $cat_id;
+                $sql .= ' WHERE category_id = :cat_id ';
+            } else if ($cat_id == 'me') {
+                $cat_id2 = $user->uid;
+                $sql .= ' WHERE user_id = :cat_id ';
+            } else {
+                $cat_id2 = 0;
+                $sql .= ' WHERE category_id != :cat_id ';
+            }
+            $st = $db->prepare($sql);
+            $st->bindValue(':cat_id', $cat_id2);
+            $st->execute();
+            $result = $st->fetch();
+            $count = $result->count;
+
             // Group by required for count
             $sql = 'SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
                         submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
@@ -134,7 +152,7 @@
             $st->execute();
             $result = $st->fetchAll();
 
-            return $result;
+            return array('articles'=>$result, 'total'=>$count, 'page'=>$page);
         }
 
         public function getArticle($slug, $news=false) {

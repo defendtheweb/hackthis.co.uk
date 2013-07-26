@@ -1,8 +1,13 @@
 <?php
     if(!defined('PAGE_PUBLIC'))
         define('PAGE_PUBLIC', false);
+    
+    $custom_js = array('articles.js', 'highlight.js');
 
     require_once('header.php');
+
+    $limit = 5;
+    $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
     $articles = new articles();
 
@@ -13,7 +18,7 @@
         if ($newsArticle)
             $newsArticles = array($newsArticle);
     } else {
-        $newsArticles = $articles->getArticles(0);
+        $newsArticles = $articles->getArticles(0, $limit, $page);
     }
 ?>
                     <section class='news'>
@@ -26,7 +31,7 @@
                         </div>
 <?php
     else:
-        foreach ($newsArticles as $article):
+        foreach ($newsArticles['articles'] as $article):
             $article->title = $app->parse($article->title, false);
             $article->body = $app->parse($article->body);
 ?>
@@ -60,6 +65,14 @@
             if ($single) {
                 $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
                 include('elements/comments.php');
+            } else {
+                if (count(ceil($newsArticles['total']/$limit)) > 1) {
+                    $pagination = new stdClass();
+                    $pagination->current = $newsArticles['page'];
+                    $pagination->count = ceil($newsArticles['total']/$limit);
+                    $pagination->root = '?page=';
+                    include('elements/pagination.php');
+                }
             }
 
 

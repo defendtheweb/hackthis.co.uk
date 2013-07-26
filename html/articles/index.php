@@ -28,7 +28,7 @@
 <?php
 	if ($category):
 ?>
-							<h1><?=$category->title;?></h1>
+							<h1><?=$category->title;?> [<?=$articleList['total'];?>]</h1>
 <?php
 	else:
 ?>
@@ -43,7 +43,7 @@
                             </div>
 <?php
     else:
-	    foreach ($articleList as $article):
+	    foreach ($articleList['articles'] as $article):
 	        $article->title = $app->parse($article->title, false);
 	        $article->body = substr($app->parse($article->body, false), 0, 300) . '...';
 ?>
@@ -58,6 +58,14 @@
 	                        </article>
 <?php
 		endforeach;
+
+	    if (count(ceil($articleList['total']/$limit)) > 1) {
+	        $pagination = new stdClass();
+	        $pagination->current = $articleList['page'];
+	        $pagination->count = ceil($articleList['total']/$limit);
+	        $pagination->root = '?page=';
+	        include('elements/pagination.php');
+	    }
 	endif;
 ?>
 	                    </div>
