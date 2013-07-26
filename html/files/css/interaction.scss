@@ -458,14 +458,40 @@ ul.share {
 div.pagination {
     margin-top: 16px;
     background: $bg;
-    padding: 4px;
+    width: 100%;
+    text-align: center;
+    cursor: default;
 
     &.lite-pagination {
         text-align: right;
     }
+
+    a {
+        padding: 5px 8px;
+        margin: 0px;
+        color: $white;
+        display: inline-block;
+
+        &.current {
+            background: $black !important;
+        }
+
+        &:hover {
+            background: $green;
+            text-decoration: none;
+        }
+    }
+
+    li {
+        display: inline-block;
+
+        &.inactive {
+            padding: 0px 6px;
+            margin: 0px;
+            color: $white;
+        }
+    }
 }
-
-
 
 
 /*scrollbar themes*/
