@@ -16,7 +16,7 @@
         $single = true;
         $newsArticle = $articles->getArticle($_GET['slug'], true);
         if ($newsArticle)
-            $newsArticles = array($newsArticle);
+            $newsArticles['articles'] = array($newsArticle);
     } else {
         $newsArticles = $articles->getArticles(0, $limit, $page);
     }
@@ -66,7 +66,7 @@
                 $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
                 include('elements/comments.php');
             } else {
-                if (count(ceil($newsArticles['total']/$limit)) > 1) {
+                if (ceil($newsArticles['total']/$limit) > 1) {
                     $pagination = new stdClass();
                     $pagination->current = $newsArticles['page'];
                     $pagination->count = ceil($newsArticles['total']/$limit);
