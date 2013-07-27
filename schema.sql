@@ -234,6 +234,7 @@ CREATE TABLE articles_draft (
 	`category_id` int(3) NOT NULL,
 	`body` TEXT NOT NULL,
 	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`note` TEXT,
 	PRIMARY KEY (`article_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
 	FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`) 
