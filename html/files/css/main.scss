@@ -184,6 +184,28 @@ header .advert {
 
 
 
+/* TABLES */
+table {
+    width: 100%;
+
+    td, th {
+        padding: 4px;
+    }
+
+    &.striped tbody tr:nth-child(odd) {
+        background: $bg;
+    }
+
+    i {
+        color: $white;
+    }
+
+    .center {
+        width: auto;
+    }
+}
+
+
 /* ALERTS */
 .msg {
     color: $white;
