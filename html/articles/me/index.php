@@ -41,7 +41,7 @@
 							        	<th class='center'><i class='icon-comments'></i></th>
 							        	<th class='center'><i class='icon-heart'></i></th>
 <?php 	else: ?>
-							        	<th width='22px'>&nbsp;</th>
+							        	<th width='25px'></th>
 <?php 	endif; ?>
 							        </tr>
 							    </thead>
@@ -61,9 +61,9 @@
 									<tr class='<?=($article->note?'declined':'awaiting');?>'>
 							        	<td><a href='/articles/view.php?id=<?=$article->id;?>'><?=$article->title;?></a> <span class='dark'>&middot; <?=$article->cat_title;?></a></td>
 <?php 			if ($article->note): ?>
-							        	<td><span class='hint--top' data-hint='Declined: <?=str_replace("'", '`', str_replace("<br />", "", $app->parse($article->note, false, false)));?>'><i class='icon-error'></i></span></td>
+							        	<td class='center'><span class='hint--left' data-hint='Declined: <?=str_replace("'", '`', str_replace("<br />", "", $app->parse($article->note, false, false)));?>'><i class='icon-cross'></i></span></td>
 <?php 			else: ?>
-							        	<td><span class='hint--top' data-hint='Awaiting review'><i class='icon-help'></i></span></td>
+							        	<td class='center'><span class='hint--left' data-hint='Awaiting review'><i class='icon-eye'></i></span></td>
 <?php			endif; ?>
 									</tr>
 <?php

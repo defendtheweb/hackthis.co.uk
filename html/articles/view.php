@@ -53,8 +53,8 @@
 <?php
             else:
 ?>            
-                            <div class='msg msg-warning'>
-                                <i class='icon-warning'></i>
+                            <div class='msg msg-info'>
+                                <i class='icon-info'></i>
                                 This article is awaiting review
                             </div>
 <?php
@@ -67,7 +67,7 @@
                             <article class='bbcode body'>
                                 <header class='title clearfix'>
                                     <?php if ($myArticle): ?>
-                                        <a href='/admin/articles.php?action=edit&id=<?=$id;?>' class='button right'><i class='icon-pencil'></i></a>
+                                        <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button right'><i class='icon-pencil'></i></a>
                                     <?php elseif ($user->admin_pub_priv): ?>
                                         <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                     <?php endif; ?>

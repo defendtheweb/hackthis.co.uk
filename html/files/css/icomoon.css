@@ -270,10 +270,10 @@ you can use the generic selector below, but it's slower:
 .icon-blocked:before {
 	content: "\e04d";
 }
-.icon-close:before {
+.icon-cross:before {
 	content: "\e04e";
 }
-.icon-checkmark:before {
+.icon-tick:before {
 	content: "\e04f";
 }
 .icon-loop:before {

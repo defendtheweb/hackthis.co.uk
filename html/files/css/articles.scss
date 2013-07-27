@@ -130,20 +130,20 @@ a.article-suggest {
 
 
 table {
-    i.icon-error {
-        color: $msg_error;
-    }
-
-    i.icon-help {
-        color: $msg_info;
-    }
-
     tr.declined {
         border-left: 1px solid $msg_error;
+        
+        i {
+            color: $msg_error;
+        }
     }
 
     tr.awaiting {
         border-left: 1px solid $msg_info;
+        
+        i {
+            color: $msg_info;
+        }
     }
 }
 

@@ -186,7 +186,7 @@
             return $result;
         }
 
-        public function updateArticle($id, $changes, $updated=true) {
+        public function updateArticle($id, $changes, $updated=true, $draft=false) {
             if (!is_array($changes)) return false;
 
             global $db, $user;
@@ -206,11 +206,21 @@
 
             $fields = rtrim($fields, ',');
 
-            $query  = "UPDATE articles SET ".$fields;
-            if ($updated)
+            if ($draft)
+                $query  = "UPDATE articles_draft SET note = NULL, ".$fields;
+            else
+                $query  = "UPDATE articles SET ".$fields;
+
+            if (!$draft && $updated)
                 $query .= ",updated=NOW()";
             $query .= " WHERE article_id=?";
             $values[] = $id;
+
+            if ($draft || !$user->admin_pub_priv) {
+                $query .= " AND user_id = ?";
+            }
+
+            $values[] = $user->uid;
 
             $st = $db->prepare($query);
             $res = $st->execute($values); 
@@ -316,6 +326,23 @@
                 return false;
 
             return $result;
+        }
+
+        public function submitArticle($title, $body, $category) {
+            global $db, $user;
+
+            if (!$title || !$body)
+                return false;
+
+            // Group by required for count
+            $st = $db->prepare('INSERT INTO articles_draft (`user_id`,`title`,`category_id`,`body`)
+                                VALUES (:uid,:title,:cat_id,:body)');
+            $result = $st->execute(array(':uid' => $user->uid, ':title' => $title, ':cat_id' => $category, ':body' => $body));
+
+            if (!$result)
+                return false;
+
+            return $db->lastInsertId();          
         }
 
 
