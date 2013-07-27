@@ -20,6 +20,8 @@ RewriteRule ^news/(.+)$ /news.php?slug=$1&%{QUERY_STRING}
 RewriteRule ^articles/(.+)/(.+)/([0-9]+)$ /articles/index.php?slug=$1/$2&page=$3&%{QUERY_STRING} [L]
 RewriteRule ^articles/(.+)/([0-9]+)$ /articles/index.php?slug=$1&page=$2&%{QUERY_STRING} [L]
 RewriteRule ^articles/([0-9]+)$ /articles/index.php?page=$1&%{QUERY_STRING} [L]
+RewriteRule ^articles/submit$ /articles/me/submit.php?slug=$1&%{QUERY_STRING}
+
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^articles/(.+)/(.+)$ /articles/index.php?slug=$1/$2&%{QUERY_STRING} [L]
