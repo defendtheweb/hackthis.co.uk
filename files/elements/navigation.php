@@ -49,7 +49,8 @@
 ?>
                                 <li class='parent'><a href='/articles/me'>My Articles</a>
                                     <ul>
-                                        <li><a href='/articles/me'>View all</a></li>
+                                        <li><a href='/articles/me'>Approved</a></li>
+                                        <li><a href='/articles/me?submissions'>Submitted</a></li>
                                         <li><a href='/articles/submit'>Submit</a></li>
                                     </ul>
                                 </li>
