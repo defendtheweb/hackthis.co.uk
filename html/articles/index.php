@@ -12,8 +12,10 @@
 	$articles = new articles();
     if (isset($_GET['slug'])) {
     	$category = $articles->getCategory($_GET['slug']);
-		if (!$category)
+		if (!$category) {
 			header('Location: /articles');
+			die();
+		}
 		$articleList = $articles->getArticles($category->id, $limit, $page);
 	} else {
    		$category = null;
@@ -35,7 +37,7 @@
 							<h1>Article Index</h1>
 <?php
 	endif;
-    if (!isset($articleList) || !$articleList):
+    if (!isset($articleList) || !$articleList || $articleList['total'] == 0):
 ?>
                             <div class='msg msg-error'>
                                 <i class='icon-error'></i>
@@ -59,7 +61,7 @@
 <?php
 		endforeach;
 
-	    if (count(ceil($articleList['total']/$limit)) > 1) {
+	    if (ceil($articleList['total']/$limit) > 1) {
 	        $pagination = new stdClass();
 	        $pagination->current = $articleList['page'];
 	        $pagination->count = ceil($articleList['total']/$limit);

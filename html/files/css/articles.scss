@@ -129,6 +129,25 @@ a.article-suggest {
 }
 
 
+table {
+    i.icon-error {
+        color: $msg_error;
+    }
+
+    i.icon-help {
+        color: $msg_info;
+    }
+
+    tr.declined {
+        border-left: 1px solid $msg_error;
+    }
+
+    tr.awaiting {
+        border-left: 1px solid $msg_info;
+    }
+}
+
+
 @media ( max-width : 769px ) {
     a.article-suggest,
     .article-sidebar {

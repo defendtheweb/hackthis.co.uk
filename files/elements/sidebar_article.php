@@ -1,6 +1,9 @@
 <div class="col span_6 article-sidebar">
 	<div class='sticky'>
-<?php if ($category || isset($article)): ?>
+<?php if (isset($myArticle) && $myArticle): ?>
+        <a class='button' href='/articles/me?submissions'><i class='icon-caret-left'></i> Submitted Articles</a>
+        <br/><br/>
+<?php elseif ((isset($category) && $category) || isset($article)): ?>
 		<a class='button' href='/articles/'><i class='icon-caret-left'></i> Article Index</a>
         <br/><br/>
 <?php elseif ($user->loggedIn): ?>

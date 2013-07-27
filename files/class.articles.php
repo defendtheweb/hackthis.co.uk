@@ -70,11 +70,6 @@
         }
 
         public function getCategory($slug) { 
-            if ($slug == 'me') {
-                $category = (object) array('id' => 'me', 'title' => 'My Articles');
-                return $category;
-            }
-
             global $db;
 
             //Get category id
@@ -92,26 +87,8 @@
         public function getArticles($cat_id=null, $limit=2, $page=1) {
             global $db, $user;
 
-            // Get totals
-            $sql = 'SELECT count(*) as `count` FROM articles';
-            if ($cat_id !== null && $cat_id !== 'me') {
-                $cat_id2 = $cat_id;
-                $sql .= ' WHERE category_id = :cat_id ';
-            } else if ($cat_id == 'me') {
-                $cat_id2 = $user->uid;
-                $sql .= ' WHERE user_id = :cat_id ';
-            } else {
-                $cat_id2 = 0;
-                $sql .= ' WHERE category_id != :cat_id ';
-            }
-            $st = $db->prepare($sql);
-            $st->bindValue(':cat_id', $cat_id2);
-            $st->execute();
-            $result = $st->fetch();
-            $count = $result->count;
-
             // Group by required for count
-            $sql = 'SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
+            $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug, a.body,
                         submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                         CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                         COALESCE(comments.count, 0) AS comments,
@@ -131,12 +108,9 @@
                     LEFT JOIN 
                         ( SELECT article_id, COUNT(*) AS count FROM articles_favourites WHERE user_id = :uid GROUP BY article_id) user_favourites
                     ON a.article_id = user_favourites.article_id';
-            if ($cat_id !== null && $cat_id !== 'me')
+            if ($cat_id !== null)
                 $sql .= ' WHERE a.category_id = :cat_id ';
-            else if ($cat_id == 'me') {
-                $cat_id = $user->uid;
-                $sql .= ' WHERE a.user_id = :cat_id ';
-            } else {
+            else {
                 $cat_id = 0;
                 $sql .= ' WHERE a.category_id != :cat_id ';
             }
@@ -151,6 +125,12 @@
             $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
             $st->execute();
             $result = $st->fetchAll();
+
+            // Get total rows
+            $st = $db->prepare('SELECT FOUND_ROWS() AS `count`');
+            $st->execute();
+            $count = $st->fetch();
+            $count = $count->count;
 
             return array('articles'=>$result, 'total'=>$count, 'page'=>$page);
         }
@@ -260,6 +240,88 @@
             return $result;
         }
 
+
+        /*
+         * USERS ARTICLES
+         */
+        public function getMyArticles($approved=true, $limit=2, $page=1) {
+            global $db, $user;
+
+            // Group by required for count
+            if ($approved) {
+                $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug,
+                            submitted, updated, a.category_id AS cat_id, categories.title AS cat_title,
+                            CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
+                            COALESCE(comments.count, 0) AS comments,
+                            COALESCE(favourites.count, 0) AS favourites,
+                            SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total
+                        FROM articles a
+                        LEFT JOIN articles_categories categories
+                        ON a.category_id = categories.category_id
+                        LEFT JOIN users
+                        ON users.user_id = a.user_id
+                        LEFT JOIN 
+                            ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
+                        ON a.article_id = comments.article_id
+                        LEFT JOIN 
+                            ( SELECT article_id, COUNT(*) AS count FROM articles_favourites GROUP BY article_id) favourites
+                        ON a.article_id = favourites.article_id
+                        WHERE a.user_id = :uid
+                        GROUP BY a.article_id
+                        ORDER BY total DESC, submitted DESC
+                        LIMIT :limit1, :limit2';
+            } else {
+                $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, a.title, a.note,
+                            `time`, categories.title AS cat_title
+                        FROM articles_draft a
+                        LEFT JOIN articles_categories categories
+                        ON a.category_id = categories.category_id
+                        WHERE a.user_id = :uid
+                        ORDER BY `time` DESC
+                        LIMIT :limit1, :limit2';           
+            }
+
+            $st = $db->prepare($sql);
+            $st->bindValue(':uid', $user->uid);
+            $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
+            $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            // Get total rows
+            $st = $db->prepare('SELECT FOUND_ROWS() AS `count`');
+            $st->execute();
+            $count = $st->fetch();
+            $count = $count->count;
+
+            return array('articles'=>$result, 'total'=>$count, 'page'=>$page);
+        }
+
+        public function getMyArticle($id) {
+            global $db, $user;
+
+            // Group by required for count
+            $st = $db->prepare('SELECT a.article_id AS id, a.title, a.body, a.note,
+                                    `time`, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
+                                    categories.parent_id AS parent
+                                FROM articles_draft a
+                                LEFT JOIN articles_categories categories
+                                ON a.category_id = categories.category_id
+                                WHERE a.article_id = :id AND user_id = :uid
+                                LIMIT 1');
+            $st->execute(array(':id' => $id, ':uid' => $user->uid));
+            $result = $st->fetch();
+
+            if (!$result)
+                return false;
+
+            return $result;
+        }
+
+
+        /*
+         * COMMENTS
+         */
 
         public function getComments($article_id, $parent_id=0, $bbcode=true) {
             global $app, $db, $user;
