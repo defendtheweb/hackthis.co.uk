@@ -49,7 +49,7 @@
 
             $app->stats->users_activity($this);
 
-            $st = $db->prepare('SELECT username, score, status, (oauth_id IS NOT NULL) as connected,
+            $st = $db->prepare('SELECT username, score, status, email, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
                     profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                     activity.consecutive, activity.consecutive_most
@@ -351,8 +351,14 @@
 
         public function setImagePath($path) {
             global $db, $app;
-            $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path');
-            $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
+
+            if ($path != 'gravatar') {
+                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path, gravatar = 0');
+                $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
+            } else {
+                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `gravatar`) VALUES (:uid, 1) ON DUPLICATE KEY UPDATE gravatar = 1');
+                $result = $st->execute(array(':uid' => $this->uid));
+            }
 
             $app->awardMedal(11, $this->uid);         
         }

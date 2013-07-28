@@ -36,6 +36,44 @@
 	}
 }
 
+.gravatar-pic {
+    width: 100%;
+    max-width: 200px;
+    height: 200px;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+
+    img {
+    	width: 100%;
+    }
+
+    a {
+    	text-align: center;
+        font-size: 1.5em;
+        padding: 6px;
+        font-weight: bold;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 200px;
+        padding-top: 50px;
+        text-decoration: none;
+        background: rgba(0,0,0,0.3);
+
+        i {
+        	margin-bottom: 6px;
+            font-size: 3em;
+        }
+    }
+
+    &:hover a {
+        background: #000000;
+        background: rgba(0,0,0,0.8);
+    }
+}
+
 .no-js {
 	#upload-form {	
 		width: auto;
