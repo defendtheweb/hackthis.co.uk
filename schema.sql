@@ -217,7 +217,7 @@ CREATE TABLE articles (
 	`slug` varchar(64) NOT NULL,
 	`category_id` int(3) NOT NULL,
 	`body` TEXT  NOT NULL,
-	`thumbnail` varchar(16), 
+	`thumbnail` varchar(32), 
 	`submitted` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`updated` timestamp,
 	`featured` int(1),
