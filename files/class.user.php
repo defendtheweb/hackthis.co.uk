@@ -76,6 +76,24 @@
                 $this->image = profile::getImg($this->image, 100, $gravatar);
             } else
                 $this->image = profile::getImg(null, 100);
+
+
+            if ($this->score >= $app->max_score)
+                $this->score_perc = 100;
+            else
+                $this->score_perc = $this->score/$app->max_score * 100;
+
+            if ($this->consecutive <= 7)
+                $consecutive_target = 7;
+            elseif ($this->consecutive <= 14)
+                $consecutive_target = 14;
+            else
+                $consecutive_target = 30;
+
+            if ($this->consecutive >= $consecutive_target)
+                $this->consecutive_perc = 100;
+            else
+                $this->consecutive_perc = $this->consecutive/$consecutive_target * 100;
         }
 
         private function salt() {

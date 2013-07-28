@@ -26,9 +26,9 @@
                                 </a>
                             </div>
                             <ul class='user-profile'>
-                                <li class='progress progress-score'><span style='width: 90%'>90%</span></li>
+                                <li class='progress progress-score'><span style='width: <?=$user->score_perc;?>%'><?=$user->score_perc;?>%</span></li>
                                 <li>Score <span class='right'><?=$user->score;?></span></li>
-                                <li class='progress progress-login'><span style='width: 40%'>40%</span></li>
+                                <li class='progress progress-login'><span style='width: <?=$user->consecutive_perc;?>%'><?=$user->consecutive_perc;?>%</span></li>
                                 <li>
                                     Activity <span class='hint--bottom' data-hint="Consecutive number of active days.&#10;Consecutive days are calculated using UTC.&#10;Your personal best is highlighted."><i class='icon-info'></i></span>
                                     <span class='right'><?=$user->consecutive;?> <span><?=$user->consecutive_most;?></span></span>

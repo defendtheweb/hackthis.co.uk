@@ -1,6 +1,7 @@
 <?php
 	class app {
 		public $bbcode;
+		public $max_score = 4000;
 
 		function __construct() {
 			global $custom_css, $custom_js;

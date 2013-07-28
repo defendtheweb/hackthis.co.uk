@@ -1,6 +1,6 @@
 <?php
     if(!defined('PAGE_PUBLIC'))
-        define('PAGE_PUBLIC', false);
+        define('PAGE_PUBLIC', true);
     
     $custom_js = array('articles.js', 'highlight.js');
 
