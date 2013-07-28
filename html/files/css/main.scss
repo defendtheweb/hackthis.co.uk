@@ -373,18 +373,48 @@ sidebar h1 {
 /* FOOTER */
 #page-footer {
     background: $bg;
-}
+    
+    footer {
+        margin-bottom: 0px;
 
-#page-footer footer {
-    margin-bottom: 0px;
+        div.container {
+            margin-bottom: 0;
+            padding: 10px 0;
+        }
 
-    div.container {
-        margin-bottom: 0;
-        padding: 10px 0;
-    }
+        #page-footer-2 {
+            background: $light_bg;
 
-    #page-footer-2 {
-        background: $light_bg;
+            .right a {
+                font-size: 1.9em;
+                margin-left: 6px;
+
+                &:hover {
+                    text-decoration: none;
+                }
+
+                i.icon-facebook {
+                    color: darken(#3B5998, 15%);
+                    &:hover {
+                        color: #3B5998;
+                    }
+                }
+
+                i.icon-twitter {
+                    color: darken(#00ACED, 15%);
+                    &:hover {
+                        color: #00ACED;
+                    }
+                }
+
+                i.icon-feed {
+                    color: darken(#F88B02, 15%);
+                    &:hover {
+                        color: #F88B02;
+                    }
+                }
+            }
+        }
     }
 }
 
