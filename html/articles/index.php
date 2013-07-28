@@ -9,18 +9,18 @@
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-	$articles = new articles();
+    $articles = new articles();
     if (isset($_GET['slug'])) {
-    	$category = $articles->getCategory($_GET['slug']);
-		if (!$category) {
-			header('Location: /articles');
-			die();
-		}
-		$articleList = $articles->getArticles($category->id, $limit, $page);
-	} else {
-   		$category = null;
-   		$articleList = $articles->getArticles(null, $limit, $page);
-   	}
+        $category = $articles->getCategory($_GET['slug']);
+        if (!$category) {
+            header('Location: /articles');
+            die();
+        }
+        $articleList = $articles->getArticles($category->id, $limit, $page);
+    } else {
+        $category = null;
+        $articleList = $articles->getArticles(null, $limit, $page);
+    }
 ?>
                     <section class="row">
 <?php
@@ -28,15 +28,11 @@
 ?>    
                         <div class="col span_18 article-main">
 <?php
-	if ($category):
+    if ($category):
 ?>
-							<h1><?=$category->title;?> [<?=$articleList['total'];?>]</h1>
+                            <h1><?=$category->title;?> [<?=$articleList['total'];?>]</h1>
 <?php
-	else:
-?>
-							<h1>Article Index</h1>
-<?php
-	endif;
+    endif;
     if (!isset($articleList) || !$articleList || $articleList['total'] == 0):
 ?>
                             <div class='msg msg-error'>
@@ -45,32 +41,63 @@
                             </div>
 <?php
     else:
-	    foreach ($articleList['articles'] as $article):
-	        $article->title = $app->parse($article->title, false);
-	        $article->body = substr($app->parse($article->body, false), 0, 300) . '...';
-?>
-	                        <article class='bbcode body index'>
-	                            <header class='title clearfix'>
-	                                <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
-	                            </header>
-	                            <?php
-	                                echo $article->body;
-	                            ?>
-	                            <a href='<?=$article->uri;?>'>continue reading</a>
-	                        </article>
-<?php
-		endforeach;
 
-	    if (ceil($articleList['total']/$limit) > 1) {
-	        $pagination = new stdClass();
-	        $pagination->current = $articleList['page'];
-	        $pagination->count = ceil($articleList['total']/$limit);
-	        $pagination->root = '?page=';
-	        include('elements/pagination.php');
-	    }
-	endif;
+        if (!$category):
+            $n = 0;
+            $hot = $articles->getHotArticles();
+            foreach($hot AS $article):
+                if ($n++ == 3)
+                    break;
+
+                if ($n == 1):
 ?>
-	                    </div>
+                            <div class="row fluid">
+<?php           endif; ?>
+                                <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail)?'img':'';?> thumbnail">
+<?php               if (isset($article->thumbnail)): ?>
+                                    <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
+<?php               endif; ?>
+                                    <div class="caption">
+                                        <h3><?=$article->title;?></h3>
+<?php               if (!isset($article->thumbnail)): ?>
+                                    <p><?=$article->body;?></p>
+<?php               endif; ?>
+                                    </div>
+                                </a>
+<?php           if ($n == 3): ?>
+                            </div>
+<?php
+               endif;
+            endforeach;
+        endif;
+
+        $n = 0;
+        foreach ($articleList['articles'] as $article):
+            $article->title = $app->parse($article->title, false);
+            $article->body = substr($app->parse($article->body, false), 0, 300) . '...';
+?>
+                            <article class='bbcode body index'>
+                                <header class='title clearfix'>
+                                    <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
+                                </header>
+                                <?php
+                                    echo $article->body;
+                                ?>
+                                <a href='<?=$article->uri;?>'>continue reading</a>
+                            </article>
+<?php
+        endforeach;
+
+        if (ceil($articleList['total']/$limit) > 1) {
+            $pagination = new stdClass();
+            $pagination->current = $articleList['page'];
+            $pagination->count = ceil($articleList['total']/$limit);
+            $pagination->root = '?page=';
+            include('elements/pagination.php');
+        }
+    endif;
+?>
+                        </div>
                     </section>
 <?php
    require_once('footer.php');
