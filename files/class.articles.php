@@ -88,7 +88,7 @@
             global $db, $user;
 
             // Group by required for count
-            $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug, a.body,
+            $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug, a.body, a.thumbnail,
                         submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                         CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
                         COALESCE(comments.count, 0) AS comments,
@@ -139,7 +139,7 @@
             global $db, $user;
 
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body,
+            $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body, a.thumbnail,
                                     submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                                     categories.parent_id AS parent,
                                     CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
@@ -232,7 +232,8 @@
             global $app, $db, $user;
 
             $st = $db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
-                                CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug
+                                CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
+                                a.body, a.thumbnail
                                 FROM articles a
                                 LEFT JOIN 
                                     ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments

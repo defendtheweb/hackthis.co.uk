@@ -283,6 +283,47 @@ a.icon-hover {
     }
 }
 
+/* IMAGES */
+.thumbnail {
+    background: $bg;
+    padding: 12px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    height: 252px;
+    text-decoration: none !important;
+    color: $text;
+
+    &:hover {
+        background: $light_bg;
+    }
+
+    &.img .caption {
+        height: 70px;
+        overflow: hidden;
+    }
+
+    .caption {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    img {
+        width: 100%;
+    }
+
+    h3 {
+        margin: 0;
+        color: $white;
+        text-align: left;
+    }
+
+    &.img h3 {
+        margin-top: 6px;
+    }
+}
+
 
 
 /* WYSIWYG */

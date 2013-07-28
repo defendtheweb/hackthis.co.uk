@@ -31,7 +31,9 @@
             }
 ?>
         </ul>
-
+<?php
+    if ((isset($category) && $category) || isset($article)):
+?>
         <h2>Top Articles</h2>
         <ul class='hot'>
 <?php
@@ -41,7 +43,12 @@
             <li><a href='<?=$hotArticle->slug;?>'><?=$hotArticle->title;?></a></li>
 <?php
         }
+    endif;
 ?>
         </ul>
+
+<?php
+    include('widgets/adverts.php');
+?>
 	</div>
 </div>
