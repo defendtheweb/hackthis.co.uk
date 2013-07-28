@@ -119,8 +119,8 @@
 <?php
     elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
 ?>
-                        <li class='right <?=isset($user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($user->login_error))?"data-error='{$user->login_error}'":'';?>>Login</a></li>
-                        <li class='right <?=isset($user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($user->reg_error))?"data-error='{$user->reg_error}'":'';?>>Register</a></li>
+                        <li class='right nav-extra-login-item <?=isset($user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($user->login_error))?"data-error='{$user->login_error}'":'';?>>Login</a></li>
+                        <li class='right nav-extra-register-item <?=isset($user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($user->reg_error))?"data-error='{$user->reg_error}'":'';?>>Register</a></li>
 <?php
     endif;
 ?>

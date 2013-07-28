@@ -476,6 +476,17 @@
                     &.nav-extra-events-cont {
                         right: 35px;
                     }
+
+                    &.nav-extra-login-item, &.nav-extra-register-item {
+                        top: -23px;
+                        a {
+                            font-size: 1em;
+                        }
+                    }
+
+                    &.nav-extra-register-item {
+                        right: 60px;
+                    }
                 }
 
                 ul {
