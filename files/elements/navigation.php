@@ -113,8 +113,10 @@
                         <li class='right icon'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
                         <li class='right icon nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
                         <li class='right icon mobile-hide nav-search'>
-                            <input placeholder='Search: topic, user, level..'/>
-                            <a href='#'><i class='icon-search'></i></a>
+                            <form action='/search.php' method='get'>
+                                <input placeholder='Search: topic, user, level..' name='q'/>
+                                <a href='#' onclick="$(this).parent().submit();"><i class='icon-search'></i></a>
+                            </form>
                         </li>
 <?php
     elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in

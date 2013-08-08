@@ -150,7 +150,7 @@ form input.button:visited {
     }
 
     &.left {
-        float: left;
+        float: none !important;
         margin: 0px;
     }
 }

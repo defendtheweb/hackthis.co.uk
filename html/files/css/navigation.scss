@@ -305,6 +305,7 @@
                         margin: 4px;
                         height: 15px;
                         padding: 0 4px;
+                        padding-top: 1px;
 
                         &:hover {
                             background: none;
@@ -333,6 +334,7 @@
                         a {
                             display: inline-block;
                             margin-top: -6px;
+                            padding: 4px;
 
                             &:hover i {
                                 color: $text;

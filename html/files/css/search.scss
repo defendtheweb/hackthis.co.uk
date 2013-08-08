@@ -1,0 +1,69 @@
+ul.users-list {
+    list-style: none;
+    margin-bottom: 16px;
+
+    li {
+        margin-right: 4px;
+        float: left;
+
+        figure {
+            position: relative;
+            margin-bottom: 2px;
+
+            img {
+                display: block;
+                width: 48px;
+            }
+
+            /* HOVER STYLE BELOW BLOCK */
+
+            figcaption {
+                z-index: 0;
+                box-shadow: 0 0 0 0 $light_bg;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.1s ease 0s, width 0.1s ease 0s, box-shadow 0.1s ease 0s;
+                background: $light_bg;
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding-left: 55px;
+                overflow: hidden;
+                white-space: nowrap;
+                padding-right: 8px;
+                font-size: 0.9em;
+
+                a {
+                    font-weight: bold;
+                    color: $white;
+                }
+            }
+        }
+    }
+}
+
+.no-touch .users-list li:hover {
+    img {
+        z-index: 100;
+        position: relative;
+    }
+
+    figcaption {
+        z-index: 99;
+        box-shadow: 0 0 0 4px $light_bg;
+        opacity: 1;
+        width: auto;
+    }
+}
+
+
+article.article header {
+    margin-bottom: 6px;
+
+    h2 {
+        margin: 0px;
+        font-size: 1.2em;
+    }
+}
