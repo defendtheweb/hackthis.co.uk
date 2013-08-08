@@ -2,7 +2,6 @@ USE hackthis;
 
 -- CATEGORIES
 INSERT INTO `articles_categories` (`category_id`, `parent_id`, `title`, `slug`) VALUES
-(0, NULL, 'News', 'news'),
 (1, NULL, 'Hacking', 'hacking'),
 (2, 1, 'Website Security', 'hacking/web-security'),
 (3, 1, 'Application Security', 'hacking/app-security'),
@@ -14,7 +13,10 @@ INSERT INTO `articles_categories` (`category_id`, `parent_id`, `title`, `slug`) 
 (9, NULL, 'General', 'general'),
 (10, NULL, 'Forensics', 'forensics'),
 (11, NULL, 'Videos', 'videos'),
-(12, NULL, 'Talks', 'talks');
+(12, NULL, 'Talks', 'talks'),
+(13, NULL, 'News', 'news');
+
+UPDATE `articles_categories` SET `category_id` = 0 WHERE `title` = 'News';
 
 -- ARTICLES
 INSERT INTO `articles` (`article_id`, `title`, `slug`, `category_id`, `user_id`, `submitted`, `body`, `views`, `featured`) VALUES
