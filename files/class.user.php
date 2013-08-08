@@ -51,7 +51,7 @@
 
             $st = $db->prepare('SELECT username, score, status, email, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
-                    profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`,
+                    profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most
                     FROM users u
                     LEFT JOIN users_profile profile
@@ -71,10 +71,16 @@
                 $this->pub_priv > 1)
                     $this->admin = true;
 
-            if (isset($this->image)) {
-                $gravatar = isset($this->gravatar) && $this->gravatar == 1;
-                $this->image = profile::getImg($this->image, 100, $gravatar);
-            } else
+
+            if (isset($this->gravatar) && $this->gravatar == 1) {
+                // If user is currently using gravatar but has uploaded an image previously
+                if (isset($this->image))
+                    $this->image_old = profile::getImg($this->image, 75, 0);
+
+                $this->image = profile::getImg($this->email, 100, 1);
+            } else if (isset($this->image))
+                $this->image = profile::getImg($this->image, 100, 0);
+            else
                 $this->image = profile::getImg(null, 100);
 
 
@@ -370,12 +376,18 @@
         public function setImagePath($path) {
             global $db, $app;
 
-            if ($path != 'gravatar') {
-                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path, gravatar = 0');
-                $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
-            } else {
+            if ($path === 'gravatar') {
                 $st = $db->prepare('INSERT INTO users_profile (`user_id`, `gravatar`) VALUES (:uid, 1) ON DUPLICATE KEY UPDATE gravatar = 1');
                 $result = $st->execute(array(':uid' => $this->uid));
+            } else if ($path === 'current') {
+                $st = $db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0');
+                $result = $st->execute(array(':uid' => $this->uid));
+            } else if ($path === 'default') {
+                $st = $db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0, img = NULL');
+                $result = $st->execute(array(':uid' => $this->uid));
+            } else {
+                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path, gravatar = 0');
+                $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
             }
 
             $app->awardMedal(11, $this->uid);         

@@ -1,5 +1,5 @@
 <?php
-    if (isset($_GET['upload'])) {
+    if (isset($_GET['upload']) && isset($_POST['file'])) {
         $redirect = true;
         require('../files/ajax/upload.php');
     }
@@ -8,9 +8,15 @@
     $custom_css = array('settings.scss');
     require_once('init.php');
 
-    if (isset($_GET['gravatar']) && !isset($_GET['done'])) {
-        $user->setImagePath('gravatar');
-        header('Location: ?gravatar&done');
+    if ((isset($_GET['gravatar']) || isset($_GET['upload']) || isset($_GET['default'])) && !isset($_GET['done'])) {
+        if (isset($_GET['gravatar']))
+            $user->setImagePath('gravatar');
+        else if (isset($_GET['upload']))
+            $user->setImagePath('current');
+        else if (isset($_GET['default']))
+            $user->setImagePath('default');
+
+        header('Location: ?done');
     }
 
     require_once('header.php');
@@ -55,6 +61,18 @@
             <br/>
             By uploading a file you certify that you have the right to distribute this picture and does not violate the <a href='/terms.php'>Terms of Service</a>.
             <br/><br/>
+            <div class='row center'>
+<?php if (isset($user->image_old)): ?>
+                <div class="col span_12">
+                    <strong class='white'>Use previous image</strong><br/>
+                    <a href='?upload'><img width='75px' src='<?=$user->image_old;?>'/></a>
+                </div>
+<?php endif; ?>
+                <div class="col span_<?=isset($user->image_old)?'12':'24';?>">
+                    <strong class='white'>Use default image</strong><br/>
+                    <a href='?default'><img width='75px' src='/users/images/75/1:1/no_pic.jpg'/></a>
+                </div>
+            </div>
         </div>
         <div class="col span_1">
             &nbsp;
