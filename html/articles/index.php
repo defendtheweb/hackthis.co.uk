@@ -60,7 +60,7 @@
                                     <div class="caption">
                                         <h3><?=$article->title;?></h3>
 <?php               if (!isset($article->thumbnail)): ?>
-                                    <p><?=$article->body;?></p>
+                                    <p><?=$app->parse($article->body, false);?></p>
 <?php               endif; ?>
                                     </div>
                                 </a>
@@ -71,7 +71,6 @@
             endforeach;
         endif;
 
-        $n = 0;
         foreach ($articleList['articles'] as $article):
             $article->title = $app->parse($article->title, false);
             $article->body = substr($app->parse($article->body, false), 0, 300) . '...';
