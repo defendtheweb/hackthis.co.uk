@@ -27,11 +27,13 @@ CREATE TABLE users_oauth (
 
 CREATE TABLE users_levels (
 	`user_id` int(7) NOT NULL,
-	`level_id` int(3) NOT NULL,
-	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`level_id` varchar(4) NOT NULL,
+	`started` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`completed` timestamp,
+	`attempts` smallint(3) UNSIGNED DEFAULT 0,
 	PRIMARY KEY (`user_id`),
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-	-- FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
+	-- Level constraint added later
 ) ENGINE=InnoDB;
 
 CREATE TABLE users_profile (
@@ -166,6 +168,25 @@ CREATE TABLE users_medals (
 	FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)
 ) ENGINE=InnoDB;
 
+
+/*
+	LEVELS
+*/
+CREATE TABLE levels_groups (
+	`group_id` varchar(4),
+	`title` varchar(25),
+	PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE levels (
+	`level_id` varchar(4),
+	`group_id` varchar(4) NOT NULL,
+	PRIMARY KEY (`level_id`),
+	FOREIGN KEY (`group_id`) REFERENCES levels_groups (`group_id`)
+) ENGINE=InnoDB;
+
+ALTER TABLE users_levels
+ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
 
 /*
 	MESSAGES
