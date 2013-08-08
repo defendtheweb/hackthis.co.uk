@@ -8,12 +8,6 @@ $(function() {
     });
 
 
-    var $window = $(window);
-    var $elem = $('article.body');
-    var $target = $('.article-suggest');
-
-    $window.scroll(checkSuggestion);
-
     function checkSuggestion() {
         var viewport_bottom = $window.scrollTop() + $window.height();
         var height = $elem.height();
@@ -24,5 +18,13 @@ $(function() {
             $target.fadeOut();
         }
     }
-    checkSuggestion();
+    if ($('.article-suggest').length) {
+        var $window = $(window);
+        var $elem = $('article.body');
+        var $target = $('.article-suggest');
+
+        $window.scroll(checkSuggestion);
+
+        checkSuggestion();
+    }
 });
