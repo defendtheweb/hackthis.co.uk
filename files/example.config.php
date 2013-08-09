@@ -1,13 +1,13 @@
 <?php
-	// Site variables
-	$config['path'] = '/home/username/hackthis.co.uk';
+    // Site variables
+    $config['path'] = realpath($_SERVER["DOCUMENT_ROOT"] . '/../');
 
-	// Database configuration
-	$config['db']['driver'] = 'mysql';
-	$config['db']['host'] = 'localhost';
-	$config['db']['username'] = 'root';
-	$config['db']['password'] = 'pass';
-	$config['db']['database'] = 'hackthis';
+    // Database configuration
+    $config['db']['driver'] = 'mysql';
+    $config['db']['host'] = 'localhost';
+    $config['db']['username'] = 'root';
+    $config['db']['password'] = 'pass';
+    $config['db']['database'] = 'hackthis';
 
     $config['facebook']['secret'] = '';
     $config['facebook']['public'] = '';
