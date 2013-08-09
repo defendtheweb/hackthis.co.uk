@@ -252,14 +252,26 @@
                         family: Verdana,Helvetica,Arial,sans-serif;
                         weight: bold;
                     }
+
+                    /* Level colours */
+                    &.progress_0 {
+                        color: red;
+                    }
+                    &.progress_1 {
+                        color: $bright_green;
+                    }
                 }
 
-                &.parent > a:before {
-                    @include icon("\f0da");
-                    float: right;
-                    margin-top: 1px;
-                    margin-right: -4px;
+                &.parent {
+                    padding-right: 10px;
+                    > a:before {
+                        @include icon("\f0da");
+                        position: absolute;
+                        right: 8px;
+                        top: 5px;
+                    }
                 }
+
 
                 &.right {
                     float: right;
