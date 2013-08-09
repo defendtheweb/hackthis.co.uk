@@ -4,7 +4,7 @@
             'this', 'have', 'from', 'one', 'had', 'word', 'what', 'were', 'when', 'your', 'said', 'there',
             'each', 'which', 'their', 'will', 'other', 'about', 'many', 'then', 'them', 'some', 'would',
             'make', 'like', 'time', 'look', 'more', 'write', 'number', 'way', 'could', 'people', 'than',
-            'first', 'been', 'call', 'who', 'oil', 'its', 'now', 'find', 'long', 'down', 'day', 'did',
+            'first', 'been', 'call', 'who', 'its', 'now', 'find', 'long', 'down', 'day', 'did',
             'get', 'come', 'made', 'may', 'part', 'that');
 
         public function go($q) {
