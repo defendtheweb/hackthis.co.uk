@@ -1,4 +1,5 @@
 files/config.php
+html/.htaccess
 html/files/css/min
 html/files/js/min
 files/uploads
