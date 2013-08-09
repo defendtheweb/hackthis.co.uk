@@ -27,7 +27,7 @@ CREATE TABLE users_oauth (
 
 CREATE TABLE users_levels (
 	`user_id` int(7) NOT NULL,
-	`level_id` varchar(4) NOT NULL,
+	`level_id` tinyint(3) UNSIGNED NOT NULL,
 	`started` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`completed` timestamp,
 	`attempts` smallint(3) UNSIGNED DEFAULT 0,
@@ -173,16 +173,17 @@ CREATE TABLE users_medals (
 	LEVELS
 */
 CREATE TABLE levels_groups (
-	`group_id` varchar(4),
-	`title` varchar(25),
-	PRIMARY KEY (`group_id`)
+	`title` varchar(16),
+	PRIMARY KEY (`title`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE levels (
-	`level_id` varchar(4),
-	`group_id` varchar(4) NOT NULL,
+	`level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` varchar(8) NOT NULL,
+	`group` varchar(16) NOT NULL,
 	PRIMARY KEY (`level_id`),
-	FOREIGN KEY (`group_id`) REFERENCES levels_groups (`group_id`)
+	UNIQUE (`name`, `group`),
+	FOREIGN KEY (`group`) REFERENCES levels_groups (`title`)
 ) ENGINE=InnoDB;
 
 ALTER TABLE users_levels
