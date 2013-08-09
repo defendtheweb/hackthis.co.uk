@@ -1,14 +1,12 @@
 <?php
     define("PAGE_PUBLIC", true);
 
-    if ($user->loggedIn)
-        $custom_css = array('articles.scss', 'highlight.css');
-
-    require_once('header.php');
+    require_once('init.php');
 
     if ($user->loggedIn) {
         require_once("news.php");
     } else {
+        require_once('header.php');
 ?>
 
                     <h1 class='title'>About</h1>
