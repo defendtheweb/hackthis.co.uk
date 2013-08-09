@@ -123,13 +123,13 @@ class loader {
                 $this->custom_js = array();
             }
 
-            array_merge($this->custom_js, (array)$filename);
+            $this->custom_js = array_merge($this->custom_js, (array)$filename);
         } else if ($type == 'css') {
             if (!is_array($this->custom_css) || !count($this->custom_css)) {
                 $this->custom_css = array();
             }
 
-            array_merge($this->custom_css, (array)$filename);
+            $this->custom_css = array_merge($this->custom_css, (array)$filename);
         }
     }
     

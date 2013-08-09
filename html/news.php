@@ -1,10 +1,15 @@
 <?php
+    $custom_css = array('articles.scss', 'highlight.css');
     if(!defined('PAGE_PUBLIC'))
         define('PAGE_PUBLIC', false);
-    
-    $custom_js = array('articles.js', 'highlight.js');
 
     require_once('header.php');
+    
+    $minifier->add_file('highlight.js', 'js');
+    $minifier->add_file('articles.js', 'js');
+
+    $minifier->add_file('highlight.css', 'css');
+    $minifier->add_file('articles.css', 'css');
 
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;

@@ -1,6 +1,9 @@
 <?php
     define("PAGE_PUBLIC", true);
 
+    if ($user->loggedIn)
+        $custom_css = array('articles.scss', 'highlight.css');
+
     require_once('header.php');
 
     if ($user->loggedIn) {

@@ -46,14 +46,14 @@
                 if (isset($cat->children) && count($cat->children))
                     $c .= 'parent';
 
-                echo "<li class='$c'><a href='/articles/{$cat->slug}'>";
-                echo "{$cat->title}</a>\n";
+                echo "                                        <li class='$c'><a href='/articles/{$cat->slug}'>";
+                echo "{$cat->title}</a>";
                 if (isset($cat->children) && count($cat->children)) {
-                    echo "<ul>\n";
+                    echo "\n                                        <ul>\n";
                     foreach($cat->children AS $child) {
                         articles::printCategoryList($child, $menu, $cat->title, $current_section, $current_cat);
                     }
-                    echo "</ul>\n";
+                    echo "                                        </ul>\n                                        ";
                 }
                 echo "</li>\n";
             } else {
@@ -188,7 +188,6 @@
 
         public function updateArticle($id, $changes, $updated=true, $draft=false) {
             if (!is_array($changes)) return false;
-
             global $db, $user;
 
             //Check privilages
@@ -202,6 +201,7 @@
             foreach ($changes as $field=>$change) {
                 $fields .= "`$field` = ?,";
                 $values[] = $change;
+                echo 'hi';
             }
 
             $fields = rtrim($fields, ',');
@@ -218,9 +218,8 @@
 
             if ($draft || !$user->admin_pub_priv) {
                 $query .= " AND user_id = ?";
+                $values[] = $user->uid;
             }
-
-            $values[] = $user->uid;
 
             $st = $db->prepare($query);
             $res = $st->execute($values); 
