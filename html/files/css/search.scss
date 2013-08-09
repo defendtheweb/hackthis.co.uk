@@ -3,7 +3,7 @@ ul.users-list {
     margin-bottom: 16px;
 
     li {
-        margin-right: 4px;
+        margin-right: 6px;
         float: left;
 
         figure {
@@ -13,27 +13,25 @@ ul.users-list {
             img {
                 display: block;
                 width: 48px;
+                position: absolute;
+                top: 4px;
+                left: 4px;
             }
 
             /* HOVER STYLE BELOW BLOCK */
 
             figcaption {
-                z-index: 0;
-                box-shadow: 0 0 0 0 $light_bg;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.1s ease 0s, width 0.1s ease 0s, box-shadow 0.1s ease 0s;
+                width: auto;
+                height: 56px;
                 background: $light_bg;
-                position: absolute;
-                left: 0;
-                top: 0;
-                padding-left: 55px;
                 overflow: hidden;
                 white-space: nowrap;
-                padding-right: 8px;
+                padding: 5px 12px 6px 60px;
                 font-size: 0.9em;
+
+                &:hover {
+                    background: $lighter_bg;
+                }
 
                 a {
                     font-weight: bold;
@@ -43,21 +41,6 @@ ul.users-list {
         }
     }
 }
-
-.no-touch .users-list li:hover {
-    img {
-        z-index: 100;
-        position: relative;
-    }
-
-    figcaption {
-        z-index: 99;
-        box-shadow: 0 0 0 4px $light_bg;
-        opacity: 1;
-        width: auto;
-    }
-}
-
 
 article.article header {
     margin-bottom: 6px;
