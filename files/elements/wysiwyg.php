@@ -48,7 +48,7 @@
         <li><a href='#' class='icon-wondering' data-value=':/'></a></li>
     </ul>
 
-    <textarea name='body' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?$wysiwyg_text:'';?></textarea>
+    <textarea name='body' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?htmlspecialchars($wysiwyg_text):'';?></textarea>
     <div class='preview'>&nbsp;</div>
 </div>
 <input type="checkbox" id="enter" name="enter" <?=(isset($_COOKIE["wysiwygEnter"]) && $_COOKIE["wysiwygEnter"] == 'true')?'checked':'';?>/>
