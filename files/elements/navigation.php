@@ -7,23 +7,34 @@
 <?php
     if ($app->user->loggedIn):
 ?>
-                        <li><a href='/'>levels</a>
-                            <ul>
-                                <li class='parent'><a href='/'>Main</a>
-                                    <ul>
-                                        <li><a href='/'>Level 1</a></li>
-                                        <li><a href='/'>Level 2</a></li>
-                                        <li><a href='/'>Level 3</a></li>
-                                    </ul>
+                        <li><a href='/levels'>levels</a>
+                        <ul>
+<?php
+        $levels = $app->levels->getList();
+        $lastGroup = '';
+        foreach($levels as $level):
+            if ($level->group !== $lastGroup):
+                if ($lastGroup !== ''):
+?>
+                            </ul></li>
+<?php
+            endif;
+            $lastGroup = $level->group;
+?>
+                            <li class='parent'><a href='/levels/<?=strtolower($level->group);?>'><?=$level->group;?></a><ul>
+<?php
+        endif;
+?>
+                                <li>
+                                    <a class="progress_<?=$level->completed;?>" href="<?=$level->uri;?>">
+                                        <span class="thumb_title">Level <?=$level->name;?></span>
+                                    </a>
                                 </li>
-                                <li class='parent'><a href='/'>Basic+</a>
-                                    <ul>
-                                        <li><a href='/'>Level 1</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href='/'>Javascript</a></li>
-                            </ul>
-                        </li>
+<?php
+    endforeach;
+?>
+                            </ul></li>
+                        </ul></li>
 <?php
     else:
 ?>

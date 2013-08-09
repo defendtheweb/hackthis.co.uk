@@ -1,0 +1,26 @@
+.levels-list {
+    margin-bottom: 8px;
+
+    li {
+        float: left;
+
+        a {
+            background: $bg;
+            margin: 5px 5px 5px 0;
+            width: 138px;
+            padding: 10px 6px;
+            border-bottom: 1px solid $green;
+            display: block;
+            text-align: center;
+
+            &:hover {
+                text-decoration: none;
+                background: $light_bg;
+            }
+
+            &.progress_0 {
+                border-bottom-color: $red;
+            }
+        }
+    }
+}
