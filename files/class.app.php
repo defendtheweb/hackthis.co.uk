@@ -17,7 +17,7 @@
             // Connect to database
             $this->connectDB($this->config['db']);
 
-            $this->utils = new utils();
+            $this->utils = new utils($this);
 
             $this->stats = new stats($this);
 

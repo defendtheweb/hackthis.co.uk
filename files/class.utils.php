@@ -1,10 +1,14 @@
 <?php
     class utils {
+        private $app;
+
+        public function __construct($app) {
+            $this->app = $app;
+        }
 
         public function parse($text, $bbcode=true, $mentions=true) {
-            global $app;
             if ($bbcode) {
-                $text = $app->bbcode->Parse($text);
+                $text = $this->app->bbcode->Parse($text);
                 if ($mentions) {
                     $text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
                 }
@@ -19,10 +23,9 @@
         }
 
         private function mentions_callback($matches) {
-            global $db;
             $mention = $matches[1];
 
-            $st = $db->prepare('SELECT username FROM users WHERE username = :username LIMIT 1');
+            $st = $this->app->db->prepare('SELECT username FROM users WHERE username = :username LIMIT 1');
             $st->execute(array(':username' => $mention));
             
             if ($res = $st->fetch())
@@ -106,8 +109,6 @@
         }
 
         public function search_users($username, $limit=0) {
-            global $db, $user;
-
             $username .= '%';
 
             $sql = 'SELECT u.username, IFNULL(friends.status, 0) AS friends
@@ -117,9 +118,9 @@
                     WHERE u.username LIKE :username AND u.user_id != :user
                     ORDER BY friends DESC, u.username
                     LIMIT :limit';
-            $st = $db->prepare($sql);
+            $st = $this->app->db->prepare($sql);
             $st->bindValue(':username', $username);
-            $st->bindValue(':user', $app->user->uid);
+            $st->bindValue(':user', $this->app->user->uid);
             $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
             $st->execute();
 
