@@ -1,56 +1,81 @@
 <?php
-	class app {
-		public $bbcode;
-		public $max_score = 4000;
+    class app {
+        public $bbcode;
+        public $max_score = 4000;
 
-		function __construct() {
-			global $custom_css, $custom_js;
+        function __construct() {
+            global $custom_css, $custom_js;
 
-			//load configuration file
-			require('config.php');
-			if (!isset($config) || !is_array($config))
-				throw new Exception('Config error');
+            //load configuration file
+            require('config.php');
+            if (!isset($config) || !is_array($config))
+                throw new Exception('Config error');
 
-			$this->config = $config;
-			$this->config['cache'] = $this->config['path'] . "/files/cache/";
+            $this->config = $config;
+            $this->config['cache'] = $this->config['path'] . "/files/cache/";
 
-			$this->utils = new utils();
+            // Connect to database
+            $this->connectDB($this->config['db']);
 
-			if (!is_array($custom_css))
-				$custom_css = Array();
-			if (!is_array($custom_js))
-				$custom_js = Array();
+            $this->utils = new utils();
 
-			require('vendor/nbbc.php');
-			$this->bbcode = new BBCode;
-			array_push($custom_css, 'bbcode.scss');
-			array_push($custom_js, 'bbcode.js');
-			//$this->bbcode->SetDetectURLs(true);
+            $this->stats = new stats($this);
 
-			$this->stats = new stats();
+            // Create user object
+            $this->user = new user($this);
 
-			$this->notifications = new notifications();
-			$this->feed = new feed();
+            $this->notifications = new notifications($this);
+            $this->feed = new feed($this);
 
-			//get version number
-			$this->cache = new cache($this);
-			$this->version = substr($this->cache->get('version'), 1);
-		}
+            //get version number
+            $this->cache = new cache($this);
+            $this->version = substr($this->cache->get('version'), 1);
 
-		public function config($key) {
-			return $this->config[$key];
-		}
+            // Create level object
+            $this->levels = new levels($this);
+            // Create articles object
+            $this->articles = new articles($this);
 
-		public function awardMedal($medalId, $uid) {
-			global $db, $user;
-            $st = $db->prepare('INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (:uid, :medalId)');
+            if (!is_array($custom_css))
+                $custom_css = Array();
+            if (!is_array($custom_js))
+                $custom_js = Array();
+
+            require('vendor/nbbc.php');
+            $this->bbcode = new BBCode;
+            array_push($custom_css, 'bbcode.scss');
+            array_push($custom_js, 'bbcode.js');
+            //$this->bbcode->SetDetectURLs(true);
+        }
+
+        public function config($key) {
+            return $this->config[$key];
+        }
+
+        private function connectDB($config) {
+            // Connect to database
+            try {
+                $dsn = "{$config['driver']}:host={$config['host']}";
+                $dsn .= (!empty($config['port'])) ? ';port=' . $config['port'] : '';
+                $dsn .= ";dbname={$config['database']}";
+                $this->db = new PDO($dsn, $config['username'], $config['password']);
+           //     $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+                $this->db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
+            } catch(PDOException $e) {
+                die($e->getMessage());
+            }
+        }
+
+        public function awardMedal($medalId, $uid) {
+            $st = $this->db->prepare('INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (:uid, :medalId)');
             $result = $st->execute(array(':medalId' => $medalId, ':uid' => $uid));
 
             return (bool) $result;
-		}
+        }
 
-		public function parse($text, $bbcode=true, $mentions=true) {
-			return $this->utils->parse($text, $bbcode, $mentions);
-		}
-	}
+        public function parse($text, $bbcode=true, $mentions=true) {
+            return $this->utils->parse($text, $bbcode, $mentions);
+        }
+    }
 ?>

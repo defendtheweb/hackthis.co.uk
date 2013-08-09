@@ -34,7 +34,7 @@
         $filepath = $app->config('path') . "/files/uploads/images/" . $filename;
 
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $filepath)) {
-            $user->setImagePath($filename);
+            $app->user->setImagePath($filename);
 
             return true;
         }

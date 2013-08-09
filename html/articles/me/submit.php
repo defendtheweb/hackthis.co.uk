@@ -5,8 +5,6 @@
 
     require_once('header.php');
 
-    $articles = new articles();
-
     if (isset($_GET['id']) && $_GET['action'] == 'edit') {
         $myArticle = true;
         $id = preg_replace('/[^0-9]*/','',$_GET['id']);
@@ -18,13 +16,13 @@
         //Update?
         if (isset($_POST['body'])) {
             $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body'], 'category_id'=>$_POST['category']);
-            $status = $articles->updateArticle($id, $changes, false, true);
+            $status = $app->articles->updateArticle($id, $changes, false, true);
         }
 
-        $article = $articles->getMyArticle($id);
+        $article = $app->articles->getMyArticle($id);
     } else {
         if (isset($_POST['body'])) {
-            $status = $articles->submitArticle($_POST['title'], $_POST['body'], $_POST['category']);
+            $status = $app->articles->submitArticle($_POST['title'], $_POST['body'], $_POST['category']);
             if ($status) {
                 header('Location: /articles/view.php?id='.$status);
                 die();
@@ -67,9 +65,9 @@
                                 
                                     <ul>
 <?php
-                $categories = articles::getCategories();
+                $categories = $app->articles->getCategories();
                 foreach($categories as $cat) {
-                    articles::printCategoryList($cat);
+                    $app->articles->printCategoryList($cat);
                 }
 ?>
                                     </ul>

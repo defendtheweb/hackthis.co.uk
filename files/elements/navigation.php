@@ -5,7 +5,7 @@
                     <ul>
                         <li><a href='/'>home</a></li>
 <?php
-    if ($user->loggedIn):
+    if ($app->user->loggedIn):
 ?>
                         <li><a href='/'>levels</a>
                             <ul>
@@ -31,7 +31,7 @@
 <?php
     endif;
 
-    $categories = articles::getCategories(null, false);
+    $categories = $app->articles->getCategories(null, false);
 ?>
                         <li><a href='/articles/'>articles</a>
                             <ul>
@@ -39,13 +39,13 @@
                                     <ul>
 <?php
     foreach($categories as $cat) {
-        articles::printCategoryList($cat, true);
+        $app->articles->printCategoryList($cat, true);
     }
 ?>
                                     </ul>
                                 </li>
 <?php
-    if ($user->loggedIn):
+    if ($app->user->loggedIn):
 ?>
                                 <li class='parent'><a href='/articles/me'>My Articles</a>
                                     <ul>
@@ -70,7 +70,7 @@
                         <li><a href='/'>contact us</a></li>
 
 <?php
-    if ($user->loggedIn):
+    if ($app->user->loggedIn):
 ?>
                         <li class='right icon mobile-hide'><a href='/'><i class="icon-menu"></i></a>
                             <ul>
@@ -81,23 +81,23 @@
                         <li class='mobile-only'><a href='/settings/'>Settings</a></li>
                         <li class='mobile-only'><a href='/?logout'>Logout</a></li>
 <?php
-        if ($user->admin):
+        if ($app->user->admin):
 ?>
                         <li class='right icon mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
                             <ul>
 <?php
-            if ($user->admin_site_priv):
+            if ($app->user->admin_site_priv):
 ?>
                                 <li><a href='/admin/levels.php'>Levels</a></li>
                                 <li><a href='/admin/users.php'>Users</a></li>
 <?php
             endif;
-            if ($user->admin_pub_priv):
+            if ($app->user->admin_pub_priv):
 ?>
                                 <li><a href='/admin/articles.php'>Articles</a></li>
 <?php
             endif;
-            if ($user->admin_forum_priv):
+            if ($app->user->admin_forum_priv):
 ?>
                                 <li><a href='/admin/forum.php'>Forum</a></li>
 <?php
@@ -121,14 +121,14 @@
 <?php
     elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
 ?>
-                        <li class='right nav-extra-login-item <?=isset($user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($user->login_error))?"data-error='{$user->login_error}'":'';?>>Login</a></li>
-                        <li class='right nav-extra-register-item <?=isset($user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($user->reg_error))?"data-error='{$user->reg_error}'":'';?>>Register</a></li>
+                        <li class='right nav-extra-login-item <?=isset($app->user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($app->user->login_error))?"data-error='{$app->user->login_error}'":'';?>>Login</a></li>
+                        <li class='right nav-extra-register-item <?=isset($app->user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($app->user->reg_error))?"data-error='{$app->user->reg_error}'":'';?>>Register</a></li>
 <?php
     endif;
 ?>
                     </ul>
 <?php
-    if ($user->loggedIn):
+    if ($app->user->loggedIn):
 ?>
                     <div id='nav-extra-dropdown'>
                         Hey there :)

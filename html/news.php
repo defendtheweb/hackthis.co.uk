@@ -16,16 +16,14 @@
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-    $articles = new articles();
-
     $single = false;
     if (isset($_GET['slug'])) {
         $single = true;
-        $newsArticle = $articles->getArticle($_GET['slug'], true);
+        $newsArticle = $app->articles->getArticle($_GET['slug'], true);
         if ($newsArticle)
             $newsArticles['articles'] = array($newsArticle);
     } else {
-        $newsArticles = $articles->getArticles(0, $limit, $page);
+        $newsArticles = $app->articles->getArticles(0, $limit, $page);
     }
 ?>
                     <section class='news'>
@@ -44,7 +42,7 @@
 ?>
                         <article class='bbcode body'>
                             <header class='title clearfix'>
-                                <?php if ($user->admin_pub_priv): ?>
+                                <?php if ($app->user->admin_pub_priv): ?>
                                     <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                 <?php endif; ?>
                                 <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>

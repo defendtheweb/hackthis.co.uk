@@ -3,7 +3,7 @@
 ?>
                 <sidebar class="col span_6 clr">
 <?php
-        if ($user->loggedIn) {
+        if ($app->user->loggedIn) {
             include('widgets/dashboard.php');
             include('widgets/feed.php');
         } else {

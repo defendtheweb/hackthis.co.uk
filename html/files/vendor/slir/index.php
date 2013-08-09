@@ -28,3 +28,4 @@
 require_once 'core/slir.class.php';
 $slir = new SLIR();
 $slir->processRequestFromURL();
+?>

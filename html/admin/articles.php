@@ -4,13 +4,11 @@
 
     require_once('header.php');
 
-    $articles = new articles();
-
     if (!isset($_GET['action'])) {
         $limit = 25;
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-        $articleList = $articles->getMyArticles(false, $limit, $page);
+        $articleList = $app->articles->getMyArticles(false, $limit, $page);
 ?>
                             <table class='striped'>
                                 <thead>
@@ -49,7 +47,7 @@
 
     } else {
         if ($_GET['action'] === 'edit'):
-            $article = $articles->getArticle($_GET['slug'], 'all');
+            $article = $app->articles->getArticle($_GET['slug'], 'all');
 
             if (!$article):
 ?>
@@ -63,7 +61,7 @@
                 if (isset($_POST['body'])) {
                     $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body'], 'category_id'=>$_POST['category']);
 
-                    $updated = $articles->updateArticle($article->id, $changes, isset($_POST['update']));
+                    $updated = $app->articles->updateArticle($article->id, $changes, isset($_POST['update']));
                     if ($updated) {
                         $uri = "http://{$_SERVER[HTTP_HOST]}{$_SERVER[REQUEST_URI]}";
                         if (!isset($_GET['update'])) $uri .= '&update';
@@ -99,9 +97,9 @@
             
                 <ul>
 <?php
-                $categories = articles::getCategories();
+                $categories = $app->articles->getCategories();
                 foreach($categories as $cat) {
-                    articles::printCategoryList($cat);
+                    $app->articles->printCategoryList($cat);
                 }
 ?>
                 </ul>

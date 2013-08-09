@@ -13,8 +13,7 @@
     $limit = 25;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-	$articles = new articles();
-	$articleList = $articles->getMyArticles($approved, $limit, $page);
+	$articleList = $app->articles->getMyArticles($approved, $limit, $page);
 ?>
                     <section class="row">
 <?php

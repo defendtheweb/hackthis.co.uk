@@ -2,7 +2,7 @@
     $custom_css = array('search.scss');
     require_once('header.php');
 
-    $search = new search();
+    $search = new search($app);
 
     if (isset($_GET['q'])) {
         $q = preg_replace('/[^a-zA-Z0-9"@._-\s]/', '', strip_tags(html_entity_decode($_GET['q'])));

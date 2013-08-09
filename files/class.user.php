@@ -1,9 +1,12 @@
 <?php
     class user {
+        private $app;
         public $loggedIn = false;
         public $admin = false;
 
-        public function __construct() {
+        public function __construct($app) {
+            $this->app = $app;
+
             //Check if user is logging in
             if (isset($_GET['logout'])) {
                 $this->logout();
@@ -45,11 +48,9 @@
         }
 
         private function get_details() {
-            global $db, $app;
+            $this->app->stats->users_activity($this);
 
-            $app->stats->users_activity($this);
-
-            $st = $db->prepare('SELECT username, score, status, email, (oauth_id IS NOT NULL) as connected,
+            $st = $this->app->db->prepare('SELECT username, score, status, email, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
                     profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most
@@ -84,10 +85,10 @@
                 $this->image = profile::getImg(null, 100);
 
 
-            if ($this->score >= $app->max_score)
+            if ($this->score >= $this->app->max_score)
                 $this->score_perc = 100;
             else
-                $this->score_perc = $this->score/$app->max_score * 100;
+                $this->score_perc = $this->score/$this->app->max_score * 100;
 
             if ($this->consecutive <= 7)
                 $consecutive_target = 7;
@@ -115,8 +116,7 @@
         }
 
         public function login($user, $pass) {
-            global $db;
-            $st = $db->prepare('SELECT u.user_id, u.password, IFNULL(priv.site_priv, 1) as site_priv
+            $st = $this->app->db->prepare('SELECT u.user_id, u.password, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
@@ -144,11 +144,10 @@
         }
 
         public function oauth($provider, $id) {
-            global $db, $app;
             if ($provider === 'facebook') {
                 $redirect = urlencode('http://dev.hackthis/?facebook');
 
-                $fb = $app->config('facebook');
+                $fb = $this->app->config('facebook');
                 $uri = "https://graph.facebook.com/oauth/access_token?client_id={$fb['public']}&redirect_uri={$redirect}&client_secret={$fb['secret']}&code={$id}";
 
                 $content = @file_get_contents($uri);
@@ -177,16 +176,16 @@
                 //Is user logged in?
                 if ($this->loggedIn) {
                     //Connect to existing account
-                    $st = $db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
+                    $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
                             VALUES (:fid, "facebook")');
                     $result = $st->execute(array(':fid' => $fid));
                     if (!$result) {
                         $this->connect_msg = 'Facebook account already connected to another user';
                         return false;
                     }
-                    $oauth_id = $db->lastInsertId();
+                    $oauth_id = $this->app->db->lastInsertId();
 
-                    $st = $db->prepare('UPDATE users SET oauth_id = :oauth
+                    $st = $this->app->db->prepare('UPDATE users SET oauth_id = :oauth
                             WHERE user_id = :uid LIMIT 1');
                     $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
                     $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
@@ -194,7 +193,7 @@
                 } else { 
                     //Login or register
                     //lookup fid
-                    $st = $db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
+                    $st = $this->app->db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
                             FROM users_oauth oauth
                             INNER JOIN users u
                             ON oauth.id = u.oauth_id
@@ -223,24 +222,24 @@
                         // email - $token_details->email;
 
                         // Add to DB - create oauth entry
-                        $st = $db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
+                        $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
                                 VALUES (:fid, "facebook")');
                         $result = $st->execute(array(':fid' => $fid));
                         if (!$result) {
                             $this->login_error = 'Error registering';
                             return false;
                         }
-                        $oauth_id = $db->lastInsertId();
+                        $oauth_id = $this->app->db->lastInsertId();
 
                         // Create user
-                        $st = $db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`)
+                        $st = $this->app->db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`)
                                 VALUES (:u, :oid, :email)');
                         $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
                         if (!$result) {
                             $this->login_error = 'Error registering';
                             return false;
                         }
-                        $uid = $db->lastInsertId();
+                        $uid = $this->app->db->lastInsertId();
 
                         // Create profile
                         switch($token_details->gender) {
@@ -254,7 +253,7 @@
                                 $gender = NULL;
                         }
 
-                        $st = $db->prepare('INSERT INTO users_profile (`user_id`, `name`, `gender`)
+                        $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `name`, `gender`)
                                 VALUES (:uid, :name, :gender)');
                         $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
                         if (!$result) {
@@ -275,7 +274,6 @@
         }
 
         private function createSession() {
-            global $app;
             if ($this->loggedIn && isset($this->uid)) {
                 //session_regenerate_id();
                 $_SESSION['uid'] = $this->uid;
@@ -284,7 +282,7 @@
                 $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['user_agent_id'] = md5($_SERVER['HTTP_USER_AGENT']);
                 
-                $app->stats->users_activity($this, true);
+                $this->app->stats->users_activity($this, true);
 
                 // Redirect user back to where they came from
                 header("location: " . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
@@ -292,14 +290,12 @@
         }
 
         public function register() {
-            global $db, $app;
-
             //Input check
             $username = $_POST['reg_username'];
-            if (!$app->utils->check_user($username))
+            if (!$this->app->utils->check_user($username))
                 return "Invalid username";
 
-            $st = $db->prepare('SELECT username FROM users WHERE username=?');
+            $st = $this->app->db->prepare('SELECT username FROM users WHERE username=?');
             $st->bindParam(1, $username);
             $st->execute();
             if ($st->fetch(PDO::FETCH_ASSOC))
@@ -314,24 +310,24 @@
             $hash = crypt($pass, $this->salt());
 
             $email = $_POST['reg_email'];
-            if (!$app->utils->check_email($email))
+            if (!$this->app->utils->check_email($email))
                 return "Invalid email address";
 
-            $st = $db->prepare('SELECT username FROM users WHERE email=?');
+            $st = $this->app->db->prepare('SELECT username FROM users WHERE email=?');
             $st->bindParam(1, $email);
             $st->execute();
             if ($st->fetch(PDO::FETCH_ASSOC))
                 return "Email already in use";
 
             // Add to DB
-            $st = $db->prepare('INSERT INTO users (`username`, `password`, `email`)
+            $st = $this->app->db->prepare('INSERT INTO users (`username`, `password`, `email`)
                     VALUES (:u, :p, :e)');
             $result = $st->execute(array(':u' => $username, ':p' => $hash, ':e' => $email));
 
             if (!$result)
                 return "Error creating account";
 
-            $uid = $db->lastInsertId();
+            $uid = $this->app->db->lastInsertId();
 
             // Login user
             $this->loggedIn = true;
@@ -350,9 +346,7 @@
 
         /* MISC */
         public function hideConnect() {
-            global $db;
-
-            $st = $db->prepare('UPDATE users SET `oauth_id` = 0 WHERE `user_id` = :uid');
+            $st = $this->app->db->prepare('UPDATE users SET `oauth_id` = 0 WHERE `user_id` = :uid');
             $result = $st->execute(array(':uid' => $this->uid));
            
             return $result;
@@ -374,23 +368,21 @@
         }
 
         public function setImagePath($path) {
-            global $db, $app;
-
             if ($path === 'gravatar') {
-                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `gravatar`) VALUES (:uid, 1) ON DUPLICATE KEY UPDATE gravatar = 1');
+                $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `gravatar`) VALUES (:uid, 1) ON DUPLICATE KEY UPDATE gravatar = 1');
                 $result = $st->execute(array(':uid' => $this->uid));
             } else if ($path === 'current') {
-                $st = $db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0');
+                $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0');
                 $result = $st->execute(array(':uid' => $this->uid));
             } else if ($path === 'default') {
-                $st = $db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0, img = NULL');
+                $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`) VALUES (:uid) ON DUPLICATE KEY UPDATE gravatar = 0, img = NULL');
                 $result = $st->execute(array(':uid' => $this->uid));
             } else {
-                $st = $db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path, gravatar = 0');
+                $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `img`) VALUES (:uid, :path) ON DUPLICATE KEY UPDATE img = :path, gravatar = 0');
                 $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
             }
 
-            $app->awardMedal(11, $this->uid);         
+            $this->app->awardMedal(11, $this->uid);         
         }
     }
 ?>

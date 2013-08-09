@@ -1,10 +1,14 @@
 <?php
     class feed {
-        public function get($last=0, $user_id=null) {
-            global $app, $db, $user;
+        private $app;
 
+        public function __construct($app) {
+            $this->app = $app;
+        }
+
+        public function get($last=0, $user_id=null) {
             if (!isset($user_id)) {
-                $st = $db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
+                $st = $this->app->db->prepare('SELECT username, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
                         FROM users_feed feed
                         LEFT JOIN users
                         ON feed.user_id = users.user_id
@@ -15,7 +19,7 @@
                 $st->execute();
                 $result = $st->fetchAll();
             } else {
-                $st = $db->prepare('SELECT feed.feed_id, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
+                $st = $this->app->db->prepare('SELECT feed.feed_id, feed.user_id, feed.type, feed.item_id, feed.time AS timestamp
                         FROM users_feed feed
                         WHERE user_id = :user_id AND feed.time > :last
                         ORDER BY time DESC');
@@ -29,7 +33,7 @@
             foreach ($result as &$res) {
                 if ($res->type == 'friend') {
                     // status
-                    $st = $db->prepare("SELECT username as username_2
+                    $st = $this->app->db->prepare("SELECT username as username_2
                         FROM users
                         WHERE user_id = :item_id
                         LIMIT 1");
@@ -38,7 +42,7 @@
                     $st->fetch();
                 } else if ($res->type == 'medal') {
                     // label, colour
-                    $st = $db->prepare("SELECT medals.label, medals_colours.colour
+                    $st = $this->app->db->prepare("SELECT medals.label, medals_colours.colour
                         FROM medals
                         LEFT JOIN medals_colours
                         ON medals.colour_id = medals_colours.colour_id
@@ -49,7 +53,7 @@
                     $st->fetch();
                 } else if ($res->type == 'comment' || $res->type == 'comment_mention') {
                     // uri, title
-                    $st = $db->prepare("SELECT users.username, articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
+                    $st = $this->app->db->prepare("SELECT users.username, articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
                         FROM articles_comments
                         LEFT JOIN articles
                         ON articles_comments.article_id = articles.article_id
@@ -64,7 +68,7 @@
                     $res->uri = "{$res->uri}#comment-{$res->item_id}";
                 } else if ($res->type == 'article' || $res->type == 'favourite') {
                     // uri, title
-                    $st = $db->prepare("SELECT articles.title, articles.category_id, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
+                    $st = $this->app->db->prepare("SELECT articles.title, articles.category_id, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
                         FROM articles
                         WHERE article_id = :item_id
                         LIMIT 1");
@@ -79,34 +83,30 @@
 
                 // Parse title
                 if (isset($res->title)) {
-                    $res->title = $app->parse($res->title, false);
+                    $res->title = $this->app->parse($res->title, false);
                 }
 
                 unset($res->item_id);                
                 unset($res->user_id);
 
-                $res->timestamp = $app->utils->fdate($res->timestamp);
+                $res->timestamp = $this->app->utils->fdate($res->timestamp);
             }
 
             return $result;
         }
 
         public function add($to, $type, $item) {
-            global $db;
-
-            $st = $db->prepare('INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (:to, :type, :item)');
+            $st = $this->app->db->prepare('INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (:to, :type, :item)');
             $result = $st->execute(array(':to' => $to, ':type' => $type, ':item' => $item));
            
             return $result;
         }
 
         public function remove($id) {
-            global $db, $user;
-
-            $st = $db->prepare("DELETE FROM users_feed
+            $st = $this->app->db->prepare("DELETE FROM users_feed
                 WHERE user_id = :user_id AND feed_id = :item_id
                 LIMIT 1");
-            $result = $st->execute(array(':item_id' => $id, ':user_id' => $user->uid));
+            $result = $st->execute(array(':item_id' => $id, ':user_id' => $this->app->user->uid));
 
             return $result;
         }

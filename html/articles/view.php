@@ -6,18 +6,16 @@
 
     require_once('header.php');
 
-    $articles = new articles();
-
     if (isset($_GET['slug'])) {
         $myArticle = false;
         // check if it is a category
-        $category = $articles->getCategory($_GET['slug']);
+        $category = $app->articles->getCategory($_GET['slug']);
         if ($category) {
             include('index.php');
             die();
         }
 
-        $article = $articles->getArticle($_GET['slug']);
+        $article = $app->articles->getArticle($_GET['slug']);
     } else if (isset($_GET['id'])) {
         $myArticle = true;
         $id = preg_replace('/[^0-9]*/','',$_GET['id']);
@@ -25,7 +23,7 @@
             header('Location: /articles');
             die();
         }
-        $article = $articles->getMyArticle($id);
+        $article = $app->articles->getMyArticle($id);
     }
 ?>
                     <section class="row">
@@ -68,7 +66,7 @@
                                 <header class='title clearfix'>
                                     <?php if ($myArticle): ?>
                                         <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button right'><i class='icon-pencil'></i></a>
-                                    <?php elseif ($user->admin_pub_priv): ?>
+                                    <?php elseif ($app->user->admin_pub_priv): ?>
                                         <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                     <?php endif; ?>
                                     <h1><?=$article->title;?></h1>
@@ -93,7 +91,7 @@
                                 </header>
 
 <?php
-    $matches = $articles->getTOC($article->body);
+    $matches = $app->articles->getTOC($article->body);
     if (count($matches[0])):
 ?>
                                 <div class="right contents">
@@ -117,7 +115,7 @@
 <?php
     endif; 
     
-    $article->body = $articles->setupTOC($article->body);
+    $article->body = $app->articles->setupTOC($article->body);
 
     echo $article->body;
 ?>

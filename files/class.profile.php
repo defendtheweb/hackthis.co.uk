@@ -1,10 +1,13 @@
 <?php
     class profile {
+        private $app;
+
         public function __construct($username, $uid=false) {
-            global $db, $user, $app;
+            global $app;
+            $this->app = $app;
 
             if ($uid) {
-                $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.forum_signature,
+                $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.forum_signature,
                                     friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                                     IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
@@ -16,11 +19,11 @@
                                     LEFT JOIN users_priv priv
                                     ON u.user_id = priv.user_id
                                     WHERE u.user_id = :profile");
-                $st->execute(array(':profile' => $username, ':user' => $user->uid));
+                $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);
                 $res = $st->fetch();
             } else {
-                $st = $db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
+                $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
                                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                                     IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
@@ -34,7 +37,7 @@
                                     LEFT JOIN users_priv priv
                                     ON u.user_id = priv.user_id
                                     WHERE u.username = :profile");
-                $st->execute(array(':profile' => $username, ':user' => $user->uid));
+                $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);
                 $res = $st->fetch();
             }
@@ -53,7 +56,7 @@
                 return true;
 
 
-            $st = $db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
+            $st = $this->app->db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
                     FROM users_medals
                     INNER JOIN medals
                     ON users_medals.medal_id = medals.medal_id
@@ -63,7 +66,7 @@
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
 
-            $st = $db->prepare('SELECT u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
+            $st = $this->app->db->prepare('SELECT u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users_friends as friends
                     INNER JOIN users u
                     ON u.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
@@ -73,25 +76,24 @@
                     ON (users_friends.user_id = u.user_id AND users_friends.friend_id = :user) OR (users_friends.user_id = :user AND users_friends.friend_id = u.user_id)
                     WHERE friends.status = 1 AND (friends.user_id = :uid OR friends.friend_id = :uid)
                     ORDER BY u.username');
-            $st->execute(array(':uid' => $this->uid, ':user' => $user->uid));
+            $st->execute(array(':uid' => $this->uid, ':user' => $this->app->user->uid));
             $this->friendsList = $st->fetchAll();
 
             if (isset($this->about))
-                $this->about = $app->parse($this->about);
+                $this->about = $this->app->parse($this->about);
 
-            $this->lastfm = $app->parse($this->lastfm,false);
+            $this->lastfm = $this->app->parse($this->lastfm,false);
 
             $this->feed = $this->getFeed();
             $this->social = $this->getSocial();
 
-            $this->owner = ($user->uid === $this->uid);
+            $this->owner = ($this->app->user->uid === $this->uid);
         }
 
         public function getFeed() {
-            global $app;
             $return = array();
 
-            $feed = $app->feed->get(0, $this->uid);
+            $feed = $this->app->feed->get(0, $this->uid);
 
             foreach($feed as $item) {
                 switch($item->type) {
@@ -142,10 +144,9 @@
         }
 
         public function getSocial() {
-            global $app;
-            $return = array();
+                        $return = array();
             if (isset($this->website)) {
-                $this->website = $app->utils->repairUri($this->website);
+                $this->website = $this->app->utils->repairUri($this->website);
                 array_push($return, array('icon'=>'globe', 'uri'=>$this->website));
             }
 
@@ -154,15 +155,13 @@
         }
 
         function printItem($key, $value, $time=false) {
-            global $app;
-            if (!$key || !$value)
+                        if (!$key || !$value)
                 return;
 
-            global $app;
-            if ($time) {
-                $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $app->utils->timeSince($value) . '</time>';
+                        if ($time) {
+                $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $this->app->utils->timeSince($value) . '</time>';
             } else {
-                $value = $app->parse($value, false, false);
+                $value = $this->app->parse($value, false, false);
             }
             return "                    <li><span class='strong'>{$key}:</span> {$value}</li>\n";
         }
@@ -185,46 +184,43 @@
         }
 
         public function addFriend() {
-            global $db, $user;
-            $status = ($user->uid === $this->uid);
+            $status = ($this->app->user->uid === $this->uid);
 
             $error = false;
             try {
-                $st = $db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
+                $st = $this->app->db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
                         VALUES (:uid, :uid2, :status)');
-                $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid, ':status' => $status));
+                $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid, ':status' => $status));
             } catch (Exception $e) {
                 $error = true;
             }
 
             // check if row created, else it already exists
             if ($error || !$st->rowCount()) {
-                $st = $db->prepare('UPDATE users_friends SET `status` = 1
+                $st = $this->app->db->prepare('UPDATE users_friends SET `status` = 1
                                     WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
-                $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
+                $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid));
             }
 
             return $st->rowCount();
         }
 
         public function removeFriend() {
-            global $db, $user;
-
-            $st = $db->prepare('DELETE FROM users_friends
+            
+            $st = $this->app->db->prepare('DELETE FROM users_friends
                                 WHERE (user_id = :uid AND friend_id = :uid2) OR
                                 (user_id = :uid2 AND friend_id = :uid)');
-            $st->execute(array(':uid' => $user->uid, ':uid2' => $this->uid));
+            $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid));
 
             return $st->rowCount();
         }
 
         public static function getMusic($id) {
-            global $app;
-
+            
             if (!isset($id))
                 return false;
 
-            $lfm = $app->config('lastfm');
+            $lfm = $this->app->config('lastfm');
             $uri = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={$id}&limit=5&api_key={$lfm['public']}&format=json";
 
             $data = @file_get_contents($uri);

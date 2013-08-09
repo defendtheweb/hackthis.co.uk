@@ -10,11 +10,11 @@
 
     if ((isset($_GET['gravatar']) || isset($_GET['upload']) || isset($_GET['default'])) && !isset($_GET['done'])) {
         if (isset($_GET['gravatar']))
-            $user->setImagePath('gravatar');
+            $app->user->setImagePath('gravatar');
         else if (isset($_GET['upload']))
-            $user->setImagePath('current');
+            $app->user->setImagePath('current');
         else if (isset($_GET['default']))
-            $user->setImagePath('default');
+            $app->user->setImagePath('default');
 
         header('Location: ?done');
     }
@@ -62,13 +62,13 @@
             By uploading a file you certify that you have the right to distribute this picture and does not violate the <a href='/terms.php'>Terms of Service</a>.
             <br/><br/>
             <div class='row center'>
-<?php if (isset($user->image_old)): ?>
+<?php if (isset($app->user->image_old)): ?>
                 <div class="col span_12">
                     <strong class='white'>Use previous image</strong><br/>
-                    <a href='?upload'><img width='75px' src='<?=$user->image_old;?>'/></a>
+                    <a href='?upload'><img width='75px' src='<?=$app->user->image_old;?>'/></a>
                 </div>
 <?php endif; ?>
-                <div class="col span_<?=isset($user->image_old)?'12':'24';?>">
+                <div class="col span_<?=isset($app->user->image_old)?'12':'24';?>">
                     <strong class='white'>Use default image</strong><br/>
                     <a href='?default'><img width='75px' src='/users/images/75/1:1/no_pic.jpg'/></a>
                 </div>
@@ -80,7 +80,7 @@
         <div class="col span_8">
             <h1>Use Gravatar</h1>
             <div class='gravatar-pic'>
-                <img width='200px' src='https://www.gravatar.com/avatar/<?=md5(strtolower(trim($user->email)));?>?d=http://www.hackthis.co.uk/users/images/no_pic.jpg&s=200'/>
+                <img width='200px' src='https://www.gravatar.com/avatar/<?=md5(strtolower(trim($app->user->email)));?>?d=http://www.hackthis.co.uk/users/images/no_pic.jpg&s=200'/>
                 <a href='?gravatar'>
                     <i class="icon-image"></i><br/>
                     Use Gravatar

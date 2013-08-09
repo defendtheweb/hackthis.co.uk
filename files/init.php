@@ -23,27 +23,10 @@
 		die($e->getMessage());
 	}
 
-	// Connect to database
-	$db = $app->config('db');
-	try {
-		$dsn = "{$db['driver']}:host={$db['host']}";
-		$dsn .= (!empty($db['port'])) ? ';port=' . $db['port'] : '';
-		$dsn .= ";dbname={$db['database']}";
-		$db = new PDO($dsn, $db['username'], $db['password']);
-		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-		$db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
-	} catch(PDOException $e) {
-		die($e->getMessage());
-	}
-
-	// Create user object
-	$user = new user();
-
 	$minifier = new loader($custom_css, $custom_js);
 
-	if ($user->loggedIn) {
-        if (defined('PAGE_PRIV') && !$user->{PAGE_PRIV.'_priv'}) {
+	if ($app->user->loggedIn) {
+        if (defined('PAGE_PRIV') && !$app->user->{PAGE_PRIV.'_priv'}) {
 	        require_once('error.php');
 	    }		
     } else {

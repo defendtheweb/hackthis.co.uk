@@ -6,7 +6,7 @@
 <?php elseif ((isset($category) && $category) || isset($article)): ?>
 		<a class='button' href='/articles/'><i class='icon-caret-left'></i> Article Index</a>
         <br/><br/>
-<?php elseif ($user->loggedIn): ?>
+<?php elseif ($app->user->loggedIn): ?>
         <a class='button' href='/articles/submit'><i class='icon-books'></i> Submit Article</a>
         <a class='button' href='/articles/me'>My Articles</a>
         <br/><br/>
@@ -25,9 +25,9 @@
                 $cat_id = $article->cat_id;
             }
 
-            $categories = articles::getCategories(null, false);
+            $categories = $app->articles->getCategories(null, false);
             foreach($categories as $cat) {
-                articles::printCategoryList($cat, true, '', $parent, $cat_id);
+                $app->articles->printCategoryList($cat, true, '', $parent, $cat_id);
             }
 ?>
         </ul>
@@ -37,7 +37,7 @@
         <h2>Top Articles</h2>
         <ul class='hot'>
 <?php
-        $hot = $articles->getHotArticles();
+        $hot = $app->articles->getHotArticles();
         foreach($hot AS $hotArticle) {
 ?>
             <li><a href='<?=$hotArticle->slug;?>'><?=$hotArticle->title;?></a></li>

@@ -6,14 +6,14 @@
                     <h2><?=$comments["count"];?> response<?=$comments["count"] ==1?'':'s';?> to "<?=$comments["title"];?>"</h2>
                     <form class='no-js-hide'>
 <?php
-    if (!$user->loggedIn):
+    if (!$app->user->loggedIn):
 ?>
                         <div class='msg msg-error'>
                             <i class='icon-error'></i>
                             You must be logged in to comment
                         </div>
 <?php
-    elseif (!$user->forum_priv):
+    elseif (!$app->user->forum_priv):
 ?>
                         <div class='msg msg-warning'>
                             <i class='icon-warning'></i>

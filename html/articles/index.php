@@ -9,17 +9,16 @@
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-    $articles = new articles();
     if (isset($_GET['slug'])) {
-        $category = $articles->getCategory($_GET['slug']);
+        $category = $app->articles->getCategory($_GET['slug']);
         if (!$category) {
             header('Location: /articles');
             die();
         }
-        $articleList = $articles->getArticles($category->id, $limit, $page);
+        $articleList = $app->articles->getArticles($category->id, $limit, $page);
     } else {
         $category = null;
-        $articleList = $articles->getArticles(null, $limit, $page);
+        $articleList = $app->articles->getArticles(null, $limit, $page);
     }
 ?>
                     <section class="row">
@@ -44,7 +43,7 @@
 
         if (!$category):
             $n = 0;
-            $hot = $articles->getHotArticles();
+            $hot = $app->articles->getHotArticles();
             foreach($hot AS $article):
                 if ($n++ == 3)
                     break;

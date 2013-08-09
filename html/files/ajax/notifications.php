@@ -2,7 +2,7 @@
     header('Content-Type: application/json');
     require_once('init.php');
 
-    $userId = $user->uid;
+    $userId = $app->user->uid;
     $result = array('status'=>true);
 
     if (isset($_GET['events'])) {

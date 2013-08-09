@@ -3,7 +3,7 @@
 
     require_once('init.php');
 
-    if ($user->loggedIn) {
+    if ($app->user->loggedIn) {
         require_once("news.php");
     } else {
         require_once('header.php');

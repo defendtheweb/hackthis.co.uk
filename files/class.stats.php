@@ -1,14 +1,18 @@
 <?php
     class stats {
-        function users_activity($user, $login = false) {
-            global $db;
+        private $app;
 
+        public function __construct($app) {
+            $this->app = $app;
+        }
+
+        function users_activity($user, $login = false) {
             // Was the last activity yesterday?
             $consecutive = false;
             $sql = 'SELECT DATEDIFF(last_active, CURDATE()) as `diff`
                     FROM users_activity
                     WHERE user_id = :uid';
-            $st = $db->prepare($sql);
+            $st = $this->app->db->prepare($sql);
             $st->execute(array(':uid' => $user->uid));
             $res = $st->fetch();
             if ($res->diff == -1)
@@ -30,7 +34,7 @@
 
             $sql .= ' WHERE user_id = :user_id';
 
-            $st = $db->prepare($sql);
+            $st = $this->app->db->prepare($sql);
             $st->execute(array(':user_id' => $user->uid));
         }
     }

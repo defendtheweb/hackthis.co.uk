@@ -34,6 +34,7 @@ require_once 'core/slirconfigdefaults.class.php';
  */
 class SLIRConfig extends SLIRConfigDefaults
 {
+
   // override configuration values here
   public static $documentRoot = '../../../../files/uploads/images';
   public static $defaultImagePath = 'no_pic.jpg';
@@ -47,3 +48,4 @@ class SLIRConfig extends SLIRConfigDefaults
 }
 
 SLIRConfig::init();
+?>

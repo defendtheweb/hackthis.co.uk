@@ -1,11 +1,11 @@
                     <article class="widget">
                         <h1>Registration</h1>
 <?php
-    if (isset($user->reg_error)):
+    if (isset($app->user->reg_error)):
 ?>
                         <div class='msg msg-error'>
                             <i class='icon-error'></i>
-                            <?=$user->reg_error;?>
+                            <?=$app->user->reg_error;?>
                         </div>
 <?php
     endif;

@@ -1,11 +1,11 @@
                     <article class="widget">
                         <h1>Login</h1>
 <?php
-    if (isset($user->login_error)):
+    if (isset($app->user->login_error)):
 ?>
                         <div class='msg msg-error'>
                             <i class='icon-error'></i>
-                            <?=$user->login_error;?>
+                            <?=$app->user->login_error;?>
                         </div>
 <?php
     endif;

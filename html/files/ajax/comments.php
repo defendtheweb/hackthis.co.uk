@@ -5,17 +5,15 @@
 
     $result = array("status"=>false);
 
-    $articles = new articles();
-
     if (isset($_GET['action'])) {
         if ($_GET['action'] == "get") {
-            $comments = $articles->getComments($_GET['id']);
+            $comments = $app->articles->getComments($_GET['id']);
 
             $result['status'] = true;
             $result['comments'] = $comments;
-        } else if ($user->loggedIn) {
+        } else if ($app->user->loggedIn) {
             if ($_GET['action'] == "add") {
-                $comment = $articles->addComment($_POST['body'], $_POST['id'], $_POST['parent']);
+                $comment = $app->articles->addComment($_POST['body'], $_POST['id'], $_POST['parent']);
 
                 if ($comment) {
                     $result['status'] = true;
@@ -23,11 +21,11 @@
                 } else
                     $result['status'] = false;
             } else if ($_GET['action'] == "delete") {
-                $result['status'] = $comment = $articles->deleteComment($_POST['id']);
+                $result['status'] = $comment = $app->articles->deleteComment($_POST['id']);
             } else if ($_GET['action'] == "favourite") {
-                $result['status'] = $comment = $articles->favourite($_POST['id']);
+                $result['status'] = $comment = $app->articles->favourite($_POST['id']);
             } else if ($_GET['action'] == "unfavourite") {
-                $result['status'] = $comment = $articles->unfavourite($_POST['id']);
+                $result['status'] = $comment = $app->articles->unfavourite($_POST['id']);
             }
         }
     }

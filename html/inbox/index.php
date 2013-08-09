@@ -5,7 +5,7 @@
     $custom_js = array('inbox.js');
     require_once('header.php');
 
-    $messages = new messages();
+    $messages = new messages($app);
 
     if (isset($_POST['body']) && isset($_GET['view'])) {
         $result = $messages->newMessage(null, $_POST['body'], $_GET['view']);

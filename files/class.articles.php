@@ -1,8 +1,12 @@
 <?php
     class articles {
-        public static function getCategories($parent=null, $news=true) {
-            global $db, $user;
+        private $app;
 
+        public function __construct($app) {
+            $this->app = $app;
+        }
+
+        public function getCategories($parent=null, $news=true) {
             if ($parent == null) {
                 $sql =  "SELECT category_id AS id, title, slug
                          FROM articles_categories
@@ -10,11 +14,11 @@
                 if (!$news)
                     $sql .= " AND category_id != 0 ";
                 $sql .= "ORDER BY title ASC";
-                $st = $db->prepare($sql);
+                $st = $this->app->db->prepare($sql);
                 $st->execute(array(':parent'=>$parent));
                 $result = $st->fetchAll();
             } else {
-                $st = $db->prepare('SELECT category_id AS id, title, slug
+                $st = $this->app->db->prepare('SELECT category_id AS id, title, slug
                                     FROM articles_categories
                                     WHERE parent_id = :parent
                                     ORDER BY title ASC');
@@ -31,7 +35,7 @@
             return $result;
         }
 
-        public static function printCategoryList($cat, $menu = false, $parent_str = "", $current_section = null, $current_cat = null) {
+        public function printCategoryList($cat, $menu = false, $parent_str = "", $current_section = null, $current_cat = null) {
             if ($menu) {
                 if ($parent_str) {
                     $cat->title = str_ireplace($parent_str, '', $cat->title);
@@ -70,10 +74,8 @@
         }
 
         public function getCategory($slug) { 
-            global $db;
-
             //Get category id
-            $st = $db->prepare('SELECT category_id AS id, title, slug, parent_id AS parent FROM articles_categories
+            $st = $this->app->db->prepare('SELECT category_id AS id, title, slug, parent_id AS parent FROM articles_categories
                                 WHERE slug = :slug LIMIT 1');
             $st->execute(array(':slug' => $slug));
             $result = $st->fetch();
@@ -85,8 +87,6 @@
         }
 
         public function getArticles($cat_id=null, $limit=2, $page=1) {
-            global $db, $user;
-
             // Group by required for count
             $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug, a.body, a.thumbnail,
                         submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
@@ -118,16 +118,16 @@
             $sql .= 'GROUP BY a.article_id
                     ORDER BY submitted DESC
                     LIMIT :limit1, :limit2';
-            $st = $db->prepare($sql);
+            $st = $this->app->db->prepare($sql);
             $st->bindValue(':cat_id', $cat_id);
-            $st->bindValue(':uid', $user->uid);
+            $st->bindValue(':uid', $this->app->user->uid);
             $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
             $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
             $st->execute();
             $result = $st->fetchAll();
 
             // Get total rows
-            $st = $db->prepare('SELECT FOUND_ROWS() AS `count`');
+            $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
             $st->execute();
             $count = $st->fetch();
             $count = $count->count;
@@ -136,10 +136,8 @@
         }
 
         public function getArticle($slug, $news=false) {
-            global $db, $user;
-
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body, a.thumbnail,
+            $st = $this->app->db->prepare('SELECT a.article_id AS id, users.username, a.title, a.slug, a.body, a.thumbnail,
                                     submitted, updated, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                                     categories.parent_id AS parent,
                                     CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri,
@@ -163,14 +161,14 @@
                                 WHERE a.slug = :slug
                                 GROUP BY a.article_id
                                 ORDER BY submitted DESC');
-            $st->execute(array(':slug' => $slug, ':uid' => $user->uid));
+            $st->execute(array(':slug' => $slug, ':uid' => $this->app->user->uid));
             $result = $st->fetch();
 
             if (!$result || ($news !== 'all' && ($news && $result->cat_id != 0) || (!$news && $result->cat_id == 0)))
                 return false;
 
             if (!$news) {
-                $st = $db->prepare('SELECT a.title, CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri
+                $st = $this->app->db->prepare('SELECT a.title, CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS uri
                                     FROM articles a
                                     WHERE a.category_id = :cat_id AND submitted < :sub
                                     ORDER BY submitted DESC
@@ -180,7 +178,7 @@
             }
 
             //increment read count
-            $st = $db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
+            $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
             $st->execute(array(':aid' => $result->id));
 
             return $result;
@@ -188,10 +186,9 @@
 
         public function updateArticle($id, $changes, $updated=true, $draft=false) {
             if (!is_array($changes)) return false;
-            global $db, $user;
 
             //Check privilages
-            if (!$user->loggedIn)
+            if (!$this->app->user->loggedIn)
                 return false;
 
             // Get field list
@@ -216,21 +213,19 @@
             $query .= " WHERE article_id=?";
             $values[] = $id;
 
-            if ($draft || !$user->admin_pub_priv) {
+            if ($draft || !$this->app->user->admin_pub_priv) {
                 $query .= " AND user_id = ?";
-                $values[] = $user->uid;
+                $values[] = $this->app->user->uid;
             }
 
-            $st = $db->prepare($query);
+            $st = $this->app->db->prepare($query);
             $res = $st->execute($values); 
 
             return $res;
         }
 
         public function getHotArticles($limit=5) {
-            global $app, $db, $user;
-
-            $st = $db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
+            $st = $this->app->db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
                                 a.body, a.thumbnail
                                 FROM articles a
@@ -255,8 +250,6 @@
          * USERS ARTICLES
          */
         public function getMyArticles($approved=true, $limit=2, $page=1) {
-            global $db, $user;
-
             // Group by required for count
             if ($approved) {
                 $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug,
@@ -291,15 +284,15 @@
                         LIMIT :limit1, :limit2';           
             }
 
-            $st = $db->prepare($sql);
-            $st->bindValue(':uid', $user->uid);
+            $st = $this->app->db->prepare($sql);
+            $st->bindValue(':uid', $this->app->user->uid);
             $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
             $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
             $st->execute();
             $result = $st->fetchAll();
 
             // Get total rows
-            $st = $db->prepare('SELECT FOUND_ROWS() AS `count`');
+            $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
             $st->execute();
             $count = $st->fetch();
             $count = $count->count;
@@ -308,10 +301,8 @@
         }
 
         public function getMyArticle($id) {
-            global $db, $user;
-
             // Group by required for count
-            $st = $db->prepare('SELECT a.article_id AS id, a.title, a.body, a.note,
+            $st = $this->app->db->prepare('SELECT a.article_id AS id, a.title, a.body, a.note,
                                     `time`, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
                                     categories.parent_id AS parent
                                 FROM articles_draft a
@@ -319,7 +310,7 @@
                                 ON a.category_id = categories.category_id
                                 WHERE a.article_id = :id AND user_id = :uid
                                 LIMIT 1');
-            $st->execute(array(':id' => $id, ':uid' => $user->uid));
+            $st->execute(array(':id' => $id, ':uid' => $this->app->user->uid));
             $result = $st->fetch();
 
             if (!$result)
@@ -329,20 +320,18 @@
         }
 
         public function submitArticle($title, $body, $category) {
-            global $db, $user;
-
             if (!$title || !$body)
                 return false;
 
             // Group by required for count
-            $st = $db->prepare('INSERT INTO articles_draft (`user_id`,`title`,`category_id`,`body`)
+            $st = $this->app->db->prepare('INSERT INTO articles_draft (`user_id`,`title`,`category_id`,`body`)
                                 VALUES (:uid,:title,:cat_id,:body)');
-            $result = $st->execute(array(':uid' => $user->uid, ':title' => $title, ':cat_id' => $category, ':body' => $body));
+            $result = $st->execute(array(':uid' => $this->app->user->uid, ':title' => $title, ':cat_id' => $category, ':body' => $body));
 
             if (!$result)
                 return false;
 
-            return $db->lastInsertId();          
+            return $this->app->db->lastInsertId();          
         }
 
 
@@ -351,10 +340,8 @@
          */
 
         public function getComments($article_id, $parent_id=0, $bbcode=true) {
-            global $app, $db, $user;
-
             // Group by required for count
-            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted,
+            $st = $this->app->db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted,
                                DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`,
                                coalesce(users.username, 0) as username, users_profile.gravatar,
                                IF (users_profile.gravatar = 1, users.email , users_profile.img) as `image`
@@ -371,9 +358,9 @@
             foreach($result as $key=>$comment) {
                 if (!$comment->deleted) {
                     if ($bbcode)
-                        $comment->comment = $app->parse($comment->comment);
+                        $comment->comment = $this->app->parse($comment->comment);
 
-                    if ($comment->username === $user->username)
+                    if ($comment->username === $this->app->user->username)
                         $comment->owner = true;
                 } else {
                     unset($comment->username);
@@ -385,7 +372,7 @@
                 $replies = $this->getComments($article_id, $comment->id);
                 if ($replies) {
                     $comment->replies = $replies;
-                    unset($comment->deleted);
+                    unset($comment->deleted); 
                 } else if ($comment->deleted) {
                     //array_splice($result, $key, 1);
                     unset($result[$key]);
@@ -409,10 +396,8 @@
         }
 
         public function getComment($comment_id, $bbcode=true) {
-            global $app, $db, $user;
-
             // Group by required for count
-            $st = $db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
+            $st = $this->app->db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
@@ -420,11 +405,11 @@
                     ORDER BY `time` DESC');
             $st->execute(array(':comment_id' => $comment_id));
             $result = $st->fetchAll();
-
+ 
             foreach($result as $comment) {
-                $comment->comment = $app->parse($comment->comment, $bbcode);
+                $comment->comment = $this->app->parse($comment->comment, $bbcode);
 
-                if ($comment->username === $user->username)
+                if ($comment->username === $this->app->user->username)
                     $comment->owner = true;
             }
 
@@ -432,24 +417,22 @@
         }
 
         public function addComment($comment, $article_id, $parent_id=0) {
-            global $app, $db, $user;
-
             // Check privilages
-            if (!$user->loggedIn)
+            if (!$this->app->user->loggedIn)
                 return false;
 
-            $st = $db->prepare('INSERT INTO articles_comments (`article_id`, `parent_id`, `user_id`, `comment`) VALUES (:article_id, :parent_id, :user_id, :body)');
-            $result = $st->execute(array(':article_id' => $article_id,':parent_id' => $parent_id, ':user_id' => $user->uid, ':body' => $comment));
+            $st = $this->app->db->prepare('INSERT INTO articles_comments (`article_id`, `parent_id`, `user_id`, `comment`) VALUES (:article_id, :parent_id, :user_id, :body)');
+            $result = $st->execute(array(':article_id' => $article_id,':parent_id' => $parent_id, ':user_id' => $this->app->user->uid, ':body' => $comment));
             if (!$result)
                 return false;
 
-            $comment_id = $db->lastInsertId();
+            $comment_id = $this->app->db->lastInsertId();
 
-            $notified = array($user->uid);
+            $notified = array($this->app->user->uid);
 
             // Update parents author
             if ($parent_id != 0) {
-                $st = $db->prepare('SELECT comments.user_id AS author FROM articles_comments comments
+                $st = $this->app->db->prepare('SELECT comments.user_id AS author FROM articles_comments comments
                                    INNER JOIN users
                                    ON users.user_id = comments.user_id
                                    WHERE comments.comment_id = :parent_id LIMIT 1');
@@ -459,7 +442,7 @@
                 if ($result) {
                     if (!in_array($result->author, $notified)) {
                         array_push($notified, $result->author);
-                        $app->notifications->add($result->author, 'comment_reply', $user->uid, $comment_id);
+                        $this->app->notifications->add($result->author, 'comment_reply', $this->app->user->uid, $comment_id);
                     }
                 }
             }
@@ -467,15 +450,15 @@
             // Check for mentions
             preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $comment, $mentions);
             foreach($mentions[1] as $mention) {
-                $st = $db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
+                $st = $this->app->db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
                 $st->execute(array(':username' => $mention));
                 $result = $st->fetch();
                 
                 if ($result) {
                     if (!in_array($result->user_id, $notified)) {
                         array_push($notified, $result->user_id);
-                        $app->notifications->add($result->user_id, 'comment_mention', $user->uid, $comment_id);
-                        $app->feed->add($result->user_id, 'comment_mention', $comment_id);
+                        $this->app->notifications->add($result->user_id, 'comment_mention', $this->app->user->uid, $comment_id);
+                        $this->app->feed->add($result->user_id, 'comment_mention', $comment_id);
                     }
                 }
             }
@@ -485,55 +468,48 @@
         }
 
         public function deleteComment($comment_id) {
-            global $app, $db, $user;
-
             // Check privilages
-            if (!$user->loggedIn)
+            if (!$this->app->user->loggedIn)
                 return false;
 
-            $st = $db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id AND user_id = :uid LIMIT 1');
-            $st->execute(array(':id' => $comment_id, ':uid' => $user->uid));
+            $st = $this->app->db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id AND user_id = :uid LIMIT 1');
+            $st->execute(array(':id' => $comment_id, ':uid' => $this->app->user->uid));
 
             return ($st->rowCount() > 0);
         }
 
         public function favourite($article_id) {
-            global $db, $user;
-
             // Check privilages
-            if (!$user->loggedIn)
+            if (!$this->app->user->loggedIn)
                 return false;
 
-            $st = $db->prepare('INSERT INTO articles_favourites (`article_id`, `user_id`) VALUES (:article_id, :uid)');
-            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $user->uid));
+            $st = $this->app->db->prepare('INSERT INTO articles_favourites (`article_id`, `user_id`) VALUES (:article_id, :uid)');
+            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $this->app->user->uid));
             return $result;
         }
 
         public function unfavourite($article_id) {
-            global $db, $user;
-
             // Check privilages
-            if (!$user->loggedIn)
+            if (!$this->app->user->loggedIn)
                 return false;
 
-            $st = $db->prepare('DELETE FROM articles_favourites WHERE `article_id` = :article_id AND `user_id` = :uid LIMIT 1');
-            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $user->uid));
+            $st = $this->app->db->prepare('DELETE FROM articles_favourites WHERE `article_id` = :article_id AND `user_id` = :uid LIMIT 1');
+            $result = $st->execute(array(':article_id' => $article_id, ':uid' => $this->app->user->uid));
             return $result;
         }
 
         public function setupTOC($body){
             //Add href tags
             $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
-            function process($matches) {
-                global $app;
-                $slug = $app->utils->generateSlug($matches[2]);
-                
-                $match = $matches[0];
-                $match = substr($matches[0],0,3) . " id='$slug'" . substr($matches[0],3);
-                return $match;
-            }
+            return preg_replace_callback($pattern, array($this, 'setupTOCProcess'), $body);
+        }
 
-            return preg_replace_callback($pattern, 'process', $body);
+        public function setupTOCProcess($matches) {
+            $slug = $this->app->utils->generateSlug($matches[2]);
+            
+            $match = $matches[0];
+            $match = substr($matches[0],0,3) . " id='$slug'" . substr($matches[0],3);
+            return $match;
         }
 
         public function getTOC($body) {

@@ -6,6 +6,11 @@
             'make', 'like', 'time', 'look', 'more', 'write', 'number', 'way', 'could', 'people', 'than',
             'first', 'been', 'call', 'who', 'its', 'now', 'find', 'long', 'down', 'day', 'did',
             'get', 'come', 'made', 'may', 'part', 'that');
+        private $app;
+
+        public function __construct($app) {
+            $this->app = $app;
+        }
 
         public function go($q) {
             $q = trim($q);
@@ -17,8 +22,6 @@
         }
 
         private function searchArticles($term) {
-            global $db;
-
             // Build search query
             preg_match_all('/(?<!")\b[a-zA-Z0-9"@._-]+\b|(?<=")\b[^"]+/', $term, $terms, PREG_PATTERN_ORDER);
             if (!count($terms[0]))
@@ -67,7 +70,7 @@
                     ORDER BY search.`matches` DESC, `submitted` DESC
                     LIMIT 5";
 
-            $st = $db->prepare($sql);
+            $st = $this->app->db->prepare($sql);
             $st->execute($searchValues);
             $result = $st->fetchAll();
 
@@ -78,8 +81,6 @@
         }
 
         private function searchUsers($term) {
-            global $db, $user;
-
             if (strlen($term) <= 3)
                 return false;
 
@@ -95,8 +96,8 @@
                     ORDER BY username DESC
                     LIMIT 32';
 
-            $st = $db->prepare($sql);
-            $st->execute(array(':like' => $like, ':term' => $term, ':uid' => $user->uid));
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':like' => $like, ':term' => $term, ':uid' => $this->app->user->uid));
             $result = $st->fetchAll();
 
             if (!count($result))

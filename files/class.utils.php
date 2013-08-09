@@ -119,7 +119,7 @@
                     LIMIT :limit';
             $st = $db->prepare($sql);
             $st->bindValue(':username', $username);
-            $st->bindValue(':user', $user->uid);
+            $st->bindValue(':user', $app->user->uid);
             $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
             $st->execute();
 
