@@ -42,7 +42,7 @@
 ?>
                         <article class='bbcode body'>
                             <header class='title clearfix'>
-                                <?php if ($app->user->admin_pub_priv): ?>
+                                <?php if ($single && $app->user->admin_pub_priv): ?>
                                     <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                 <?php endif; ?>
                                 <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
@@ -67,21 +67,21 @@
                             ?>
                         </article>
 <?php
-            if ($single) {
-                $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
-                include('elements/comments.php');
-            } else {
-                if (ceil($newsArticles['total']/$limit) > 1) {
-                    $pagination = new stdClass();
-                    $pagination->current = $newsArticles['page'];
-                    $pagination->count = ceil($newsArticles['total']/$limit);
-                    $pagination->root = '?page=';
-                    include('elements/pagination.php');
-                }
-            }
-
-
         endforeach;
+
+        if ($single) {
+            $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
+            include('elements/comments.php');
+        } else {
+            if (ceil($newsArticles['total']/$limit) > 1) {
+                $pagination = new stdClass();
+                $pagination->current = $newsArticles['page'];
+                $pagination->count = ceil($newsArticles['total']/$limit);
+                $pagination->root = '?page=';
+                include('elements/pagination.php');
+            }
+        }
+
     endif;
 ?>
                     </section>
