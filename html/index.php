@@ -3,6 +3,11 @@
 
     require_once('init.php');
 
+    if ($_POST['payload'] && $_GET['hook'] == $app->config('git')) {
+        header("Content-type: text/plain");
+        shell_exec("../deploy.sh");
+    }
+
     if ($app->user->loggedIn) {
         require_once("news.php");
     } else {

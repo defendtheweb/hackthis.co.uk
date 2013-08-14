@@ -9,6 +9,8 @@
     $config['db']['password'] = 'pass';
     $config['db']['database'] = 'hackthis';
 
+    $config['git'] = 'anystring';
+    
     $config['facebook']['secret'] = '';
     $config['facebook']['public'] = '';
 
