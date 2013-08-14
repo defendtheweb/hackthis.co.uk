@@ -24,3 +24,29 @@
         }
     }
 }
+
+.level-header {
+    .green {
+        color: $green;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .previous-level, .next-level {
+        font-size: 4em;
+        margin-top: -12px;
+
+        i {
+            width: 55px;
+            height: 55px;
+            display: block;
+        }
+    }
+
+    a.previous-level:hover, a.next-level:hover {
+        color: $bright_green;
+        text-decoration: none;
+    }
+}
