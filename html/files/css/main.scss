@@ -48,6 +48,10 @@ h1, h2 {
     @include title_font;
     text-transform: capitalize;
     font-size: 1.5em;
+
+    &.no-margin {
+        margin: 0;
+    }
 }
 
 h2 {

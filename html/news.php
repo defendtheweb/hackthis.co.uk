@@ -7,6 +7,7 @@
     $minifier->add_file('highlight.js', 'js');
     $minifier->add_file('articles.js', 'js');
 
+    $minifier->add_file('forum.scss', 'css');
     $minifier->add_file('highlight.css', 'css');
     $minifier->add_file('articles.css', 'css');
 
