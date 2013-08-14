@@ -36,6 +36,9 @@
                         </div>
 <?php
     else:
+        if (!$single)
+            include('elements/forum_latest.php');
+
         foreach ($newsArticles['articles'] as $article):
             $article->title = $app->parse($article->title, false);
             $article->body = $app->parse($article->body);
