@@ -266,5 +266,12 @@
 
             return $result;
         }
+
+        function message($msg, $type='error') {
+            echo "                        <div class='msg msg-{$type}'>
+                            <i class='icon-{$type}'></i>
+                            {$msg}
+                        </div>";
+        }
     }
 ?>
