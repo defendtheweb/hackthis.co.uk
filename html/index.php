@@ -3,9 +3,10 @@
 
     require_once('init.php');
 
-    if ($_POST['payload'] && $_GET['hook'] == $app->config('git')) {
+    if (isset($_POST['payload']) && $_POST['payload'] && isset($_GET['hook']) && $_GET['hook'] == $app->config('git')) {
         header("Content-type: text/plain");
         shell_exec("../deploy.sh");
+        die();
     }
 
     if ($app->user->loggedIn) {
