@@ -17,6 +17,8 @@
                             <a class='hide-external' href='https://www.facebook.com/hackthisuk'><i class='icon-facebook'></i></a>
                             <a class='hide-external' href='https://twitter.com/hackthisuk'><i class='icon-twitter'></i></a>
                             <a class='hide-external' href='http://feeds.feedburner.com/hackthisuk'><i class='icon-feed'></i></a>
+                            <!-- <a class='hide-external' href='https://plus.google.com/u/1/111391128364055041923'><i class='icon-google-plus'></i></a>
+                            <a class='hide-external' href='https://www.youtube.com/channel/UCCfqc6ZuCSLdLMKYJl5hLyg'><i class='icon-youtube'></i></a> -->
                         </div>
                         Current Version: <a href='https://github.com/HackThis/hackthis.co.uk/tree/<?=trim($app->version);?>'><?=trim($app->version);?></a><br/>
                         Copyright © 2008 - <?=date('Y');?> <a href='//www.hackthis.co.uk'>hackthis.co.uk</a> || Icons: <a href='http://fortawesome.github.io/Font-Awesome/'>Font Awesome</a>

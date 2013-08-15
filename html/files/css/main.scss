@@ -421,6 +421,20 @@ sidebar h1 {
                         color: #F88B02;
                     }
                 }
+
+                i.icon-google-plus {
+                    color: darken(#d34836, 15%);
+                    &:hover {
+                        color: #d34836;
+                    }
+                }
+
+                i.icon-youtube {
+                    color: darken(#CD332D, 15%);
+                    &:hover {
+                        color: #CD332D;
+                    }
+                }
             }
         }
     }
