@@ -15,11 +15,25 @@
 		die();
     }
 
-
 	require_once('header.php');
 
 	$level = $currentLevel;
-    require_once('elements/levels/header.php');
+	print_r($level);
+?>
+	<div class='row'>
+		<div class='col span_6 level-sidebar'>
+<?php
+    require_once('elements/levels/stats.php');
+?>
+		</div>
 
+		<div class='col span_18'>
+<?php
+    require_once('elements/levels/header.php');
+    require_once('elements/levels/level.php');
+?>
+		</div>
+	</div>
+<?php
     require_once('footer.php');
 ?>

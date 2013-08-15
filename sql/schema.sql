@@ -187,6 +187,14 @@ CREATE TABLE levels (
 	FOREIGN KEY (`group`) REFERENCES levels_groups (`title`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE levels_data (
+	`level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution') NOT NULL,
+	`value` text NOT NULL,
+	PRIMARY KEY (`level_id`, `key`),
+	FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
+) ENGINE=InnoDB;
+
 ALTER TABLE users_levels
 ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
 

@@ -26,6 +26,10 @@
 }
 
 .level-header {
+    background: $bg;
+    padding-top: 16px;
+    padding-bottom: 32px;
+
     .green {
         color: $green;
     }
@@ -37,6 +41,7 @@
     .previous-level, .next-level {
         font-size: 4em;
         margin-top: -12px;
+        cursor: default;
 
         i {
             width: 55px;
@@ -48,5 +53,39 @@
     a.previous-level:hover, a.next-level:hover {
         color: $bright_green;
         text-decoration: none;
+        cursor: pointer;
+    }
+
+    .next-level.hint--left:hover {
+        color: red;
+    }
+}
+
+.level-area {    
+    form {
+        background: $bg;
+        padding-bottom: 16px;
+
+        fieldset {
+            width: 300px;
+            max-width: 95%;
+            margin: 0 auto;
+            border: none;
+
+            input[type="text"], input[type="password"] {
+                border-color: $dark;
+                margin-bottom: 12px;
+
+                &:focus {
+                    border-color: lighten($dark, 15%);
+                }
+            }
+        }
+    }
+}
+
+.level-sidebar {
+    table td {
+        vertical-align: top;
     }
 }

@@ -38,6 +38,7 @@
 
             $sql = "SELECT levels.level_id, `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`,
+                users_levels_count.`count`,
                 levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
                 FROM levels
                 INNER JOIN levels_groups
@@ -48,14 +49,40 @@
                 ON levels_after.name > levels.name
                 LEFT JOIN users_levels
                 ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
+                LEFT JOIN (SELECT level_id, count(*) AS `count` FROM users_levels WHERE completed > 0 GROUP BY level_id) users_levels_count
+                ON users_levels_count.level_id = levels.level_id
                 WHERE levels.name = :level AND levels.group = :group";
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':level'=>$level, ':group'=>$group, ':uid'=>$this->app->user->uid));
-            $level = $st->fetch();
+            $level = $st->fetch();        
 
             if ($level)
                 $this->levelView($level->level_id);
+            else
+                return false;
+
+            //Build level data
+            $sql = 'SELECT `key`, `value`, users.username
+                    FROM levels_data
+                    LEFT JOIN users
+                    ON levels_data.value = users.user_id AND levels_data.key = "author"
+                    WHERE level_id = :lid';
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':lid'=>$level->level_id));
+            $data = $st->fetchAll();
+
+            $level->data = array();
+
+            foreach($data as $d) {
+                //Find all non-value entries
+                foreach($d as $k=>$v) {
+                    if ($v && $k !== 'key' && $k !== 'value')
+                        $d->value = $v;
+                }
+
+                $level->data[$d->key] = $d->value;
+            }
 
             return $level;
         }
