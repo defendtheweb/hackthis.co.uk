@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>HackThis!!</title>
+        <title>HackThis!!<?=$app->page->title?' - '.$app->page->title:'';?></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
