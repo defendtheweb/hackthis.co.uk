@@ -62,18 +62,18 @@
         $article->title = $app->parse($article->title, false);
         $article->body = $app->parse($article->body);
 ?>
-                            <article class='bbcode body'>
+                            <article class='bbcode body' itemscope itemtype="http://schema.org/Article">
                                 <header class='title clearfix'>
                                     <?php if ($myArticle): ?>
                                         <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button right'><i class='icon-pencil'></i></a>
                                     <?php elseif ($app->user->admin_pub_priv): ?>
                                         <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
                                     <?php endif; ?>
-                                    <h1><?=$article->title;?></h1>
-                                    <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
-                                    <?php if (isset($article->updated) && $article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
+                                    <h1 itemprop="name"><?=$article->title;?></h1>
+                                    <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
+                                    <?php if (isset($article->updated) && $article->updated > 0): ?>&#183; updated <time itemprop='dateModified' datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
                                     <?php if (isset($article->cat_title)) { echo "&#183; <a href='{$article->cat_slug}'>{$article->cat_title}</a>"; }?>
-                                    <?php if (isset($article->username)) { echo "&#183; {$app->utils->username_link($article->username)}"; }?>
+                                    <?php if (isset($article->username)) { echo "&#183; <a rel='author' itemprop='author' href='/user/{$article->username}'>{$article->username}</a>"; }?>
 
                                     <?php
                                         if (!$myArticle) {
@@ -86,6 +86,7 @@
                                             $share->favourites = $article->favourites;
                                             $share->favourited = $article->favourited;
                                             include("elements/share.php");
+                                            echo '<meta itemprop="interactionCount" content="UserComments:'.$share->comments.'"/>';
                                         }
                                     ?>
                                 </header>
@@ -116,9 +117,13 @@
     endif; 
     
     $article->body = $app->articles->setupTOC($article->body);
-
+?>
+                                <meta itemprop="wordCount" content="<?=str_word_count($article->body);?>"/>
+                                <div itemprop='articleBody'>
+<?php
     echo $article->body;
 ?>
+                                </div>
                             </article>
 <?php
         if (!$myArticle) {
