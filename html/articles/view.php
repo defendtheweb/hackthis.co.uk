@@ -110,6 +110,8 @@
         echo "<li{$c}<a href='#{$slug}'>{$match}</a></li>";
         $i++;
     }
+
+    echo "<li><a href='#comments'>Comments</a></li>";
 ?>
                                     </ul>
                                 </div>
