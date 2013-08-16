@@ -141,8 +141,11 @@
                     $level->attempts = $level->attempts + 1;
                     if ($correct) {
                         $level->completed = true;
+                        $level->count++;
                         $level->last_user = $this->app->user->username;
                         $level->last_completed = "now";
+                        //Update user score (temporary)
+                        $this->app->user->score = $this->app->user->score + $level->data['reward'];
                         $st = $this->app->db->prepare('UPDATE users_levels SET completed = NOW(), attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
                         $st->execute(array(':lid'=> $level->level_id, ':uid' => $this->app->user->uid));
                     } else {

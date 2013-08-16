@@ -393,14 +393,22 @@ CREATE PROCEDURE user_feed_remove(_user_id INT, _type TEXT, _item_id INT)
 DROP TRIGGER IF EXISTS update_user_level;
 CREATE TRIGGER update_user_level AFTER UPDATE ON users_levels FOR EACH ROW
 	BEGIN
+		DECLARE REWARD INT;
 		IF NEW.completed > 0 THEN
 			CALL user_feed(NEW.user_id, 'level', NEW.level_id);
+
+			SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = NEW.level_id AND `key` = 'reward' LIMIT 1);
+			UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
 		END IF;
 	END;
 
 DROP TRIGGER IF EXISTS delete_user_level;
 CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
 	BEGIN
+		DECLARE REWARD INT;
+		SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = OLD.level_id AND `key` = 'reward' LIMIT 1);
+		UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
+
 		CALL user_feed_remove(OLD.user_id, 'level', OLD.level_id);
 	END;
 
