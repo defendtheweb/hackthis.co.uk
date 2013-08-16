@@ -17,7 +17,7 @@
 ?>
                     <article class="widget dashboard">
                         <section class="fluid clr center">
-                            <h1><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></h1>
+                            <h1 class='lower'><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></h1>
                             <div class='profile-pic'>
                                 <img src='<?=$app->user->image;?>'/>
                                 <a href='/settings/image' class='upload'>

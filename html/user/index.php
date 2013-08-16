@@ -1,13 +1,17 @@
 <?php
     $custom_css = array('profile.scss', 'confirm.css');
     $custom_js = array('jquery.confirm.js', 'profile.js');
-    require_once('header.php');
+    require_once('init.php');
+    
     $profile = new profile($_GET['user']);
+    if (isset($profile->uid))
+        $app->page->title = $profile->username;
+
+    require_once('header.php');
+    
 
     if (!isset($profile->uid)):
-?>
-    User not found
-<?php
+        $app->utils->message("User not found");
         require_once('footer.php');
         die();
     endif;
@@ -35,7 +39,7 @@
 
         <a href='/inbox/compose?to=<?=$profile->username;?>' class='messages-new button right' data-to="<?=$profile->username;?>"><i class='icon-envelope-alt'></i> PM user</a>
 
-        <h1><?=$profile->username;?></h1>
+        <h1 class='lower'><?=$profile->username;?></h1>
 <?php if ($profile->admin): ?>
         <strong>Administrator</strong>
 <?php elseif ($profile->moderator): ?>
