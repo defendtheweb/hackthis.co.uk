@@ -132,9 +132,13 @@
             return $dt->format($format);
         }
 
-        public function timeSince($date, $short=false) {
+        public function timeSince($date, $short=false, $date2=null) {
             $date = strtotime($date);
-            $diff = time() - $date;
+
+            if (!$date2)
+                $diff = time() - $date;
+            else
+                $diff = strtotime($date2) - $date;
             
             if (!$diff)
                 return "secs" . (!$short?' ago':'');
