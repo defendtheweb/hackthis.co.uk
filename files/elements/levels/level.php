@@ -15,6 +15,8 @@
             </fieldset>
         </form>            
 <?php
+        elseif ($page = realpath($app->config('path') . '/files/elements/levels/'.basename($level->data['form']).'.php')):
+            include($page);
         else:
             echo $level->data['form'];
         endif;
