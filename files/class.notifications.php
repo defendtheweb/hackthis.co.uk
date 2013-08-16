@@ -144,7 +144,7 @@
         }
 
         public function getText($event) {
-                        if ($event->type === 'comment_reply') {
+            if ($event->type === 'comment_reply') {
                 $icon = 'comments';
                 $text = $this->app->utils->username_link($event->username) . ' replied to your comment on ';
             } else if ($event->type === 'comment_mention') {

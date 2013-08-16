@@ -17,7 +17,7 @@ $(function() {
     '        {{else type == "news"}}'+
     '            <i class="icon-article"></i><a href="${uri}">${title}</a>'+
     '        {{else type == "level"}}'+
-    '            <i class="icon-good"></i><a href="/user/${username}">${username}</a> <span class="dark">·</span> <a href="${slug}">Main 1${title}</a>'+
+    '            <i class="icon-good"></i><a href="/user/${username}">${username}</a> <span class="dark">·</span> <a href="${uri}">${title}</a>'+
     '        {{/if}}'+
     '        </div>'+
     '        <div class="col span_6 time right"><time class="short" datetime="${timestamp}"></time></div>'+

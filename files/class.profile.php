@@ -111,7 +111,7 @@
                         break;
                     case 'level':
                         $icon = 'good';
-                        $string = "Completed something";
+                        $string = "Completed <a href='{$item->uri}'>{$item->title}</a>";
                         break;
                     case 'friend':
                         $icon = 'addfriend';

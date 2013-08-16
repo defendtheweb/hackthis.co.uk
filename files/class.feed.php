@@ -40,6 +40,18 @@
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
+                } if ($res->type == 'level') {
+                    // status
+                    $st = $this->app->db->prepare("SELECT LOWER(CONCAT('/levels/', CONCAT_WS('/', levels_groups.title, levels.name))) as `uri`,
+                        CONCAT(levels_groups.title, ' ', levels.name) as `title`
+                        FROM levels
+                        INNER JOIN levels_groups
+                        ON levels_groups.title = levels.group
+                        WHERE level_id = :item_id
+                        LIMIT 1");
+                    $st->execute(array(':item_id' => $res->item_id));
+                    $st->setFetchMode(PDO::FETCH_INTO, $res);
+                    $st->fetch();
                 } else if ($res->type == 'medal') {
                     // label, colour
                     $st = $this->app->db->prepare("SELECT medals.label, medals_colours.colour
