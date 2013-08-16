@@ -29,9 +29,12 @@
 	if (isset($level->attempt)) {
 		echo "<br/>";
 		if ($level->attempt === true)
-			$app->utils->message('Level complete', 'good');
+			$app->utils->message('Level complete'.(isset($level->level_after_uri)?", <a href='$level->level_after_uri'>next level</a>":''), 'good');
 		else
 			$app->utils->message('Invalid details');
+	} else if (isset($_GET['skipped'])) {
+		echo "<br/>";
+		$app->utils->message('You must complete main levels in order', 'info');
 	}
 ?>
 </div>

@@ -28,7 +28,7 @@
             return $this->list;
         }
 
-        public function getLevel($group, $level) {
+        public function getLevel($group, $name) {
             $before_after_sql = 'SELECT `name`, LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`
                 FROM levels
                 INNER JOIN levels_groups
@@ -60,12 +60,29 @@
                 WHERE levels.name = :level AND levels.group = :group";
 
             $st = $this->app->db->prepare($sql);
-            $st->execute(array(':level'=>$level, ':group'=>$group, ':uid'=>$this->app->user->uid));
+            $st->execute(array(':level'=>$name, ':group'=>$group, ':uid'=>$this->app->user->uid));
             $level = $st->fetch();        
 
-            if ($level)
+            if ($level) {
+                //Check if user has access
+                if (isset($level->level_before_uri) && $level->group == 'main') {
+                    $sql = 'SELECT IF(users_levels.completed > 0, 1, 0) as `completed` FROM levels
+                            LEFT JOIN users_levels
+                            ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
+                            WHERE `group` = :group AND levels.name < :name
+                            ORDER BY `name` DESC
+                            LIMIT 1';
+                            
+                    $st = $this->app->db->prepare($sql);
+                    $st->execute(array(':name'=>$name, ':group'=>$group, ':uid'=>$this->app->user->uid));
+                    $previous = $st->fetch();
+
+                    if (!$previous || !$previous->completed)
+                        header("Location: $level->level_before_uri?skipped");
+                }
+
                 $this->levelView($level->level_id);
-            else
+            } else
                 return false;
 
             //Build level data
