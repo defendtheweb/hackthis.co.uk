@@ -53,9 +53,9 @@
                 ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
                 LEFT JOIN (SELECT level_id, count(*) AS `count` FROM users_levels WHERE completed > 0 GROUP BY level_id) users_levels_count
                 ON users_levels_count.level_id = levels.level_id
-                INNER JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed ASC) users_levels_first
+                LEFT JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed ASC) users_levels_first
                 ON users_levels_first.level_id = levels.level_id
-                INNER JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed DESC) users_levels_last
+                LEFT JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed DESC) users_levels_last
                 ON users_levels_last.level_id = levels.level_id
                 WHERE levels.name = :level AND levels.group = :group";
 
