@@ -1,5 +1,6 @@
 <?php
     $custom_css = array('levels.scss');
+    $page_title = 'Levels';
     require_once('header.php');
 
     $levels = $app->levels->getList();

@@ -1,5 +1,5 @@
 <div class='level-area'>
-	<form method="POST" action="m2.php" id="level_form">
+	<form method="POST" id="level_form">
 		<fieldset>
 			<label for="user">Username:</label>
 			<input type="text" autocomplete="off" id="user" name="user"><br>

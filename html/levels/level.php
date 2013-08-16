@@ -15,10 +15,12 @@
 		die();
     }
 
+    //Check if user completed level
+    $app->levels->check($currentLevel);
+
 	require_once('header.php');
 
 	$level = $currentLevel;
-	print_r($level);
 ?>
 	<div class='row'>
 		<div class='col span_6 level-sidebar'>

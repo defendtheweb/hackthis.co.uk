@@ -37,8 +37,10 @@
                 ORDER BY `name`';
 
             $sql = "SELECT levels.level_id, `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
-                IF(users_levels.completed > 0, 1, 0) as `completed`,
-                users_levels_count.`count`,
+                IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
+                IFNULL(users_levels.attempts, 0) as `attempts`,
+                users_levels_count.`count`, users_levels_first.`username` AS first_user, users_levels_last.`username` AS last_user,
+                users_levels_first.`completed` AS first_completed, users_levels_last.`completed` AS last_completed,
                 levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
                 FROM levels
                 INNER JOIN levels_groups
@@ -51,6 +53,10 @@
                 ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
                 LEFT JOIN (SELECT level_id, count(*) AS `count` FROM users_levels WHERE completed > 0 GROUP BY level_id) users_levels_count
                 ON users_levels_count.level_id = levels.level_id
+                LEFT JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed ASC LIMIT 1) users_levels_first
+                ON users_levels_first.level_id = levels.level_id
+                LEFT JOIN (SELECT username, level_id, completed FROM users_levels LEFT JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 ORDER BY completed DESC LIMIT 1) users_levels_last
+                ON users_levels_first.level_id = levels.level_id
                 WHERE levels.name = :level AND levels.group = :group";
 
             $st = $this->app->db->prepare($sql);
@@ -84,12 +90,70 @@
                 $level->data[$d->key] = $d->value;
             }
 
+            // Set page details
+            $this->app->page->title = ucwords($level->title);
+
             return $level;
         }
 
         function levelView($level_id) {
             $st = $this->app->db->prepare('INSERT IGNORE INTO users_levels (`user_id`, `level_id`) VALUES (:uid, :lid)');
             $st->execute(array(':lid'=> $level_id, ':uid' => $this->app->user->uid));
+        }
+
+        function check($level) {
+            if (!isset($level->data['answer']))
+                return false;
+
+            $answers = json_decode($level->data['answer']);
+
+            $attempted = false;
+            $correct = false;
+            foreach($answers AS $answer) {
+                if (strtolower($answer->method) == 'post') {
+                    if (isset($_POST[$answer->name])) {
+                        $attempted = true;
+                            if ($_POST[$answer->name] === $answer->value)
+                                $correct = true;
+                            else {
+                                $correct = false;
+                                break;
+                            }
+                    }
+                } else if (strtolower($answer->method) == 'get') {
+                    if (isset($_GET[$answer->name])) {
+                        $attempted = true;
+                            if ($_POST[$answer->name] === $answer->value)
+                                $correct = true;
+                            else {
+                                $correct = false;
+                                break;
+                            }
+                    }
+                }
+            }
+
+            if ($attempted) {
+                $level->attempt = $correct;
+
+                // Woo they did it, have they done it before?
+                if (!$level->completed) {
+                    $level->attempts = $level->attempts + 1;
+                    if ($correct) {
+                        $level->completed = true;
+                        $level->last_user = $this->app->user->username;
+                        $level->last_completed = "now";
+                        $st = $this->app->db->prepare('UPDATE users_levels SET completed = NOW(), attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
+                        $st->execute(array(':lid'=> $level->level_id, ':uid' => $this->app->user->uid));
+                    } else {
+                        // Record attempt
+                        $st = $this->app->db->prepare('UPDATE users_levels SET attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
+                        $st->execute(array(':lid'=> $level->level_id, ':uid' => $this->app->user->uid));
+                    }
+                }
+            }
+
+            return $correct;
         }
     }
 ?>

@@ -14,9 +14,24 @@
 	<span class='right next-level dark'><i class='icon-caret-right'></i></span>
 <?php endif; ?>
 
-	<h1 class='no-margin'><?=$level->title;?></h1>
-<?php if (isset($level->data['author'])): ?>
-	created by <a href='/user/<?=$level->data['author'];?>'><?=$level->data['author'];?></a><br/>
+	<h1 class='no-margin'><?=ucwords($level->title);?></h1>
+	<span class='dark'>Attempts: <?=$level->attempts;?>
+<?php if ($level->completed): ?>
+		&middot; Duration: <?=$app->utils->timeSince($level->started, true, $level->completed_time);?>
 <?php endif; ?>
-	<span class='strong <?=$level->completed?'green':'red';?>'><?=$level->completed?'Completed':'Incomplete';?></span>
+	</span>
+	<span class='hint--top' data-hint="This information is not public and only reflects&#10;the first time you completed the level."><i class='icon-info'></i></span><br/>
+
+	<span class='strong <?=$level->completed?'green':'red';?>'><?=$level->completed?'Completed':'Incomplete';?></span><br/>
+
+
+<?php
+	if (isset($level->attempt)) {
+		echo "<br/>";
+		if ($level->attempt === true)
+			$app->utils->message('Level complete', 'good');
+		else
+			$app->utils->message('Invalid details');
+	}
+?>
 </div>
