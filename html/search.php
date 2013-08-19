@@ -40,16 +40,14 @@
             foreach($results['users'] as $result):
 ?>
                         <li>
-                            <figure>
-                                <a href='/user/<?=$result->username;?>'>
-                                    <img src='<?=$result->image;?>' width='100%' alt='<?=$result->username;?> profile picture'/>
-                                </a>
-                                <figcaption>
-                                    <a href='/user/<?=$result->username;?>'><?=$result->username;?></a><br/>
+                            <a href='/user/<?=$result->username;?>'>
+                                <img src='<?=$result->image;?>' width='100%' alt='<?=$result->username;?> profile picture'/>
+                                <div>
+                                    <span><?=$result->username;?></span><br/>
                                     Score: <?=$result->score;?><br/>
                                     <?=($result->status)?'Friends':'';?>
-                                </figcaption>
-                            </firgure>
+                                </div>
+                            </a>
                         </li>
 <?php 
             endforeach;

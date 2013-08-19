@@ -198,3 +198,49 @@
 }
 
 
+ul.users-list {
+    list-style: none;
+    margin-bottom: 16px;
+
+    li {
+        margin-right: 6px;
+        float: left;
+
+        a {
+            position: relative;
+            margin-bottom: 2px;
+            color: $text;
+            display: block;
+
+            &:hover {
+                text-decoration: none;
+                div {
+                    background: $lighter_bg;
+                }
+            }
+
+            img {
+                display: block;
+                width: 48px;
+                position: absolute;
+                top: 4px;
+                left: 4px;
+            }
+
+            div {
+                width: auto;
+                height: 56px;
+                background: $light_bg;
+                overflow: hidden;
+                white-space: nowrap;
+                padding: 5px 12px 6px 60px;
+                font-size: 0.9em;
+
+                span {
+                    font-weight: bold;
+                    color: $white;
+                }
+            }
+        }
+    }
+}

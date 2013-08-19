@@ -125,7 +125,7 @@
                         <li class='right icon nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
                         <li class='right icon mobile-hide nav-search'>
                             <form action='/search.php' method='get'>
-                                <input placeholder='Search: topic, user, level..' name='q'/>
+                                <input autocomplete="off" placeholder='Search: topic, user, level..' name='q'/>
                                 <a href='#' onclick="$(this).parent().submit();"><i class='icon-search'></i></a>
                             </form>
                         </li>

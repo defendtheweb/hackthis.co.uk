@@ -19,12 +19,36 @@
     // FRIENDS LIST
     if (isset($_GET['friends'])):
 ?>
-    <a href='/user/<?=$profile->username;?>'><i class='icon-caret-left'></i> <?=$profile->username;?>'s profile</a>
+        <a href='/user/<?=$profile->username;?>'><i class='icon-caret-left'></i> <?=$profile->username;?>'s profile</a>
+        <br/><br/>
+        <ul class='users-list'>
+<?php
+        foreach($profile->friendsList as $friend):
+            if (isset($friend->image)) {
+                $gravatar = isset($friend->gravatar) && $friend->gravatar == 1;
+                $friend->image = profile::getImg($friend->image, 48, $gravatar);
+            } else
+                $friend->image = profile::getImg(null, 48);
+?>
+            <li>
+                <a href='/user/<?=$friend->username;?>'>
+                    <img src='<?=$friend->image;?>' width='100%' alt='<?=$friend->username;?> profile picture'/>
+                    <div>
+                        <span><?=$friend->username;?></span><br/>
+                        Score: <?=$friend->score;?><br/>
+                        <?=($friend->status)?'Friends':'';?>
+                    </div>
+                </a>
+            </li>
+<?php   endforeach; ?>
+        </ul>
 
 <?php
         require_once('footer.php');
         die();
-    endif;
+    endif; // End friends list
+
+    /* USERS PROFILE STARTS */
 ?>
     <article class='profile'>
 <?php if ($profile->friends):?>
@@ -160,7 +184,7 @@
                                     Score: <?=$friend->score;?><br/>
                                     <?=($friend->status)?'Friends':'';?>
                                 </figcaption>
-                            </firgure>
+                            </figure>
                         </li>
 <?php   endforeach; ?>
                     </ul>

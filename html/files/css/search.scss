@@ -6,9 +6,18 @@ ul.users-list {
         margin-right: 6px;
         float: left;
 
-        figure {
+        a {
             position: relative;
             margin-bottom: 2px;
+            color: $text;
+            display: block;
+
+            &:hover {
+                text-decoration: none;
+                div {
+                    background: $lighter_bg;
+                }
+            }
 
             img {
                 display: block;
@@ -18,9 +27,7 @@ ul.users-list {
                 left: 4px;
             }
 
-            /* HOVER STYLE BELOW BLOCK */
-
-            figcaption {
+            div {
                 width: auto;
                 height: 56px;
                 background: $light_bg;
@@ -29,11 +36,7 @@ ul.users-list {
                 padding: 5px 12px 6px 60px;
                 font-size: 0.9em;
 
-                &:hover {
-                    background: $lighter_bg;
-                }
-
-                a {
+                span {
                     font-weight: bold;
                     color: $white;
                 }
