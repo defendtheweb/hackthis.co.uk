@@ -19,6 +19,10 @@
     // FRIENDS LIST
     if (isset($_GET['friends'])):
 ?>
+        <div id="friends-search" class="mobile-hide">
+            <input placeholder="Search friends">
+            <i class="icon-search"></i>
+        </div>
         <a href='/user/<?=$profile->username;?>'><i class='icon-caret-left'></i> <?=$profile->username;?>'s profile</a>
         <br/><br/>
         <ul class='users-list'>

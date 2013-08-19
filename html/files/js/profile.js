@@ -75,4 +75,24 @@ $(function() {
             }
         });
     }
+
+
+    $('#friends-search input').on('keyup', function(e) {
+        if (e.which == 27 || e.keyCode == 27) {
+            $(this).val("");
+        }
+
+        var term = $(this).val().replace(/[^a-zA-Z 0-9]+/g,'');
+        if (term.length < 1) {
+            $('.users-list li').show();
+            return false;
+        }
+
+        var re = new RegExp(term, 'i');
+        $('.users-list li').each(function() {
+            var username = $(this).find('span').text();
+            if(!username.match(re))
+                $(this).hide();
+        });
+    });
 });
