@@ -11,7 +11,8 @@
     $minifier->add_file('highlight.css', 'css');
     $minifier->add_file('articles.css', 'css');
 
-    require_once('header.php');
+    // Set canonical link
+    $app->page->canonical = "https://www.hackthis.co.uk";
 
 
     $limit = 5;
@@ -26,6 +27,8 @@
     } else {
         $newsArticles = $app->articles->getArticles(0, $limit, $page);
     }
+    
+    require_once('header.php');
 ?>
                     <section class='news'>
 <?php

@@ -9,6 +9,9 @@
         <title>HackThis!!<?=$app->page->title?' - '.$app->page->title:'';?></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+        <?=isset($app->page->canonical)?'<link rel="canonical" href="'.$app->page->canonical.'"/>':'';?>
+        <?=isset($app->page->prev)?'<link rel="prev" href="'.$app->page->prev.'"/>':'';?>
+        <?=isset($app->page->next)?'<link rel="next" href="'.$app->page->next.'"/>':'';?>
 
         <link href='//fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 
