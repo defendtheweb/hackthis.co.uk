@@ -17,7 +17,7 @@
 	<h1 class='no-margin'><?=ucwords($level->title);?></h1>
 	<span class='dark'>Attempts: <?=$level->attempts;?>
 <?php if ($level->completed): ?>
-		&middot; Duration: <?=$app->utils->timeSince($level->started, true, $level->completed_time);?>
+		&middot; Duration: <?=$app->utils->timeBetween($level->started, $level->completed_time);?>
 <?php endif; ?>
 	</span>
 	<span class='hint--top' data-hint="This information is not public and only reflects&#10;the first time you completed the level."><i class='icon-info'></i></span><br/>

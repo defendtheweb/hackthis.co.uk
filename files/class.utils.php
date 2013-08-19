@@ -132,18 +132,13 @@
             return $dt->format($format);
         }
 
-        public function timeSince($date, $short=false, $date2=null) {
+        public function timeSince($date, $short=false) {
             $date = strtotime($date);
 
-            if (!$date2)
-                $diff = time() - $date;
-            else
-                $diff = strtotime($date2) - $date;
+            $diff = time() - $date;
             
             if (!$diff)
                 return "secs" . (!$short?' ago':'');
-
-            date('d-m-Y', $date);
 
             $isSameDay = (date('d-m-Y', $date) === date('d-m-Y'));
 
@@ -171,6 +166,24 @@
                     else
                         return date('F j, Y', $date);
                 }
+            }
+        }
+
+        public function timeBetween($date, $date2) {
+            $date = strtotime($date);
+            $diff = strtotime($date2) - $date;
+
+            if (!$diff || $diff < 60)
+                return "secs";
+            else if ($diff < 3600) {
+                $n = floor($diff/60);
+                return "{$n} min" . ($n==1?'':'s'); 
+            } else if ($diff < 86400) {
+                $n = floor($diff/3600);
+                return "{$n} hour" . ($n==1?'':'s'); 
+            } else {
+                $n = floor($diff/86400);
+                return "{$n} day" . ($n==1?'':'s'); 
             }
         }
 
