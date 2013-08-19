@@ -74,34 +74,6 @@
         <strong>Moderator</strong>
 <?php endif; ?>
 
-        <br/>
-        <ul class='profile-details clr'>
-<?php
-    echo $profile->printItem("Name", $profile->name);
-    if ($profile->show_email) { echo $profile->printItem("Email", $profile->email); }
-    echo $profile->printItem("Gender", ucfirst($profile->gender));
-    echo $profile->printItem("DOB", $profile->getDob());
-    echo $profile->printItem("Joined", $profile->joined, true);
-    echo $profile->printItem("Last seen", $profile->last_active, true);
-
-    if (count($profile->social)):
-?>
-            <li><ul class='social'>
-
-<?php
-        foreach($profile->social as $social):
-?>
-            <li><a class='hide-external' href='<?=$social['uri'];?>'><i class='icon-<?=$social['icon'];?>'></i></a></li>
-<?php
-        endforeach;
-?>
-            </ul></li>
-<?php
-    endif;
-?>
-        </ul>
-
-
         <section class='fluid clr'>
             <div class='col span_7 clr'>
                 <img src='<?=$profile->image;?>' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
@@ -212,6 +184,41 @@
             </div>
 
             <div class='col span_17 clr'>
+                <section class='profile-details row fluid'>
+                    <ul class='clr'>
+<?php
+    $profile->printItem("Score", $profile->score);
+    $profile->printItem("Posts", 1025);
+    $profile->printItem("<a href='faq.php#karma'>Karma</a>", 0);
+?>
+                    </ul>
+                    <ul class='clr'>
+<?php
+    $profile->printItem("Name", $profile->name);
+    if ($profile->show_email) { $profile->printItem("Email", $profile->email); }
+    $profile->printItem("Gender", $profile->gender, false, true);
+    $profile->printItem("DOB", $profile->getDob());
+    $profile->printItem("Joined", $profile->joined, true);
+    $profile->printItem("Last seen", $profile->last_active, true);
+?>
+                    </ul>
+<?php                    
+    if (count($profile->social)):
+?>               
+                    <ul class='social clr'>
+
+<?php
+        foreach($profile->social as $social):
+?>
+                        <li><a class='hide-external' href='<?=$social['uri'];?>'><i class='icon-<?=$social['icon'];?>'></i></a></li>
+<?php
+        endforeach;
+?>
+                    </ul>
+<?php
+    endif;
+?>
+                </section>
 <?php
     if (isset($profile->about))
         echo $profile->about;

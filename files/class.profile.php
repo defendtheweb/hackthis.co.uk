@@ -155,16 +155,20 @@
             return $return;
         }
 
-        function printItem($key, $value, $time=false) {
-                        if (!$key || !$value)
+        function printItem($key, $value, $time=false, $uc=false) {
+            if (!$key || !isset($value) || $value === false)
                 return;
 
-                        if ($time) {
+            if ($time) {
                 $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $this->app->utils->timeSince($value) . '</time>';
+            } else if (is_numeric($value)) {
+                $value = number_format($value);
             } else {
+                if ($uc)
+                    $value = ucfirst($value);
                 $value = $this->app->parse($value, false, false);
             }
-            return "                    <li><span class='strong'>{$key}:</span> {$value}</li>\n";
+            echo "                    <li><span class='strong'>{$value}</span><span class='small'>{$key}</span></li>\n";
         }
 
         public function getDob() {
@@ -217,11 +221,11 @@
         }
 
         public static function getMusic($id) {
-            
+            global $app;
             if (!isset($id))
                 return false;
 
-            $lfm = $this->app->config('lastfm');
+            $lfm = $app->config('lastfm');
             $uri = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user={$id}&limit=5&api_key={$lfm['public']}&format=json";
 
             $data = @file_get_contents($uri);

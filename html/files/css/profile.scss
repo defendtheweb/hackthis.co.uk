@@ -84,37 +84,6 @@
                 }
             }
         }
-
-        &.profile-details {
-            margin-bottom: 8px;
-            > li {
-                float: left;
-
-                &:not(:last-child):after {
-                    margin: 0 6px;
-                    content: '·';
-                }
-            }
-
-            &.social {
-                margin-top: 8px;
-                li {
-                    float: left;
-                    margin-right: 2px;
-                    font-size: 1.1em;
-                    
-                    a {
-                        padding: 0 2px;
-                        color: $text_dark;
-
-                        &:hover {
-                            text-decoration: none;
-                            color: $white;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     .profile-feed {
@@ -140,6 +109,52 @@
                 &:hover {
                     text-decoration: none;
                     color: $red;
+                }
+            }
+        }
+    }
+
+    .profile-details {
+        background: $bg;
+        padding: 8px;
+
+        ul {
+            &:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            > li {
+                float: left;
+
+                span {
+                    display: block;
+
+                    &.strong {
+                        color: $white;
+                    }
+                }
+
+                &:not(:last-child) {
+                    margin-right: 18px;
+                }
+            }
+
+            &.social {
+                margin-top: 8px;
+                li {
+                    float: left;
+                    margin-right: 2px;
+                    font-size: 1.1em;
+                    
+                    a {
+                        padding: 0 2px;
+                        color: $text_dark;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: $white;
+                        }
+                    }
                 }
             }
         }
