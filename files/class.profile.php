@@ -119,7 +119,8 @@
                         break;
                     case 'medal':
                         $icon = 'trophy colour-' . $item->colour;
-                        $string = "Awarded <div class='medal medal-{$item->colour}'>$item->label</div>";
+                        $item->label = strtolower($item->label);
+                        $string = "Awarded <a href='/medals.php#{$item->label}' class='medal medal-{$item->colour}'>$item->label</a>";
                         break;
                     case 'article':
                         $icon = 'books';

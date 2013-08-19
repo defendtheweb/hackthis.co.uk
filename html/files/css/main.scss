@@ -334,7 +334,7 @@ blockquote {
 
     @include border-radius();
 
-    color: #000000;
+    color: $black;
     display: inline-block;
     font-size: 9.75px;
     font-weight: bold;
@@ -344,6 +344,10 @@ blockquote {
     white-space: nowrap;
     position: relative;
     top: -1px;
+
+    &:hover {
+        text-decoration: none;
+    }
 
     &.medal-bronze {
         background-color: #693909;

@@ -147,6 +147,13 @@
 
     .profile-extra {
         margin-top: 10px;
+
+        .medal a {
+            color: $black;
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .profile-music {

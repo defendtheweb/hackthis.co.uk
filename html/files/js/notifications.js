@@ -7,7 +7,7 @@ $(function() {
     '        {{else type == "friend"}}'+
     '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="dark">and</span> <a href="/user/${username_2}">${username_2}</a>'+
     '        {{else type == "medal"}}'+
-    '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php">${label}</a>'+
+    '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php#${label.toLowerCase()}">${label}</a>'+
     '        {{else type == "comment"}}'+
     '            <i class="icon-comments"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "favourite"}}'+
@@ -90,7 +90,7 @@ $(function() {
                             '    {{else type == "friend_accepted"}}'+
                             '            <a href="/user/${username}">${username}<a/> accepted your friend request'+
                             '    {{else type == "medal"}}'+
-                            '            You have been awarded <a href="/medals/"><div class="medal medal-${colour}">${label}</div></a><br/>'+
+                            '            You have been awarded <a href="/medals.php#${label.toLowerCase()}"><div class="medal medal-${colour}">${label}</div></a><br/>'+
                             '    {{else type == "comment_reply"}}'+
                             '            <a href="/user/${username}">${username}<a/> replied to your comment on <a href="${slug}">${title}</a><br/>'+
                             '    {{else type == "comment_mention"}}'+

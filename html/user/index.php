@@ -146,7 +146,7 @@
 <?php
         foreach ($profile->medals as $medal):
 ?>
-                        <li class="medal medal-<?=$medal->colour;?>"><?=$medal->label;?></li>
+                        <li class="medal medal-<?=$medal->colour;?>"><a href='/medals.php#<?=strtolower($medal->label);?>'><?=$medal->label;?></a></li>
 <?php
         endforeach;
 ?>
