@@ -17,7 +17,7 @@
     endif;
 
     // FRIENDS LIST
-    if (isset($_GET['friends'])):
+    if (isset($_GET['friends']) && count($profile->friendsList)):
 ?>
         <div id="friends-search" class="mobile-hide">
             <input placeholder="Search friends">
