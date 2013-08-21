@@ -146,10 +146,10 @@
         public function getText($event) {
             if ($event->type === 'comment_reply') {
                 $icon = 'comments';
-                $text = $this->app->utils->username_link($event->username) . ' replied to your comment on ';
+                $text = $this->app->utils->userLink($event->username) . ' replied to your comment on ';
             } else if ($event->type === 'comment_mention') {
                 $icon = 'comments';
-                $text = $this->app->utils->username_link($event->username) . ' mentioned you in a comment on ';
+                $text = $this->app->utils->userLink($event->username) . ' mentioned you in a comment on ';
             } else if ($event->type === 'article') {
                 $icon = 'books';
                 $text = 'Your article has been published ';
@@ -160,12 +160,12 @@
             } else if ($event->type === 'friend') {
                 $icon = 'user';
                 if ($event->status == 0)
-                    $text = $this->app->utils->username_link($event->username) . ' sent you a friend request';
+                    $text = $this->app->utils->userLink($event->username) . ' sent you a friend request';
                 else
-                    $text = 'You accepted a friend request from ' . $this->app->utils->username_link($event->username);
+                    $text = 'You accepted a friend request from ' . $this->app->utils->userLink($event->username);
             } else if ($event->type === 'friend_accepted') {
                 $icon = 'addfriend';
-                $text = $this->app->utils->username_link($event->username) . ' accepted your friend request';
+                $text = $this->app->utils->userLink($event->username) . ' accepted your friend request';
             }
 
             if (isset($event->slug)) {

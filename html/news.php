@@ -55,7 +55,7 @@
                                 <h1><a href='<?=$article->uri;?>'><?=$article->title;?></a></h1>
                                 <time pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
                                 <?php if ($article->updated > 0): ?>&#183; updated <time pubdate datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
-                                <?php if (isset($article->username)) { echo "&#183; by {$app->utils->username_link($article->username)}"; }?>
+                                <?php if (isset($article->username)) { echo "&#183; by {$app->utils->userLink($article->username)}"; }?>
 
                                 <?php
                                     $share = new stdClass();

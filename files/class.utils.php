@@ -53,7 +53,7 @@
             return $result;
         }
 
-        public function username_link($username) {
+        public function userLink($username) {
             return "<a href='/user/{$username}'>{$username}</a>";
         }
 
