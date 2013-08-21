@@ -28,6 +28,12 @@ html:not(.no-js) a[href^="https://"]:not(.hide-external):not(.stop-external):aft
 
 form {
     @include clearfix();
+
+    fieldset {
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
 }
 
 label {
