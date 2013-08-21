@@ -45,7 +45,8 @@ CREATE TABLE users_profile (
 	`country` tinyint(3) UNSIGNED,
 	`dob` DATE,
 	`show_dob` tinyint(1),
-	`gender` enum('male','female'),
+	`gender` enum('male','female','alien'),
+	`show_gender` tinyint(1),
 	`show_email` tinyint(1),
 	`website` varchar(256),
 	`about` text,
@@ -548,11 +549,6 @@ CREATE TRIGGER articles_update_audit BEFORE UPDATE ON articles FOR EACH ROW
 		IF OLD.thumbnail <> NEW.thumbnail THEN
 			INSERT INTO articles_audit (article_id, draft, field, old_value, new_value) 
 				VALUES(NEW.article_id, 0, 'thumbnail', OLD.thumbnail, NEW.thumbnail);
-		END IF;
-
-		IF OLD.featured <> NEW.featured THEN
-			INSERT INTO articles_audit (article_id, draft, field, old_value, new_value) 
-				VALUES(NEW.article_id, 0, 'featured', OLD.featured, NEW.featured);
 		END IF;
 
 	END;
