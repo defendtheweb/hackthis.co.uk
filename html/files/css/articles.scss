@@ -7,16 +7,21 @@ article.index {
     }
 }
 
+article.body {
+    div.contents {
+        float: right;
+        background: $bg;
+        padding: 8px;
+        margin-left: 16px;
+        min-width: 30%;
 
-div.contents {
-    float: right;
-    background: $bg;
-    padding: 8px;
-    margin-left: 16px;
-    min-width: 30%;
+        ul {
+            list-style: none;
+        }
+    }
 
-    ul {
-        list-style: none;
+    b, strong, .strong {
+        color: $white;
     }
 }
 
