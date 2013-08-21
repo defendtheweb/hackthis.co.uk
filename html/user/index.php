@@ -63,9 +63,15 @@
         <a href='#' class='button right acceptfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Accept</a>
 <?php else: ?>
         <a href='#' class='button right addfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Add friend</a>
-<?php endif; ?>
+<?php
+    endif;
 
+    if ($profile->owner):
+?>
+        <a href='/settings/' class='button right'><i class='icon-edit'></i> Edit profile</a>
+<?php else: ?>
         <a href='/inbox/compose?to=<?=$profile->username;?>' class='messages-new button right' data-to="<?=$profile->username;?>"><i class='icon-envelope-alt'></i> PM user</a>
+<?php endif; ?>
 
         <h1 class='lower'><?=$profile->username;?></h1>
 <?php if ($profile->admin): ?>
@@ -188,15 +194,16 @@
                     <ul class='clr'>
 <?php
     $profile->printItem("Score", $profile->score);
-    $profile->printItem("Posts", 1025);
+    $profile->printItem("<a href='#'>Posts</a>", 1025);
+    $profile->printItem("<a href='#'>Articles</a>", 2);
     $profile->printItem("<a href='faq.php#karma'>Karma</a>", 0);
 ?>
                     </ul>
                     <ul class='clr'>
 <?php
-    $profile->printItem("Name", $profile->name);
+    if ($profile->show_name) { $profile->printItem("Name", $profile->name); }
     if ($profile->show_email) { $profile->printItem("Email", $profile->email); }
-    $profile->printItem("Gender", $profile->gender, false, true);
+    if ($profile->show_gender) { $profile->printItem("Gender", $profile->gender, false, true); }
     $profile->printItem("DOB", $profile->getDob());
     $profile->printItem("Joined", $profile->joined, true);
     $profile->printItem("Last seen", $profile->last_active, true);
