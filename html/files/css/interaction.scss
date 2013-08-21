@@ -70,6 +70,11 @@ select {
         width: 50%;
     }
 
+    &.tiny {
+        width: 25%;
+        min-width: 150px;
+    }
+
     &:focus {
         border-color: $lighter_bg;
         outline: none;
