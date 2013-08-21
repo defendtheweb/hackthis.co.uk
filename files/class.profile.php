@@ -79,8 +79,10 @@
             $st->execute(array(':uid' => $this->uid, ':user' => $this->app->user->uid));
             $this->friendsList = $st->fetchAll();
 
-            if (isset($this->about))
+            if (isset($this->about)) {
+                $this->about_plain = $this->about;
                 $this->about = $this->app->parse($this->about);
+            }
 
             $this->lastfm = $this->app->parse($this->lastfm,false);
 

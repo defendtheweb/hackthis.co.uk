@@ -367,6 +367,67 @@
             return (isset($this->username)) ? $this->username : '';
         }
 
+        public function update($changes) {
+            if (!count($changes))
+                return false;
+
+            if (!$this->app->checkCSRFKey("settings", $changes['token']))
+                return "Invalid request";
+
+            $updates = array();
+
+            // Name
+            if ($changes['name'])
+                $updates['name'] = $changes['name'];
+            $updates['show_name'] = (isset($changes['display_name'])?'1':'0');
+
+            // Email
+            if ($changes['email'] && $this->app->utils->check_email($changes['email'])) {
+                //$updates['email'] = $changes['email'];
+            } else {
+                return "Invalid email address";
+            }
+            $updates['show_email'] = (isset($changes['display_email'])?'1':'0');
+
+            // Gender
+            switch($changes['gender']) {
+                case 'm': $updates['gender'] = 'male'; break;
+                case 'f': $updates['gender'] = 'female'; break;
+                case 'a': $this->app->awardMedal(10, $this->uid); $updates['gender'] = 'alien'; break;
+                default: return "Invalid gender";
+            }
+            $updates['show_gender'] = (isset($changes['display_gender'])?'1':'0');
+
+            // About
+            if ($changes['about'])
+                $updates['about'] = $changes['about'];
+
+            // INSERT IGNORE to create profile
+            $st = $this->app->db->prepare('INSERT IGNORE INTO users_profile (`user_id`) VALUES (:uid)');
+            $st->execute(array(':uid' => $this->uid));
+
+            // Build query
+            $fields = '';
+            $values = array();
+
+            print_r($updates);
+            foreach ($updates as $field=>$update) {
+                $fields .= "`$field` = ?,";
+                $values[] = $update;
+            }
+
+            $fields = rtrim($fields, ',');
+
+            $query  = "UPDATE users_profile SET ".$fields;
+            $query .= " WHERE user_id=?";
+            $values[] = $this->uid;
+
+            $st = $this->app->db->prepare($query);
+            $res = $st->execute($values);
+
+            return true;
+        }
+
         public function setImagePath($path) {
             if ($path === 'gravatar') {
                 $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `gravatar`) VALUES (:uid, 1) ON DUPLICATE KEY UPDATE gravatar = 1');

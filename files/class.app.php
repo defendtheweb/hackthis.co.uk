@@ -70,8 +70,28 @@
             }
         }
 
+        public function generateCSRFKey($key) {
+            $token = base64_encode( openssl_random_pseudo_bytes(16));
+            $_SESSION[ 'csrf_' . $key ] = $token;
+            return $token;
+        }
+
+        public function checkCSRFKey($key, $value) {
+            if (!isset($_SESSION['csrf_' . $key]))
+                return false;
+            if (!$value)
+                return false;
+
+            if ($_SESSION['csrf_' . $key] !== $value)
+                return false;
+
+            unset($_SESSION['csrf_' . $key]); 
+            return true;
+        }
+
+
         public function awardMedal($medalId, $uid) {
-            $st = $this->db->prepare('INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (:uid, :medalId)');
+            $st = $this->db->prepare('INSERT IGNORE INTO users_medals (`user_id`, `medal_id`) VALUES (:uid, :medalId)');
             $result = $st->execute(array(':medalId' => $medalId, ':uid' => $uid));
 
             return (bool) $result;
