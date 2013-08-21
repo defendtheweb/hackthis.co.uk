@@ -22,9 +22,27 @@ INSERT INTO users_priv (`user_id`, `pub_priv`) VALUES (2, 2);
 -- Medals
 INSERT INTO medals_colours (`reward`, `colour`) VALUES (100, 'bronze');
 INSERT INTO medals_colours (`reward`, `colour`) VALUES (200, 'silver');
-INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 1, 'Test');
-INSERT INTO medals (`label`, `colour_id`, `description`) VALUES ('Test', 2, 'Test');
-INSERT INTO medals (`medal_id`, `label`, `colour_id`, `description`) VALUES (11, 'Cheese', 1, 'Upload a profile picture');
+INSERT INTO medals_colours (`reward`, `colour`) VALUES (500, 'gold');
+INSERT INTO medals_colours (`reward`, `colour`) VALUES (50, 'green');
+INSERT INTO `medals` (`medal_id`, `colour_id`, `label`, `description`) VALUES
+(1, 1, 'Score', 'Earn 1000 points'),
+(2, 2, 'Score', 'Earn 2500 points'),
+(3, 3, 'Score', 'Earn 5000 points'),
+(4, 1, 'Visits', 'Login everyday for a week'),
+(5, 2, 'Visits', 'Login everyday for a fortnight'),
+(6, 3, 'Visits', 'Login everyday for a month'),
+(7, 2, 'Veteran', 'Member for 1 year'),
+(10, 1, 'Alien', 'Become one of the aliens'),
+(11, 1, 'Cheese', 'Upload a profile image'),
+(12, 1, 'Veteran', 'Member for a month'),
+(13, 2, 'Journalist', 'Write a news post and get it published'),
+(14, 2, 'Writer', 'Write an article and get it published'),
+(15, 4, 'helper', 'Make a considerable effort to help the site'),
+(16, 1, 'Forum', 'Post 50 forum messages'),
+(17, 2, 'Forum', 'Post 250 forum messages'),
+(18, 3, 'Forum', 'Post 1000 forum messages'),
+(19, 4, 'Donator', 'Make a donation greater than &pound;5');
+
 
 -- Award medal
 INSERT INTO users_medals (`user_id`, `medal_id`) VALUES (1, 1);
