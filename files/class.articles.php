@@ -198,7 +198,6 @@
             foreach ($changes as $field=>$change) {
                 $fields .= "`$field` = ?,";
                 $values[] = $change;
-                echo 'hi';
             }
 
             $fields = rtrim($fields, ',');
