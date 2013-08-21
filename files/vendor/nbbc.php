@@ -1168,7 +1168,7 @@ class BBCode {
                 function SetDefaultRules() { $this->tag_rules = $this->defaults->default_tag_rules; }
                 function SetWikiURL($url) { $this->wiki_url = $url; }
                 function GetWikiURL($url) { return $this->wiki_url; }
-                function GetDefaultWikiURL() { return '/?page='; }
+                function GetDefaultWikiURL() { return "/articles/"; }
                 function SetLocalImgDir($path) { $this->local_img_dir = $path; }
                 function GetLocalImgDir() { return $this->local_img_dir; }
                 function GetDefaultLocalImgDir() { return "img"; }
@@ -1212,7 +1212,7 @@ class BBCode {
                                 }
                                 function Wikify($string) {
                                     return rawurlencode(str_replace(" ", "-",
-                                                        trim(preg_replace("/[!?;@#\$%\\^&*<>=+`~\\x00-\\x20_-]+/", "", $string))));
+                                                        trim(preg_replace("/[!?;@#\$%\\^&*<>=+`~\\x00-\\x20_-]+/", "-", $string))));
                                 }
                                 function IsValidURL($string, $email_too = true) {
                                     if (preg_match("/^
