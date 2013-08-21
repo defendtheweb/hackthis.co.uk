@@ -200,6 +200,10 @@ header .advert {
 table {
     width: 100%;
 
+    thead {
+        color: white;
+    }
+
     td, th {
         padding: 4px;
     }
