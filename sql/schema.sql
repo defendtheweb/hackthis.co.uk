@@ -39,6 +39,7 @@ CREATE TABLE users_levels (
 CREATE TABLE users_profile (
 	`user_id` int(7) NOT NULL,
 	`name` varchar(32),
+	`show_name` tinyint(1),
 	`img` varchar(32),
 	`gravatar` tinyint(1) DEFAULT 0,
 	`country` tinyint(3) UNSIGNED,
@@ -258,7 +259,6 @@ CREATE TABLE articles (
 	`thumbnail` varchar(32), 
 	`submitted` timestamp DEFAULT CURRENT_TIMESTAMP,
 	`updated` timestamp,
-	`featured` int(1),
 	`views` int(5) DEFAULT 0,
 	PRIMARY KEY (`article_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
