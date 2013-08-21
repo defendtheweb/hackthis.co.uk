@@ -140,6 +140,13 @@ CREATE TABLE users_feed (
 	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE users_donations (
+	`user_id` int(7) NOT NULL,
+	`amount` DECIMAL(6,2),
+	`time` timestamp DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
 /*
 	MEDALS
 */
