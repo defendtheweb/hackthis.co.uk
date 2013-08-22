@@ -232,8 +232,8 @@
                         $oauth_id = $this->app->db->lastInsertId();
 
                         // Create user
-                        $st = $this->app->db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`)
-                                VALUES (:u, :oid, :email)');
+                        $st = $this->app->db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`, `verfied`)
+                                VALUES (:u, :oid, :email, 1)');
                         $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
                         if (!$result) {
                             $this->login_error = 'Error registering';
