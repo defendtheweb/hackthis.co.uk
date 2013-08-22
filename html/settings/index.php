@@ -18,11 +18,11 @@
 
     $values = array();
     $values['name'] = htmlspecialchars($profile->name);
-    $values['display_name'] = ($profile->show_name || $profile->show_name === null)?'checked':'';
+    $values['display_name'] = $profile->show_name?'checked':'';
     $values['email'] = htmlspecialchars($profile->email);
     $values['display_email'] = $profile->show_email?'checked':'';
     $values['gender'] = $profile->gender;
-    $values['display_gender'] = ($profile->show_gender || $profile->show_gender === null)?'checked':'';
+    $values['display_gender'] = $profile->show_gender ?'checked':'';
     $values['dob'] = isset($profile->dob)?'value="'.date('d/m/Y', strtotime($profile->dob)).'"':'';
     $values['show_dob'] = $profile->show_dob;
     $values['profile'] = isset($profile->about_plain)?$profile->about_plain:'';
@@ -56,10 +56,10 @@
     }
 
     require_once('header.php');
-?>
 
+    $tab = 'profile';
+    include('elements/tabs_settings.php');
 
-<?php
     if (isset($updated)) {
         $app->utils->message($updated);
     } else if (isset($_GET['done'])) {

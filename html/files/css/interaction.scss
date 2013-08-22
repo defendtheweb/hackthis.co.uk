@@ -294,6 +294,45 @@ a.icon-hover {
     }
 }
 
+
+/* TABS */
+ul.tabs {
+    margin-bottom: 16px;
+    @include clearfix();
+    font-size: 1em;
+    background: $bg;
+
+    li {
+        float: left;
+        margin-right: 2px;
+        list-style: none;
+
+        &.right {
+            float: right;
+            margin-left: 2px;
+            margin-right: 0px;
+        }
+
+        a {
+            display: block;
+            padding: 3px 12px;
+            color: $text;
+
+            &:hover {
+                background: $light_bg;
+                color: $white;
+                text-decoration: none;
+            }
+        }
+
+        &.active a {
+            color: $white;
+            background: $lighter_bg;
+        }
+    }
+}
+
+
 /* IMAGES */
 .thumbnail {
     background: $bg;

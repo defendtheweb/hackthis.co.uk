@@ -22,6 +22,9 @@
 
     require_once('header.php');
 
+    $tab = 'image';
+    include('elements/tabs_settings.php');
+
     if (isset($_GET['done'])):
 ?>
     <div class='msg msg-good'>
