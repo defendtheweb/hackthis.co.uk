@@ -6,11 +6,15 @@
             $this->app = $app;
         }
 
-        public function parse($text, $bbcode=true, $mentions=true) {
+        public function parse($text, $bbcode=true, $mentions=true, $twitterfy=true) {
             if ($bbcode) {
                 $text = $this->app->bbcode->Parse($text);
                 if ($mentions) {
                     $text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
+                }
+
+                if ($twitterfy) {
+                    $text = preg_replace_callback("/\[tweet\](.*?)\[\/tweet\]/is", array($this, 'twitterfy_callback'), $text);
                 }
             } else {
                 //$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
@@ -32,6 +36,33 @@
                 return "<a href='/user/{$res->username}'>{$res->username}</a>";
 
             return $matches[0];
+        }
+
+        private function twitterfy_callback($matches) {
+            return $this->twitterfy($matches[1]);
+        }
+
+        public function twitterfy($id) {
+            if (strstr($id, '/')) {
+                $id = basename($id);
+            }
+
+            $file = 'tweet_'.$id;
+            $cache = $this->app->cache->get($file);
+            if ($cache)
+                return $cache;
+
+            $uri = "https://api.twitter.com/1/statuses/oembed.json?id={$id}";
+            $content = @file_get_contents($uri);
+            if (!$content) {
+                return false;
+            }
+            $details = json_decode($content);
+            $html = $details->html;
+
+            $this->app->cache->set($file, $html);
+
+            return $html;
         }
 
         public function repairUri($uri) {
