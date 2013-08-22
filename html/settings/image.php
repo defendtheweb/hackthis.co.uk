@@ -8,6 +8,7 @@
     $custom_css = array('settings.scss');
     require_once('init.php');
 
+    $app->page->title = 'Settings - Image';
     if ((isset($_GET['gravatar']) || isset($_GET['upload']) || isset($_GET['default'])) && !isset($_GET['done'])) {
         if (isset($_GET['gravatar']))
             $app->user->setImagePath('gravatar');

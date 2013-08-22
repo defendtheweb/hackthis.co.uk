@@ -174,7 +174,7 @@
         }
 
         public function getDob() {
-            if (!$this->show_dob)
+            if (!$this->show_dob || !$this->dob)
                 return false;
 
             $dob = strtotime($this->dob);

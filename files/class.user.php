@@ -402,6 +402,15 @@
             if ($changes['about'])
                 $updates['about'] = $changes['about'];
 
+            if ($changes['dob']) {
+                $date = DateTime::createFromFormat("d/m/Y", $changes['dob']);
+                if ($date == false)
+                    return "Invalid date format";
+                $updates['dob'] = $date->format('Y-m-d');
+            }
+            if ($changes['show_dob'] === '0' || $changes['show_dob'] === '1' || $changes['show_dob'] === '2')
+                $updates['show_dob'] = $changes['show_dob'];
+
             // INSERT IGNORE to create profile
             $st = $this->app->db->prepare('INSERT IGNORE INTO users_profile (`user_id`) VALUES (:uid)');
             $st->execute(array(':uid' => $this->uid));
