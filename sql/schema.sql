@@ -10,6 +10,7 @@ CREATE TABLE users (
 	`password` varchar(64),
 	`oauth_id` int(7),
 	`email` varchar(128) NOT NULL,
+	`verified` tinyint(1) NOT NULL DEFAULT 0,
 	`score` mediumint(6) NOT NULL DEFAULT 0,
 	`status` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`user_id`),
@@ -343,6 +344,14 @@ CREATE TRIGGER insert_user AFTER INSERT ON users FOR EACH ROW
 	BEGIN
 		INSERT INTO users_activity (`user_id`) VALUES (NEW.user_id);
 		CALL user_feed(NEW.user_id, 'join', NULL);
+	END;
+
+DROP TRIGGER IF EXISTS update_user;
+CREATE TRIGGER update_user BEFORE UPDATE ON users FOR EACH ROW
+	BEGIN
+		IF OLD.email <> NEW.email THEN
+			SET NEW.verified = 0;
+		END IF;
 	END;
 
 DROP TRIGGER IF EXISTS delete_user;
