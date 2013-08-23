@@ -51,7 +51,7 @@
             $result = $st->fetchAll();
 
             // Loop items, get details and create images
-            foreach ($result as &$res) {
+            foreach ($result as $key=>&$res) {
                 if ($res->type == 'friend') {
                     // status
                     $st = $this->app->db->prepare("SELECT status
@@ -97,7 +97,12 @@
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
-                    $st->fetch();
+                    $status = $st->fetch();
+
+                    if ($status === false) {
+                        unset($result[$key]);
+                        continue;
+                    }
 
                     $res->slug = "/{$res->slug}";
                 }
