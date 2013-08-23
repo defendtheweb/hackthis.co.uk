@@ -66,7 +66,7 @@
         $app->utils->message("Profile updated, <a href='/user/".$app->user->username."'>view here</a>", "good");
     }
 ?>
-
+    <h1>Profile</h1>
     <form action="?save" method="POST">
         <fieldset>
             <label for="name">Real Name:</label><br>
