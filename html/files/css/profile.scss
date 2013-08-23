@@ -257,7 +257,7 @@ ul.users-list {
         margin-right: 6px;
         float: left;
 
-        a {
+        > a, > div {
             position: relative;
             margin-bottom: 2px;
             color: $text;
@@ -290,6 +290,23 @@ ul.users-list {
                 span {
                     font-weight: bold;
                     color: $white;
+
+                    &.icons {
+                        display: block;
+                        margin-top: 8px;
+                        text-align: center;
+                        a {
+                            margin: 0 3px;
+                            &:hover {
+                                text-decoration: none;
+                                color: $bright_green;
+
+                                .icon-cross {
+                                    color: red;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

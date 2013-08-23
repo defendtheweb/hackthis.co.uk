@@ -3,4 +3,5 @@ html/.htaccess
 html/files/css/min
 html/files/js/min
 files/uploads
+files/cache
 html/files/vendor/slir/cache

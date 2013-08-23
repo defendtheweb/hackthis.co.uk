@@ -31,7 +31,7 @@ $(function() {
 
     });
 
-    $('.profile').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
+    $('body').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
         e.preventDefault();
         var $this = $(this);
 
@@ -42,7 +42,9 @@ $(function() {
         uri += $(this).attr('data-uid');
 
         $.getJSON(uri, function(data) {
-            if (data.status) {
+            if ($this.hasClass('removefriend-hide')) {
+                $this.closest('li').fadeOut();
+            } else if (data.status) {
                 if ($this.hasClass('addfriend')) {
                     $this.html('Pending').removeClass('addfriend').addClass('button-disabled');
                 } else if ($this.hasClass('acceptfriend')) {
@@ -50,7 +52,6 @@ $(function() {
                 } else if ($this.hasClass('removefriend')) {
                     $this.html('<i class="icon-addfriend"></i> Add friend').removeClass('removefriend button-blank').addClass('addfriend');
                 }
-
             }
         });
     });
