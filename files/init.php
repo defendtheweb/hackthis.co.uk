@@ -31,7 +31,8 @@
 	    }		
     } else {
         array_push($minifier->custom_js, 'guest.js');
-        array_push($minifier->custom_css, 'guest.css');
+        array_push($minifier->custom_js, 'jquery.transit.min.js');
+        array_push($minifier->custom_css, 'guest.scss');
 
         if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
 	        require_once('error.php');

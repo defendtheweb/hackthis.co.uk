@@ -25,19 +25,19 @@
                     <section class='row features'>
                         <div class='col span_8'>
                             <h2>Challenges</h2>
-                            <i class='icon-flag'></i><br/>
-                            Test your skills with 30+ levels,<br/>
-                            covering all aspects of security
+                            <div class='circle'><i class='icon-flag'></i></div><br/>
+                            <span class='blurb'>Test your skills with 30+ levels,<br/>
+                            covering all aspects of security</span>
                         </div>
                         <div class='col span_8'>
                             <h2>Community</h2>
-                            <i class='icon-domain2'></i><br/>
-                            Join in with 150,000+<br/>like-minded members
+                            <div class='circle'><i class='icon-domain2'></i></div><br/>
+                            <span class='blurb'>Join in with 150,000+<br/>like-minded members</span>
                         </div>
                         <div class='col span_8'>
                             <h2>Articles</h2>
-                            <i class='icon-insertpictureleft'></i><br/>
-                            Learn from our online<br/>collection of articles
+                            <div class='circle'><i class='icon-insertpictureleft'></i></div><br/>
+                            <span class='blurb'>Learn from our online<br/>collection of articles</span>
                         </div>
                     </section>
                     <p>

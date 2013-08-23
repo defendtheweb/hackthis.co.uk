@@ -277,36 +277,6 @@ table {
 }
 
 
-/* Index page site feature bubbles */
-section.features {
-    margin: 15px 2px;
-    text-align: center;
-    color: $white;
-
-    .col {
-        margin: 15px 0;
-
-        i {
-            display: inline-block;
-            height: 108px;
-            width: 108px;
-
-            background: darken($green, 10%);
-            @include border-radius(50%);
-            font-size: 5em;
-            padding: 19px;
-            cursor: default;
-            @include transition(background-color, 200ms, ease-in-out);
-            margin-bottom: 8px;
-
-            &:hover {
-                background: $green;
-            }
-        }
-    }
-}
-
-
 /* QUOTES */
 blockquote {
     border-left: 5px solid $light_bg;

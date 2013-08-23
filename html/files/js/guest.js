@@ -1,6 +1,14 @@
 var loggedIn = false;
 
 $(function() {
+    // Animate stuff
+    var delay = 150;
+    for (i = 0; i < 3; i++) {
+        $($('.features h2')[i]).transition({ opacity: 1, delay: (i*delay) }, 2000);
+        $($('.features .circle')[i]).transition({ opacity: 1, scale: 1, delay: (300+i*delay) }, 500, 'snap');
+        $($('.features .blurb')[i]).transition({ opacity: 1, delay: (i*delay) }, 2000);
+    }
+
     var tests = {
         user: function (val) {
             return val.length > 3 &&
