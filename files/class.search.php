@@ -66,6 +66,7 @@
                          HAVING matches > 0
                        ) search
                     ON search.article_id = a.article_id
+                    WHERE a.category_id != 0
                     GROUP BY a.article_id
                     ORDER BY search.`matches` DESC, `submitted` DESC
                     LIMIT 5";
@@ -84,7 +85,7 @@
             if (strlen($term) <= 3)
                 return false;
 
-            $like = "%{$term}%";
+            $like = "{$term}%";
 
             $sql = 'SELECT username, users.score, profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`, users_friends.status
                     FROM users
@@ -93,8 +94,8 @@
                     LEFT JOIN users_friends
                     ON (users_friends.user_id = users.user_id AND users_friends.friend_id = :uid) OR (users_friends.user_id = :uid AND users_friends.friend_id = users.user_id)
                     WHERE username LIKE :like OR email = :term
-                    ORDER BY username DESC
-                    LIMIT 32';
+                    ORDER BY username ASC
+                    LIMIT 8';
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':like' => $like, ':term' => $term, ':uid' => $this->app->user->uid));
