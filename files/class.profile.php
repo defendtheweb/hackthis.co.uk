@@ -66,7 +66,7 @@
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
 
-            $st = $this->app->db->prepare('SELECT u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
+            $st = $this->app->db->prepare('SELECT u.user_id as uid, u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users_friends as friends
                     INNER JOIN users u
                     ON u.user_id = IF(friends.user_id = :uid, friends.friend_id, friends.user_id)
