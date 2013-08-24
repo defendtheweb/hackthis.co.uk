@@ -6,7 +6,7 @@ USE hackthis;
 */
 CREATE TABLE users (
 	`user_id` int(7) NOT NULL AUTO_INCREMENT,
-	`username` varchar(16) NOT NULL,
+	`username` varchar(32) NOT NULL,
 	`password` varchar(64),
 	`oauth_id` int(7),
 	`email` varchar(128) NOT NULL,
@@ -239,13 +239,55 @@ CREATE TABLE pm_users (
 
 
 /*
+	FORUM
+*/
+CREATE TABLE forum_sections (
+	`section_id` int(3) NOT NULL AUTO_INCREMENT,
+	`parent_id` int(3),
+	`title` varchar(32),
+	`slug` varchar(255),
+	`description` text,
+	PRIMARY KEY (`section_id`),
+	UNIQUE (`slug`)
+) ENGINE=InnoDB;
+
+CREATE TABLE forum_threads (
+	`thread_id` int(6) NOT NULL AUTO_INCREMENT,
+	`section_id` int(3) NOT NULL,
+	`title` varchar(128) NOT NULL,
+	`slug` varchar(255),
+	`owner` int(7), 
+	`deleted` tinyint(1) DEFAULT 0,
+	`closed` tinyint(1) DEFAULT 0,
+	`sticky` tinyint(1) DEFAULT 0,
+	PRIMARY KEY (`thread_id`),
+	UNIQUE (`slug`),
+    FOREIGN KEY (`owner`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`section_id`) REFERENCES forum_sections (`section_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE forum_posts (
+	`post_id` int(6) NOT NULL AUTO_INCREMENT,
+	`thread_id` int(6) NOT NULL,
+	`body` TEXT  NOT NULL,
+	`author` int(7), 
+	`posted` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`updated` timestamp,
+	`deleted` tinyint(1) DEFAULT 0,
+	PRIMARY KEY (`post_id`),
+    FOREIGN KEY (`author`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
+) ENGINE=InnoDB;
+
+
+/*
 	ARTICLES
 */
 CREATE TABLE articles_categories (
 	`category_id` int(3) NOT NULL AUTO_INCREMENT,
 	`parent_id` int(3),
-	`title` varchar(64),
-	`slug` varchar(64),
+	`title` varchar(32),
+	`slug` varchar(255),
 	PRIMARY KEY (`category_id`),
 	UNIQUE (`slug`)
 ) ENGINE=InnoDB;
@@ -255,7 +297,7 @@ CREATE TABLE articles (
 	`article_id` int(6) NOT NULL AUTO_INCREMENT,
 	`user_id` int(7),
 	`title` varchar(128) NOT NULL,
-	`slug` varchar(64) NOT NULL,
+	`slug` varchar(255) NOT NULL,
 	`category_id` int(3) NOT NULL,
 	`body` TEXT  NOT NULL,
 	`thumbnail` varchar(32), 
@@ -263,6 +305,7 @@ CREATE TABLE articles (
 	`updated` timestamp,
 	`views` int(5) DEFAULT 0,
 	PRIMARY KEY (`article_id`),
+	UNIQUE (`slug`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
 ) ENGINE=InnoDB;
