@@ -232,7 +232,7 @@
                         $oauth_id = $this->app->db->lastInsertId();
 
                         // Create user
-                        $st = $this->app->db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`, `verfied`)
+                        $st = $this->app->db->prepare('INSERT INTO users (`username`, `oauth_id`, `email`, `verified`)
                                 VALUES (:u, :oid, :email, 1)');
                         $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
                         if (!$result) {
