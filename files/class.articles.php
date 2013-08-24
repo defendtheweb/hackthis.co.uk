@@ -27,7 +27,7 @@
             }
 
             foreach($result as $res) {
-                $children = articles::getCategories($res->id, $news);
+                $children = $this->getCategories($res->id, $news);
                 if ($children)
                     $res->children = $children;
             }
@@ -55,7 +55,7 @@
                 if (isset($cat->children) && count($cat->children)) {
                     echo "\n                                        <ul>\n";
                     foreach($cat->children AS $child) {
-                        articles::printCategoryList($child, $menu, $cat->title, $current_section, $current_cat);
+                        $this->printCategoryList($child, $menu, $cat->title, $current_section, $current_cat);
                     }
                     echo "                                        </ul>\n                                        ";
                 }
