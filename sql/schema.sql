@@ -279,6 +279,16 @@ CREATE TABLE forum_posts (
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE forum_users (
+	`user_id` int(7) NOT NULL,
+	`thread_id` int(6) NOT NULL,
+	`viewed` timestamp DEFAULT CURRENT_TIMESTAMP,
+	`watching` tinyint(1) DEFAULT 0,
+	PRIMARY KEY (`user_id`, `thread_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
+) ENGINE=InnoDB;
+
 
 /*
 	ARTICLES

@@ -15,6 +15,13 @@
 ?>
         </ul>
 
+        <h1>View</h1>
+        <ul class='plain'>
+            <li <?=!(isset($_GET['popular']) || isset($_GET['no-replies']))?'class="active"':'';?>><a href='?'>View all</a></li>
+            <li <?=isset($_GET['popular'])?'class="active"':'';?>><a href='?popular'>Most popular threads</a></li>
+            <li <?=isset($_GET['no-replies'])?'class="active"':'';?>><a href='?no-replies'>Threads with no replies</a></li>
+        </ul>
+
 <?php
     include('widgets/adverts.php');
 ?>

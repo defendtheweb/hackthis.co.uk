@@ -10,13 +10,18 @@
 
     $breadcrumb = '';
     if (isset($_GET['slug'])) {
+        // Section or thread?
+        $thread = $forum->isThread($_GET['slug']);
+        if ($thread) {
+            include('view.php');
+            die();
+        }
+
         $section = $forum->getSection($_GET['slug']);
         if (!$section) {
             header('Location: /forum');
             die();
         }
-
-        $breadcrumb = $forum->getBreadcrumb($section);
 
         if (!$section->child && isset($_GET['submit'])) {
             if (isset($_POST['title']) && isset($_POST['body'])) {
@@ -30,7 +35,14 @@
         $section = null;
     }
 
-    $threads = $forum->getThreads($section);
+    $breadcrumb = $forum->getBreadcrumb($section);
+
+    if (isset($_GET['no-replies']))
+        $threads = $forum->getThreads($section, true);
+    else if (isset($_GET['popular']))
+        $threads = $forum->getThreads($section, false, true);
+    else
+        $threads = $forum->getThreads($section);
 
     require_once('header.php');
 ?>
@@ -46,7 +58,7 @@
 <?php endif; ?>
 
                             <h1 class='no-margin'>Forum</h1>
-                            <?=$breadcrumb;?><br/>
+                            <?=$breadcrumb;?><br/><br/>
                             <div class='forum-container clearfix'>
                                 <ul class='forum-topics fluid'>
                                     <li class='forum-topic-header row'>
@@ -58,13 +70,26 @@
                                     <li class='forum-section'>
                                         <ul>
 
-                                <?php
-                                    foreach($threads AS $thread):
-                                ?>
-                                            <li class='row <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
+<?php
+    foreach($threads AS $thread):
+?>
+                                            <li class='row <?=(!$thread->viewed)?($thread->watching)?'highlight':'new':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
                                                 <div class="section_info col span_16">
-                                                    <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a><br>
-                                                    Started by <a href="/user/<?=$thread->author;?>"><?=$thread->author;?></a>, <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($thread->created));?>"><?=$app->utils->timeSince($thread->created);?></time>
+                                                    <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
+<?php
+    $threadBreadcrumb = $forum->getThreadBreadcrumb($section, $thread);
+    if ($threadBreadcrumb):
+?>
+                                                    <div class='small thread-sections dark'><?=$threadBreadcrumb;?></div>
+<?php
+    else:
+?>
+                                                    <div class='small thread-blurb dark'>
+                                                        <?=$thread->blurb;?>
+                                                    </div>
+<?php
+    endif;
+?>
                                                 </div>
                                                 <div class="section_replies col span_2"><?=$thread->count;?></div>
                                                 <div class="section_voices col span_2"><?=$thread->voices;?></div>
@@ -73,9 +98,9 @@
                                                     <a class='strong' href="/user/<?=$thread->latest_author;?>"><?=$thread->latest_author;?></a>
                                                 </div>
                                             </li>
-                                <?php
-                                    endforeach;
-                                ?>
+<?php
+    endforeach;
+?>
                                         </ul>
                                     </li>
                                 </ul>
