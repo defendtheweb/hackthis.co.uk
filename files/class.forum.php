@@ -109,6 +109,10 @@
         }
 
         public function getThreads($section) {
+            $section_slug = '';
+            if ($section)
+                $section_slug = $section->slug;
+                
             $st = $this->app->db->prepare("SELECT threads.title, threads.slug, threads.closed, threads.sticky,
                 users.username AS author, posts.count, latest.posted AS latest, latest.username AS latest_author, posts.voices, posts.created
                 FROM forum_threads threads
@@ -118,9 +122,9 @@
                 ON posts.thread_id = threads.thread_id
                 LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0) latest
                 ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
-                WHERE threads.deleted = 0 AND posts.count > 0
+                WHERE threads.slug LIKE CONCAT(:section_slug, '%') AND threads.deleted = 0 AND posts.count > 0
                 ORDER BY sticky DESC, latest DESC");
-            $st->execute();
+            $st->execute(array(':section_slug'=>$section_slug));
             $result = $st->fetchAll();
 
             foreach($result AS $res) {
@@ -131,6 +135,31 @@
             }
 
             return $result;
+        }
+
+        public function newThread($section, $title, $body) {
+            $section_id = $section->id;
+            $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
+            try {
+                $this->app->db->beginTransaction();
+
+                $st = $this->app->db->prepare("INSERT INTO forum_threads (`section_id`, `title`, `slug`, `owner`)
+                    VALUES (:section_id, :title, :slug, :uid)");
+                $status = $st->execute(array(':section_id'=>$section_id, ':title'=>$title, ':slug'=>$slug, ':uid'=>$this->app->user->uid));
+
+                $thread_id = $this->app->db->lastInsertId();
+
+                $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
+                    VALUES (:thread_id, :body, :uid)");
+                $status = $st->execute(array(':thread_id'=>$thread_id, ':body'=>$body, ':uid'=>$this->app->user->uid));
+
+                $this->app->db->commit();
+            } catch(PDOExecption $e) {
+                $this->app->db->rollback();
+                return false;
+            }
+
+            return true;
         }
     }
 ?>

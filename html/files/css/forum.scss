@@ -148,3 +148,49 @@
         }
     }
 }
+
+
+.forum-container {
+    overflow: hidden;
+    position: relative;
+    min-height: 325px;
+
+    .forum-topics, .forum-new-thread {
+        width: 100%;
+        position: relative;
+        top: 0;
+        left: 0;
+        -webkit-transition: left 0.5s ease-in-out;
+        -moz-transition: left 0.5s ease-in-out;
+        -o-transition: left 0.5s ease-in-out;
+        transition: left 0.5s ease-in-out;
+    }
+
+    .forum-new-thread {
+        position: absolute;
+        left: 110%;
+    }
+
+    &.new-thread {
+        .forum-new-thread {
+            left: 0;
+        }
+        .forum-topics {
+            left: -110%;
+        }     
+    }
+}
+
+
+@media ( max-width : 769px ) {
+    .forum-sidebar, .section_voices, .section_latest {
+        display: none !important;
+    }
+
+    .section_info {
+        width: 83% !important;
+    }
+    .section_replies {
+        width: 15% !important;
+    }
+}
