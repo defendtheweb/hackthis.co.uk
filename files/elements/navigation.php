@@ -83,8 +83,9 @@
 <?php
     if ($app->user->loggedIn):
 ?>
-                        <li class='right icon mobile-hide'><a href='/'><i class="icon-menu"></i></a>
+                        <li class='right icon mobile-hide'><a href='/user/<?=$app->user->username;?>'><i class="icon-avatar"></i></a>
                             <ul>
+                                <li><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></li>
                                 <li><a href='/settings/'>Settings</a></li>
                                 <li class='seperator'><a href='/?logout'>Logout</a></li>
                             </ul>
