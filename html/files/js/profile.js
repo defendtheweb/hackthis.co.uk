@@ -1,4 +1,6 @@
 $(function() {
+    var uid = $('article.profile').attr('data-uid');
+
     $('.profile').on('mouseover', '.removefriend', function(e){
         $(this).html('<i class="icon-removefriend"></i> Remove');
     }).on('mouseout', '.removefriend', function(e){
@@ -39,7 +41,7 @@ $(function() {
             var uri = '/files/ajax/user.php?action=friend.add&uid=';
         else
             var uri = '/files/ajax/user.php?action=friend.remove&uid=';
-        uri += $(this).attr('data-uid');
+        uri += uid;
 
         $.getJSON(uri, function(data) {
             if ($this.hasClass('removefriend-hide')) {
@@ -96,4 +98,115 @@ $(function() {
                 $(this).hide();
         });
     });
+
+
+
+
+
+
+    // User stats UI stuff
+    var $details = $('.profile-details');
+    $details.css({'min-height': $details.outerHeight()});
+    $stats = $('<div class="profile-stats">\
+                    <a href="#" class="close"><i class="icon-cross"></i></a>\
+                    <div class="loading"><i class="icon-clock"></i></div>\
+                    <div class="profile-stats-extra">\
+                        <div id="profile-stats-chart"></div>\
+                        <div class="more"><ul><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li></ul></div>\
+                    </div>\
+                </div>').hide();
+
+    $details.find('.show-posts, .show-articles, .show-karma').on('click', function(e) {
+        e.preventDefault();
+
+        var uri = '/files/ajax/user.php?action=graph&uid='+uid;
+
+        $.when($details.children('ul').fadeOut()).then(function() {
+            $stats.clone().appendTo($details).fadeIn(function() {
+                $.getJSON(uri, function(data) {
+                    $details.find('.loading').hide();
+                    $details.find('.profile-stats-extra').slideDown();
+                    drawChart(data['data']);
+                }); 
+            });
+        });
+    })
+
+
+    $details.on('click', '.close', function(e) {
+        e.preventDefault();
+
+        $.when($stats.fadeOut()).then(function() {
+            $details.children('.profile-stats').slideUp(function() {
+                $details.children('.profile-stats').remove();
+                $details.children('ul').fadeIn();
+            });
+        });
+    });
+
+
+
+    function drawChart(data) {
+        var margin = {top: 10, right: 10, bottom: 20, left: 20},
+            width = $('#profile-stats-chart').width() - margin.left - margin.right,
+            height = 150 - margin.top - margin.bottom;
+
+        var graph = d3.select("#profile-stats-chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("id", "visualization")
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var format = d3.time.format("%d/%m/%Y");
+
+        var xscale = d3.time.scale().domain([format.parse(data[0].d), format.parse(data[data.length-1].d)]).range([0, width]);
+        var yscale = d3.scale.linear().domain([0,15]).range([height,0]);
+        var line = d3.svg.line()
+          .interpolate("cardinal")
+          .x(function(n) { return xscale(format.parse(n.d)) })
+          .y(function(n) { return yscale(n.c) })
+
+        var path = graph.append("path")
+          .attr("d", line(data))
+          .attr("stroke-width", "1")
+          .attr("fill", "none");
+
+        var totalLength = path.node().getTotalLength();
+
+
+        // Axis
+        var xAxis = d3.svg.axis()
+            .scale(xscale)
+            .orient("bottom")
+            .ticks(d3.time.days, 1)
+            .tickFormat(d3.time.format('%d %b'))
+            .tickSize(4, 0, 0);
+
+        graph.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+        var yAxis = d3.svg.axis()
+            .scale(yscale)
+            .orient("left")
+            .ticks(4)
+            .tickSize(4, 0, 0);
+
+        graph.append("g")
+                .attr("class", "x axis")
+                .call(yAxis)
+
+
+        path
+          .attr("stroke-dasharray", totalLength + " " + totalLength)
+          .attr("stroke-dashoffset", totalLength)
+          .transition()
+            .duration(1000)
+            .ease("linear")
+            .attr("stroke-dashoffset", 0);
+    }
 });

@@ -2,41 +2,45 @@
     class profile {
         private $app;
 
+        // If $uid just get the basic user info ... for ajax stuff
         public function __construct($username, $uid=false) {
             global $app;
             $this->app = $app;
 
             if ($uid) {
                 $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.forum_signature,
-                                    friends.status AS friends, friends.user_id AS friend, profile.gravatar,
-                                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
-                                    IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
-                                    FROM users u
-                                    LEFT JOIN users_profile profile
-                                    ON u.user_id = profile.user_id
-                                    LEFT JOIN users_friends friends
-                                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                                    LEFT JOIN users_priv priv
-                                    ON u.user_id = priv.user_id
-                                    WHERE u.user_id = :profile");
+                    friends.status AS friends, friends.user_id AS friend, profile.gravatar,
+                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
+                    IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                    FROM users u
+                    LEFT JOIN users_profile profile
+                    ON u.user_id = profile.user_id
+                    LEFT JOIN users_friends friends
+                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                    LEFT JOIN users_priv priv
+                    ON u.user_id = priv.user_id
+                    WHERE u.user_id = :profile");
                 $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);
                 $res = $st->fetch();
             } else {
                 $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
-                                    activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
-                                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
-                                    IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
-                                    FROM users u
-                                    LEFT JOIN users_profile profile
-                                    ON u.user_id = profile.user_id
-                                    LEFT JOIN users_activity activity
-                                    ON u.user_id = activity.user_id
-                                    LEFT JOIN users_friends friends
-                                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                                    LEFT JOIN users_priv priv
-                                    ON u.user_id = priv.user_id
-                                    WHERE u.username = :profile");
+                    activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
+                    IF (profile.gravatar = 1, u.email , profile.img) as `image`,
+                    IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
+                    forum_posts.posts, articles.articles
+                    FROM users u
+                    LEFT JOIN users_profile profile
+                    ON u.user_id = profile.user_id
+                    LEFT JOIN users_activity activity
+                    ON u.user_id = activity.user_id
+                    LEFT JOIN users_friends friends
+                    ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                    CROSS JOIN (SELECT COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 AND author = :user) forum_posts
+                    CROSS JOIN (SELECT COUNT(*) AS `articles` FROM articles WHERE user_id = :user) articles
+                    LEFT JOIN users_priv priv
+                    ON u.user_id = priv.user_id
+                    WHERE u.username = :profile");
                 $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);
                 $res = $st->fetch();
@@ -228,6 +232,21 @@
             $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid));
 
             return $st->rowCount();
+        }
+
+
+
+        /* STATIC FUNCTIONS */
+        public static function getGraph($uid, $type='posts') {
+            global $app;
+            $st = $app->db->prepare('SELECT date_format(posted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM forum_posts
+                WHERE deleted = 0 AND author = :uid
+                GROUP BY `d`
+                ORDER BY `posted` ASC');
+            $st->execute(array(':uid' => $uid));
+            $res = $st->fetchAll();
+
+            return $res;
         }
 
         public static function getMusic($id) {

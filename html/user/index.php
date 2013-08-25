@@ -54,15 +54,15 @@
 
     /* USERS PROFILE STARTS */
 ?>
-    <article class='profile'>
+    <article class='profile' data-uid='<?=$profile->uid;?>'>
 <?php if ($profile->friends):?>
-        <a href='#' class='button button-blank right removefriend' data-uid='<?=$profile->uid;?>'><i class='icon-user'></i> Friends</a>
+        <a href='#' class='button button-blank right removefriend'><i class='icon-user'></i> Friends</a>
 <?php elseif ($profile->friends !== NULL && $profile->friend != $profile->uid): ?>
         <a href='#' class='button right button-disabled'>Pending</a>
 <?php elseif ($profile->friends !== NULL && $profile->friend == $profile->uid): ?>
-        <a href='#' class='button right acceptfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Accept</a>
+        <a href='#' class='button right acceptfriend'><i class='icon-addfriend'></i> Accept</a>
 <?php else: ?>
-        <a href='#' class='button right addfriend' data-uid='<?=$profile->uid;?>'><i class='icon-addfriend'></i> Add friend</a>
+        <a href='#' class='button right addfriend'><i class='icon-addfriend'></i> Add friend</a>
 <?php
     endif;
 
@@ -191,12 +191,12 @@
 
             <div class='col span_17 clr'>
                 <section class='profile-details row fluid'>
-                    <ul class='clr'>
+                    <ul class='clr line1'>
 <?php
     $profile->printItem("Score", $profile->score);
-    $profile->printItem("<a href='#'>Posts</a>", 1025);
-    $profile->printItem("<a href='#'>Articles</a>", 2);
-    $profile->printItem("<a href='faq.php#karma'>Karma</a>", 0);
+    $profile->printItem("<a href='#' class='show-posts'>Posts</a>", $profile->posts);
+    $profile->printItem("<a href='#' class='show-articles'>Articles</a>", $profile->articles);
+    $profile->printItem("<a href='' class='show-karma'>Karma</a>", 0);
 ?>
                     </ul>
                     <ul class='clr'>
@@ -233,6 +233,8 @@
             </div>
         </section>
     </article>
+
+    <script type="text/javascript" src="/files/js/d3.js"></script>
 <?php
     require_once('footer.php');
 ?>

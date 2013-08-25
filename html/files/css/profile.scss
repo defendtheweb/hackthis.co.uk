@@ -119,8 +119,8 @@
         background: $bg;
         padding: 8px;
 
-        ul {
-            &:not(:last-child) {
+        > ul {
+            &.line1 {
                 margin-bottom: 10px;
             }
 
@@ -158,6 +158,67 @@
                     }
                 }
             }
+        }
+
+        .profile-stats {
+            position: relative;
+            height: 100%;
+
+            #profile-stats-chart {
+                height: 150px;
+                margin-bottom: 16px;
+
+                svg {
+                    stroke: $green;
+
+                    .axis path,
+                    .axis line {
+                        fill: none;
+                        stroke: $text_dark;
+                        shape-rendering: crispEdges;
+                    }
+
+                    .axis text {
+                        font-size: 10px;
+                        stroke: $text_dark;
+                    }
+                }
+            }
+
+            .profile-stats-extra {
+                display: none;
+
+                ul li {
+                    padding: 6px;
+                    &:nth-child(odd) {
+                        background: $light_bg;
+                    }
+                }
+            }
+
+            a.close {
+                position: absolute;
+                top: 0;
+                right: 0;
+                font-size: 0.9em;
+                &:hover {
+                    text-decoration: none;
+                    i {
+                        color: $green;
+                    }
+                }
+
+                i {
+                    color: $white;
+                }
+            }
+
+            .loading {
+                    position: absolute;
+                    top: 23px;
+                    left: 50%;
+                    margin-left: -8px;
+                }
         }
     }
 
