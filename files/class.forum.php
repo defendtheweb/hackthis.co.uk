@@ -114,7 +114,7 @@
                 $crumb .= '<a href="/forum/'.$section->slug4.'">'.$section->title4.'</a> ' . $divide . ' ';
 
             if (!$thread)
-                $crumb .= '<span class="white">Latest Threads</span>';
+                $crumb .= '<span class="white">Latest threads</span>';
 
             return $crumb;
         }
@@ -231,15 +231,17 @@
 
 
         public function getThread($thread_id, $page = 1, $limit = 10) {
-            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, section.slug AS section_slug, replies.count AS replies
+            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`
                 FROM forum_threads thread
+                LEFT JOIN forum_users
+                ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
                 LEFT JOIN forum_sections section
                 ON section.section_id = thread.section_id
                 LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts GROUP BY `thread_id`) replies
                 ON replies.thread_id = thread.thread_id
                 WHERE thread.thread_id = :thread_id
                 LIMIT 1");
-            $st->execute(array(':thread_id'=>$thread_id));
+            $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             $thread = $st->fetch();
 
             if (!$thread)
@@ -328,14 +330,22 @@
                         }
                     }
                 }
-
-
             
                 //Update view status
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`, `watching`)
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             }
+
+            return $status;
+        }
+
+        public function watchThread($thread_id, $watch=true) {
+            if ($watch) $watch = '1'; else $watch = '0';
+
+            $st = $this->app->db->prepare("UPDATE forum_users SET `watching` = :watch
+                WHERE `user_id` = :uid AND `thread_id` = :thread_id");
+            $status = $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid, ':watch'=>$watch));
 
             return $status;
         }

@@ -29,11 +29,18 @@
 <?php
         include('elements/sidebar_forum.php');
 ?>    
-                        <div class="col span_18 forum-main">
+                        <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>">
 
-<?php if ($app->user->loggedIn && $section && !$section->child): ?>
-    <a href='#' class='new-thread button right'><i class='icon-chat'></i> Post reply</a>
-<?php endif; ?>
+<?php if ($app->user->loggedIn): ?>
+    <a href='#' class='post-reply button right'><i class='icon-chat'></i> Post reply</a>
+<?php   if ($thread->watching): ?>
+    <a href='#' class='post-watch post-unwatch button right'><i class='icon-eye-blocked'></i> Unwatch</a>
+<?php   else: ?>
+    <a href='#' class='post-watch button right'><i class='icon-eye'></i> Watch</a>
+<?php
+        endif;
+      endif;
+?>
 
                             <h1 class='no-margin'><?=$thread->title;?></h1>
                             <?=$breadcrumb;?><br/><br/>
