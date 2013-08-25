@@ -10,6 +10,8 @@ $(function() {
     '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php#${label.toLowerCase()}">${label}</a>'+
     '        {{else type == "comment"}}'+
     '            <i class="icon-comments"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
+    '        {{else type == "forum_post"}}'+
+    '            <i class="icon-chat"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "favourite"}}'+
     '            <i class="icon-heart"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "article"}}'+
@@ -95,6 +97,10 @@ $(function() {
                             '            <a href="/user/${username}">${username}<a/> replied to your comment on <a href="${slug}">${title}</a><br/>'+
                             '    {{else type == "comment_mention"}}'+
                             '            <a href="/user/${username}">${username}<a/> mentioned you in a comment on <a href="${slug}">${title}</a><br/>'+
+                            '    {{else type == "forum_post"}}'+
+                            '            <a href="/user/${username}">${username}<a/> posted in <a href="${slug}">${title}</a><br/>'+
+                            '    {{else type == "forum_mention"}}'+
+                            '            <a href="/user/${username}">${username}<a/> mentioned you in <a href="${slug}">${title}</a><br/>'+
                             '    {{else type == "article"}}'+
                             '            Your article has been published <a href="${slug}">${title}</a><br/>'+
                             '    {{/if}}'+

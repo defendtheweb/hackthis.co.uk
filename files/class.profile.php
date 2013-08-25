@@ -132,6 +132,14 @@
                         $icon = 'article';
                         $string = "<a href='{$item->uri}'>{$item->title}</a> was published";
                         break;
+                    case 'forum_post':
+                        $icon = 'chat';
+                        $string = "Posted in <a href='{$item->uri}'>{$item->title}</a>";
+                        break;
+                    case 'forum_mention':
+                        $icon = 'chat';
+                        $string = "Mentioned by <a href='/user/{$item->username}'>{$item->username}</a> in <a href='{$item->uri}'>{$item->title}</a>";
+                        break;
                     case 'join':
                         $icon = 'user';
                         $string = 'Joined HackThis!!';

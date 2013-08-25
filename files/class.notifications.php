@@ -87,6 +87,21 @@
                     $st->fetch();
 
                     $res->slug = "/{$res->slug}#comment-{$res->item_id}";
+                } else if ($res->type == 'forum_post' || $res->type == 'forum_mention') {
+                    // uri, title
+                    $st = $this->app->db->prepare("SELECT users.username, forum_threads.title, CONCAT('/forum/', forum_threads.`slug`) AS slug
+                        FROM forum_posts
+                        LEFT JOIN forum_threads
+                        ON forum_threads.thread_id = forum_posts.thread_id
+                        LEFT JOIN users
+                        ON forum_posts.author = users.user_id
+                        WHERE forum_posts.post_id = :item_id
+                        LIMIT 1");
+                    $st->execute(array(':item_id' => $res->item_id));
+                    $st->setFetchMode(PDO::FETCH_INTO, $res);
+                    $st->fetch();
+
+                    $res->slug = "{$res->slug}#post-{$res->item_id}";
                 } else if ($res->type == 'article') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
@@ -158,6 +173,9 @@
             } else if ($event->type === 'article') {
                 $icon = 'books';
                 $text = 'Your article has been published ';
+            } else if ($event->type === 'forum_post') {
+                $icon = 'chat';
+                $text = $this->app->utils->userLink($event->username) .' posted in ';
             } else if ($event->type === 'medal') {
                 $icon = 'trophy colour-' . $event->colour;
                 $text = "You have been awarded
