@@ -295,6 +295,42 @@
             $status = $st->execute(array(':thread_id'=>$thread_id, ':body'=>$body, ':uid'=>$this->app->user->uid));
 
             if ($status) {
+                $post_id = $this->app->db->lastInsertId();
+
+                $notified = array($this->app->user->uid);
+
+                // Check for mentions
+                preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
+                foreach($mentions[1] as $mention) {
+                    $st = $this->app->db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
+                    $st->execute(array(':username' => $mention));
+                    $result = $st->fetch();
+                    
+                    if ($result) {
+                        if (!in_array($result->user_id, $notified)) {
+                            array_push($notified, $result->user_id);
+                            $this->app->notifications->add($result->user_id, 'forum_mention', $this->app->user->uid, $post_id);
+                        }
+                    }
+                }
+
+                // Notify watchers
+                $st = $this->app->db->prepare('SELECT forum_users.user_id AS author FROM forum_users
+                                   WHERE thread_id = :thread_id AND watching = 1');
+                $st->execute(array(':thread_id' => $thread_id));
+                $watchers = $st->fetchAll();
+                
+                if ($watchers) {
+                    foreach($watchers AS $watcher) {
+                        if (!in_array($watcher->author, $notified)) {
+                            array_push($notified, $watcher->author);
+                            $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
+                        }
+                    }
+                }
+
+
+            
                 //Update view status
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`, `watching`)
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");

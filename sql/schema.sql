@@ -136,7 +136,7 @@ CREATE TABLE users_notifications (
 CREATE TABLE users_feed (
     `feed_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
-    `type` enum('join','level','friend','medal','thread','forum_post','forum_mention','karma','comment','comment_mention','favourite','article','image') NOT NULL,
+    `type` enum('join','level','friend','medal','thread','forum_post','karma','comment','favourite','article','image') NOT NULL,
     `item_id` int(7),
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`feed_id`),
@@ -554,26 +554,7 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
 DROP TRIGGER IF EXISTS insert_forum_post;
 CREATE TRIGGER insert_forum_post AFTER INSERT ON forum_posts FOR EACH ROW
     BEGIN
-        -- Alert watchers
-        DECLARE done INT DEFAULT FALSE;
-        DECLARE ids INT;
-        DECLARE cur CURSOR FOR SELECT user_id FROM forum_users WHERE thread_id = NEW.thread_id AND user_id != NEW.author AND watching = 1;
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-        OPEN cur;
-            ins_loop: LOOP
-                FETCH cur INTO ids;
-                IF done THEN
-                    LEAVE ins_loop;
-                END IF;
-
-                CALL user_notify(ids, 'forum_post', null, NEW.post_id);
-
-            END LOOP;
-        CLOSE cur;
-
-
-        CALL user_feed(NEW.author, 'post', NEW.post_id);
+        CALL user_feed(NEW.author, 'forum_post', NEW.post_id);
     END;
 
 

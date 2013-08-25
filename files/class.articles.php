@@ -457,7 +457,6 @@
                     if (!in_array($result->user_id, $notified)) {
                         array_push($notified, $result->user_id);
                         $this->app->notifications->add($result->user_id, 'comment_mention', $this->app->user->uid, $comment_id);
-                        $this->app->feed->add($result->user_id, 'comment_mention', $comment_id);
                     }
                 }
             }
