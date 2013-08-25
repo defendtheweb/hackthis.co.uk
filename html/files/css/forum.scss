@@ -211,6 +211,16 @@
         background: $black;
     }
 
+    .post-unwatch {
+        background: $black;
+        color: $text;
+
+        &:hover {
+            color: $white;
+            background: $bg;
+        }
+    }
+
     .post-list li {
         list-style: none;
         background: $bg;
