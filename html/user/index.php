@@ -190,7 +190,7 @@
             </div>
 
             <div class='col span_17 clr'>
-                <section class='profile-details row fluid'>
+                <section class='profile-details row fluid' data-graph-start='<?=date('d/m/Y', strtotime($profile->joined));?>' data-graph-end='<?=date('d/m/Y');?>'>
                     <ul class='clr line1'>
 <?php
     $profile->printItem("Score", $profile->score);

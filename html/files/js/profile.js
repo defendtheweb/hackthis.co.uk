@@ -106,6 +106,9 @@ $(function() {
 
     // User stats UI stuff
     var $details = $('.profile-details');
+    var graph_start = $details.attr('data-graph-start');
+    var graph_end = $details.attr('data-graph-end');
+
     $details.css({'min-height': $details.outerHeight()});
     $stats = $('<div class="profile-stats">\
                     <a href="#" class="close"><i class="icon-cross"></i></a>\
@@ -162,7 +165,8 @@ $(function() {
 
         var format = d3.time.format("%d/%m/%Y");
 
-        var xscale = d3.time.scale().domain([format.parse(data[0].d), format.parse(data[data.length-1].d)]).range([0, width]);
+        //var xscale = d3.time.scale().domain([format.parse(data[0].d), format.parse(data[data.length-1].d)]).range([0, width]);
+        var xscale = d3.time.scale().domain([format.parse(graph_start), format.parse(graph_end)]).range([0, width]);
         var yscale = d3.scale.linear().domain([0,15]).range([height,0]);
         var line = d3.svg.line()
           .interpolate("cardinal")
