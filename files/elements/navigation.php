@@ -70,7 +70,18 @@
 ?>
                             </ul>
                         </li>
-                        <li><a href='/forum/'>forum</a></li>
+<?php
+    $sections = $app->forum->getSections(null, false);
+?>
+                        <li><a href='/forum/'>forum</a>
+                            <ul>
+<?php
+    foreach($sections as $sec) {
+        $app->forum->printSectionsList($sec, true);
+    }
+?>
+                            </ul>
+                        </li>
                         <li><a href='/irc/'>irc</a>
                             <ul>
                                 <li><a href='/'>Chat Online</a></li>

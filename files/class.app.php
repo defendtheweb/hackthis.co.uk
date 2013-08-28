@@ -38,6 +38,8 @@
             $this->levels = new levels($this);
             // Create articles object
             $this->articles = new articles($this);
+            // Create forum object
+            $this->forum = new forum($this);
 
             if (!is_array($custom_css))
                 $custom_css = Array();

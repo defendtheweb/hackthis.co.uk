@@ -6,7 +6,7 @@
 
     require_once('init.php');
 
-    $forum = new forum($app);
+    $forum = $app->forum;
 
     $breadcrumb = '';
     if (isset($_GET['slug'])) {

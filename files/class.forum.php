@@ -41,7 +41,7 @@
             return $result;
         }
 
-        public function printSectionsList($cat, $menu = false, $current, $level = 1) {
+        public function printSectionsList($cat, $menu = false, $current = null, $level = 1) {
             if ($menu) {
                 $c = '';
                 $t = 'title'.$level;
@@ -205,6 +205,9 @@
         }
 
         public function newThread($section, $title, $body) {
+            if (!$title || strlen($title) < 3 || !$body || strlen($body) < 3)
+                return false;
+
             $section_id = $section->id;
             $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
             try {
@@ -331,10 +334,13 @@
                     }
                 }
             
-                //Update view status
+                // Update view status
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`, `watching`)
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+
+                // Add to feed
+                $this->app->feed->call($this->app->user->uid, 'forum_post', $post_id);
             }
 
             return $status;
