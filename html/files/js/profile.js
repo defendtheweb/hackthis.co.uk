@@ -149,7 +149,40 @@ $(function() {
 
 
 
-    function drawChart(data) {
+    function drawChart(tmpData) {
+        var data = [];
+        var yMax = 5;
+
+        // Fill in gaps in data
+        var dmy = graph_end.split("/");
+        var end = new Date(dmy[2], dmy[1] - 1, dmy[0]);
+        dmy = graph_start.split("/");
+        var d = new Date(dmy[2], dmy[1] - 1, dmy[0]);
+        while(1) {
+            if (d <= end) {
+                dStr = (d.getDate()>9?'':'0')+d.getDate()+'/'+(d.getMonth()>=9?'':'0')+(d.getMonth()+1)+'/'+d.getFullYear();
+                c = 0;
+                // lookup date in tmpData
+                for(i = 0; i < tmpData.length; i++) {
+                    if (tmpData[i].d == dStr) {
+                        c = parseInt(tmpData[i].c);
+                        break;
+                    }
+                }
+
+                if (c > yMax) 
+                    yMax = c;
+
+                // add to array
+                obj = { d: dStr, c: c}
+                data.push(obj);
+            } else
+                break;
+            d.setDate(d.getDate()+1);
+        }
+
+        yMax += (yMax % 5);
+
         var margin = {top: 10, right: 10, bottom: 20, left: 20},
             width = $('#profile-stats-chart').width() - margin.left - margin.right,
             height = 150 - margin.top - margin.bottom;
@@ -167,18 +200,11 @@ $(function() {
 
         //var xscale = d3.time.scale().domain([format.parse(data[0].d), format.parse(data[data.length-1].d)]).range([0, width]);
         var xscale = d3.time.scale().domain([format.parse(graph_start), format.parse(graph_end)]).range([0, width]);
-        var yscale = d3.scale.linear().domain([0,15]).range([height,0]);
+        var yscale = d3.scale.linear().domain([0,yMax]).range([height,0]);
         var line = d3.svg.line()
-          .interpolate("cardinal")
+          .interpolate("linear")
           .x(function(n) { return xscale(format.parse(n.d)) })
           .y(function(n) { return yscale(n.c) })
-
-        var path = graph.append("path")
-          .attr("d", line(data))
-          .attr("stroke-width", "1")
-          .attr("fill", "none");
-
-        var totalLength = path.node().getTotalLength();
 
 
         // Axis
@@ -190,9 +216,9 @@ $(function() {
             .tickSize(4, 0, 0);
 
         graph.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
-                .call(xAxis);
+            .attr("class", "x axis")
+            .attr("transform", "translate(-4," + height + ")")
+            .call(xAxis);
 
         var yAxis = d3.svg.axis()
             .scale(yscale)
@@ -204,6 +230,13 @@ $(function() {
                 .attr("class", "x axis")
                 .call(yAxis)
 
+
+        var path = graph.append("path")
+          .attr("d", line(data))
+          .attr("stroke-width", "1")
+          .attr("fill", "none");
+
+        var totalLength = path.node().getTotalLength();
 
         path
           .attr("stroke-dasharray", totalLength + " " + totalLength)
