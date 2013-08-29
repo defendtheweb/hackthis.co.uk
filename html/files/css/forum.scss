@@ -4,14 +4,40 @@
 
 .forum-latest tr {
     background: #141414;
-}
+    border-left: 2px solid #141414;
 
-.forum-latest tr:hover {
-    background: #1e1e1e;
+    &:hover {
+        background: #1e1e1e;
+        border-left: 2px solid #1e1e1e;
+    }
+
+    &.highlight {
+        border-left: 2px solid $green;
+
+        &:hover {
+            border-left: 2px solid lighten($green, 25%);
+        }
+    }
+
+    &.new {
+        border-left: 2px solid $bg;
+
+        &:hover {
+            border-left: 2px solid lighten($bg, 20%);
+        }
+    }
+
+    &.closed {
+        border-left: 2px solid $red;
+
+        &:hover {
+            border-left: 2px solid lighten($red, 25%);
+        }
+    }
 }
 
 .forum-latest tr td {
-    padding: 6px;
+    padding: 4px 6px;
 }
 
 .forum-latest span.medal-green {
@@ -257,6 +283,12 @@
 
             font-size: 1em;
             line-height: 1.3em;
+
+            blockquote {
+                background: $black;
+                border-color: darken($green, 10%);
+                padding: 10px 60px 10px 10px;
+            }
         }
     }
 

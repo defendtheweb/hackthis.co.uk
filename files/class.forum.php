@@ -6,6 +6,32 @@
             $this->app = $app;
         }
 
+        public function getLatest($limit = 3) {
+            $sql = "SELECT threads.title, threads.slug, threads.closed,
+                users.username AS author, posts.count-1 as `count`, latest.posted AS latest, latest.username AS latest_author, IF (forum_users.viewed >= latest, 1, 0) AS `viewed`, forum_users.watching
+                FROM forum_threads threads
+                LEFT JOIN users
+                ON users.user_id = threads.owner
+                LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
+                ON posts.thread_id = threads.thread_id
+                LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0) latest
+                ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
+                LEFT JOIN forum_users
+                ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+
+                WHERE threads.deleted = 0
+                ORDER BY latest DESC
+                LIMIT :limit";
+
+            $st = $this->app->db->prepare($sql);
+            $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            $st->bindValue(':uid', $this->app->user->uid);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            return $result;
+        }
+
         public function isThread($slug) {
             $st = $this->app->db->prepare("SELECT thread_id AS id
                      FROM forum_threads
@@ -340,7 +366,7 @@
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
 
                 // Add to feed
-                $this->app->feed->call($this->app->user->uid, 'forum_post', $post_id);
+                $this->app->feed->call($this->app->user->username, 'forum_post', "cat", "dog");
             }
 
             return $status;
