@@ -124,10 +124,11 @@ function PopupCenter(url, title, w, h) {
 }
 
 function createCookie(name, value, days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        var expires = "; expires=" + date.toGMTString();
-    } else var expires = "";
+    if (!days) {
+        days = 1000;
+    }
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    var expires = "; expires=" + date.toGMTString();
     document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
 }
