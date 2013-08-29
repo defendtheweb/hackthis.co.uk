@@ -51,7 +51,7 @@ class loader {
      */
     var $default_js = Array( 'utils.js', 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'jquery.mCustomScrollbar.js',
                              'jquery.sticky.js', 'jquery.placeholder.min.js', 'jquery.autosize.js', 'jquery.selectmenu.js',
-                             'main.js', 'notifications.js', 'autosuggest.js');
+                             'main.js');
     var $default_css = Array('normalize.css', 'icomoon.css', 'responsive-gs-24col.scss', 'h5dp.css', 'hint.css',
                              'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss', 'comments.scss');
 

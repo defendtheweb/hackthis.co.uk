@@ -28,7 +28,10 @@
 	if ($app->user->loggedIn) {
         if (defined('PAGE_PRIV') && !$app->user->{PAGE_PRIV.'_priv'}) {
 	        require_once('error.php');
-	    }		
+	    }	
+
+        array_push($minifier->custom_js, 'notifications.js');
+        array_push($minifier->custom_js, 'autosuggest.js');
     } else {
         array_push($minifier->custom_js, 'guest.js');
         array_push($minifier->custom_js, 'jquery.transit.min.js');
