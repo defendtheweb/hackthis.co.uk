@@ -1,6 +1,7 @@
 <?php
     class forum {
         private $app;
+        private $error;
 
         public function __construct($app) {
             $this->app = $app;
@@ -320,8 +321,10 @@
         }
 
         public function newPost($thread_id, $body) {
-            if (strlen($body) <= 3)
+            if (strlen($body) <= 3) {
+                $this->error = 'Post content is too short';
                 return false;
+            }
 
             $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
                 VALUES (:thread_id, :body, :uid)");
@@ -382,6 +385,10 @@
             $status = $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid, ':watch'=>$watch));
 
             return $status;
+        }
+
+        public function getError() {
+            return ($this->error)?$this->error:'Error making request';
         }
     }
 ?>

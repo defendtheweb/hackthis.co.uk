@@ -3,20 +3,32 @@
         header('Location: /forum');
 
     if (isset($_GET['page']) && is_numeric($_GET['page']))
-        $page = $_GET['page'];
+        $thread_page = $_GET['page'];
     else
-        $page = 1;
+        $thread_page = 1;
 
-    $thread = $forum->getThread($thread->id, $page);
+    $thread = $forum->getThread($thread->id, $thread_page);
     if (!$thread)
         header('Location: /forum');
 
+    $viewing_thread = true;
+
+    $thread_page_count = ceil($thread->replies/10);
+
+    if (isset($_GET['submitted']) || isset($_GET['latest'])) {
+        if ($thread_page != $thread_page_count) {
+            $thread_page = $thread_page_count;
+            $thread = $forum->getThread($thread->id, $thread_page);
+        }
+    }
 
     if (isset($_GET['submit']) && isset($_POST['body'])) {
         $submitted = $forum->newPost($thread->id, $_POST['body']);
 
-        if ($submitted)
-            header('Location: '. strtok($_SERVER["REQUEST_URI"], '?') . '?submitted');
+        if ($submitted) {
+            header('Location: '. strtok($_SERVER["REQUEST_URI"], '?') . '?submitted#latest');
+            die();
+        }
     }
 
     $section = $thread->section;
@@ -39,11 +51,20 @@
     <a href='#' class='post-watch button right'><i class='icon-eye'></i> Watch</a>
 <?php
         endif;
-      endif;
+      endif;$submitted
 ?>
 
                             <h1 class='no-margin'><?=$thread->title;?></h1>
                             <?=$breadcrumb;?><br/><br/>
+
+<?php
+    if (isset($_GET['submit']) && isset($_POST['body'])) {
+        $app->utils->message($forum->getError(), 'error');
+        $wysiwyg_text = $_POST['body'];
+    } else if (isset($_GET['submitted'])) {
+        $app->utils->message('Posted submitted', 'good');
+    }
+?>
 
                             <ul class='post-list'>
 <?php
@@ -72,10 +93,10 @@
 
                             <div class='forum-pagination'>
 <?php
-        if (ceil($thread->replies/10) > 1) {
+        if ($thread_page_count > 1) {
             $pagination = new stdClass();
-            $pagination->current = $page;
-            $pagination->count = ceil($thread->replies/10);
+            $pagination->current = $thread_page;
+            $pagination->count = $thread_page_count;
             $pagination->root = '?page=';
             include('elements/pagination.php');
         }
@@ -84,10 +105,12 @@
                             </div>
                             <ul class='post-list reply-list'>
 <?php 
+        $n = 0;
         foreach($thread->posts AS $post):
+            $n++;
             $post->body = $app->parse($post->body);
 ?>
-                                <li>
+                                <li <?=($thread_page == $thread_page_count && $n = count($thread->posts))?'id="latest"':'';?>>
                                     <div class="post_header clr">
                                         <a href="/user/<?=$post->username;?>"><img src="/users/images/29/1:1/bfb4871a2dd1e1f372a6784458b6dce9.jpg" class="user_img"> <?=$post->username;?></a>
                                         <div class="karma small">
@@ -106,10 +129,10 @@
                             </ul>
                             <div class='forum-pagination'>
 <?php
-        if (ceil($thread->replies/10) > 1) {
+        if ($thread_page_count > 1) {
             $pagination = new stdClass();
-            $pagination->current = $page;
-            $pagination->count = ceil($thread->replies/10);
+            $pagination->current = $thread_page;
+            $pagination->count = $thread_page_count;
             $pagination->root = '?page=';
             include('elements/pagination.php');
         }
@@ -122,8 +145,16 @@
     if ($app->user->loggedIn):
 ?>
 
-                            <form class='forum-thread-reply' method="POST" action="?submit">
-<?php include('elements/wysiwyg.php'); ?>
+                            <form id="submit" class='forum-thread-reply' method="POST" action="?submit#submit">
+<?php
+    if (isset($_GET['submit']) && isset($_POST['body'])) {
+        $app->utils->message($forum->getError(), 'error');
+        $wysiwyg_text = $_POST['body'];
+    } else if (isset($_GET['submitted'])) {
+        $app->utils->message('Posted submitted', 'good');
+    }
+    include('elements/wysiwyg.php');
+?>
                                 <input type='submit' class='button' value='Submit'/>
                             </form>
 
