@@ -553,10 +553,6 @@ div.pagination {
     text-align: center;
     cursor: default;
 
-    &.lite-pagination {
-        text-align: right;
-    }
-
     a {
         padding: 5px 8px;
         margin: 0px;
@@ -583,6 +579,122 @@ div.pagination {
         }
     }
 }
+
+div.lite-pagination {
+    display: inline-block;
+    margin-left: 4px;
+
+    li {
+        float: left;
+
+        a {
+            position: relative;
+            top: 4px;
+
+            display: inline-block;
+            height: 19px;
+            min-width: 19px;
+            text-align: center;
+
+            font-size: 0.9em;
+            border: 1px solid $light_bg;
+            padding: 1px 4px;
+            margin-left: 2px;
+
+            &:hover {
+                text-decoration: none;
+                background: $light_bg;
+            }
+        }
+    }
+}
+
+
+
+/* CHAT BAR */
+#chat-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+
+    height: 0;
+    width: 350px;
+    max-width: 100%;
+    border-top: 3px solid $green;
+
+    background: $black;
+
+    transition: height 0.3s;
+
+    &.show {
+        height: 275px !important;
+        max-height: 75%;
+
+        input {
+            display: block;
+        }
+    }
+
+    &:hover {
+        height: 28px;
+    }
+
+    .chat-bar-title {
+        cursor: pointer;
+        color: $white;
+        background: $bg;
+        padding: 4px 6px;
+        height: 25px;
+
+        i:hover {
+            color: $bright_green;
+        }
+    }
+
+    .chat-container {
+        border-left: 2px solid $bg;
+        border-right: 2px solid $bg;
+        padding: 4px;
+        height: 222px;
+
+        ul li {
+            list-style: none;
+            padding: 2px 0;
+
+            span {
+                color: $red;
+                padding-right: 2px;
+            }
+
+            &.info {
+                font-style: italic;
+                color: $dark;
+            }
+        }
+    }
+
+    input {
+        position: absolute;
+        border: none;
+        border-top: 1px solid $bg;
+        border-left: 2px solid $bg;
+        border-right: 2px solid $bg;
+        background: $black;
+        bottom: 0;
+        left: 0;
+        padding: 4px 6px;
+        margin-bottom: 0;
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    #chat-bar {
+        height: 28px;
+    }
+}
+
 
 
 /*scrollbar themes*/

@@ -77,6 +77,13 @@
                                                 <div class="section_info col span_16">
                                                     <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
 <?php
+    if (ceil($thread->count/10) > 1) {
+        $pagination = new stdClass();
+        $pagination->count = ceil($thread->count/10);
+        $pagination->root = $thread->slug . '?page=';
+        include('elements/lite_pagination.php');
+    }
+
     $threadBreadcrumb = $forum->getThreadBreadcrumb($section, $thread);
     if ($threadBreadcrumb):
 ?>
