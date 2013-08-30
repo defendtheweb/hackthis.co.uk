@@ -31,7 +31,14 @@
         }
 
         public function getEvents($limit=5, $offset=0) {
-            
+            // Get count
+            $st = $this->app->db->prepare("SELECT count(*) AS `count`
+                               FROM users_notifications
+                               WHERE users_notifications.user_id = :uid");
+            $st->bindParam(":uid", $this->app->user->uid);
+            $st->execute();
+            $result = $st->fetch();
+           
             // Get items
             $st = $this->app->db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type,
                                users_notifications.time AS timestamp, seen, username,
@@ -48,10 +55,10 @@
             $st->bindParam(":offset", $offset, PDO::PARAM_INT);
             $st->bindParam(":limit", $limit, PDO::PARAM_INT);
             $st->execute();
-            $result = $st->fetchAll();
+            $result->items = $st->fetchAll();
 
             // Loop items, get details and create images
-            foreach ($result as $key=>&$res) {
+            foreach ($result->items as $key=>&$res) {
                 if ($res->type == 'friend') {
                     // status
                     $st = $this->app->db->prepare("SELECT status
@@ -176,6 +183,9 @@
             } else if ($event->type === 'forum_post') {
                 $icon = 'chat';
                 $text = $this->app->utils->userLink($event->username) .' posted in ';
+            } else if ($event->type === 'forum_mention') {
+                $icon = 'chat';
+                $text = $this->app->utils->userLink($event->username) .' mentioned you in ';
             } else if ($event->type === 'medal') {
                 $icon = 'trophy colour-' . $event->colour;
                 $text = "You have been awarded
@@ -189,6 +199,8 @@
             } else if ($event->type === 'friend_accepted') {
                 $icon = 'addfriend';
                 $text = $this->app->utils->userLink($event->username) . ' accepted your friend request';
+            } else {
+                return 'N/A';
             }
 
             if (isset($event->slug)) {

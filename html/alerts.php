@@ -3,12 +3,12 @@
     require_once('header.php');
 
     $event_limit = 25;
-    if (isset($_GET['page']) && is_numeric($_GET['page']))
+    if (isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0)
         $event_page = (int)$_GET['page'];
     else
-        $event_page = 0;
+        $event_page = 1;
 
-    $event_offset = $event_page * $event_limit;
+    $event_offset = ($event_page-1) * $event_limit;
     $events = $app->notifications->getEvents($event_limit, $event_offset);
 
     if (count($events) > 0):
@@ -16,7 +16,7 @@
 
         <ul class='events plain'>
 <?php
-        foreach ($events as $event):
+        foreach ($events->items as $event):
             $event->timestamp = strtotime($event->timestamp);
             if (!isset($prev_day) || $prev_day != date('Ymd', $event->timestamp)):
                 if (date('Ymd') == date('Ymd', $event->timestamp))
@@ -62,12 +62,12 @@
 <?php
     endif; 
 
-    if (count($events) > 0) {
+    if ($events->count > 1) {
         $pagination = new stdClass();
         $pagination->current = $event_page;
-        $pagination->last = (count($events) < $event_limit);
-        $pagination->root = '/alerts.php?page=';
-        include('elements/lite_pagination.php');
+        $pagination->count = ceil($events->count/$event_limit);
+        $pagination->root = '?page=';
+        include('elements/pagination.php');
     }
 
     require_once('footer.php');
