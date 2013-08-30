@@ -48,6 +48,7 @@
                             <ul class='post-list'>
 <?php
     $post = $thread->question;
+    $post->body = $app->parse($post->body);
 ?>
                                 <li>
                                     <div class="post_header clr">
@@ -64,13 +65,27 @@
 <?php   endif; ?>
                                 </li>
                             </ul>
+
+<?php
+    if (count($thread->posts)):
+?>
+
                             <div class='forum-pagination'>
+<?php
+        if (ceil($thread->replies/10) > 1) {
+            $pagination = new stdClass();
+            $pagination->current = $page;
+            $pagination->count = ceil($thread->replies/10);
+            $pagination->root = '?page=';
+            include('elements/pagination.php');
+        }
+?>
                                 Viewing <?=count($thread->posts);?> repl<?=(count($thread->posts) == 1)?'y':'ies';?> - <?=$thread->p_start;?> through <?=$thread->p_end;?> (of <?=$thread->replies;?> total)
                             </div>
                             <ul class='post-list reply-list'>
 <?php 
-    foreach($thread->posts AS $post):
-        $post->body = $app->parse($post->body);
+        foreach($thread->posts AS $post):
+            $post->body = $app->parse($post->body);
 ?>
                                 <li>
                                     <div class="post_header clr">
@@ -80,24 +95,43 @@
                                         </div>
                                     </div>
                                     <div class="post_body"><?=$post->body;?></div>
-<?php   if ($post->edited > 0): ?>
+<?php       if ($post->edited > 0): ?>
                                     <div class="post_footer small">
                                         <i>Edited 3 hours ago by</i>
                                     </div>
-<?php   endif; ?>
+<?php       endif; ?>
                                 </li>
-<?php endforeach; ?>
+<?php   endforeach; ?>
 
                             </ul>
                             <div class='forum-pagination'>
+<?php
+        if (ceil($thread->replies/10) > 1) {
+            $pagination = new stdClass();
+            $pagination->current = $page;
+            $pagination->count = ceil($thread->replies/10);
+            $pagination->root = '?page=';
+            include('elements/pagination.php');
+        }
+?>
                                 Viewing <?=count($thread->posts);?> repl<?=(count($thread->posts) == 1)?'y':'ies';?> - <?=$thread->p_start;?> through <?=$thread->p_end;?> (of <?=$thread->replies;?> total)
                             </div>
+<?php
+    endif; // End reply count check
 
+    if ($app->user->loggedIn):
+?>
 
                             <form class='forum-thread-reply' method="POST" action="?submit">
 <?php include('elements/wysiwyg.php'); ?>
                                 <input type='submit' class='button' value='Submit'/>
                             </form>
+
+<?php
+    else:
+        $app->utils->message('You must be logged in to reply to this topic', 'info');
+    endif;
+?>
 
                         </div>
                     </section>

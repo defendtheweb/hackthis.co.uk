@@ -73,7 +73,7 @@
 <?php
     foreach($threads AS $thread):
 ?>
-                                            <li class='row <?=(!$thread->viewed)?($thread->watching)?'highlight':'new':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
+                                            <li class='row <?=($app->user->loggedIn)?(!$thread->viewed)?($thread->watching)?'highlight':'new':'':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
                                                 <div class="section_info col span_16">
                                                     <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
 <?php

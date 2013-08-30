@@ -310,9 +310,11 @@
             $thread->section = $this->getSection($thread->section_slug);
 
             //Update view status
-            $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`)
-                    VALUES (:uid, :thread_id) ON DUPLICATE KEY UPDATE `viewed` = now()");
-            $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+            if ($this->app->user->loggedIn) {
+                $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`)
+                        VALUES (:uid, :thread_id) ON DUPLICATE KEY UPDATE `viewed` = now()");
+                $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+            }
 
             return $thread;
         }

@@ -235,6 +235,25 @@
         margin: 8px 0;
         padding: 8px 0;
         background: $black;
+
+        .pagination {
+            margin-top: -4px;
+            float: right;
+            width: auto;
+            background: $black;
+
+            .right {
+                margin-left: 4px;
+            }
+
+            a:hover {
+                background: $bg;
+            }
+
+            .current {
+                background: $green !important;
+            }
+        }        
     }
 
     .post-unwatch {
