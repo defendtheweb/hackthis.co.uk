@@ -232,7 +232,7 @@
         }
 
         public function newThread($section, $title, $body) {
-            if (!$title || strlen($title) < 3 || !$body || strlen($body) < 3)
+            if (!$title || strlen($title) < 3)
                 return false;
 
             $section_id = $section->id;
@@ -246,7 +246,11 @@
 
                 $thread_id = $this->app->db->lastInsertId();
 
-                $this->newPost($thread_id, $body);
+                $status = $this->newPost($thread_id, $body);
+                if (!$status) {
+                    $this->app->db->rollback();
+                    return false;
+                }
                 // $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
                 //     VALUES (:thread_id, :body, :uid)");
                 // $st->execute(array(':thread_id'=>$thread_id, ':body'=>$body, ':uid'=>$this->app->user->uid));
@@ -430,7 +434,7 @@
             }
 
             //check post length
-            if (str_word_count($body) <= 2) {
+            if (str_word_count($body) < 2) {
                 $this->error = "Post content is too short";
                 return false;
             }

@@ -53,7 +53,7 @@
 ?>    
                         <div class="col span_18 article-main">
 
-<?php if ($app->user->loggedIn && $section && !$section->child): ?>
+<?php if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child): ?>
     <a href='#' class='new-thread button right'><i class='icon-chat'></i> New thread</a>
 <?php endif; ?>
 
@@ -85,7 +85,7 @@
     if (ceil($thread->count/10) > 1) {
         $pagination = new stdClass();
         $pagination->count = ceil($thread->count/10);
-        $pagination->root = $thread->slug . '?page=';
+        $pagination->root = '/forum/' . $thread->slug . '?page=';
         include('elements/lite_pagination.php');
     }
 
