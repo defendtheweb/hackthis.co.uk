@@ -73,9 +73,9 @@ $(function() {
 
     function resizePostInfo(self) {
         return function() {
-            var h = $(self).find('.post_content').innerHeight();
+            var h = $(self).find('.post_content').height();
             if (h > $(self).find('.post_header').height()) {
-                $(self).find('.post_header').innerHeight(h+1);
+                $(self).find('.post_header').height(h-4);
             }
         }
     }
