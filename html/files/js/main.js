@@ -34,6 +34,8 @@ $(function() {
             $this = $(this);
             d = new Date($this.attr('datetime'));
             $this.text(timeSince(d, $this.hasClass('short')));
+            if (!$this.attr('title'))
+                $this.attr('title', timeString(d));
         });
 
         setTimeout(updateTimes, 1000);
