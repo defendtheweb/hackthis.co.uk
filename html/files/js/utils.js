@@ -72,7 +72,7 @@ function timeString(d) {
                         "April", "May", "June", "July", "August", "September", 
                         "October", "November", "December");
 
-    return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + d.getHours() + ":" + d.getMinutes();
+    return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + (d.getHours()<=9?'0':'') + d.getHours() + ":" + (d.getMinutes()<=9?'0':'') + d.getMinutes();
 }
 
 
