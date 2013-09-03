@@ -75,9 +75,12 @@
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
-                    $st->fetch();
+                    $n = $st->fetch();
 
-                    $res->uri = "{$res->uri}#comment-{$res->item_id}";
+                    if (!$n)
+                        unset($result[$key]);
+                    else
+                        $res->uri = "{$res->uri}#comment-{$res->item_id}";
                 } else if ($res->type == 'forum_post' || $res->type == 'forum_mention') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT users.username, forum_threads.title, CONCAT('/forum/', forum_threads.`slug`) AS uri
@@ -90,9 +93,13 @@
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
-                    $st->fetch();
+                    $n = $st->fetch();
 
-                    $res->uri = "{$res->uri}#post-{$res->item_id}";
+
+                    if (!$n)
+                        unset($result[$key]);
+                    else
+                        $res->uri = "{$res->uri}#post-{$res->item_id}";
                 } else if ($res->type == 'article' || $res->type == 'favourite') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT articles.title, articles.category_id, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri
@@ -127,11 +134,18 @@
             return $result;
         }
 
-        public function add($to, $type, $item) {
-            $st = $this->app->db->prepare('INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (:to, :type, :item)');
-            $result = $st->execute(array(':to' => $to, ':type' => $type, ':item' => $item));
-           
-            return $result;
+        public function call($username, $type, $title, $uri) {
+            $ch = curl_init();
+
+            $s = $this->app->config['socket'];
+            curl_setopt($ch, CURLOPT_URL, $s['address'] . '/feed?api=' . $s['key']);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, 
+                http_build_query(array('username' => $username, 'type' => $type, 'title' => $title, 'uri' => $uri)));
+
+            curl_exec($ch);
+
+            curl_close ($ch);
         }
 
         public function remove($id) {

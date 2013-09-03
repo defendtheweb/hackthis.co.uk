@@ -115,21 +115,37 @@ $(function() {
                     <div class="loading"><i class="icon-clock"></i></div>\
                     <div class="profile-stats-extra">\
                         <div id="profile-stats-chart"></div>\
-                        <div class="more"><ul><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li><li>stuff here</li></ul></div>\
+                        <div class="more"></div>\
                     </div>\
                 </div>').hide();
 
     $details.find('.show-posts, .show-articles, .show-karma').on('click', function(e) {
         e.preventDefault();
 
-        var uri = '/files/ajax/user.php?action=graph&uid='+uid;
+        var type = '';
+        if ($(this).hasClass('show-posts'))
+            type = 'posts'
+        else
+            type = 'articles'
+        var uri = '/files/ajax/user.php?action=graph&type='+type+'&uid='+uid;
 
         $.when($details.children('ul').fadeOut()).then(function() {
             $stats.clone().appendTo($details).fadeIn(function() {
                 $.getJSON(uri, function(data) {
                     $details.find('.loading').hide();
                     $details.find('.profile-stats-extra').slideDown();
-                    drawChart(data['data']);
+                    drawChart(data['graph']);
+
+                    if (data['data'] && data['data'].length) {
+                        $ul = $('<ul>');
+                        $.each(data['data'], function(index, data) {
+                            $a = $('<a>', {href: '/forum/'+data.slug, text: data.title, class: 'strong'});
+                            $time = $('<time>', {datetime: data.time, class: 'dark'});
+                            $li = $('<li>', {text: data.body}).prepend('<br/>').prepend($time).prepend($a);
+                            $li.appendTo($ul);
+                        });
+                        $details.find('.profile-stats-extra .more').append($ul);
+                    }
                 }); 
             });
         });
@@ -217,7 +233,7 @@ $(function() {
 
         graph.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(-4," + height + ")")
+            .attr("transform", "translate(-2," + height + ")")
             .call(xAxis);
 
         var yAxis = d3.svg.axis()

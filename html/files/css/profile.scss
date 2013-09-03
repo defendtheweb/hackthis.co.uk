@@ -193,6 +193,11 @@
                     &:nth-child(odd) {
                         background: $light_bg;
                     }
+
+                    time {
+                        margin-left: 4px;
+                        font-size: 0.9em;
+                    }
                 }
             }
 

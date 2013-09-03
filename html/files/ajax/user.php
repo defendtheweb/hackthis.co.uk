@@ -32,13 +32,8 @@
 
             if ($res)
                 $result['music'] = $res;
-        } else if ($action == 'graph' && isset($_GET['uid'])) {
-            $res = profile::getGraph($_GET['uid']);
-
-            $result['status'] = (bool) $res;
-
-            if ($res)
-                $result['data'] = $res;
+        } else if ($action == 'graph' && isset($_GET['uid']) && isset($_GET['type'])) {
+                $result = profile::getStats($_GET['uid'], $_GET['type']);
         }
     }
 

@@ -36,8 +36,10 @@
                     ON u.user_id = activity.user_id
                     LEFT JOIN users_friends friends
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    CROSS JOIN (SELECT COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 AND author = :user) forum_posts
-                    CROSS JOIN (SELECT COUNT(*) AS `articles` FROM articles WHERE user_id = :user) articles
+                    LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
+                    ON forum_posts.author = u.user_id
+                    LEFT JOIN (SELECT user_id, COUNT(*) AS `articles` FROM articles GROUP BY user_id) articles
+                    ON articles.user_id = u.user_id
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
                     WHERE u.username = :profile");
@@ -169,12 +171,14 @@
             return $return;
         }
 
-        function printItem($key, $value, $time=false, $uc=false) {
-            if (!$key || !isset($value) || $value === false)
+        function printItem($key, $value=0, $time=false, $uc=false) {
+            if (!$key)
                 return;
 
             if ($time) {
                 $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $this->app->utils->timeSince($value) . '</time>';
+            } else if (!$value) {
+                $value = 0;
             } else if (is_numeric($value)) {
                 $value = number_format($value);
             } else {
@@ -237,16 +241,44 @@
 
 
         /* STATIC FUNCTIONS */
-        public static function getGraph($uid, $type='posts') {
+        public static function getStats($uid, $type='posts') {
             global $app;
-            $st = $app->db->prepare('SELECT date_format(posted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM forum_posts
-                WHERE deleted = 0 AND author = :uid
-                GROUP BY `d`
-                ORDER BY `posted` ASC');
-            $st->execute(array(':uid' => $uid));
-            $res = $st->fetchAll();
+            
+            $result = array("status"=>true);
 
-            return $res;
+            if ($type == 'posts') {
+                $st = $app->db->prepare('SELECT date_format(posted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM forum_posts
+                    WHERE deleted = 0 AND author = :uid
+                    GROUP BY `d`
+                    ORDER BY `posted` ASC');
+                $st->execute(array(':uid' => $uid));
+                $result['graph'] = $st->fetchAll();
+
+                $st = $app->db->prepare('SELECT posts.body, posts.posted AS `time`, threads.title, threads.slug
+                    FROM forum_posts posts
+                    INNER JOIN forum_threads threads
+                    ON threads.thread_id = posts.thread_id
+                    WHERE posts.deleted = 0 AND posts.author = :uid
+                    ORDER BY posts.`posted` DESC');
+                $st->execute(array(':uid' => $uid));
+                $result['data'] = $st->fetchAll();
+
+                if ($result['data']) {
+                    foreach ($result['data'] AS $post) {
+                        $post->body = $app->parse($post->body, false);
+                        $post->time = date('c', strtotime($post->time));
+                    }
+                }
+            } else {
+                $st = $app->db->prepare('SELECT date_format(submitted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM articles
+                    WHERE user_id = :uid
+                    GROUP BY `d`
+                    ORDER BY `submitted` ASC');
+                $st->execute(array(':uid' => $uid));
+                $result['graph'] = $st->fetchAll();                
+            }
+
+            return $result;
         }
 
         public static function getMusic($id) {
