@@ -30,6 +30,38 @@ $(function() {
     });
 
 
+    $('a.remove').click(function(e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        var $elem = $(this).closest('li');
+
+        $.confirm({
+            title   : 'Delete post',
+            message : 'Are you sure you want to delete this message? <br />It cannot be restored at a later time! Continue?',
+            buttons : {
+                Yes : {
+                    action: function(){
+                        // Remove item from feed
+                        var uri = '/files/ajax/forum.php?action=post.remove&id=' + id;
+                        $.getJSON(uri, function(data) {
+                            if (data.status) {
+                               $elem.slideUp();
+                               numbers =$($('.forum-pagination')[0]).clone().children().remove().end().text().match(/[0-9]+/g);
+                               console.log(numbers);
+                               $('.forum-pagination').text('Viewing '+(numbers[0]-1)+' replies - '+numbers[1]+' through '+(numbers[2]-1)+' (of '+(numbers[3]-1)+' total)')
+                            }
+                        });
+                    }
+                },
+                No  : {}
+            }
+        });
+    });
+
+
+
+
+
     $('ul.post-list li').each(function() {
         var self = this;
 

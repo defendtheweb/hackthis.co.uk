@@ -283,7 +283,7 @@
                 return false;
 
             // Get question
-            $st = $this->app->db->prepare("SELECT users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
                 forum_posts.posts, users.score
                 FROM forum_posts post
@@ -311,7 +311,7 @@
             $thread->p_start = (($page-1)*$limit)+1;            
 
             // Get replies
-            $st = $this->app->db->prepare("SELECT users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
                 forum_posts.posts, users.score
                 FROM forum_posts post
@@ -404,6 +404,33 @@
 
                 // Add to feed
                 $this->app->feed->call($this->app->user->username, 'forum_post', "cat", "dog");
+            }
+
+            return $status;
+        }
+
+        public function deletePost($post_id) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            if ($this->app->user->forum_priv == 1) {
+                $st = $this->app->db->prepare("SELECT post_id
+                                               FROM forum_posts
+                                               WHERE post_id = :pid AND author = :uid");
+                $st->execute(array(':pid'=>$post_id, ':uid'=>$this->app->user->uid));
+                $status = $st->fetch();
+            } else if ($this->app->user->forum_priv > 1) {
+                $status = true;
+            } else {
+                $status = false;
+            }
+
+            if ($status) {
+                $st = $this->app->db->prepare("UPDATE forum_posts
+                                               SET deleted = 1
+                                               WHERE post_id = :pid
+                                               LIMIT 1");
+                $st->execute(array(':pid'=>$post_id));                
             }
 
             return $status;

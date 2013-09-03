@@ -1,6 +1,6 @@
 <?php
-    $custom_css = array('forum.scss', 'highlight.css');
-    $custom_js = array('forum.js', 'highlight.js');
+    $custom_css = array('forum.scss', 'highlight.css', 'confirm.css');
+    $custom_js = array('forum.js', 'highlight.js', 'jquery.confirm.js');
     if (!defined("_SIDEBAR")) define("_SIDEBAR", false);
     if (!defined("PAGE_PUBLIC")) define('PAGE_PUBLIC', true);
 
@@ -31,8 +31,11 @@
                     header('Location: '. strtok($_SERVER["REQUEST_URI"], '?'));
             }
         }
+
+        $app->page->title = 'Forum - ' . $section->title;
     } else {
         $section = null;
+        $app->page->title = 'Forum';
     }
 
     $breadcrumb = $forum->getBreadcrumb($section);

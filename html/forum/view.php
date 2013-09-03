@@ -35,6 +35,8 @@
 
     $breadcrumb = $forum->getBreadcrumb($section, true) . "<a href='/forum/{$thread->slug}'>{$thread->title}</a>";
 
+    $app->page->title = $thread->title;
+
     require_once('header.php');
 ?>
                     <section class="row">
@@ -83,7 +85,6 @@
                                         <br/>
 <?php   if ($post->user_id === $app->user->uid): ?>
                                         <a href='#' class='button icon'><i class='icon-edit'></i></a>
-                                        <a href='#' class='button icon'><i class='icon-trash'></i></a>
 <?php   else: ?>
                                         <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
@@ -139,9 +140,9 @@
                                         <i class='icon-trophy'></i> <?=$post->score;?><br/>
                                         <i class='icon-chat'></i> <?=$post->posts;?><br/>
                                         <br/>
-<?php   if ($post->user_id === $app->user->uid): ?>
+<?php   if ($post->user_id === $app->user->uid || $app->user->forum_priv > 1): ?>
                                         <a href='#' class='button icon'><i class='icon-edit'></i></a>
-                                        <a href='#' class='button icon'><i class='icon-trash'></i></a>
+                                        <a href='#' data-id='<?=$post->post_id;?>' class='button icon remove'><i class='icon-trash'></i></a>
 <?php   else: ?>
                                         <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
