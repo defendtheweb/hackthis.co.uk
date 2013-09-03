@@ -914,8 +914,9 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
 . $title . "</div>\n<div class=\"bbcode_quote_body\">"
 . $content . "</div>\n</div>\n";*/
 
-return "\n<blockquote>\n\t".$content."\n\t<span>".$title."</span>\n</blockquote>";
+return "\n<blockquote>\n\t{$content}" . ($title?"\n\t<span>{$title}</span>":'') . "\n</blockquote>";
 }
+
 function DoList($bbcode, $action, $name, $default, $params, $content) {
     $list_styles = Array(
                          '1' => 'decimal',
