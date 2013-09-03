@@ -269,6 +269,7 @@
         list-style: none;
         background: $light_bg;
         margin-bottom: 2px;
+        position: relative;
 
         .post_info, .post_body {
             padding: 8px;
@@ -296,6 +297,9 @@
         }
 
         .post_content {
+            padding-right: 2%;
+            margin-bottom: 2%;
+
             .karma {
                 text-align: right;
                 padding: 2px 4px;
@@ -313,17 +317,21 @@
                             color: red;
                         }
                     }
-                }
-            }
 
-            .post_footer {
-                padding: 4px;
+                    &.dark {
+                        padding: 0;
+
+                        &:hover {
+                            color: $text;
+                        }
+                    }
+                }
             }
 
             .post_body {
                 // background: #222;
                 color: #BBB;
-                padding-left: 0;
+                padding: 0;
                 padding-top: 2px;
 
                 font-size: 1em;
@@ -333,6 +341,13 @@
                     background: $black;
                     border-color: darken($green, 10%);
                     padding: 10px 60px 10px 10px;
+                }
+
+                .post_signature {
+                    border-top: 1px solid $bg;
+                    margin-top: 16px;
+                    padding-top: 4px;
+                    clear: both;
                 }
             }
         }

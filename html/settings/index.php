@@ -59,14 +59,15 @@
 
     $tab = 'profile';
     include('elements/tabs_settings.php');
-
+?>
+    <h1>Profile</h1>
+<?php
     if (isset($updated)) {
         $app->utils->message($updated);
     } else if (isset($_GET['done'])) {
         $app->utils->message("Profile updated, <a href='/user/".$app->user->username."'>view here</a>", "good");
     }
 ?>
-    <h1>Profile</h1>
     <form action="?save" method="POST">
         <fieldset>
             <label for="name">Real Name:</label><br>

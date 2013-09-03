@@ -367,6 +367,19 @@
             return (isset($this->username)) ? $this->username : '';
         }
 
+        public function updateSignature($signature, $token) {
+            if (!$this->app->checkCSRFKey("settings", $token))
+                return "Invalid request";
+
+            $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `forum_signature`) VALUES (:uid, :signature) ON DUPLICATE KEY UPDATE forum_signature = :signature');
+            $result = $st->execute(array(':signature' => $signature, ':uid' => $this->uid));
+
+            if ($result)
+                return true;
+            else
+                return "Error updating profile";
+        }
+
         public function update($changes) {
             if (!count($changes))
                 return false;

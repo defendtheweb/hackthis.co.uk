@@ -283,7 +283,7 @@
                 return false;
 
             // Get question
-            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
                 forum_posts.posts, users.score
                 FROM forum_posts post
@@ -311,7 +311,7 @@
             $thread->p_start = (($page-1)*$limit)+1;            
 
             // Get replies
-            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+            $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
                 forum_posts.posts, users.score
                 FROM forum_posts post

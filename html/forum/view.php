@@ -83,27 +83,31 @@
                                         <i class='icon-trophy'></i> <?=$post->score;?><br/>
                                         <i class='icon-chat'></i> <?=$post->posts;?><br/>
                                         <br/>
-<?php   if ($post->user_id === $app->user->uid): ?>
-                                        <a href='#' class='button icon'><i class='icon-edit'></i></a>
+<?php   if ($post->user_id === $app->user->uid || $app->user->forum_priv > 1): ?>
+                                        <a href='#' class='button icon'><i class='icon-edit'></i> Edit post</a>
 <?php   else: ?>
                                         <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
                                     </div>
-                                    <div class="col span_19 post_content">
+                                    <article class="col span_19 post_content">
                                         <div class="karma small">
                                             <a href='#'><i class='icon-caret-down'></i></a>
                                             12
                                             <a href='#'><i class='icon-caret-up'></i></a>
+                                            <a class='dark' href='/faq#karma'><i class='icon-help'></i></a>
                                         </div>
                                         <div class="post_body">
                                             <?=$post->body;?>
-                                        </div>
-<?php   if ($post->edited > 0): ?>
-                                        <div class="post_footer small">
-                                            <i>Edited 3 hours ago by</i>
-                                        </div>
+<?php
+        if (isset($post->signature)):
+            $post->signature = $app->parse($post->signature);
+?>
+                                            <div class='post_signature'>
+                                                <?=$post->signature;?>
+                                            </div>
 <?php   endif; ?>
-                                    </div>
+                                        </div>
+                                    </article>
                                 </li>
                             </ul>
 
@@ -147,7 +151,7 @@
                                         <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
                                     </div>
-                                    <div class="col span_19 post_content">
+                                    <article class="col span_19 post_content">
                                         <div class="karma small">
                                             <a href='#'><i class='icon-caret-down'></i></a>
                                             12
@@ -155,13 +159,21 @@
                                         </div>
                                         <div class="post_body">
                                             <?=$post->body;?>
+<?php
+        if (isset($post->signature)):
+            $post->signature = $app->parse($post->signature);
+?>
+                                            <div class='post_signature'>
+                                                <?=$post->signature;?>
+                                            </div>
+<?php   endif; ?>
                                         </div>
 <?php   if ($post->edited > 0): ?>
                                         <div class="post_footer small">
                                             <i>Edited 3 hours ago by</i>
                                         </div>
 <?php   endif; ?>
-                                    </div>
+                                    </article>
                                 </li>
 <?php   endforeach; ?>
 
