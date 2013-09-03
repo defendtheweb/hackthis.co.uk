@@ -28,4 +28,23 @@ $(function() {
             $(this).removeClass('post-unwatch').html('<i class="icon-eye"></i> Watch');
         }
     });
+
+
+    $('ul.post-list li').each(function() {
+        var self = this;
+
+        if ($(self).find('.post_content .bbcode-youtube').length)
+            setTimeout(resizePostInfo(self), 5);
+        else
+            resizePostInfo(self)();
+    });
+
+    function resizePostInfo(self) {
+        return function() {
+            var h = $(self).find('.post_content').innerHeight();
+            if (h > $(self).find('.post_header').height()) {
+                $(self).find('.post_header').innerHeight(h+1);
+            }
+        }
+    }
 });

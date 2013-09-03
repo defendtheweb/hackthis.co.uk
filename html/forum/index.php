@@ -59,6 +59,11 @@
 
                             <h1 class='no-margin'>Forum</h1>
                             <?=$breadcrumb;?><br/><br/>
+<?php
+    if ($app->user->loggedIn && $app->user->forum_priv < 1) {
+        $app->utils->message('You have been banned from posting content in the forum', 'error');
+    }
+?>
                             <div class='forum-container clearfix'>
                                 <ul class='forum-topics fluid'>
                                     <li class='forum-topic-header row'>

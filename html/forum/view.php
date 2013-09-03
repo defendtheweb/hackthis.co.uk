@@ -44,7 +44,7 @@
                         <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>">
 
 <?php if ($app->user->loggedIn): ?>
-    <a href='#' class='post-reply button right'><i class='icon-chat'></i> Post reply</a>
+    <a href='#submit' class='post-reply button right'><i class='icon-chat'></i> Post reply</a>
 <?php   if ($thread->watching): ?>
     <a href='#' class='post-watch post-unwatch button right'><i class='icon-eye-blocked'></i> Unwatch</a>
 <?php   else: ?>
@@ -71,19 +71,38 @@
     $post = $thread->question;
     $post->body = $app->parse($post->body);
 ?>
-                                <li>
-                                    <div class="post_header clr">
-                                        <a href="/user/<?=$post->username;?>"><img src="/users/images/29/1:1/bfb4871a2dd1e1f372a6784458b6dce9.jpg" class="user_img"> <?=$post->username;?></a>
-                                        <div class="karma small">
-                                            Karma: <span class="karma"><a href="#" data-id="18241" class="rep rep_down">&lt;</a> 0 <a href="#" data-id="18241" class="rep rep_up">&gt;</a></span>
-                                        </div>
-                                    </div>
-                                    <div class="post_body"><?=$post->body;?></div>
-<?php   if ($post->edited > 0): ?>
-                                    <div class="post_footer small">
-                                        <i>Edited 3 hours ago by</i>
-                                    </div>
+                                <li class='row fluid clr'>
+                                    <div class="col span_5 post_header">
+                                        <a href="/user/<?=$post->username;?>" class="user">
+                                            <?=$post->username;?><br/>
+                                            <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">
+                                        </a><br/>
+
+                                        <i class='icon-trophy'></i> <?=$post->score;?><br/>
+                                        <i class='icon-chat'></i> <?=$post->posts;?><br/>
+                                        <br/>
+<?php   if ($post->user_id === $app->user->uid): ?>
+                                        <a href='#' class='button icon'><i class='icon-edit'></i></a>
+                                        <a href='#' class='button icon'><i class='icon-trash'></i></a>
+<?php   else: ?>
+                                        <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
+                                    </div>
+                                    <div class="col span_19 post_content">
+                                        <div class="karma small">
+                                            <a href='#'><i class='icon-caret-down'></i></a>
+                                            12
+                                            <a href='#'><i class='icon-caret-up'></i></a>
+                                        </div>
+                                        <div class="post_body">
+                                            <?=$post->body;?>
+                                        </div>
+<?php   if ($post->edited > 0): ?>
+                                        <div class="post_footer small">
+                                            <i>Edited 3 hours ago by</i>
+                                        </div>
+<?php   endif; ?>
+                                    </div>
                                 </li>
                             </ul>
 
@@ -110,19 +129,38 @@
             $n++;
             $post->body = $app->parse($post->body);
 ?>
-                                <li <?=($thread_page == $thread_page_count && $n = count($thread->posts))?'id="latest"':'';?>>
-                                    <div class="post_header clr">
-                                        <a href="/user/<?=$post->username;?>"><img src="/users/images/29/1:1/bfb4871a2dd1e1f372a6784458b6dce9.jpg" class="user_img"> <?=$post->username;?></a>
+                                <li <?=($thread_page == $thread_page_count && $n == count($thread->posts))?'id="latest"':'';?> class='row fluid clr'>
+                                    <div class="col span_5 post_header">
+                                        <a href="/user/<?=$post->username;?>" class="user">
+                                            <?=$post->username;?><br/>
+                                            <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">
+                                        </a><br/>
+
+                                        <i class='icon-trophy'></i> <?=$post->score;?><br/>
+                                        <i class='icon-chat'></i> <?=$post->posts;?><br/>
+                                        <br/>
+<?php   if ($post->user_id === $app->user->uid): ?>
+                                        <a href='#' class='button icon'><i class='icon-edit'></i></a>
+                                        <a href='#' class='button icon'><i class='icon-trash'></i></a>
+<?php   else: ?>
+                                        <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
+<?php   endif; ?>
+                                    </div>
+                                    <div class="col span_19 post_content">
                                         <div class="karma small">
-                                            Karma: <span class="karma"><a href="#" data-id="18241" class="rep rep_down">&lt;</a> 0 <a href="#" data-id="18241" class="rep rep_up">&gt;</a></span>
+                                            <a href='#'><i class='icon-caret-down'></i></a>
+                                            12
+                                            <a href='#'><i class='icon-caret-up'></i></a>
                                         </div>
+                                        <div class="post_body">
+                                            <?=$post->body;?>
+                                        </div>
+<?php   if ($post->edited > 0): ?>
+                                        <div class="post_footer small">
+                                            <i>Edited 3 hours ago by</i>
+                                        </div>
+<?php   endif; ?>
                                     </div>
-                                    <div class="post_body"><?=$post->body;?></div>
-<?php       if ($post->edited > 0): ?>
-                                    <div class="post_footer small">
-                                        <i>Edited 3 hours ago by</i>
-                                    </div>
-<?php       endif; ?>
                                 </li>
 <?php   endforeach; ?>
 
@@ -142,7 +180,7 @@
 <?php
     endif; // End reply count check
 
-    if ($app->user->loggedIn):
+    if ($app->user->loggedIn && $app->user->forum_priv > 0):
 ?>
 
                             <form id="submit" class='forum-thread-reply' method="POST" action="?submit#submit">
@@ -159,6 +197,8 @@
                             </form>
 
 <?php
+    elseif ($app->user->loggedIn):
+        $app->utils->message('You have been banned from posting content in the forum', 'error');
     else:
         $app->utils->message('You must be logged in to reply to this topic', 'info');
     endif;

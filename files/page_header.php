@@ -8,12 +8,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>HackThis!!<?=$app->page->title?' - '.$app->page->title:'';?></title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
         <?=isset($app->page->canonical)?'<link rel="canonical" href="'.$app->page->canonical.'"/>':'';?>
         <?=isset($app->page->prev)?'<link rel="prev" href="'.$app->page->prev.'"/>':'';?>
         <?=isset($app->page->next)?'<link rel="next" href="'.$app->page->next.'"/>':'';?>
 
         <link href='//fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
+
+        <script src="//<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
 
         <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
@@ -22,7 +24,7 @@
             <script src="/files/js/html5shiv.js"></script>
         <![endif]-->
     </head>
-    <body>
+    <body <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".md5($app->user->username)."'";?>>
       <div class="page-wrap">
         <div id="header-wrap" class="container">
             <header>

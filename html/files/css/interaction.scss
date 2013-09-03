@@ -191,6 +191,10 @@ a.button {
     i {
         padding-right: 4px;
     }
+
+    &.icon i {
+        padding-right: 0;
+    }
 }
 
 

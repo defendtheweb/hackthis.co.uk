@@ -246,9 +246,10 @@
 
                 $thread_id = $this->app->db->lastInsertId();
 
-                $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
-                    VALUES (:thread_id, :body, :uid)");
-                $st->execute(array(':thread_id'=>$thread_id, ':body'=>$body, ':uid'=>$this->app->user->uid));
+                $this->newPost($thread_id, $body);
+                // $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
+                //     VALUES (:thread_id, :body, :uid)");
+                // $st->execute(array(':thread_id'=>$thread_id, ':body'=>$body, ':uid'=>$this->app->user->uid));
 
                 $this->app->db->commit();
             } catch(PDOExecption $e) {
@@ -278,10 +279,16 @@
                 return false;
 
             // Get question
-            $st = $this->app->db->prepare("SELECT users.username, post.body, post.posted, post.updated AS edited
+            $st = $this->app->db->prepare("SELECT users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+                profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
+                forum_posts.posts, users.score
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
+                LEFT JOIN users_profile profile
+                ON users.user_id = profile.user_id
+                LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
+                ON forum_posts.author = post.author
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT 1");
@@ -289,13 +296,27 @@
             $st->execute();
             $thread->question = $st->fetch();
 
+            // Get questioners image
+            if (isset($thread->question->image)) {
+                $gravatar = isset($thread->question->gravatar) && $thread->question->gravatar == 1;
+                $thread->question->image = profile::getImg($thread->question->image, 50, $gravatar);
+            } else
+                $thread->question->image = profile::getImg(null, 50);
+
+
             $thread->p_start = (($page-1)*$limit)+1;            
 
             // Get replies
-            $st = $this->app->db->prepare("SELECT users.username, post.body, post.posted, post.updated AS edited
+            $st = $this->app->db->prepare("SELECT users.user_id, users.username, post.body, post.posted, post.updated AS edited,
+                profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
+                forum_posts.posts, users.score
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
+                LEFT JOIN users_profile profile
+                ON users.user_id = profile.user_id
+                LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
+                ON forum_posts.author = post.author
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT :l1, :l2");
@@ -304,6 +325,15 @@
             $st->bindValue(':l2', (int) $limit, PDO::PARAM_INT); 
             $st->execute();
             $thread->posts = $st->fetchAll();
+
+            // Get posts images
+            foreach($thread->posts AS $post) {
+                if (isset($post->image)) {
+                    $gravatar = isset($post->gravatar) && $post->gravatar == 1;
+                    $post->image = profile::getImg($post->image, 50, $gravatar);
+                } else
+                    $post->image = profile::getImg(null, 50);
+            }
 
             $thread->p_end = $thread->p_start + count($thread->posts) - 1;
 
@@ -321,10 +351,8 @@
         }
 
         public function newPost($thread_id, $body) {
-            if (strlen($body) <= 3) {
-                $this->error = 'Post content is too short';
+            if (!$this->validatePost($body))
                 return false;
-            }
 
             $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
                 VALUES (:thread_id, :body, :uid)");
@@ -389,6 +417,39 @@
 
         public function getError() {
             return ($this->error)?$this->error:'Error making request';
+        }
+
+        //check user can post
+        function validatePost($body, $edit=false) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            if ($this->app->user->forum_priv < 1) {
+                $this->error = "You have been banned from posting messages";
+                return false;
+            }
+
+            //check post length
+            if (str_word_count($body) <= 2) {
+                $this->error = "Post content is too short";
+                return false;
+            }
+
+            if (!$edit)  {
+                //check when last post was made
+                $st = $this->app->db->prepare('SELECT author
+                                               FROM forum_posts
+                                               WHERE author = :uid AND posted > NOW() - INTERVAL 30 SECOND
+                                               ORDER BY posted DESC
+                                               LIMIT 1');
+                $st->execute(array(':uid'=>$this->app->user->uid));
+                if ($st->fetch()) {
+                    $this->error = "You can only post a message once every 30 seconds, please wait and try again";
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 ?>

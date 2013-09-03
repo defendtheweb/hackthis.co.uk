@@ -267,7 +267,7 @@
 
     .post-list li {
         list-style: none;
-        background: $bg;
+        background: $light_bg;
         margin-bottom: 2px;
 
         .post_info, .post_body {
@@ -275,45 +275,67 @@
         }
 
         .post_header {
-            padding: 6px 8px;
-            padding-left: 35px;
-            height: 29px;
+            padding: 6px 0 12px 0;
+            text-align: center;
             position: relative;
 
+            background: $bg;
+
+            a.user {
+                font-size: 1.1em;
+                font-weight: bold;
+            }
+
             img {
-                position: absolute;
-                top: 0;
-                left: 0;
+                margin: 4px;
             }
 
+            .button {
+                margin-left: 0;
+            }
+        }
+
+        .post_content {
             .karma {
-                float: right;
+                text-align: right;
+                padding: 2px 4px;
+
+                a {
+                    padding: 0 4px;
+
+                    &:hover {
+                        text-decoration: none;
+
+                        .icon-caret-up {
+                            color: $bright_green;
+                        }
+                        .icon-caret-down {
+                            color: red;
+                        }
+                    }
+                }
+            }
+
+            .post_footer {
+                padding: 4px;
+            }
+
+            .post_body {
+                // background: #222;
+                color: #BBB;
+                padding-left: 0;
+                padding-top: 2px;
+
+                font-size: 1em;
+                line-height: 1.3em;
+
+                blockquote {
+                    background: $black;
+                    border-color: darken($green, 10%);
+                    padding: 10px 60px 10px 10px;
+                }
             }
         }
-
-        .post_footer {
-            padding: 6px 8px;
-        }
-
-        .post_body {
-            background: #222;
-            color: #BBB;
-
-            font-size: 1em;
-            line-height: 1.3em;
-
-            blockquote {
-                background: $black;
-                border-color: darken($green, 10%);
-                padding: 10px 60px 10px 10px;
-            }
-        }
-    }
-
-    .reply-list li .post_body {
-        background: $black;
-        color: $text;
-        border: 1px solid $bg;
     }
 
     .forum-thread-reply {
