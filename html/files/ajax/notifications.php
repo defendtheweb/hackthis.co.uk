@@ -9,7 +9,7 @@
         $result['items'] = $app->notifications->getEvents();
     } else {
         $last = isset($_POST['last'])?$_POST['last']:0;
-        $result['feed'] = $app->feed->get($last);
+        // $result['feed'] = $app->feed->get($last); -- feed is now sent via sockets
         $result['counts'] = $app->notifications->getCounts();
     }
 
