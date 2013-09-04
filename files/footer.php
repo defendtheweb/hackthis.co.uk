@@ -9,7 +9,9 @@
                     <span class='strong'>Disclaimer:</span><br/>
                     The owner of this site does not accept responsibility for the actions of any users of this site.
                     Users are solely responsible for any content that they place on this site This site does not encourage or condone any illegal activity,
-                    or attempts to hack into any network where they do not have authority to do so. 
+                    or attempts to hack into any network where they do not have authority to do so. <br/>
+                    <br/>
+                    <a href='/privacy'>Privacy</a> &middot; <a href='/terms'>Terms of Use</a> &middot; <a href='/contact'>Contact Us</a> 
                 </div>
                 <div id="page-footer-2">
                     <div class="container row">
