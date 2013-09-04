@@ -30,7 +30,6 @@ $(function() {
                 No  : {}
             }
         });
-
     });
 
     $('body').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {

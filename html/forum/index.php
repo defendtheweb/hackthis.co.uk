@@ -6,6 +6,11 @@
 
     require_once('init.php');
 
+    if (isset($_GET['page']) && is_numeric($_GET['page']))
+        $page = $_GET['page'];
+    else
+        $page = 1;
+
     $forum = $app->forum;
 
     $breadcrumb = '';
@@ -41,11 +46,14 @@
     $breadcrumb = $forum->getBreadcrumb($section);
 
     if (isset($_GET['no-replies']))
-        $threads = $forum->getThreads($section, true);
+        $threads = $forum->getThreads($section, $page, true);
     else if (isset($_GET['popular']))
-        $threads = $forum->getThreads($section, false, true);
+        $threads = $forum->getThreads($section, $page, false, true);
     else
-        $threads = $forum->getThreads($section);
+        $threads = $forum->getThreads($section, $page);
+
+    $threads_count = $threads->count;
+    $threads = $threads->threads;
 
     require_once('header.php');
 ?>
@@ -68,7 +76,11 @@
     }
 ?>
                             <div class='forum-container clearfix'>
-                                <ul class='forum-topics fluid'>
+                                <div class='forum-topics'>
+<?php
+    if (count($threads)):
+?>
+                                <ul class='fluid'>
                                     <li class='forum-topic-header row'>
                                         <div class="section_info col span_16">Thread</div>
                                         <div class="section_replies col span_2">Replies</div>
@@ -79,31 +91,31 @@
                                         <ul>
 
 <?php
-    foreach($threads AS $thread):
+        foreach($threads AS $thread):
 ?>
                                             <li class='row <?=($app->user->loggedIn)?(!$thread->viewed)?($thread->watching)?'highlight':'new':'':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
                                                 <div class="section_info col span_16">
                                                     <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
 <?php
-    if (ceil($thread->count/10) > 1) {
-        $pagination = new stdClass();
-        $pagination->count = ceil($thread->count/10);
-        $pagination->root = '/forum/' . $thread->slug . '?page=';
-        include('elements/lite_pagination.php');
-    }
+            if (ceil($thread->count/10) > 1) {
+                $pagination = new stdClass();
+                $pagination->count = ceil($thread->count/10);
+                $pagination->root = '/forum/' . $thread->slug . '?page=';
+                include('elements/lite_pagination.php');
+            }
 
-    $threadBreadcrumb = $forum->getThreadBreadcrumb($section, $thread);
-    if ($threadBreadcrumb):
+            $threadBreadcrumb = $forum->getThreadBreadcrumb($section, $thread);
+            if ($threadBreadcrumb):
 ?>
                                                     <div class='small thread-sections dark'><?=$threadBreadcrumb;?></div>
 <?php
-    else:
+            else:
 ?>
                                                     <div class='small thread-blurb dark'>
                                                         <?=$thread->blurb;?>
                                                     </div>
 <?php
-    endif;
+            endif;
 ?>
                                                 </div>
                                                 <div class="section_replies col span_2"><?=$thread->count;?></div>
@@ -114,19 +126,35 @@
                                                 </div>
                                             </li>
 <?php
-    endforeach;
+        endforeach;
 ?>
                                         </ul>
                                     </li>
                                 </ul>
-                                <form class='forum-new-thread' method="POST" action="?submit">
-                                    <label>Title:</label><br/>
-                                    <input type="text" id='title' name='title' class='short'/>
-<?php include('elements/wysiwyg.php'); ?>
-                                    <input type='submit' class='button' value='Submit'/>
-                                </form>
-                            </div>
+<?php
+        else:
+            $app->utils->message('No threads found, consider starting your own', 'info');
 
+        endif;
+
+        if ($threads_count > 10) {
+            $pagination = new stdClass();
+            $pagination->current = $page;
+            $pagination->count = ceil($threads_count/10);
+            $pagination->root = '?page=';
+            include('elements/pagination.php');
+        }
+?>
+                                </div>
+                                <div class='forum-new-thread'>
+                                    <form method="POST" action="?submit">
+                                        <label>Title:</label><br/>
+                                        <input type="text" id='title' name='title' class='short'/>
+    <?php include('elements/wysiwyg.php'); ?>
+                                        <input type='submit' class='button' value='Submit'/>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </section>
 

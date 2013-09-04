@@ -281,11 +281,11 @@ table {
 blockquote {
     border-left: 5px solid $light_bg;
     font-style: italic;
-    margin: 20px;
+    margin: 5% 3%;
     padding: 0 60px 0 10px;
     color: $text_dark;
     display: inline-block;
-    width: 100%;
+    width: 93%;
 
     > span:not(.highlight) {
         display: block;

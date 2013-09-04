@@ -199,7 +199,7 @@
 .forum-container {
     overflow: hidden;
     position: relative;
-    min-height: 325px;
+    min-height: 500px;
 
     .forum-topics, .forum-new-thread {
         width: 100%;
@@ -297,7 +297,6 @@
         }
 
         .post_content {
-            padding-right: 2%;
             margin-bottom: 2%;
 
             .karma {
@@ -307,7 +306,7 @@
                 a {
                     padding: 0 4px;
 
-                    &:hover {
+                    &:hover, &.karma-cancel {
                         text-decoration: none;
 
                         .icon-caret-up {
@@ -333,6 +332,7 @@
                 color: #BBB;
                 padding: 0;
                 padding-top: 2px;
+                padding-right: 2%;
 
                 font-size: 1em;
                 line-height: 1.3em;

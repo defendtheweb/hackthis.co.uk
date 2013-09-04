@@ -32,8 +32,8 @@ $(function() {
 
     $('a.remove').click(function(e) {
         e.preventDefault();
-        var id = $(this).attr('data-id');
         var $elem = $(this).closest('li');
+        var id = $elem.attr('data-id');
 
         $.confirm({
             title   : 'Delete post',
@@ -59,6 +59,42 @@ $(function() {
     });
 
 
+
+    $('a.karma').on('click', function(e) {
+        e.preventDefault();
+
+        $this = $(this);
+        var id = $this.closest('li').attr('data-id');
+        var $value = $this.siblings('span');
+
+        if ($this.hasClass('karma-up')) {
+            var uri = '/files/ajax/forum.php?action=karma.positive&id=' + id;
+            $value.text(parseInt($value.text())+1);            
+        } else {
+            var uri = '/files/ajax/forum.php?action=karma.negative&id=' + id;
+            $value.text(parseInt($value.text())-1);
+        }
+
+        if ($this.hasClass('karma-cancel')) {
+            uri += '&cancel';
+            if ($this.hasClass('karma-up')) {
+                $value.text(parseInt($value.text())-2);
+            } else {
+                $value.text(parseInt($value.text())+2);
+            }
+        } else if ($this.siblings().hasClass('karma-cancel')) {
+            if ($this.hasClass('karma-up')) {
+                $value.text(parseInt($value.text())+1);
+            } else {
+                $value.text(parseInt($value.text())-1);
+            }            
+        }
+
+        $.getJSON(uri);
+
+        $this.siblings().removeClass('karma-cancel');
+        $this.toggleClass('karma-cancel');
+    });
 
 
 
