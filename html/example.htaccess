@@ -9,6 +9,11 @@ php_value include_path ".:/path/to/hackthis.co.uk/files/"
 # ------------------------------------------------------------------------------
 RewriteEngine On
 
+#STUFF
+RewriteRule ^terms/?$ /terms.php [L]
+RewriteRule ^privacy/?$ /privacy.php [L]
+RewriteRule ^faq/?$ /faq.php [L]
+
 #IMAGES
 RewriteRule ^users/images/(.+)/(.+)/(.+)$ /files/vendor/slir/?h=$1&c=$2&i=$3 [L]
 
