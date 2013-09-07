@@ -74,7 +74,7 @@
 <?php endif; ?>
 
         <h1 class='lower'><?=$profile->username;?></h1> 
-<?php if ($app->user->site_priv > 1):
+<?php if ($app->user->admin_site_priv):
         echo '#'.$profile->user_id;
       endif;
       if ($profile->admin): ?>
