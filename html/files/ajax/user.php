@@ -33,10 +33,10 @@
             if ($res)
                 $result['music'] = $res;
         } else if ($action == 'graph' && isset($_GET['uid']) && isset($_GET['type'])) {
-                $result = profile::getStats($_GET['uid'], $_GET['type']);
+            $result = profile::getStats($_GET['uid'], $_GET['type']);
         }
     }
 
     $json = json_encode($result);
-    echo htmlspecialchars($json, ENT_NOQUOTES);
+    echo $json;
 ?>

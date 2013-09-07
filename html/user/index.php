@@ -73,8 +73,11 @@
         <a href='/inbox/compose?to=<?=$profile->username;?>' class='messages-new button right' data-to="<?=$profile->username;?>"><i class='icon-envelope-alt'></i> PM user</a>
 <?php endif; ?>
 
-        <h1 class='lower'><?=$profile->username;?></h1>
-<?php if ($profile->admin): ?>
+        <h1 class='lower'><?=$profile->username;?></h1> 
+<?php if ($app->user->site_priv > 1):
+        echo '#'.$profile->user_id;
+      endif;
+      if ($profile->admin): ?>
         <strong>Administrator</strong>
 <?php elseif ($profile->moderator): ?>
         <strong>Moderator</strong>

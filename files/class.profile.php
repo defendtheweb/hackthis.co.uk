@@ -254,7 +254,7 @@
                 $st->execute(array(':uid' => $uid));
                 $result['graph'] = $st->fetchAll();
 
-                $st = $app->db->prepare('SELECT posts.body, posts.posted AS `time`, threads.title, threads.slug
+                $st = $app->db->prepare('SELECT posts.body, posts.posted AS `time`, threads.title, CONCAT("/forum/", threads.slug) AS slug
                     FROM forum_posts posts
                     INNER JOIN forum_threads threads
                     ON threads.thread_id = posts.thread_id
@@ -265,6 +265,7 @@
 
                 if ($result['data']) {
                     foreach ($result['data'] AS $post) {
+                        $post->title = $app->parse($post->title, false);
                         $post->body = $app->parse($post->body, false);
                         $post->time = date('c', strtotime($post->time));
                     }
@@ -275,7 +276,21 @@
                     GROUP BY `d`
                     ORDER BY `submitted` ASC');
                 $st->execute(array(':uid' => $uid));
-                $result['graph'] = $st->fetchAll();                
+                $result['graph'] = $st->fetchAll(); 
+
+                $st = $app->db->prepare('SELECT articles.`submitted` AS `time`, articles.title, CONCAT(IF(articles.category_id = 0, "/news/", "/articles/"), articles.slug) AS slug
+                    FROM articles
+                    WHERE articles.user_id = :uid
+                    ORDER BY articles.`submitted` DESC');
+                $st->execute(array(':uid' => $uid));
+                $result['data'] = $st->fetchAll();
+
+                if ($result['data']) {
+                    foreach ($result['data'] AS $post) {
+                        $post->title = $app->parse($post->title, false);
+                        $post->time = date('c', strtotime($post->time));
+                    }
+                }
             }
 
             return $result;

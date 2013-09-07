@@ -136,14 +136,32 @@ $(function() {
                     drawChart(data['graph']);
 
                     if (data['data'] && data['data'].length) {
-                        $ul = $('<ul>');
-                        $.each(data['data'], function(index, data) {
-                            $a = $('<a>', {href: '/forum/'+data.slug, text: data.title, class: 'strong'});
-                            $time = $('<time>', {datetime: data.time, class: 'dark'});
-                            $li = $('<li>', {text: data.body}).prepend('<br/>').prepend($time).prepend($a);
-                            $li.appendTo($ul);
-                        });
-                        $details.find('.profile-stats-extra .more').append($ul);
+                        data_page = 1;
+                        $ul = writeList(data['data'], data_page);
+                        
+                        $more = $details.find('.profile-stats-extra .more');
+                        $more.append($ul);
+
+                        $('<span>', {class: 'dark', html: 'Showing <span class="indicator">1 - ' + ((data['data'].length > 10)?'10':data['data'].length) + '</span> of ' + data['data'].length}).appendTo($more);
+
+                        if (data['data'].length > 10) {
+                            $('<a>', {text: 'NEXT', class: 'button right', href: '#'}).on('click', function(e) {
+                                e.preventDefault();
+                                $list = writeList(data['data'], ++data_page);
+                                if ($list)
+                                    $details.find('.profile-stats-extra .more ul').replaceWith($list);
+                                else
+                                    data_page--;
+                            }).appendTo($more);
+                            $('<a>', {text: 'PREV', class: 'button right', href: '#'}).on('click', function(e) {
+                                e.preventDefault();
+                                $list = writeList(data['data'], --data_page);
+                                if ($list)
+                                    $details.find('.profile-stats-extra .more ul').replaceWith($list);
+                                else
+                                    data_page++;
+                            }).appendTo($more);
+                        }
                     }
                 }); 
             });
@@ -162,6 +180,33 @@ $(function() {
         });
     });
 
+
+    function writeList(data, page) {
+        $ul = $('<ul>');
+
+        var n = (page-1)*10;
+        var o = page*10;
+        o = (data.length > o) ? o : data.length;
+
+        if (n > data.length || n < 0)
+            return false;
+
+        for (var i = n; i < o; i++) {
+            $a = $('<a>', {href: data[i].slug, html: data[i].title, class: 'strong'});
+            $time = $('<time>', {datetime: data[i].time, class: 'dark'});
+
+            if (data[i].body)
+                $li = $('<li>', {html: data[i].body}).prepend('<br/>').prepend($time).prepend($a);
+            else
+                $li = $('<li>').prepend($time).prepend($a);
+
+            $li.appendTo($ul);
+        };
+
+        $details.find('.profile-stats-extra .more .indicator').text((n+1) + ' - ' + o);
+
+        return $ul;
+    }
 
 
     function drawChart(tmpData) {
@@ -226,7 +271,7 @@ $(function() {
         var xAxis = d3.svg.axis()
             .scale(xscale)
             .orient("bottom")
-            .ticks(d3.time.days, 1)
+            .ticks(5)
             .tickFormat(d3.time.format('%d %b'))
             .tickSize(4, 0, 0);
 
