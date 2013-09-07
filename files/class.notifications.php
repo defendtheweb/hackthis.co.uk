@@ -122,7 +122,7 @@
                     $status = $st->fetch();
 
                     if ($status === false) {
-                        unset($result[$key]);
+                        unset($result->items[$key]);
                         continue;
                     }
 

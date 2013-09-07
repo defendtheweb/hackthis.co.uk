@@ -4,11 +4,26 @@
 
     require_once('header.php');
 
+    if (isset($_GET['accept'])) {
+        $status = $app->articles->acceptArticle($_GET['accept']);
+        if ($status === true)
+            $app->utils->message('Article accepted, <a href="#">view here</a>', 'good');
+        else if ($status === false)
+            $app->utils->message('Article not found', 'error');
+        else
+            $app->utils->message($status, 'error');
+    }
+
     if (!isset($_GET['action'])) {
+
         $limit = 25;
         $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
-        $articleList = $app->articles->getMyArticles(false, $limit, $page);
+        $articleList = $app->articles->getMyArticles(false, $limit, $page, true);
+
+        if (!$articleList['total']):
+            $app->utils->message('No new articles to review', 'info');
+        else:
 ?>
                             <table class='striped'>
                                 <thead>
@@ -19,31 +34,32 @@
                                 </thead>
                                 <tbody>
 <?php
-        foreach ($articleList['articles'] as $article):
-            $article->title = $app->parse($article->title, false);
+            foreach ($articleList['articles'] as $article):
+                $article->title = $app->parse($article->title, false);
 ?>
                                     <tr class='<?=($article->note?'declined':'awaiting');?>'>
                                         <td><a href='/articles/view.php?id=<?=$article->id;?>'><?=$article->title;?></a> <span class='dark'>&middot; <?=$article->cat_title;?></a></td>
-<?php       if ($article->note): ?>
+<?php           if ($article->note): ?>
                                         <td class='center'><span class='hint--left' data-hint='Declined: <?=str_replace("'", '`', str_replace("<br />", "", $app->parse($article->note, false, false)));?>'><i class='icon-cross'></i></span></td>
-<?php       else: ?>
+<?php           else: ?>
                                         <td class='center'><span class='hint--left' data-hint='Awaiting review'><i class='icon-eye'></i></span></td>
-<?php       endif; ?>
+<?php           endif; ?>
                                     </tr>
 <?php
-        endforeach;
+            endforeach;
 ?>
                                 </tbody>
                             </table>
 <?php
 
-        if (ceil($articleList['total']/$limit) > 1) {
-            $pagination = new stdClass();
-            $pagination->current = $articleList['page'];
-            $pagination->count = ceil($articleList['total']/$limit);
-            $pagination->root = '?page=';
-            include('elements/pagination.php');
-        }
+            if (ceil($articleList['total']/$limit) > 1) {
+                $pagination = new stdClass();
+                $pagination->current = $articleList['page'];
+                $pagination->count = ceil($articleList['total']/$limit);
+                $pagination->root = '?page=';
+                include('elements/pagination.php');
+            }
+        endif;
 
     } else {
         if ($_GET['action'] === 'edit'):

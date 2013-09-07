@@ -248,7 +248,7 @@
         /*
          * USERS ARTICLES
          */
-        public function getMyArticles($approved=true, $limit=2, $page=1) {
+        public function getMyArticles($approved=true, $limit=2, $page=1, $admin=false) {
             // Group by required for count
             if ($approved) {
                 $sql = 'SELECT SQL_CALC_FOUND_ROWS a.article_id AS id, users.username, a.title, a.slug,
@@ -277,14 +277,16 @@
                             `time`, categories.title AS cat_title
                         FROM articles_draft a
                         LEFT JOIN articles_categories categories
-                        ON a.category_id = categories.category_id
-                        WHERE a.user_id = :uid
-                        ORDER BY `time` DESC
+                        ON a.category_id = categories.category_id';
+                if (!$admin)
+                    $sql .= ' WHERE a.user_id = :uid';
+                $sql .= ' ORDER BY `time` DESC
                         LIMIT :limit1, :limit2';           
             }
 
             $st = $this->app->db->prepare($sql);
-            $st->bindValue(':uid', $this->app->user->uid);
+            if (!$admin)
+                $st->bindValue(':uid', $this->app->user->uid);
             $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
             $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
             $st->execute();
@@ -301,15 +303,25 @@
 
         public function getMyArticle($id) {
             // Group by required for count
-            $st = $this->app->db->prepare('SELECT a.article_id AS id, a.title, a.body, a.note,
-                                    `time`, a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
-                                    categories.parent_id AS parent
-                                FROM articles_draft a
-                                LEFT JOIN articles_categories categories
-                                ON a.category_id = categories.category_id
-                                WHERE a.article_id = :id AND user_id = :uid
-                                LIMIT 1');
-            $st->execute(array(':id' => $id, ':uid' => $this->app->user->uid));
+            $sql = 'SELECT a.user_id, a.article_id AS id, a.title, a.body, a.note, a.time AS `submitted`,
+                        a.category_id AS cat_id, categories.title AS cat_title, categories.slug AS cat_slug,
+                        categories.parent_id AS parent, users.username
+                    FROM articles_draft a
+                    LEFT JOIN articles_categories categories
+                    ON a.category_id = categories.category_id
+                    LEFT JOIN users
+                    ON users.user_id = a.user_id
+                    WHERE a.article_id = :id';
+
+            if (!$this->app->user->admin_pub_priv)
+                $sql .= ' AND a.user_id = :uid';
+
+            $sql .= ' LIMIT 1';
+            $st = $this->app->db->prepare($sql);
+            if (!$this->app->user->admin_pub_priv)
+                $st->execute(array(':id' => $id, ':uid' => $this->app->user->uid));
+            else
+                $st->execute(array(':id' => $id));
             $result = $st->fetch();
 
             if (!$result)
@@ -331,6 +343,45 @@
                 return false;
 
             return $this->app->db->lastInsertId();          
+        }
+
+        public function acceptArticle($article_id) {
+            // Find article
+            $sql = 'SELECT a.user_id, a.article_id AS id, a.category_id, a.title, a.body
+                    FROM articles_draft a
+                    WHERE a.article_id = :id';
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':id' => $article_id));
+            $result = $st->fetch();
+            if (!$result)
+                return false;
+
+            if ($result->user_id === $this->app->user->uid && !$this->app->user->admin_site_priv)
+                return "You cannot accept your own articles";
+
+
+            $result->slug = $this->app->utils->generateSlug($result->title);
+
+            $this->app->db->beginTransaction();
+            try {
+                // Insert article
+                $st = $this->app->db->prepare('INSERT INTO articles (`user_id`,`title`,`slug`,`category_id`,`body`)
+                                    VALUES (:uid,:title,:slug,:cat_id,:body)');
+                $st->execute(array(':uid' => $result->user_id, ':title' => $result->title, ':slug' => $result->slug, ':cat_id' => $result->category_id, ':body' => $result->body));
+
+                // Remove draft
+                $st = $this->app->db->prepare('DELETE FROM `articles_draft`
+                                               WHERE article_id = :id
+                                               LIMIT 1');
+                $st->execute(array(':id' => $result->id));
+
+                $this->app->db->commit();
+            } catch(PDOException $e) {
+                $this->app->db->rollBack();
+                return "Something went horribly wrong";
+            }
+
+            return true;
         }
 
 

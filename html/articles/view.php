@@ -6,6 +6,7 @@
 
     require_once('init.php');
 
+    $review = false;
     if (isset($_GET['slug'])) {
         $myArticle = false;
         // check if it is a category
@@ -24,9 +25,15 @@
             die();
         }
         $article = $app->articles->getMyArticle($id);
+
+        if ($article->user_id != $app->user->uid || $app->user->admin_site_priv)
+            $review = true;
     }
 
-    $app->page->title = $app->parse($article->title, false);
+    if ($article)
+        $app->page->title = $app->parse($article->title, false);
+    else
+        $app->page->title = 'Articles';
 
     require_once('header.php');
 ?>
@@ -68,16 +75,26 @@
 ?>
                             <article class='bbcode body' itemscope itemtype="http://schema.org/Article">
                                 <header class='title clearfix'>
-                                    <?php if ($myArticle): ?>
-                                        <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button right'><i class='icon-pencil'></i></a>
-                                    <?php elseif ($app->user->admin_pub_priv): ?>
-                                        <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button right'><i class='icon-pencil'></i></a>
-                                    <?php endif; ?>
+<?php if ($myArticle): ?>
+                                        <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button icon right'><i class='icon-edit'></i></a>
+<?php elseif ($app->user->admin_pub_priv): ?>
+                                        <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button icon right'><i class='icon-edit'></i></a>
+<?php endif; ?>
+<?php if ($review): ?>
+                                        <a href='#' class='right button'><i class='icon-cross'></i> Decline</a>
+                                        <a href='/admin/articles.php?accept=<?=$article->id;?>' class='right button'><i class='icon-tick'></i> Accept</a>
+<?php endif; ?>
                                     <h1 itemprop="name"><?=$article->title;?></h1>
                                     <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
-                                    <?php if (isset($article->updated) && $article->updated > 0): ?>&#183; updated <time itemprop='dateModified' datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time><?php endif; ?>
-                                    <?php if (isset($article->cat_title)) { echo "&#183; <a href='{$article->cat_slug}'>{$article->cat_title}</a>"; }?>
-                                    <?php if (isset($article->username)) { echo "&#183; <a rel='author' itemprop='author' href='/user/{$article->username}'>{$article->username}</a>"; }?>
+<?php if (isset($article->updated) && $article->updated > 0): ?>
+                                    &#183; updated <time itemprop='dateModified' datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time>
+<?php endif; ?>
+<?php if (isset($article->cat_title)): ?>
+                                    &#183; <a href='<?=$article->cat_slug;?>'><?=$article->cat_title;?></a>
+<?php endif; ?>
+<?php if (isset($article->username)): ?>
+                                    &#183; <a rel='author' itemprop='author' href='/user/<?=$article->username;?>'><?=$article->username;?></a>
+<?php endif; ?>
 
                                     <?php
                                         if (!$myArticle) {
