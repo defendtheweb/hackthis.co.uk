@@ -1,5 +1,6 @@
 <?php
     $custom_css = array('alerts.scss');
+    $page_title = 'Notifications';
     require_once('header.php');
 
     $event_limit = 25;

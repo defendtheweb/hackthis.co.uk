@@ -3,6 +3,7 @@
 
     $custom_css = array('inbox.scss');
     $custom_js = array('inbox.js');
+    $page_title = 'Inbox';
     require_once('header.php');
 
     $messages = new messages($app);

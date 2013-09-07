@@ -4,7 +4,7 @@
     define("_SIDEBAR", false);
     define('PAGE_PUBLIC', true);
 
-    require_once('header.php');
+    require_once('init.php');
 
     if (isset($_GET['slug'])) {
         $myArticle = false;
@@ -25,6 +25,10 @@
         }
         $article = $app->articles->getMyArticle($id);
     }
+
+    $app->page->title = $app->parse($article->title, false);
+
+    require_once('header.php');
 ?>
                     <section class="row">
 <?php

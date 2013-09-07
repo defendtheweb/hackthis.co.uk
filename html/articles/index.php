@@ -4,7 +4,7 @@
     if (!defined("_SIDEBAR")) define("_SIDEBAR", false);
     if (!defined("PAGE_PUBLIC")) define('PAGE_PUBLIC', true);
 
-    require_once('header.php');
+    require_once('init.php');
 
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
@@ -16,10 +16,15 @@
             die();
         }
         $articleList = $app->articles->getArticles($category->id, $limit, $page);
+        $app->page->title = 'Articles - ' . $category->title;
     } else {
         $category = null;
         $articleList = $app->articles->getArticles(null, $limit, $page);
+        $app->page->title = 'Articles';
     }
+
+
+    require_once('header.php');
 ?>
                     <section class="row">
 <?php

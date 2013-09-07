@@ -1,5 +1,6 @@
 <?php
     $custom_css = array('search.scss');
+    $page_title = 'Search';
     require_once('header.php');
 
     $search = new search($app);

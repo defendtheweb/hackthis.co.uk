@@ -24,10 +24,12 @@
         $newsArticle = $app->articles->getArticle($_GET['slug'], true);
         if ($newsArticle)
             $newsArticles['articles'] = array($newsArticle);
+    
+        $app->page->title = $app->parse($newsArticle->title, false);
     } else {
         $newsArticles = $app->articles->getArticles(0, $limit, $page);
     }
-    
+
     require_once('header.php');
 ?>
                     <section class='news'>
