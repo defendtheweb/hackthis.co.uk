@@ -1,4 +1,6 @@
 $(function() {
+    var favcounter = new FavCounter();
+
     var username = $('body').attr('data-username');
     var key = $('body').attr('data-key');
 
@@ -39,7 +41,7 @@ $(function() {
         socket.on('feed', function (data) {
             var item = $(feedTmpl).tmpl(data);
 
-            console.log(item);
+            // console.log(item);
 
             if ($('sidebar .feed ul').length) {
                 item.hide().prependTo($('sidebar .feed ul')).slideDown();
@@ -109,7 +111,7 @@ $(function() {
                 }
             } else {
                 if (data.info === 'register') {
-                    console.log(data);
+                    // console.log(data);
                 } else {
                     renderMsg(data);
                 }
@@ -167,6 +169,8 @@ $(function() {
                 $('.nav-extra-pm').removeClass('alert');
                 $('#pm-counter').fadeOut(200);
             }
+
+            favcounter.set(data.counts.events + data.counts.pm);
 
             // if (data.feed.length) {
             //     lastUpdate = data.feed[0].timestamp;

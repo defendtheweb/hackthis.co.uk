@@ -9,6 +9,11 @@
         <title>HackThis!!<?=$app->page->title?' - '.$app->page->title:' - The Hackers Playground';?></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+        <link href="/favicon.png" rel="icon" id="basic-favicon" type="images/png" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon" /> 
+        <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
+
         <?=isset($app->page->canonical)?'<link rel="canonical" href="'.$app->page->canonical.'"/>':'';?>
         <?=isset($app->page->prev)?'<link rel="prev" href="'.$app->page->prev.'"/>':'';?>
         <?=isset($app->page->next)?'<link rel="next" href="'.$app->page->next.'"/>':'';?>
