@@ -46,6 +46,7 @@
         <li><a href='#' class='icon-confused' data-value=':s'></a></li>
         <li><a href='#' class='icon-neutral' data-value=':|'></a></li>
         <li><a href='#' class='icon-wondering' data-value=':/'></a></li>
+        <li><a href='#' class='icon-heart' data-value='<3'></a></li>
     </ul>
 
     <textarea name='<?=isset($wysiwyg_name)?htmlspecialchars($wysiwyg_name):'body';?>' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?htmlspecialchars($wysiwyg_text):'';?></textarea>

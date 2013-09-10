@@ -401,7 +401,8 @@ class BBCodeLibrary {
                                 ':o' => 'shocked', ':-o' => 'shocked',
                                 ':s' => 'confused', ':-s' => 'confused',
                                 ':|' => 'neutral', ':-|' => 'neutral',
-                                ':/' => 'wondering', ':-/' => 'wondering'
+                                ':/' => 'wondering', ':-/' => 'wondering',
+                                '<3' => 'heart'
      );
 var $default_tag_rules = Array(
                                'h1' => Array(
