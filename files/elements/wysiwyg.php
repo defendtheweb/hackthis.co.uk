@@ -21,7 +21,7 @@
 
         <li><a href='#' class='hint--top' data-hint='Insert link' data-tag='url'><i class='icon-link'></i></a></li>
         <li><a href='#' class='hint--top' data-hint='Insert image' data-tag='img'><i class='icon-image'></i></a></li>
-        <li class='seperator'><a href='#' class='hint--top' data-hint='Upload image'><i class='icon-upload'></i></a></li>
+        <li class='seperator'><a href='#' class='hint--top show-upload' data-hint='Upload image'><i class='icon-upload'></i></a></li>
 
         <li><a href='#' class='hint--top' data-hint='Quote' data-tag='quote' data-value='author'><i class='icon-quote'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top' data-hint='Code' data-tag='code'><i class='icon-console'></i></a></li>
@@ -48,6 +48,16 @@
         <li><a href='#' class='icon-wondering' data-value=':/'></a></li>
         <li><a href='#' class='icon-heart' data-value='<3'></a></li>
     </ul>
+
+    <div class='overlay-upload'>
+        <div class='form'>
+            By uploading a file you certify that you have the right to distribute this picture and that it does not violate the <a target="_blank" href="/terms.php">Terms of Service</a>.
+            <br><br>
+            <label for="image">Image:</label><br>
+            <input type="file" class="file" id="image" name="image" />
+            <input type="button" value="Upload" class="submit-upload button" />
+        </div>
+    </div>
 
     <textarea name='<?=isset($wysiwyg_name)?htmlspecialchars($wysiwyg_name):'body';?>' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?htmlspecialchars($wysiwyg_text):'';?></textarea>
     <div class='preview'>&nbsp;</div>

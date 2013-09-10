@@ -89,6 +89,10 @@ select {
     }
 }
 
+input[type="file"] {
+    border: none;
+}
+
 textarea {
     resize: none;
     min-height: 140px;
@@ -449,18 +453,22 @@ ul.tabs {
         display: none;
     }
 
-    .overlay {
+    .overlay-upload {
         display: none;
         position: absolute;
-        top: 20px;
+        top: 28px;
         left: 0;
-        margin: 25px;
+        padding: 8px 30px;
+        width: 100%;
+        background: #000000;
+        background: rgba(0,0,0,0.9);
 
-        padding: 8px;
-        width: 93%;
-        height: 100px;
-        background: $black;
-        border: 1px solid $light_bg;
+        .form {
+            text-align: left;
+            width: 400px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
     }
 }
 

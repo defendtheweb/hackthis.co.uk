@@ -4,6 +4,12 @@ $(function() {
 
         var $this = $(this);
         var $container = $this.closest('.wysiwyg');
+        var $overlay = $container.find('.overlay-upload');
+
+        $overlay.find('.submit-upload').on('click', function(e) {
+
+        });
+
 
         if ($this.hasClass('preview-button')) {
             $this.parent().addClass('active');
@@ -26,6 +32,8 @@ $(function() {
         } else if ($this.hasClass('show-smilies')) {
             $this.parent().toggleClass('active');
             $container.find('.smilies').slideToggle();
+        } else if ($this.hasClass('show-upload')) {
+            toggleUpload($overlay);
         } else {
             var textarea = $container.find('textarea');
             var tag = this.getAttribute('data-tag');
@@ -69,4 +77,8 @@ $(function() {
         var state = $(this).is(':checked');
         createCookie("wysiwygEnter", state);
     });
+
+    function toggleUpload(overlay) {
+        overlay.stop().fadeToggle();
+    }
 });
