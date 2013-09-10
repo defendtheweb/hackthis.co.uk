@@ -30,10 +30,10 @@
 
         if (!$section->child && isset($_GET['submit'])) {
             if (isset($_POST['title']) && isset($_POST['body'])) {
-                $submitted = $forum->newThread($section, $_POST['title'], $_POST['body']);
+                $new_slug = $forum->newThread($section, $_POST['title'], $_POST['body']);
 
-                if ($submitted)
-                    header('Location: '. strtok($_SERVER["REQUEST_URI"], '?'));
+                if ($new_slug)
+                    header('Location: '. $new_slug);
             }
         }
 

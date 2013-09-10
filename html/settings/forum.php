@@ -30,7 +30,7 @@
     if (isset($updated)) {
         $app->utils->message($updated);
     } else if (isset($_GET['done'])) {
-        $app->utils->message("Profile updated, <a href='/user/".$app->user->username."'>view here</a>", "good");
+        $app->utils->message("Forum settings updated", "good");
     }
 ?>
     <form action="?save" method="POST">

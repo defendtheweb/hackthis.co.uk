@@ -139,6 +139,8 @@
     }
 
     .forum-section {
+        text-align: left;
+
         li.row {
             background: $black;
             margin-bottom: 0px;
@@ -344,10 +346,18 @@
                 }
 
                 .post_signature {
+                    position: relative;
                     border-top: 1px solid $bg;
                     margin-top: 16px;
-                    padding-top: 4px;
+                    padding-top: 10px;
                     clear: both;
+
+                    .button {
+                        position: absolute;
+                        right: 0;
+                        top: 10px;
+                        margin: 0;
+                    }
                 }
             }
         }

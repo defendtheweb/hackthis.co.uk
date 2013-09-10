@@ -84,16 +84,20 @@
                                         <i class='icon-chat'></i> <?=$post->posts;?><br/>
                                         <br/>
 <?php   if ($post->user_id === $app->user->uid || $app->user->forum_priv > 1): ?>
-                                        <a href='#' class='button icon'><i class='icon-edit'></i> Edit post</a>
+                                        <a href='#' class='button'><i class='icon-edit'></i> Edit post</a>
 <?php   else: ?>
                                         <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
 <?php   endif; ?>
                                     </div>
                                     <article class="col span_19 post_content">
                                         <div class="karma small">
+<?php   if ($post->user_id !== $app->user->uid): ?>
                                             <a href='#' class='karma karma-down <?=$post->user_karma < 0?'karma-cancel':'';?>'><i class='icon-caret-down'></i></a>
                                             <span><?=$post->karma;?></span>
                                             <a href='#' class='karma karma-up <?=$post->user_karma > 0?'karma-cancel':'';?>'><i class='icon-caret-up'></i></a>
+<?php   else: ?>
+                                            <span><?=$post->karma;?></span>
+<?php   endif; ?>
                                             <a class='dark' href='/faq#karma'><i class='icon-help'></i></a>
                                         </div>
                                         <div class="post_body">
@@ -153,9 +157,13 @@
                                     </div>
                                     <article class="col span_19 post_content">
                                         <div class="karma small">
+<?php   if ($post->user_id !== $app->user->uid): ?>
                                             <a href='#' class='karma karma-down <?=$post->user_karma < 0?'karma-cancel':'';?>'><i class='icon-caret-down'></i></a>
                                             <span><?=$post->karma;?></span>
                                             <a href='#' class='karma karma-up <?=$post->user_karma > 0?'karma-cancel':'';?>'><i class='icon-caret-up'></i></a>
+<?php   else: ?>
+                                            <span><?=$post->karma;?></span>
+<?php   endif; ?>
                                         </div>
                                         <div class="post_body">
                                             <?=$post->body;?>

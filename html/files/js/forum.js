@@ -66,34 +66,40 @@ $(function() {
         $this = $(this);
         var id = $this.closest('li').attr('data-id');
         var $value = $this.siblings('span');
+        var value;
 
         if ($this.hasClass('karma-up')) {
             var uri = '/files/ajax/forum.php?action=karma.positive&id=' + id;
-            $value.text(parseInt($value.text())+1);            
+            value = parseInt($value.text())+1;
         } else {
             var uri = '/files/ajax/forum.php?action=karma.negative&id=' + id;
-            $value.text(parseInt($value.text())-1);
+            value = parseInt($value.text())-1;
         }
 
-        if ($this.hasClass('karma-cancel')) {
-            uri += '&cancel';
-            if ($this.hasClass('karma-up')) {
-                $value.text(parseInt($value.text())-2);
-            } else {
-                $value.text(parseInt($value.text())+2);
+        $.getJSON(uri, function(data) {
+            if (data['status'] == false)
+                return false;
+
+            $value.text(value);
+
+            if ($this.hasClass('karma-cancel')) {
+                uri += '&cancel';
+                if ($this.hasClass('karma-up')) {
+                    $value.text(parseInt($value.text())-2);
+                } else {
+                    $value.text(parseInt($value.text())+2);
+                }
+            } else if ($this.siblings().hasClass('karma-cancel')) {
+                if ($this.hasClass('karma-up')) {
+                    $value.text(parseInt($value.text())+1);
+                } else {
+                    $value.text(parseInt($value.text())-1);
+                }            
             }
-        } else if ($this.siblings().hasClass('karma-cancel')) {
-            if ($this.hasClass('karma-up')) {
-                $value.text(parseInt($value.text())+1);
-            } else {
-                $value.text(parseInt($value.text())-1);
-            }            
-        }
 
-        $.getJSON(uri);
-
-        $this.siblings().removeClass('karma-cancel');
-        $this.toggleClass('karma-cancel');
+            $this.siblings().removeClass('karma-cancel');
+            $this.toggleClass('karma-cancel');
+        });
     });
 
 

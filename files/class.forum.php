@@ -278,7 +278,7 @@
                 return false;
             }
 
-            return true;
+            return '/forum/' . $slug;
         }
 
 
@@ -289,7 +289,7 @@
                 ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
                 LEFT JOIN forum_sections section
                 ON section.section_id = thread.section_id
-                LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts GROUP BY `thread_id`) replies
+                LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
                 ON replies.thread_id = thread.thread_id
                 WHERE thread.thread_id = :thread_id
                 LIMIT 1");
@@ -475,6 +475,16 @@
 
         public function giveKarma($positive = true, $post_id, $cancel=false) {
             $value = $positive?1:-1;
+
+            // Does post exist? Is user owner of post?
+            $st = $this->app->db->prepare("SELECT author
+                                           FROM forum_posts
+                                           WHERE post_id = :pid");
+            $st->execute(array(':pid'=>$post_id));
+            $result = $st->fetch();
+
+            if (!$result || $result->author === $this->app->user->uid)
+                return false;
 
             if (!$cancel) {
                 $st = $this->app->db->prepare("INSERT INTO forum_karma (`user_id`, `post_id`, `amount`)
