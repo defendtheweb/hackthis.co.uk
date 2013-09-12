@@ -18,7 +18,9 @@
 
         <li><a href='#' class='hint--top' data-tag='list' data-extra='*' data-hint="Bullet list"><i class='icon-list'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top' data-tag='list' data-extra='*' data-value='1' data-hint='Numbered list'><i class='icon-numbered-list'></i></a></li>
-
+<?php
+    if (!isset($wysiwyg_lite) || $wysiwyg_lite !== true):
+?>
         <li><a href='#' class='hint--top' data-hint='Insert link' data-tag='url'><i class='icon-link'></i></a></li>
         <li><a href='#' class='hint--top' data-hint='Insert image' data-tag='img'><i class='icon-image'></i></a></li>
         <li class='seperator'><a href='#' class='hint--top show-upload' data-hint='Upload image'><i class='icon-upload'></i></a></li>
@@ -30,7 +32,9 @@
         <li class='seperator'><a href='#' class='hint--top' data-hint='Vimeo' data-tag='vimeo'><i class='icon-vimeo2'></i></a></li>
 
         <li><a href='#' class='hint--top show-smilies' data-hint='Emoticons'><i class='icon-smiley'></i></a></li>
-
+<?php
+    endif;
+?>
         <li class='right'><a href='#' class='preview-button hint--top' data-hint="Preview"><i class='icon-eye'></i></a></li>
         <li class='right seperator active'><a href='#' class='edit-button hint--top' data-hint='Edit post'><i class='icon-code'></i></a></li>
     </ul>
@@ -62,5 +66,11 @@
     <textarea name='<?=isset($wysiwyg_name)?htmlspecialchars($wysiwyg_name):'body';?>' class='editor suggest hide-shadow' <?=isset($wysiwyg_placeholder)?"placeholder='{$wysiwyg_placeholder}'":'';?>><?=isset($wysiwyg_text)?htmlspecialchars($wysiwyg_text):'';?></textarea>
     <div class='preview'>&nbsp;</div>
 </div>
+<?php
+    if (!isset($wysiwyg_enter) || $wysiwyg_enter !== false):
+?>
 <input type="checkbox" id="enter" name="enter" <?=(isset($_COOKIE["wysiwygEnter"]) && $_COOKIE["wysiwygEnter"] == 'true')?'checked':'';?>/>
 <label for="enter">Press Enter to send</label>
+<?php
+    endif;
+?>
