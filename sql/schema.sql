@@ -492,6 +492,17 @@ CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
         CALL user_feed_remove(OLD.user_id, 'level', OLD.level_id);
     END;
 
+
+-- Update users scores when the reward given for a level is altered
+DROP TRIGGER IF EXISTS update_levels_data;
+CREATE TRIGGER update_levels_data AFTER UPDATE ON levels_data FOR EACH ROW
+    BEGIN
+        IF NEW.key = 'reward' THEN
+            UPDATE users JOIN users_levels ON users.user_id = users_levels.user_id SET users.score = users.score - OLD.value + NEW.value WHERE users_levels.level_id = NEW.level_id AND users_levels.completed > 0;
+        END IF;
+    END;
+
+
 DROP TRIGGER IF EXISTS insert_friend_before;
 CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
     BEGIN
