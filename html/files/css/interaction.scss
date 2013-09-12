@@ -163,13 +163,14 @@ form input.button:visited {
     &:hover {
         background: $lighter_bg;
     }
+}
 
+.button {
     &.left {
         float: none !important;
         margin: 0px;
     }
 }
-
 
 /* BUTTONS */
 a.button { 
