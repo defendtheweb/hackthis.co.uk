@@ -12,7 +12,7 @@
             if (isset($this->list))
                 return $this->list;
 
-            $st = $this->app->db->prepare('SELECT CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
+            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
                     IF(users_levels.completed > 0, 1, 0) as `completed`
                     FROM levels
@@ -28,7 +28,25 @@
             return $this->list;
         }
 
-        public function getLevel($group, $name) {
+        public function getGroups() {
+            $st = $this->app->db->prepare('SELECT title FROM levels_groups ORDER BY `order` ASC, `title` ASC');
+            $st->execute();
+            return $st->fetchAll();       
+        }
+
+        public function getLevelFromID($id) {
+            $st = $this->app->db->prepare('SELECT `group`, `name` FROM levels WHERE level_id = :id LIMIT 1');
+            $st->bindValue(':id', $id);
+            $st->execute();
+            $res = $st->fetch();
+
+            if ($res)
+                return $this->getLevel($res->group, $res->name, true);
+            else
+                return false;
+        }
+
+        public function getLevel($group, $name, $noSkip=false) {
             $before_after_sql = 'SELECT `name`, LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`
                 FROM levels
                 INNER JOIN levels_groups
@@ -36,7 +54,7 @@
                 WHERE `group` = :group
                 ORDER BY `name`';
 
-            $sql = "SELECT levels.level_id, `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
+            $sql = "SELECT levels.level_id, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
                 IFNULL(users_levels.attempts, 0) as `attempts`,
                 users_levels_count.`count`, users_levels_first.`username` AS first_user, users_levels_last.`username` AS last_user,
@@ -65,7 +83,7 @@
 
             if ($level) {
                 //Check if user has access
-                if (isset($level->level_before_uri) && $level->group == 'main') {
+                if (isset($level->level_before_uri) && strtolower($level->group) == 'main') {
                     $sql = 'SELECT IF(users_levels.completed > 0, 1, 0) as `completed` FROM levels
                             LEFT JOIN users_levels
                             ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
@@ -77,8 +95,10 @@
                     $st->execute(array(':name'=>$name, ':group'=>$group, ':uid'=>$this->app->user->uid));
                     $previous = $st->fetch();
 
-                    if (!$previous || !$previous->completed)
+                    if (!$noSkip && (!$previous || !$previous->completed)) {
                         header("Location: $level->level_before_uri?skipped");
+                        die();
+                    }
                 }
 
                 $this->levelView($level->level_id);
@@ -174,6 +194,88 @@
             }
 
             return $correct;
+        }
+
+
+
+
+
+        // ADMIN FUNCTIONS
+        function addCategory($title) {
+            if (!$this->app->user->admin_site_priv)
+                return false;
+
+            $st = $this->app->db->prepare('INSERT INTO levels_groups (`title`, `order`) VALUES (:title)');
+            return $st->execute(array(':title'=> $title));
+        }
+
+        function editLevel($id, $new = false) {
+            if (!$this->app->user->admin_site_priv)
+                return false;
+
+
+            $changes = array();
+
+            if (!$new) {
+                if (!$this->app->checkCSRFKey("level-editor", $_POST['token']))
+                    return false;
+
+                if (isset($_POST['category']) && strlen($_POST['category'])) {
+                    $group = $_POST['category'];
+
+                    $st = $this->app->db->prepare('UPDATE IGNORE levels SET `group` = :g WHERE level_id = :id LIMIT 1');
+                    $res = $st->execute(array(':id'=> $id, ':g'=>$group));
+                }
+            }
+
+            if (isset($_POST['reward']) && is_numeric($_POST['reward'])) {
+                $changes['reward'] = $_POST['reward'];
+            }
+            if (isset($_POST['description']) && strlen($_POST['description'])) {
+                $changes['description'] = $_POST['description'];
+            }
+            if (isset($_POST['hint']) && strlen($_POST['hint'])) {
+                $changes['hint'] = $_POST['hint'];
+            }
+            if (isset($_POST['solution']) && strlen($_POST['solution'])) {
+                $changes['solution'] = $_POST['solution'];
+            }
+
+            foreach($changes AS $change=>$value) {
+                $st = $this->app->db->prepare('INSERT INTO levels_data (`level_id`, `key`, `value`) VALUES (:id, :k, :v) ON DUPLICATE KEY UPDATE `value` = :v');
+                $res = $st->execute(array(':id'=> $id, ':k'=>$change, ':v'=>$value));
+                if (!$res)
+                    return false;
+            }
+
+            return true;
+        }
+
+        function newLevel() {
+            if (!$this->app->user->admin_site_priv)
+                return false;
+
+            if (!$this->app->checkCSRFKey("level-editor", $_POST['token']))
+                return false;
+
+            // Create level
+            try {
+                $st = $this->app->db->prepare('INSERT INTO levels (`name`, `group`) VALUES (:name, :group)');
+                $status = $st->execute(array(':name'=> $_POST['name'], ':group' => $_POST['category']));
+            } catch(PDOExecption $e) { 
+                return false;
+            }
+
+            if (!$status)
+                return false;
+
+            $id = $this->app->db->lastInsertId(); 
+
+            // Insert data
+            $this->editLevel($id, true);
+
+            // Return level id
+            return $id;
         }
     }
 ?>
