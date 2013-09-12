@@ -38,4 +38,13 @@
 							</tr>
 							</tbody>
 						</table>
+<?php
+    if (isset($currentLevel->data['hint']) && (!isset($level->attempt) || $level->attempt !== true)):
+?>
+                        <div class='level-hint'>
+                            <a class='left button' href='#'>Show hint</a>
+                        </div>
+<?php
+    endif;
+?>
                     </article>

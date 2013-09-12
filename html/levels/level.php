@@ -3,6 +3,7 @@
 		header('Location: /levels/');
 
     $custom_css = array('levels.scss');
+    $custom_js = array('levels.js');
     require_once('init.php');
 
     //Load level
@@ -13,6 +14,14 @@
 		$app->utils->message('Level not found, <a href="/levels">return to index</a>');
 		require_once('footer.php');
 		die();
+    }
+
+    if (isset($_GET['get-hint'])) {
+        if (isset($currentLevel->data['hint']))
+            echo json_encode(array('status'=>true, 'hint' => $app->utils->parse($currentLevel->data['hint'])));
+        else
+            echo json_encode(array('status'=>false));
+        die();
     }
 
     //Check if user completed level
@@ -29,7 +38,7 @@
 ?>
 		</div>
 
-		<div class='col span_18'>
+		<div class='col span_18 level-area'>
 <?php
     require_once('elements/levels/header.php');
     require_once('elements/levels/level.php');

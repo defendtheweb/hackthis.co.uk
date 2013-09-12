@@ -1,7 +1,15 @@
 <?php
-    if (isset($level->data['form'])):
+    if (isset($level->attempt) && $level->attempt === true) :
+        if (isset($level->data['solution'])):
 ?>
-    <div class='level-area'>
+        <div class='info solution'>
+            <?=$app->utils->parse($level->data['solution']);?>
+        </div>
+<?php
+        endif;
+    elseif (isset($level->data['form'])):
+?>
+    <div class='level-form'>
 <?php
         if ($form = json_decode($level->data['form'])):
 ?>
@@ -9,7 +17,7 @@
             <fieldset>
 <?php       foreach($form->fields AS $field): ?>
                 <label for="user"><?=$field->label;?>:</label>
-                <input <?=isset($field->type)?"type='{$field->type}'":'';?> autocomplete="off" <?=isset($field->name)?"id='{$field->name}' name='{$field->name}'":'';?>><br>
+                <input type='<?=isset($field->type)?"{$field->type}":'text';?>' autocomplete="off" <?=isset($field->name)?"id='{$field->name}' name='{$field->name}'":'';?>><br>
 <?php       endforeach; ?>
                 <input type="submit" class="button" value="Submit">
             </fieldset>

@@ -25,69 +25,95 @@
     }
 }
 
-.level-header {
-    background: $bg;
-    padding-top: 16px;
-    padding-bottom: 32px;
+.level-area {
+    text-align: center;
 
-    .green {
-        color: $green;
-    }
+    .level-header {
+        /* background: $bg; */
+        padding-top: 16px;
+        padding-bottom: 30px;
 
-    .red {
-        color: red;
-    }
+        .green {
+            color: $green;
+        }
 
-    .previous-level, .next-level {
-        font-size: 4em;
-        margin-top: -12px;
-        cursor: default;
+        .red {
+            color: red;
+        }
 
-        i {
-            width: 55px;
-            height: 55px;
-            display: block;
+        .previous-level, .next-level {
+            font-size: 4em;
+            margin-top: -12px;
+            cursor: default;
+
+            i {
+                width: 55px;
+                height: 55px;
+                display: block;
+            }
+        }
+
+        a.previous-level:hover, a.next-level:hover {
+            color: $bright_green;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .next-level.hint--left:hover {
+            color: red;
+        }
+
+        .msg {
+            text-align: left;
+            width: 300px;
+            max-width: 95%;
+            margin-bottom: 0px;
+            margin-top: 30px;
         }
     }
 
-    a.previous-level:hover, a.next-level:hover {
-        color: $bright_green;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .next-level.hint--left:hover {
-        color: red;
-    }
-
-    .msg {
+    .level-form {
         text-align: left;
-        width: 300px;
-        max-width: 95%;
-        margin-bottom: 0px;
-    }
-}
 
-.level-area {    
-    form {
-        background: $bg;
-        padding-bottom: 16px;
+        form {
+            /* background: $bg; */
+            padding-bottom: 16px;
 
-        fieldset {
-            width: 300px;
-            max-width: 95%;
-            margin: 0 auto;
-            border: none;
+            fieldset {
+                width: 300px;
+                max-width: 95%;
+                margin: 0 auto;
+                border: none;
 
-            input[type="text"], input[type="password"] {
-                border-color: $dark;
-                margin-bottom: 12px;
+                input[type="text"], input[type="password"] {
+                    border-color: $dark;
+                    margin-bottom: 12px;
 
-                &:focus {
-                    border-color: lighten($dark, 15%);
+                    &:focus {
+                        border-color: lighten($dark, 15%);
+                    }
                 }
             }
         }
+    }
+
+    .info {
+        text-align: left;
+        max-width: 95%;
+        width: 450px;
+        display: inline-block;
+        margin: 30px 0 0 0; 
+        background: $light_bg;
+        padding: 10px;
+    }
+}
+
+.level-hint {
+    margin-top: 18px;
+
+    .cta {
+        background: $bg;
+        padding: 8px;
     }
 }
 
