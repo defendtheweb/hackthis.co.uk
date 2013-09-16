@@ -38,7 +38,8 @@
     }
 ?>
 
-<h1><?=$level?$level->title:'New level';?></h1>
+<a class='button right' href='?edit=<?=$_GET['edit'];?>&form'>Edit form</a>
+<h2><?=$level?$level->title:'New level';?></h2>
 
 <?php if (isset($_GET['done'])) $app->utils->message('Level updated', 'good'); ?>
 

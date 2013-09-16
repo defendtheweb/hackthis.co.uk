@@ -54,7 +54,7 @@
                 WHERE `group` = :group
                 ORDER BY `name`';
 
-            $sql = "SELECT levels.level_id, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
+            $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
                 IFNULL(users_levels.attempts, 0) as `attempts`,
                 users_levels_count.`count`, users_levels_first.`username` AS first_user, users_levels_last.`username` AS last_user,
@@ -160,7 +160,7 @@
                 } else if (strtolower($answer->method) == 'get') {
                     if (isset($_GET[$answer->name])) {
                         $attempted = true;
-                            if ($_POST[$answer->name] === $answer->value)
+                            if ($_GET[$answer->name] === $answer->value)
                                 $correct = true;
                             else {
                                 $correct = false;
@@ -176,6 +176,7 @@
                 // Woo they did it, have they done it before?
                 if (!$level->completed) {
                     $level->attempts = $level->attempts + 1;
+                    $level->completed_time = 'now';
                     if ($correct) {
                         $level->completed = true;
                         $level->count++;
@@ -276,6 +277,78 @@
 
             // Return level id
             return $id;
+        }
+
+        function editLevelForm($id) {
+            if (!$this->app->user->admin_site_priv)
+                return false;
+
+            if (!$this->app->checkCSRFKey("level-editor", $_POST['token']))
+                return false;
+
+            $form = null;
+
+            // Is it JSON?
+            if (isset($_POST['form_method'])) {
+                $form = array();
+                $form['method'] = $_POST['form_method'];
+                $form['fields'] = array();
+
+                $f_types = $_POST['form_type'];
+                $f_names = $_POST['form_name'];
+                $f_labels = $_POST['form_label'];
+
+                foreach($f_types as $key => $value) {
+                    echo $value . "<br/>";
+                    if ($f_names[$key] && $f_labels[$key]) {
+                        $field = new stdClass;
+                        $field->type = $value;
+                        $field->name = $f_names[$key];
+                        $field->label = $f_labels[$key];
+                        
+                        array_push($form['fields'],$field);
+                    }
+                }
+
+                if (count($form['fields']))
+                    $form = json_encode($form);
+            } else {
+                if (isset($_POST['form']))
+                    $form = $_POST['form'];
+            }
+
+            if ($form) {
+                $st = $this->app->db->prepare('INSERT INTO levels_data (`level_id`, `key`, `value`) VALUES (:id, :k, :v) ON DUPLICATE KEY UPDATE `value` = :v');
+                $status = $st->execute(array(':id'=> $id, ':k' => 'form', ':v' => $form));
+            }
+
+            // Do answers
+            $answers = array();
+
+            $a_methods = $_POST['answer_method'];
+            $a_names = $_POST['answer_name'];
+            $a_values = $_POST['answer_value'];
+
+            foreach($a_methods as $key => $value) {
+                if ($a_names[$key] && $a_values[$key]) {
+                    $answer = new stdClass;
+                    $answer->method = $value;
+                    $answer->name = $a_names[$key];
+                    $answer->value = $a_values[$key];
+                    
+                    array_push($answers, $answer);
+                }
+            }
+
+            if (count($answers)) {
+                $answers = json_encode($answers);       
+                if ($answers) {
+                    $st = $this->app->db->prepare('INSERT INTO levels_data (`level_id`, `key`, `value`) VALUES (:id, :k, :v) ON DUPLICATE KEY UPDATE `value` = :v');
+                    $status = $st->execute(array(':id'=> $id, ':k' => 'answer', ':v' => $answers));
+                }
+            }
+
+            return true;
         }
     }
 ?>

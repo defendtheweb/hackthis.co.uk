@@ -105,15 +105,14 @@
         margin: 30px 0 0 0; 
         background: $light_bg;
         padding: 10px;
-    }
-}
 
-.level-hint {
-    margin-top: 18px;
+        &.solution {
+            margin-top: -10px;
+        }
 
-    .cta {
-        background: $bg;
-        padding: 8px;
+        &.info-hint {
+            margin-top: 0px;
+        }
     }
 }
 

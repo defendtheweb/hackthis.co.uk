@@ -38,13 +38,22 @@
 							</tr>
 							</tbody>
 						</table>
+                    </article>
+
 <?php
-    if (isset($currentLevel->data['hint']) && (!isset($level->attempt) || $level->attempt !== true)):
+    if (!isset($level->attempt) || $level->attempt !== true):
 ?>
-                        <div class='level-hint'>
-                            <a class='left button' href='#'>Show hint</a>
-                        </div>
+                    <article>
+                        <h1 class='title'>Help</h1>
+<?php
+        if (isset($currentLevel->data['hint'])):
+?>
+                        <a class='left button level-hint' href='#'>Show hint</a>
+<?php
+        endif;
+?>
+                        <a class='left button' href='/forum/level-discussion/<?=strtolower($currentLevel->group);?>-levels/<?=strtolower($currentLevel->group);?>-level-<?=$currentLevel->name;?>'>Forum</a>
+                    </article>
 <?php
     endif;
 ?>
-                    </article>

@@ -629,12 +629,20 @@ div.lite-pagination {
     position: fixed;
     bottom: 0;
     right: 0;
-    overflow: hidden;
+   /* overflow: hidden; */
 
     height: 0;
     width: 350px;
     max-width: 100%;
-    border-top: 3px solid $green;
+    border-top: 3px solid $red;
+
+    &.connected {
+        border-color: $green;
+
+        a.chat-connect {
+            display: none;
+        }
+    }
 
     background: $black;
 
@@ -647,6 +655,10 @@ div.lite-pagination {
         input {
             display: block;
         }
+
+        .chat-bar-title .unread {
+            display: none;
+        }
     }
 
     &:hover {
@@ -658,10 +670,24 @@ div.lite-pagination {
         color: $white;
         background: $bg;
         padding: 4px 6px;
-        height: 25px;
 
         i:hover {
             color: $bright_green;
+        }
+
+        .unread {
+            background: $green;
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            top: -20px;
+            left: 0;
+
+            &.hide {
+                display: none;
+            }
         }
     }
 

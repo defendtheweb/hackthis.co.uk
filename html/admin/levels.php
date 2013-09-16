@@ -1,13 +1,21 @@
 <?php
     $custom_css = array('levels.scss', 'admin.scss');
+    $custom_js = array('admin.js');
     $page_title = 'Admin - Levels';
     define("PAGE_PRIV", "admin_site");
 
     require_once('header.php');
+
+    if (!isset($_GET['edit'])):
 ?>
 
 <a class='button right' href='?edit=new'>Add level</a>
 <a class='button right' href='?edit-categories'>Edit categories</a>
+
+<?php
+    endif;
+?>
+
 <a href='levels.php'><h1>Level editor</h1></a>
 
 <?php
@@ -16,7 +24,10 @@
     }
 
     if (isset($_GET['edit'])) {
-        include('elements/level_editor/edit_level.php');
+        if (isset($_GET['form']))
+            include('elements/level_editor/edit_level_form.php');
+        else
+            include('elements/level_editor/edit_level.php');
     } else {
         include('elements/level_editor/level_list.php');
     }
