@@ -85,7 +85,14 @@
 
         <section class='fluid clr'>
             <div class='col span_7 clr'>
-                <img src='<?=$profile->image;?>' width='100%' alt='<?=$profile->username;?> profile picture'/><br/>
+                <div class="image">
+<?php if ($profile->donator): ?>
+                    <div class="label corner">
+                        <i class="icon-heart"></i>
+                    </div>
+<?php endif; ?>
+                    <img src='<?=$profile->image;?>' width='100%' alt='<?=$profile->username;?> profile picture'/>
+                </div>
                 <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>            
             </div>
 

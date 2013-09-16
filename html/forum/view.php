@@ -75,6 +75,11 @@
 ?>
                                 <li class='row fluid clr' data-id='<?=$post->post_id;?>'>
                                     <div id="post-<?=$post->post_id;?>" class="col span_5 post_header">
+<?php if ($post->donator): ?>
+                                        <div class="label corner">
+                                            <i class="icon-heart"></i>
+                                        </div>
+<?php endif; ?>
                                         <a href="/user/<?=$post->username;?>" class="user">
                                             <?=$post->username;?><br/>
                                             <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">
@@ -140,6 +145,11 @@
 ?>
                                 <li <?=($thread_page == $thread_page_count && $n == count($thread->posts))?'id="latest"':'';?> class='row fluid clr' data-id='<?=$post->post_id;?>'>
                                     <div id="post-<?=$post->post_id;?>" class="col span_5 post_header">
+<?php if ($post->donator): ?>
+                                        <div class="label corner">
+                                            <i class="icon-heart"></i>
+                                        </div>
+<?php endif; ?>
                                         <a href="/user/<?=$post->username;?>" class="user">
                                             <?=$post->username;?><br/>
                                             <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">

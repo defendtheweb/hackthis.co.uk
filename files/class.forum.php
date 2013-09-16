@@ -304,12 +304,14 @@
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (medals.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
                 LEFT JOIN users_profile profile
                 ON users.user_id = profile.user_id
+                LEFT JOIN users_medals medals
+                ON users.user_id = medals.user_id AND medals.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma
@@ -335,12 +337,14 @@
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (medals.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
                 LEFT JOIN users_profile profile
                 ON users.user_id = profile.user_id
+                LEFT JOIN users_medals medals
+                ON users.user_id = medals.user_id AND medals.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma

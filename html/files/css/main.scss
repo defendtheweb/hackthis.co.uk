@@ -15,6 +15,9 @@ body {
         color: $black;
         repeat: no-repeat; 
         position: center -50px;
+
+        image: url("/files/images/bg2.png");
+        position: center -31px;
     }
 
     margin: 0px;
@@ -120,8 +123,9 @@ h3 {
     font-style: italic;
 }
 
-.strong {
+b, .strong {
     font-weight: bold;
+    color: $white;
 }
 
 .strike {
@@ -351,6 +355,59 @@ blockquote {
 .colour-green {
     color: green !important;
 }
+
+
+
+/* LABELS */
+div.image {
+    position: relative;
+}
+
+.label.corner {
+    display: inline-block;
+    vertical-align: middle;
+
+    border-color: #D95C5C !important;
+    color: #FFFFFF !important;
+
+    background-color: transparent;
+    font-size: 0.9em;
+    height: 1.75em;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 1.75em;
+    z-index: 10;
+
+    background-color: transparent !important;
+    cursor: default;
+
+    &:after {
+        border-bottom: 2.75em solid transparent;
+        border-left: 0 solid transparent;
+        border-right-color: inherit;
+        border-style: solid;
+        border-top: 0 solid transparent;
+        border-width: 0 2.75em 2.75em 0;
+        content: "";
+        height: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 0;
+        z-index: -1;
+    }
+
+    i {
+        display: inline-block;
+        margin: 0.25em 0;
+    }
+
+}
+
+
 
 /* SIDEBAR */
 sidebar h1 {
