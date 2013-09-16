@@ -81,19 +81,17 @@
                     $st->fetch();
                 } else if ($res->type == 'comment_reply' || $res->type == 'comment_mention') {
                     // uri, title
-                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT('/articles/', articles.slug) AS slug
                         FROM articles_comments
                         LEFT JOIN articles
                         ON articles_comments.article_id = articles.article_id
-                        LEFT JOIN articles_categories
-                        ON articles_categories.category_id = articles.category_id
                         WHERE comment_id = :item_id
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
 
-                    $res->slug = "/{$res->slug}#comment-{$res->item_id}";
+                    $res->slug = "{$res->slug}#comment-{$res->item_id}";
                 } else if ($res->type == 'forum_post' || $res->type == 'forum_mention') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT users.username, forum_threads.title, CONCAT('/forum/', forum_threads.`slug`) AS slug

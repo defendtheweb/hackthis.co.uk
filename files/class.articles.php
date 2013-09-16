@@ -432,9 +432,9 @@
                 // Set image
                 if (isset($comment->image)) {
                     $gravatar = isset($comment->gravatar) && $comment->gravatar == 1;
-                    $comment->image = profile::getImg($comment->image, 28, $gravatar);
+                    $comment->image = profile::getImg($comment->image, 40, $gravatar);
                 } else
-                    $comment->image = profile::getImg(null, 28);
+                    $comment->image = profile::getImg(null, 40);
 
                 unset($comment->gravatar);
             }
@@ -447,10 +447,13 @@
 
         public function getComment($comment_id, $bbcode=true) {
             // Group by required for count
-            $st = $this->app->db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, MD5(users.username) as `image`
+            $st = $this->app->db->prepare('SELECT comments.comment_id as id, comments.comment, DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`, users.username, users.score, users_profile.gravatar,
+                    IF (users_profile.gravatar = 1, users.email , users_profile.img) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
                     ON users.user_id = comments.user_id
+                    LEFT JOIN users_profile
+                    ON users_profile.user_id = users.user_id
                     WHERE comment_id = :comment_id
                     ORDER BY `time` DESC');
             $st->execute(array(':comment_id' => $comment_id));
@@ -461,6 +464,13 @@
 
                 if ($comment->username === $this->app->user->username)
                     $comment->owner = true;
+
+                // Set image
+                if (isset($comment->image)) {
+                    $gravatar = isset($comment->gravatar) && $comment->gravatar == 1;
+                    $comment->image = profile::getImg($comment->image, 40, $gravatar);
+                } else
+                    $comment->image = profile::getImg(null, 40);
             }
 
             return $result;

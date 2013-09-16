@@ -1,115 +1,196 @@
-#comments {
-    > h2 {
-        background: $light_bg;
-        padding: 8px;
-        padding-top: 12px;
-        margin-bottom: 16px;
-        text-transform: none;
+ #comments {
+     > h2 {
+         background: $light_bg;
+         padding: 8px;
+         padding-top: 12px;
+         margin-bottom: 16px;
+         text-transform: none;
+     }
     }
 
-    article {
-        margin-bottom: 4px;
-        border: 1px solid $bg;
-        /* @include transition(border-color, 3000ms, ease-out); */
+//     article {
+//         margin-bottom: 4px;
+//         border: 1px solid $bg;
+//         /* @include transition(border-color, 3000ms, ease-out); */
+
+//         &.highlight, &:target {
+//             border-color: darken($green, 10%);
+
+//             > header {
+//                 background-color: darken($green, 10%);
+//             }
+//         }
+
+//         article {
+//             margin: {
+//                 top: 12px;
+//                 bottom: 0;
+//                 left: 30px;
+//             }
+//         }
+
+//         header {
+//             /* @include transition(background-color, 3000ms, ease-out); */
+
+//             background: $bg;
+//             padding: 6px;
+//             padding-right: 0px;
+
+//             img {
+//                 float: left;
+//                 margin: {
+//                     top: -6px;
+//                     left: -6px;
+//                     right: 8px;
+//                 }
+//             }
+
+//             time {
+//                 margin-right: 6px;
+//             }
+
+//             div.more {
+//                 display: inline-block;
+//                 margin: {
+//                     top: -6px;
+//                 }
+//                 padding: 6px;
+//                 position: relative;
+
+//                 > ul {
+//                     display: none;
+//                     background: $light_bg;
+
+//                     position: absolute;
+//                     list-style: none;
+//                     z-index: 10;
+
+//                     top: 100%;
+//                     right: 0;
+
+//                     li a {
+//                         width: 80px;
+//                         color: $text;
+//                         display: block;
+//                         padding: 4px 8px;
+//                         &:hover {
+//                             color: $white;
+//                             background: $bg;
+//                             text-decoration: none;
+//                         }
+//                     }
+//                 }
+
+//                 &:hover {
+//                     text-decoration: none;
+//                     background: $light_bg;
+//                     cursor: pointer;
+//                     color: $white;
+
+//                     > ul {
+//                         display: block;
+//                     }
+//                 }
+
+//                 i {
+//                     vertical-align: text-bottom;
+//                 }
+//             }
+//         }
+
+//         .body {
+//             padding: 6px;
+
+//             > i {
+//                 font-size: 1.2em;
+//                 color: $text_dark;
+//                 vertical-align: top;
+//             }
+
+//             form {
+//                 margin-left: 30px;
+//                 margin-top: 16px;
+//             }
+//         }
+//     }
+// }
+
+
+
+#comments_container {
+    article.comment {
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+
+        &:first-child {
+            margin-top: 0;
+            padding-top: 0;
+        }
+    }
+
+    article.comment {
+        position: relative;
+        margin-bottom: 0;
 
         &.highlight, &:target {
-            border-color: darken($green, 10%);
-
-            > header {
-                background-color: darken($green, 10%);
-            }
-        }
-
-        article {
-            margin: {
-                top: 12px;
-                bottom: 0;
-                left: 30px;
-            }
-        }
-
-        header {
-            /* @include transition(background-color, 3000ms, ease-out); */
-
             background: $bg;
-            padding: 6px;
-            padding-right: 0px;
+        }
 
+        .avatar {
+            width: 4em;
+            float: left;
             img {
-                float: left;
-                margin: {
-                    top: -6px;
-                    left: -6px;
-                    right: 8px;
-                }
+                width: 3em;
+                height: 3em;
             }
+        }
+
+        .content {
+            margin-left: 4em;
+            display: block;
 
             time {
-                margin-right: 6px;
+                padding-left: 6px;
             }
 
-            div.more {
-                display: inline-block;
-                margin: {
-                    top: -6px;
-                }
-                padding: 6px;
-                position: relative;
+            .body {
+                margin: 0.3em 0 0 0;
+                word-wrap: break-word;
+            }
 
-                > ul {
-                    display: none;
-                    background: $light_bg;
+            .controls {
+                display: none;
+                padding-left: 3px;
 
-                    position: absolute;
-                    list-style: none;
-                    z-index: 10;
+                a {
+                    color: $dark;
+                    margin: 0 3px;
+                    display: inline-block;
 
-                    top: 100%;
-                    right: 0;
+                    &:hover {
+                        color: $white;
+                        text-decoration: none;
 
-                    li a {
-                        width: 80px;
-                        color: $text;
-                        display: block;
-                        padding: 4px 8px;
-                        &:hover {
+                        i {
                             color: $white;
-                            background: $bg;
-                            text-decoration: none;
                         }
                     }
                 }
+            }
 
-                &:hover {
-                    text-decoration: none;
-                    background: $light_bg;
-                    cursor: pointer;
-                    color: $white;
-
-                    > ul {
-                        display: block;
-                    }
-                }
-
-                i {
-                    vertical-align: text-bottom;
-                }
+            &:hover .controls {
+                display: inline-block;
             }
         }
 
-        .body {
-            padding: 6px;
+        .replies {
+            box-shadow: -1px 0 0 $bg;
+            margin-left: 2em !important;
+            padding-left: 2em !important;
 
-            > i {
-                font-size: 1.2em;
-                color: $text_dark;
-                vertical-align: top;
-            }
-
-            form {
-                margin-left: 30px;
-                margin-top: 16px;
-            }
+            margin-top: 0.5em;
+            padding-bottom: 0.5em;
+            padding-top: 0.5em;
         }
     }
 }

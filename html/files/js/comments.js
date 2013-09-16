@@ -1,48 +1,76 @@
 $(function() {
     var item_id = $("#comments").attr("data-id");
-    var commentsTmpl =  '<article data-id="${id}" id="comment-${id}">'+
-                        '    <header>'+
-                        '        <div class="right">'+
-                        '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
-    if (loggedIn) {
-        commentsTmpl += '            {{if username}}<div class="more"><i class="icon-menu"></i>'+
-                        '                <ul>'+
-                        '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
-                        '                    <li><a href="#" class="comment-reply">Reply</a></li>'+
-                        '                    {{if username != 0}}<li><a href="/inbox/compose?to=${username}" class="messages-new" data-to="${username}">PM User</a></li>{{/if}}'+
-                        '                    <li><a href="#" class="comment-report">Report</a></li>'+
-                        '                </ul>'+
-                        '            </div>{{/if}}';
-    }
+    // var commentsTmpl =  '<article data-id="${id}" id="comment-${id}">'+
+    //                     '    <header>'+
+    //                     '        <div class="right">'+
+    //                     '            <time pubdate datetime="${time}">${timeSince(time)}</time>';
+    // if (loggedIn) {
+    //     commentsTmpl += '            {{if username}}<div class="more"><i class="icon-menu"></i>'+
+    //                     '                <ul>'+
+    //                     '                    {{if owner}}<li class="seperator"><a href="#" class="comment-delete">Delete</a></li>{{/if}}'+
+    //                     '                    <li><a href="#" class="comment-reply">Reply</a></li>'+
+    //                     '                    {{if username != 0}}<li><a href="/inbox/compose?to=${username}" class="messages-new" data-to="${username}">PM User</a></li>{{/if}}'+
+    //                     '                    <li><a href="#" class="comment-report">Report</a></li>'+
+    //                     '                </ul>'+
+    //                     '            </div>{{/if}}';
+    // }
 
-    commentsTmpl +=     '        </div>'+
-                        '        <span class="strong">'+
-                        '            {{if owner}}'+
-                        '                <img src="${image}" width="28px"/> You'+
-                        '            {{else username}}'+
-                        '                {{if username == 0}}'+
-                        '                    [deleted user]'+
-                        '                {{else}}'+
-                        '                    <a href=\'/user/${username}\'><img src="${image}" width="28px"/> ${username}</a>'+
-                        '                {{/if}}'+
-                        '            {{else}}'+
-                        '                [comment removed]'+
-                        '            {{/if}}'+
-                        '        </span>'+
-                        '    </header>'+
-                        '    <div class="body clearfix">'+
+    // commentsTmpl +=     '        </div>'+
+    //                     '        <span class="strong">'+
+    //                     '            {{if owner}}'+
+    //                     '                <img src="${image}" width="28px"/> You'+
+    //                     '            {{else username}}'+
+    //                     '                {{if username == 0}}'+
+    //                     '                    [deleted user]'+
+    //                     '                {{else}}'+
+    //                     '                    <a href=\'/user/${username}\'><img src="${image}" width="28px"/> ${username}</a>'+
+    //                     '                {{/if}}'+
+    //                     '            {{else}}'+
+    //                     '                [comment removed]'+
+    //                     '            {{/if}}'+
+    //                     '        </span>'+
+    //                     '    </header>'+
+    //                     '    <div class="body clearfix">'+
+    //                     '        {{if username}}'+
+    //                     '            {{html comment}}'+
+    //                     '        {{/if}}'+
+    //                     '    {{if replies}}'+
+    //                     '        {{tmpl(replies) "commentsTmpl"}}'+
+    //                     '    {{/if}}'+
+    //                     '    </div>'+
+    //                     '</article>';
+
+    var commentsTmpl =  '<article data-id="${id}" id="comment-${id}" class="comment">'+
+                        '    <a class="avatar">'+
+                        '        <img src="{{if username}}${image}{{else}}/users/images/no_pic.jpg{{/if}}"/>'+
+                        '    </a>'+
+                        '    <div class="content">'+
                         '        {{if username}}'+
-                        '            {{html comment}}'+
+                        '            <a class="author" href=\'/user/${username}\'>${username}</a>'+
+                        '            <time class="small dark" pubdate datetime="${time}">${timeSince(time)}</time>'+
+                        '            <div class="controls small dark">'+
+                        '                <a href="#" class="comment-reply"><i class="icon-reply"></i> Reply</a> '+
+                        '                {{if owner}} &middot; <a href="#" class="comment-delete"><i class="icon-trash"></i> Delete</a>{{/if}}'+
+                        '            </div>'+
+                        '            <div class="body clr">'+
+                        '                {{html comment}}'+
+                        '            </div>'+
+                        '        {{else}}'+
+                        '            [comment removed]'+
                         '        {{/if}}'+
-                        '    {{if replies}}'+
-                        '        {{tmpl(replies) "commentsTmpl"}}'+
-                        '    {{/if}}'+
                         '    </div>'+
+                        '    {{if replies}}<div class="replies clr">'+
+                        '       {{tmpl(replies) "commentsTmpl"}}'+
+                        '    </div>{{/if}}'+
                         '</article>';
+
+
+
     // Need to compile template so it can be used recursively
     $.template("commentsTmpl", commentsTmpl);
 
     $.get("/files/ajax/comments.php", {"action": "get", "id": item_id}, function(data) {
+        console.log(data);
         renderComment(data);
     }, "json");
 
@@ -82,7 +110,11 @@ $(function() {
     $('#comments').on('click', '.comment-reply', function(e) {
         e.preventDefault();
 
-        var parent = $(this).closest('header').siblings(".body");
+        var parent = $(this).closest('.content').siblings(".replies");
+        if (!parent.length) {
+            $(this).closest('.comment').append($('<div>', {class: 'replies clr'}));
+            var parent = $(this).closest('.content').siblings(".replies");
+        }
 
         // Check for existing editor
         var tmp = parent.children('form');
@@ -115,6 +147,12 @@ $(function() {
         $.post('/files/ajax/comments.php?action=delete', {"id": comment_id}, function(data) {
             if (data.status) {
                 $article.slideUp(function() { $(this).remove(); });
+                //update counter
+                var $responses = $('#comments > h2');
+                var tmp = $responses.text().replace(/(\d+)+/g, function(match, number) {
+                    return parseInt(number)-1;
+                });
+                $responses.text(tmp);
             } else {
                 alert("There appears to be a problem deleting this comment");
             }
@@ -135,7 +173,7 @@ $(function() {
         if (!parent_id)
             parent_id = 0;
 
-        var $parent = $(this).parent();
+        var $parent = $(this).closest('form');
         var body = $parent.find('textarea').val();
 
         $parent.children('.msg').remove();
