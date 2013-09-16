@@ -1,5 +1,6 @@
 <?php
     $custom_css = array('articles.scss');
+    $page_title = 'Admin - Articles';
     define("PAGE_PRIV", "admin_pub");
 
     require_once('header.php');
