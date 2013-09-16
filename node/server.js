@@ -1,7 +1,7 @@
 var http = require('http');
 var app = require('http').createServer(handler)
-//, io = require('socket.io').listen(app, { log: false })
-, io = require('socket.io').listen(app)
+, io = require('socket.io').listen(app, { log: false })
+//, io = require('socket.io').listen(app)
 , url = require('url')
 , qs = require('querystring');
 
@@ -10,8 +10,10 @@ var feed_log = [];
 var _irc = require('irc');
 var connections = [];
 var irc_log = [];
+var irc_clients = [];
 var global_irc;
 
+var irc_topic = "Global chat";
 
 app.listen(8080);
 
@@ -37,7 +39,7 @@ io.sockets.on('connection', function (connection) {
 
 function handler(req, res) {
     if (req.method == 'POST') {
-        var query = url.parse(req.url,true).query;
+        var query = url.parse(req.url, true).query;
         if (query.api == api_key) {
             var body = '';
             req.on('data', function (data) {
@@ -65,77 +67,138 @@ function feed(data) {
 
 
 
-global_irc = new _irc.Client('irc.hackthis.co.uk', 'NexBotv2', {
+global_irc = new _irc.Client('irc.hackthis.co.uk', 'ChatBot', {
+    userName: 'ChatBot',
+    realName: 'ChatBot',
+    port: 6697,
+    secure: true,
+    selfSigned: true,
+    certExpired: true,
     channels: ['#nukeland']
 });
 
-global_irc.addListener('registered', function (message) {
-    irc_log.push({ msg: message, info: 'regiser'});
-}).addListener('message', function (nick, chan, message) {
+global_irc.setMaxListeners(0);
+global_irc.addListener('message', function (nick, chan, message) {
     irc_log.push({nick: nick, chan: chan, msg: message});
 }).addListener('join', function (chan, nick, message) {
     irc_log.push({nick: nick, chan: chan, info: 'join'});
 }).addListener('part', function (chan, nick, reason, message) {
-    irc_log.push({nick: nick, chan: chan, info: 'part'});
+    irc_log.push({nick: nick, info: 'part'});
+}).addListener('quit', function (nick, reason, channels, message) {
+    irc_log.push({nick: nick, info: 'part'});
+}).addListener('topic', function (chan, topic, nick) {
+    irc_topic = topic;
 });
 
 
 function connectIRC(socket, nick, key) {
+    console.log('New IRC client');
     socket.nick = nick;
     socket.key = key;
 
     //lookup existing connection
-    for (var i = 0; i < connections.length; i++) {
-        if (connections[i].key == socket.key && connections[i].nick == socket.nick) {
-            socket.irc = connections[i].irc;
-            break;
-        }
-    }
-
-    if (!socket.irc) {
+    if (socket.key in irc_clients) {
+        irc_clients[socket.key].connections++;
+        socket.irc = irc_clients[socket.key].client;
+    } else {
+        console.log('Creating new IRC user');
         socket.irc = new _irc.Client('irc.hackthis.co.uk', nick, {
+            userName: nick,
+            realName: nick,
             channels: ['#nukeland']
         });
+
+        irc_clients[socket.key] = {connections: 1, client: socket.irc};
     }
 
+    // for (var i = 0; i < connections.length; i++) {
+    //     if (connections[i].key == socket.key && connections[i].nick == socket.nick) {
+    //         console.log('IRC user already active');
+    //         socket.irc = connections[i].irc;
+    //         break;
+    //     }
+    // }
+
+    // if (!socket.irc) {
+    //     console.log('Creating new IRC user');
+    //     socket.irc = new _irc.Client('irc.hackthis.co.uk', nick, {
+    //         userName: nick,
+    //         realName: nick,
+    //         channels: ['#nukeland']
+    //     });
+    // }
+
     //redefine handler
+    socket.irc.setMaxListeners(0);
     socket.irc.addListener('message', function (nick, chan, message) {
         socket.emit('chat', {nick: nick, chan: chan, msg: message});
     }).addListener('join', function (chan, nick, message) {
         socket.emit('chat', {nick: nick, chan: chan, msg: message, info: 'join'});
     }).addListener('part', function (chan, nick, reason, message) {
         socket.emit('chat', {nick: nick, chan: chan, msg: message, info: 'part'});
+    }).addListener('quit', function (nick, reason, channels, message) {
+        irc_log.push({nick: nick, info: 'part'});
+    }).addListener('registered', function (message) {
+        socket.emit('chat', {nick: message.args[0], info: 'registered'});
+    }).addListener('topic', function (chan, topic, nick) {
+        socket.emit('chat', {nick: nick, topic: topic, info: 'topic'});
     });
 
     socket.on('chat', function (data) {
-        socket.irc.say('#nukeland', data.msg);
+        if (data.msg.substring(0, 4) == "/me ")
+            socket.irc.action('#nukeland', data.msg.substring(4));
+        else
+            socket.irc.say('#nukeland', data.msg);
     });
 
     connections.push(socket);
 
     //Send history
+    socket.emit('chat', {topic: irc_topic, info: 'topic'});
     socket.emit('chat', irc_log.slice(-25));
 }
 
 function disconnectIRC(socket) {
+    console.log('Client disconnected');
+    key = socket.key;
+
     setTimeout(function() {
-        irc = socket.irc;
-        connections.splice(connections.indexOf(socket), 1);
+        // console.log('Deleting connection...');
 
-        if (!irc)
-            return;
+        // irc = socket.irc;
+        // connections.splice(connections.indexOf(socket), 1);
 
-        if (connections.length > 0) {
-            var n = 0;
-            connections.forEach(function(item) {
-                if (item.irc === irc)
-                    n++;
-            });
+        // if (!irc)
+        //     return;
 
-            if (n === 0)
-                irc.disconnect();
-        } else {
-            irc.disconnect();
-        }            
-    }, 15000);
+        // if (connections.length > 0) {
+        //     var n = 0;
+        //     connections.forEach(function(item) {
+        //         if (item.irc === irc)
+        //             n++;
+        //     });
+
+        //     if (n === 0) {
+        //         console.log('Disconnecting from IRC');
+        //         irc.disconnect();
+        //     } else {
+        //         console.log('IRC connection in use');
+        //     }
+        // } else {
+        //     console.log('No other connections');
+        //     irc.disconnect();
+        // }            
+
+        if (key in irc_clients) {
+            irc_clients[key].connections--;
+            console.log('Now ' + irc_clients[key].connections + ' connections');
+            
+            if (irc_clients[key].connections == 0) {
+                irc_clients[key].client.disconnect();
+                delete irc_clients[key];
+            }
+        }
+    }, 15000, key);
+
+    connections.splice(connections.indexOf(socket), 1);
 }

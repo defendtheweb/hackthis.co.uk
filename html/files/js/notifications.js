@@ -6,7 +6,7 @@ $(function() {
 
     var socket = null;
     if (typeof io !== 'undefined') {
-        socket = io.connect('http://hackthis.co.uk:8080/');
+        socket = io.connect('http://192.168.1.66:8080/');
     }
 
     var feedTmpl = '<tmpl>'+
@@ -61,12 +61,30 @@ $(function() {
 
 
     /* CHAT */
-    if (socket) {
+    function connectChat() {
+        if (connected)
+            return;
+
+        connected = true;
         socket.emit('chat_register', { nick: username, key: key });
+        $chat_bar.addClass('connected');
+
+        // Keep them connected for another day
+        createCookie("chat-connected", "true", 1);
+    }
+
+    if (socket) {
+        var connected = false;
+        var unread = 0;
 
         chat_bar = '   <div id="chat-bar">\
-                            <div class="chat-bar-title">Global chat <i class="mobile-hide right icon-new-tab"></i></div>\
+                            <div class="chat-bar-title">\
+                                <i class="mobile-hide right icon-new-tab"></i>\
+                                <span class="unread hide">0</span>\
+                                <span class="topic">Global chat</span>\
+                            </div>\
                             <div class="chat-container scroll">\
+                                <a href="#" class="left button chat-connect">Connect</a>\
                                 <ul>\
                                 </ul>\
                             </div>\
@@ -75,12 +93,23 @@ $(function() {
 
         $('body').append(chat_bar);
         $chat_bar = $('#chat-bar');
+        $unread = $chat_bar.find('.unread');
         $chat_bar.find('.scroll').mCustomScrollbar();
 
         // Is chat open
         result = new RegExp('(?:^|; )chat=([^;]*)').exec(document.cookie);
-        if (result && result[1] == 'open')
+        if (result && result[1] == 'open') {
             $chat_bar.addClass('show');
+        }
+        result = new RegExp('(?:^|; )chat-connected=([^;]*)').exec(document.cookie);
+        if (result && result[1] == 'true') {
+            connectChat();
+        }
+
+        $chat_bar.find('.chat-connect').on('click', function(e) {
+            e.preventDefault();
+            connectChat();
+        })
 
         $chat_bar.find('.chat-bar-title').on('click', function(e) {
             e.stopPropagation();
@@ -91,6 +120,8 @@ $(function() {
             } else {
                 $chat_bar.addClass('show');
                 createCookie("chat", "open");
+                unread = 0;
+                $unread.text(0).addClass('hide');;
             }
         });
 
@@ -110,10 +141,20 @@ $(function() {
                     renderMsg(data[i]);
                 }
             } else {
-                if (data.info === 'register') {
-                    // console.log(data);
+                if (data.info === 'registered') {
+
+                } else if (data.info === 'topic') {
+                    $chat_bar.find('.chat-bar-title .topic').text(data.topic);
                 } else {
                     renderMsg(data);
+
+                    if (!data.info) {                                
+                        // Unread message
+                        if (!$chat_bar.hasClass('show')) {
+                            unread++;
+                            $unread.text(unread).removeClass('hide');
+                        }
+                    }
                 }
             }
         });
