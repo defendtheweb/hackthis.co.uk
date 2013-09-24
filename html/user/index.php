@@ -7,6 +7,11 @@
     if (isset($profile->uid))
         $app->page->title = $profile->username;
 
+    if (isset($_GET['image'])) {
+        require('userbar.php');
+        die();
+    }
+
     require_once('header.php');
     
 
