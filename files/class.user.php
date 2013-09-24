@@ -136,6 +136,11 @@
 
                     $this->loggedIn = true;
                     $this->uid = $row->user_id;
+
+                    // Setup GA event
+                    $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
+                    $this->app->ssga->send();
+
                     $this->createSession();
                 }
             }
@@ -211,6 +216,11 @@
 
                         $this->loggedIn = true;
                         $this->uid = $row->user_id;
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'login', 'OAuth', $this->uid);
+                        $this->app->ssga->send();
+
                         $this->createSession();
                     } else {
                         //Assume this is a registration
@@ -264,6 +274,10 @@
                         // Login user
                         $this->loggedIn = true;
                         $this->uid = $uid;
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'register', 'OAuth', $uid);
+                        $this->app->ssga->send();
 
                         $this->createSession();
 
@@ -333,10 +347,21 @@
             $this->loggedIn = true;
             $this->uid = $uid;
 
+
+            // Setup GA event
+            $this->app->ssga->set_event('user', 'register', 'default', $uid);
+            $this->app->ssga->send();
+
             $this->createSession();
         }
 
         public function logout() {
+            if (isset($_SESSION['uid'])) {
+                // Setup GA event
+                $this->app->ssga->set_event('user', 'logout', 'default', $_SESSION['uid']);
+                $this->app->ssga->send();
+            }
+
             $this->loggedIn = false;
             session_regenerate_id(true);
             

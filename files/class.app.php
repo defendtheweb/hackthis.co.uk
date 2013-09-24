@@ -17,6 +17,10 @@
             // Connect to database
             $this->connectDB($this->config['db']);
 
+            // Setup google events class
+            require('vendor/class.ss-ga.php');
+            $this->ssga = new ssga($this->config['ssga-ua'], $this->config['domain']);
+
             // Create page object
             $this->page = new page();
 

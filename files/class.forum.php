@@ -278,6 +278,10 @@
                 return false;
             }
 
+            // Setup GA event
+            $this->app->ssga->set_event('forum', 'thread.new', '/forum/' . $slug, $this->app->user->uid);
+            $this->app->ssga->send();
+
             return '/forum/' . $slug;
         }
 
@@ -395,6 +399,10 @@
 
             if ($status) {
                 $post_id = $this->app->db->lastInsertId();
+
+                // Setup GA event
+                $this->app->ssga->set_event('forum', 'post.new', $post_id);
+                $this->app->ssga->send();
 
                 $notified = array($this->app->user->uid);
 
