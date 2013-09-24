@@ -311,20 +311,22 @@
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (medals.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator, medals.label AS medal_label, medals.colour AS medal_colour
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
                 LEFT JOIN users_profile profile
                 ON users.user_id = profile.user_id
-                LEFT JOIN users_medals medals
-                ON users.user_id = medals.user_id AND medals.medal_id = 19
+                LEFT JOIN users_medals donate
+                ON users.user_id = donate.user_id AND donate.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma
                 ON forum_karma.post_id = post.post_id
                 LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
+                LEFT JOIN (SELECT users_medals.user_id, medals.label, medals_colours.colour FROM users_medals LEFT JOIN medals ON users_medals.medal_id = medals.medal_id LEFT JOIN medals_colours ON medals.colour_id = medals_colours.colour_id WHERE highlight = 1) medals
+                ON users.user_id = medals.user_id
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT 1");
@@ -334,9 +336,9 @@
             // Get questioners image
             if (isset($thread->question->image)) {
                 $gravatar = isset($thread->question->gravatar) && $thread->question->gravatar == 1;
-                $thread->question->image = profile::getImg($thread->question->image, 50, $gravatar);
+                $thread->question->image = profile::getImg($thread->question->image, 60, $gravatar);
             } else
-                $thread->question->image = profile::getImg(null, 50);
+                $thread->question->image = profile::getImg(null, 60);
 
 
             $thread->p_start = (($page-1)*$limit)+1;            
@@ -344,20 +346,22 @@
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (medals.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator, medals.label AS medal_label, medals.colour AS medal_colour
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
                 LEFT JOIN users_profile profile
                 ON users.user_id = profile.user_id
-                LEFT JOIN users_medals medals
-                ON users.user_id = medals.user_id AND medals.medal_id = 19
+                LEFT JOIN users_medals donate
+                ON users.user_id = donate.user_id AND donate.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma
                 ON forum_karma.post_id = post.post_id
                 LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
+                LEFT JOIN (SELECT users_medals.user_id, medals.label, medals_colours.colour FROM users_medals LEFT JOIN medals ON users_medals.medal_id = medals.medal_id LEFT JOIN medals_colours ON medals.colour_id = medals_colours.colour_id WHERE highlight = 1) medals
+                ON users.user_id = medals.user_id
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT :l1, :l2");

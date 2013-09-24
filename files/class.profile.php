@@ -64,7 +64,7 @@
                 return true;
 
 
-            $st = $this->app->db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
+            $st = $this->app->db->prepare('SELECT users_medals.medal_id, users_medals.highlight, medals.label, medals.description, medals_colours.colour
                     FROM users_medals
                     INNER JOIN medals
                     ON users_medals.medal_id = medals.medal_id

@@ -173,6 +173,7 @@ CREATE TABLE users_medals (
     `user_id` int(7) NOT NULL,
     `medal_id` tinyint(3) UNSIGNED NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `highlight` tinyint(1),
     PRIMARY KEY (`user_id`, `medal_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)

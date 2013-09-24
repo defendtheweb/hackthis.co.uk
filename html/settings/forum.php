@@ -11,7 +11,7 @@
     $values['signature'] = isset($profile->forum_signature)?$profile->forum_signature:'';
 
     if (isset($_GET['save'])) {
-        $updated = $app->user->updateSignature($_POST['signature'], $_POST['token']);
+        $updated = $app->user->updateForum($_POST['signature'], $_POST['medal'], $_POST['token']);
         if ($updated === true) {
             header('location: ?done');
             die();
@@ -41,6 +41,23 @@
     $wysiwyg_placeholder = 'This will be displayed below any post you make in the forum...';
     $wysiwyg_text = $values['signature'];
     include('elements/wysiwyg.php');
+
+    if (count($profile->medals)):
+?>
+    <br/><br/>
+    <label for="medal">Promoted medal:</label><br/>
+    <select class='tiny' name="medal">
+        <option>None</option>
+<?php
+        foreach($profile->medals AS $medal):
+?>
+        <option value="<?=$medal->medal_id;?>" <?=$medal->highlight?'selected':'';?>><?=$medal->label;?> - <?=$medal->colour;?></option>
+<?php
+        endforeach;
+?>
+    </select><br/>
+<?php
+    endif;
 ?>
 
             <input type="hidden" value="<?=$app->generateCSRFKey("settings");?>" name="token">

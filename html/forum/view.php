@@ -82,9 +82,13 @@
 <?php endif; ?>
                                         <a href="/user/<?=$post->username;?>" class="user">
                                             <?=$post->username;?><br/>
-                                            <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">
-                                        </a><br/>
+                                            <img src="<?=$post->image;?>" width="60" height="60" alt="<?=$post->username;?>'s profile picture">
+                                        </a>
 
+<?php   if (isset($post->medal_label)): ?>
+                                        <div class='medal forum-medal medal-<?=$post->medal_colour;?>'><?=$post->medal_label;?></div>
+<?php   endif; ?>
+                                        <br/>
                                         <i class='icon-trophy'></i> <?=$post->score;?><br/>
                                         <i class='icon-chat'></i> <?=$post->posts;?><br/>
                                         <br/>
@@ -152,8 +156,13 @@
 <?php endif; ?>
                                         <a href="/user/<?=$post->username;?>" class="user">
                                             <?=$post->username;?><br/>
-                                            <img src="<?=$post->image;?>" width="50" height="50" alt="<?=$post->username;?>'s profile picture">
-                                        </a><br/>
+                                            <img src="<?=$post->image;?>" width="60" height="60" alt="<?=$post->username;?>'s profile picture">
+                                        </a>
+
+<?php   if (isset($post->medal_label)): ?>
+                                        <div class='medal forum-medal medal-<?=$post->medal_colour;?>'><?=$post->medal_label;?></div>
+<?php   endif; ?>
+                                        <br/>
 
                                         <i class='icon-trophy'></i> <?=$post->score;?><br/>
                                         <i class='icon-chat'></i> <?=$post->posts;?><br/>
