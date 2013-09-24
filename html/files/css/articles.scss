@@ -8,12 +8,40 @@ article.index {
 }
 
 article.body {
+    header {
+        background: $bg;
+        padding: 14px 12px 10px;
+
+        h1 {
+            margin-bottom: 4px;
+        }
+
+        .meta {
+            display: inline-block;
+
+            i:not(:first-child) {
+                border-left: 1px solid $lighter_bg;
+                margin-left: 8px;
+                padding: 0 4px 0 12px;
+            }
+
+            i {
+                padding-right: 4px;
+            }
+        }
+
+        margin-bottom: 16px;
+    }
+
     div.contents {
         float: right;
         background: $bg;
-        padding: 8px;
+
+        padding: 8px 10px 10px 10px;
         margin-left: 16px;
         min-width: 30%;
+
+        margin-top: 8px;
 
         ul {
             list-style: none;
@@ -25,6 +53,51 @@ article.body {
     }
 }
 
+ul.article-index li {
+    h2 {
+        display: inline-block;
+        font-size: 1.1em;
+        border: none;
+        font-weight: bold;
+    }
+
+    a.category {
+        display: inline-block;
+        background: rgba(0, 128, 0, 0.7);
+        color: $white;
+        padding: 2px 4px;
+        margin-left: 4px;
+
+        &:hover {
+            text-decoration: none;
+            background: $green;
+        }
+    }
+
+    margin: 24px 0;
+
+    &:not(:last-child):after {
+        content: "";
+        background: $bg;
+        height: 1px;
+        width: 95%;
+        display: block;
+        margin: 24px auto;
+    }
+
+    &.img {
+        > a > img {
+            float: left;
+            max-height: 100px;
+            margin-right: 16px;
+            opacity: 0.7;
+        }
+
+        > a:hover > img {
+            opacity: 1;
+        }
+    }
+}
 
 a.article-suggest {
     display: none;
@@ -152,6 +225,35 @@ table {
         
         i {
             color: $msg_info;
+        }
+    }
+}
+
+ul.contributors {
+    > li {
+        margin-bottom: 8px;
+
+        .header {
+            padding: 9px;
+            margin-bottom: 8px;
+            background: $bg;
+            color: $white;
+            cursor: pointer;
+
+            &:hover {
+                background: $light_bg;
+            }
+
+            .article-count {
+                i {
+                    margin-right: 4px;
+                }
+            }
+        }
+
+        > ul {
+            display: none;
+            margin-bottom: 16px;
         }
     }
 }

@@ -132,6 +132,13 @@
             $count = $st->fetch();
             $count = $count->count;
 
+            foreach ($result AS $res) {
+                //is this a video piece?
+                $res->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($res) {
+                    $res->video = $match[1];
+                }, $res->body);
+            }
+
             return array('articles'=>$result, 'total'=>$count, 'page'=>$page);
         }
 
@@ -226,8 +233,10 @@
         public function getHotArticles($limit=5) {
             $st = $this->app->db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
-                                a.body, a.thumbnail
+                                a.body, a.thumbnail, cat.title AS `category`
                                 FROM articles a
+                                LEFT JOIN articles_categories cat
+                                ON cat.category_id = a.category_id
                                 LEFT JOIN 
                                     ( SELECT article_id, COUNT(*) AS count FROM articles_comments WHERE deleted IS NULL GROUP BY article_id) comments
                                 ON a.article_id = comments.article_id
@@ -240,6 +249,13 @@
                                 LIMIT 5');
             $st->execute();
             $result = $st->fetchAll();
+
+            foreach ($result AS $res) {
+                //is this a video piece?
+                $res->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($res) {
+                    $res->video = $match[1];
+                }, $res->body);
+            }
 
             return $result;
         }
@@ -575,6 +591,30 @@
             $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
             preg_match_all($pattern, $body, $matches);
             return $matches;
+        }
+
+
+
+
+        public function getContributors() {
+            $st = $this->app->db->prepare('SELECT COUNT(article_id) AS `count`, users.username, users.user_id FROM articles
+                                           INNER JOIN users
+                                           ON users.user_id = articles.user_id
+                                           GROUP BY articles.user_id
+                                           ORDER BY `count` DESC');
+            $st->execute();
+            $result = $st->fetchAll();
+
+            foreach ($result AS $res) {
+                $st = $this->app->db->prepare('SELECT title, slug, body, CONCAT(IF(articles.category_id = 0, "/news/", "/articles/"), articles.slug) AS uri
+                                               FROM articles
+                                               WHERE user_id = :uid
+                                               ORDER BY submitted DESC');
+                $st->execute(array(':uid' => $res->user_id));
+                $res->articles = $st->fetchAll();
+            }
+
+            return $result;
         }
     }
 ?>
