@@ -11,7 +11,7 @@ if (!Date.prototype.toISOString) {
 }
 
 
-function timeSince(oldD, short) {
+function timeSince(oldD, short, forceSince) {
     if (Object.prototype.toString.call(oldD) !== "[object Date]")
         oldD = new Date(oldD);
 
@@ -30,15 +30,27 @@ function timeSince(oldD, short) {
                  && oldD.getMonth() == newD.getMonth()
                  && oldD.getFullYear() == newD.getFullYear());
 
-    if (isSameDay) {
+    if (isSameDay || forceSince) {
         if (diff < 60) {
             return "secs" + (!short ? " ago" : '');
         } else if (diff < 3600) {
             var n = Math.floor(diff/60);
             return n + " min" + (n==1?'':'s') + (!short ? " ago" : '');
-        } else {
+        } else if (diff < 86400) {
             var n = Math.floor(diff/3600);
             return n + " hour" + (n==1?'':'s') + (!short ? " ago" : '');
+        } else if (diff < 604800) {
+            var n = Math.floor(diff/86400);
+            return n + " day" + (n==1?'':'s') + (!short ? " ago" : '');
+        } else if (diff < 2630000) {
+            var n = Math.floor(diff/604800);
+            return n + " week" + (n==1?'':'s') + (!short ? " ago" : '');
+        } else if (diff < 31560000) {
+            var n = Math.floor(diff/2630000);
+            return n + " month" + (n==1?'':'s') + (!short ? " ago" : '');
+        } else {
+            var n = Math.floor(diff/31560000);
+            return n + " year" + (n==1?'':'s') + (!short ? " ago" : '');
         }
     } else if (short) {
         var day = oldD.getDate();

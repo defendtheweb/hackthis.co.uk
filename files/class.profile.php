@@ -178,7 +178,7 @@
                 return;
 
             if ($time) {
-                $value = '<time datetime="' . date('c', strtotime($value)) . '">' . $this->app->utils->timeSince($value) . '</time>';
+                $value = '<time class="forceSince" datetime="' . date('c', strtotime($value)) . '">' . $this->app->utils->timeSince($value, false, true) . '</time>';
             } else if (!$value) {
                 $value = 0;
             } else if (is_numeric($value)) {

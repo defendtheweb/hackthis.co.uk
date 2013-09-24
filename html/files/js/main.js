@@ -33,7 +33,7 @@ $(function() {
         $('time:not([data-timesince="false"])').each(function(index, value) {
             $this = $(this);
             d = new Date($this.attr('datetime'));
-            $this.text(timeSince(d, $this.hasClass('short')));
+            $this.text(timeSince(d, $this.hasClass('short'), $this.hasClass('forceSince')));
             if (!$this.attr('title'))
                 $this.attr('title', timeString(d));
         });

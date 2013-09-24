@@ -163,7 +163,7 @@
             return $dt->format($format);
         }
 
-        public function timeSince($date, $short=false) {
+        public function timeSince($date, $short=false, $forceSince=false) {
             $date = strtotime($date);
 
             $diff = time() - $date;
@@ -173,15 +173,27 @@
 
             $isSameDay = (date('d-m-Y', $date) === date('d-m-Y'));
 
-            if ($isSameDay) {
+            if ($isSameDay || $forceSince) {
                 if ($diff < 60)
                     return "secs" . (!$short?' ago':'');
                 else if ($diff < 3600) {
                     $n = floor($diff/60);
                     return "{$n} min" . ($n==1?'':'s') . (!$short?' ago':''); 
-                } else {
+                } else if ($diff < 86400) {
                     $n = floor($diff/3600);
                     return "{$n} hour" . ($n==1?'':'s') . (!$short?' ago':''); 
+                } else if ($diff < 604800) {
+                    $n = floor($diff/86400);
+                    return "{$n} day" . ($n==1?'':'s') . (!$short?' ago':''); 
+                } else if ($diff < 2630000) {
+                    $n = floor($diff/604800);
+                    return "{$n} week" . ($n==1?'':'s') . (!$short?' ago':''); 
+                } else if ($diff < 31560000) {
+                    $n = floor($diff/2630000);
+                    return "{$n} month" . ($n==1?'':'s') . (!$short?' ago':''); 
+                } else {
+                    $n = floor($diff/31560000);
+                    return "{$n} year" . ($n==1?'':'s') . (!$short?' ago':''); 
                 }
             } else if ($short) {
                 return date('d/m', $date);
@@ -192,6 +204,7 @@
                     return "Yesterday";
                 else {
                     $thisWeek = ($date > strtotime("-6 days"));
+
                     if ($thisWeek)
                         return date('l', $date);
                     else
