@@ -186,6 +186,10 @@
                         $this->app->user->score = $this->app->user->score + $level->data['reward'];
                         $st = $this->app->db->prepare('UPDATE users_levels SET completed = NOW(), attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
                         $st->execute(array(':lid'=> $level->level_id, ':uid' => $this->app->user->uid));
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('level', 'completed', $level->level_id, $this->app->user->uid);
+                        $this->app->ssga->send();
                     } else {
                         // Record attempt
                         $st = $this->app->db->prepare('UPDATE users_levels SET attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
