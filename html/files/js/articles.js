@@ -27,4 +27,10 @@ $(function() {
 
         checkSuggestion();
     }
+
+
+    // CONTRIBUTORS
+    $('.contributors > li .header').on('click', function(e) {
+        $(this).siblings('ul').slideToggle();
+    });
 });
