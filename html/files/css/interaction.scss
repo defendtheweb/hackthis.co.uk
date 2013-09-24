@@ -202,6 +202,15 @@ a.button {
     }
 }
 
+#confirmBox a.button.cancel {
+    background: none;
+    color: $dark;
+
+    &:hover {
+        color: $black;
+    }
+}
+
 
 /* SELECT MENU */
 div.select-menu {
@@ -345,7 +354,6 @@ ul.tabs {
 /* IMAGES */
 .thumbnail {
     background: $bg;
-    padding: 12px;
     cursor: pointer;
     margin-bottom: 14px;
     position: relative;
@@ -356,16 +364,32 @@ ul.tabs {
 
     &:hover {
         background: $light_bg;
+
+        &.img:before {
+            background: $green;
+        }
+    }
+
+    &.img:before {
+        content: attr(data-overlay);
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(0, 128, 0, 0.7);
+        color: $white;
+        padding: 5px 10px;
     }
 
     &.img .caption {
         height: 70px;
         overflow: hidden;
+        padding: 3px 12px;
     }
 
     .caption {
-        height: 100%;
+        height: 97%;
         overflow: hidden;
+        padding: 12px;
     }
 
     img {
@@ -380,6 +404,11 @@ ul.tabs {
 
     &.img h3 {
         margin-top: 6px;
+    }
+
+    p {
+        margin: 0;
+        margin-top: 0.4em;
     }
 }
 

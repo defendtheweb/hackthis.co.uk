@@ -39,7 +39,10 @@ $(function() {
             title   : 'Delete post',
             message : 'Are you sure you want to delete this message? <br />It cannot be restored at a later time! Continue?',
             buttons : {
-                Yes : {
+                Cancel  : {
+                    class: 'cancel'
+                },
+                Confirm : {
                     action: function(){
                         // Remove item from feed
                         var uri = '/files/ajax/forum.php?action=post.remove&id=' + id;
@@ -52,8 +55,7 @@ $(function() {
                             }
                         });
                     }
-                },
-                No  : {}
+                }
             }
         });
     });

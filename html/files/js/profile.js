@@ -16,7 +16,10 @@ $(function() {
             title   : 'Delete Confirmation',
             message : 'Are you sure you want to remove this activity from your feed? <br />It cannot be restored at a later time! Continue?',
             buttons : {
-                Yes : {
+                Cancel  : {
+                    class: 'cancel'
+                },
+                Confirm : {
                     action: function(){
                         // Remove item from feed
                         var uri = '/files/ajax/user.php?action=feed.remove&id=' + fid;
@@ -26,8 +29,7 @@ $(function() {
                             }
                         });
                     }
-                },
-                No  : {}
+                }
             }
         });
     });

@@ -51,6 +51,7 @@ h1, h2 {
     @include title_font;
     text-transform: capitalize;
     font-size: 1.5em;
+    line-height: 1.3em;
 
     &.no-margin {
         margin: 0;
@@ -62,13 +63,15 @@ h1, h2 {
 }
 
 h2 {
-   font-size: 1.3em; 
+   font-size: 1.3em;
+   line-height: 1.4em;
 }
 
 h3 {
     margin: 0.5em 0 0.2em 0;
     color: $white;
     font-size: 1.1em;
+    line-height: 1.2em;
 } 
 
 .title {
@@ -367,7 +370,7 @@ div.image {
     display: inline-block;
     vertical-align: middle;
 
-    border-color: #D95C5C !important;
+    border-color: $green !important;
     color: #FFFFFF !important;
 
     background-color: transparent;
