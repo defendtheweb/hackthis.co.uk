@@ -74,7 +74,7 @@
         $article->body = $app->parse($article->body);
 ?>
                             <article class='bbcode body' itemscope itemtype="http://schema.org/Article">
-                                <header class='title clearfix'>
+                                <header class='clearfix'>
 <?php if ($myArticle): ?>
                                         <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php elseif ($app->user->admin_pub_priv): ?>
@@ -85,17 +85,18 @@
                                         <a href='/admin/articles.php?accept=<?=$article->id;?>' class='right button'><i class='icon-tick'></i> Accept</a>
 <?php endif; ?>
                                     <h1 itemprop="name"><?=$article->title;?></h1>
-                                    <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
+                                    <div class='meta'>
+                                        <i class="icon-clock"></i> <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($article->submitted));?>"><?=$app->utils->timeSince($article->submitted);?></time>
 <?php if (isset($article->updated) && $article->updated > 0): ?>
-                                    &#183; updated <time itemprop='dateModified' datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time>
+                                        &#183; updated <time itemprop='dateModified' datetime="<?=date('c', strtotime($article->updated));?>"><?=$app->utils->timeSince($article->updated);?></time>
 <?php endif; ?>
 <?php if (isset($article->cat_title)): ?>
-                                    &#183; <a href='<?=$article->cat_slug;?>'><?=$article->cat_title;?></a>
+                                        <i class="icon-books"></i> <a href='<?=$article->cat_slug;?>'><?=$article->cat_title;?></a>
 <?php endif; ?>
 <?php if (isset($article->username)): ?>
-                                    &#183; <a rel='author' itemprop='author' href='/user/<?=$article->username;?>'><?=$article->username;?></a>
+                                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/<?=$article->username;?>'><?=$article->username;?></a>
 <?php endif; ?>
-
+                                    </div>
                                     <?php
                                         if (!$myArticle) {
                                             $share = new stdClass();
