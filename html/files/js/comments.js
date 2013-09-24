@@ -41,11 +41,11 @@ $(function() {
     //                     '</article>';
 
     var commentsTmpl =  '<article data-id="${id}" id="comment-${id}" class="comment">'+
-                        '    <a class="avatar">'+
-                        '        <img src="{{if username}}${image}{{else}}/users/images/no_pic.jpg{{/if}}"/>'+
-                        '    </a>'+
-                        '    <div class="content">'+
-                        '        {{if username}}'+
+                        '    {{if username}}'+
+                        '        <a class="avatar">'+
+                        '            <img src="{{if username}}${image}{{else}}/users/images/no_pic.jpg{{/if}}"/>'+
+                        '        </a>'+
+                        '        <div class="content">'+
                         '            <a class="author" href=\'/user/${username}\'>${username}</a>'+
                         '            <time class="small dark" pubdate datetime="${time}">${timeSince(time)}</time>'+
                         '            <div class="controls small dark">'+
@@ -55,10 +55,12 @@ $(function() {
                         '            <div class="body clr">'+
                         '                {{html comment}}'+
                         '            </div>'+
-                        '        {{else}}'+
+                        '        </div>'+
+                        '    {{else}}'+
+                        '        <div class="content deleted">'+
                         '            [comment removed]'+
-                        '        {{/if}}'+
-                        '    </div>'+
+                        '        </div>'+
+                        '    {{/if}}'+
                         '    {{if replies}}<div class="replies clr">'+
                         '       {{tmpl(replies) "commentsTmpl"}}'+
                         '    </div>{{/if}}'+

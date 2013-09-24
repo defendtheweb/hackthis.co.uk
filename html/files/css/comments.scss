@@ -149,6 +149,11 @@
             margin-left: 4em;
             display: block;
 
+            &.deleted {
+                color: $dark;
+                margin-left: 0;
+            }
+
             time {
                 padding-left: 6px;
             }
