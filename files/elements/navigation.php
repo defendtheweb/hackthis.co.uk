@@ -55,6 +55,7 @@
 ?>
                                     </ul>
                                 </li>
+                                <li><a href='/articles/contributors'>Contributors</a></li>
 <?php
     if ($app->user->loggedIn):
 ?>
