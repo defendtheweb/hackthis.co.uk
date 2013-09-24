@@ -45,12 +45,7 @@
 
     $breadcrumb = $forum->getBreadcrumb($section);
 
-    if (isset($_GET['no-replies']))
-        $threads = $forum->getThreads($section, $page, true);
-    else if (isset($_GET['popular']))
-        $threads = $forum->getThreads($section, $page, false, true);
-    else
-        $threads = $forum->getThreads($section, $page);
+    $threads = $forum->getThreads($section, $page, isset($_GET['no-replies']), isset($_GET['popular']), isset($_GET['watching']));
 
     $threads_count = $threads->count;
     $threads = $threads->threads;

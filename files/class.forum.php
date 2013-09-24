@@ -171,7 +171,7 @@
             return $crumb;
         }
 
-        public function getThreads($section, $page=1, $no_replies = false, $most_popular = false, $limit = 10) {
+        public function getThreads($section, $page=1, $no_replies = false, $most_popular = false, $watching = false, $limit = 10) {
             $section_slug = '';
             if ($section)
                 $section_slug = $section->slug;
@@ -204,6 +204,9 @@
             
             if ($no_replies)
                 $sql .= ' AND posts.count = 1';
+
+            if ($watching)
+                $sql .= ' AND forum_users.watching = 1';            
             
             if ($most_popular)
                 $sql .= " ORDER BY `count` DESC, `voices` DESC, latest DESC";

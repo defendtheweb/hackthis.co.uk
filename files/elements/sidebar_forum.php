@@ -17,9 +17,12 @@
 ?>
         </ul>
 
-        <h1>View</h1>
+        <h1 class='no-margin'>View</h1>
+        Filter topics <?=isset($section)?'in this section':'in all sections';?><br/><br/>
+
         <ul class='plain'>
-            <li <?=!(isset($_GET['popular']) || isset($_GET['no-replies']))?'class="active"':'';?>><a href='?'>View all</a></li>
+            <li <?=!(isset($_GET['popular']) || isset($_GET['watching']) || isset($_GET['no-replies']))?'class="active"':'';?>><a href='?'>View all</a></li>
+            <li <?=isset($_GET['watching'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?watching'>Watched threads</a></li>
             <li <?=isset($_GET['popular'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?popular'>Most popular threads</a></li>
             <li <?=isset($_GET['no-replies'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?no-replies'>Threads with no replies</a></li>
         </ul>
