@@ -16,6 +16,10 @@
         require_once("news.php");
     } else {
         require_once('header.php');
+
+        if (isset($_GET['deleted'])) {
+            $app->utils->message('Your account has been successfully deleted.<br/><br/>Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
+        }
 ?>
 
                     <h1 class='title'>About</h1>

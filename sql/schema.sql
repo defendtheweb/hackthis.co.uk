@@ -372,7 +372,7 @@ CREATE TABLE articles_comments (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_favourites (
+CREATE TABLE articles_favourites (articles
     `article_id` int(6) NOT NULL,
     `user_id` int(7) NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -421,6 +421,7 @@ CREATE TRIGGER update_user BEFORE UPDATE ON users FOR EACH ROW
 DROP TRIGGER IF EXISTS delete_user;
 CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
     BEGIN
+        DELETE FROM users_oauth WHERE OLD.oauth_id = id;
         DELETE FROM users_profile WHERE OLD.user_id = user_id;
         DELETE FROM users_priv WHERE OLD.user_id = user_id;
         DELETE FROM users_friends WHERE OLD.user_id = user_id OR OLD.user_id = friend_id;
@@ -428,15 +429,22 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM users_activity WHERE OLD.user_id = user_id;
         DELETE FROM users_notifications WHERE OLD.user_id = user_id;
         DELETE FROM users_medals WHERE OLD.user_id = user_id;
-        DELETE FROM users_feed WHERE OLD.user_id = user_id;
+        DELETE FROM users_levels WHERE OLD.user_id = user_id;
+        DELETE FROM reports WHERE OLD.user_id = user_id;
         DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
         DELETE FROM articles_draft WHERE OLD.user_id = user_id;
+        DELETE FROM forum_karma WHERE OLD.user_id = user_id;
+        DELETE FROM forum_users WHERE OLD.user_id = user_id;
         DELETE FROM pm_users WHERE OLD.user_id = user_id;
+        DELETE FROM users_feed WHERE OLD.user_id = user_id;
         -- Add other tables to be removed.
 
         -- Update other contributions to NULL so they aren't lost
+        UPDATE users_donations SET user_id = NULL WHERE user_id = OLD.user_id;
         UPDATE articles_comments SET user_id = NULL WHERE user_id = OLD.user_id;
         UPDATE articles SET user_id = NULL WHERE user_id = OLD.user_id;
+        UPDATE forum_posts SET author = NULL WHERE author = OLD.user_id;
+        UPDATE forum_threads SET owner = NULL WHERE owner = OLD.user_id;
         UPDATE pm_messages SET user_id = NULL WHERE user_id = OLD.user_id;
     END;
 
@@ -487,6 +495,8 @@ DROP TRIGGER IF EXISTS delete_user_level;
 CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
+        DECLARE _e INT;
+        DECLARE CONTINUE HANDLER FOR 1442 SET _e = 1;
         SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = OLD.level_id AND `key` = 'reward' LIMIT 1);
         UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
 
@@ -516,7 +526,7 @@ CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
         END IF;
     END;
 
-DROP TRIGGER IF EXISTS insert_friend;
+DROP TRIGGER IF EXISTS insert_friend;articles
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
     BEGIN
         CALL user_notify(NEW.friend_id, 'friend', NEW.user_id, null);

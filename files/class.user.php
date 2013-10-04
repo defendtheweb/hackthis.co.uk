@@ -369,6 +369,53 @@
             header("Location: /");
         }
 
+
+        public function delete($password, $token) {
+            if (!$this->app->checkCSRFKey("deleteAccount", $token))
+                return "Invalid request";
+
+            $st = $this->app->db->prepare('SELECT u.user_id, u.password
+                    FROM users u
+                    WHERE user_id = :uid');
+            $st->execute(array(':uid' => $this->uid));
+            $row = $st->fetch();
+
+            // Check if users details exist
+            if ($row) {
+                if ($row->password == crypt($password, $row->password)) {
+
+                    $this->app->db->beginTransaction();
+
+                    try {
+                        $st = $this->app->db->prepare('DELETE FROM users
+                                WHERE user_id = :uid
+                                LIMIT 1');
+                        $st->execute(array(':uid' => $this->uid));
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'delete', 'default', $this->uid);
+                        $this->app->ssga->send();
+
+                        $this->app->db->commit();
+                        return true;
+                    } catch (PDOException $e) {
+                        $this->app->db->rollback();
+                        print_r($e);
+                        return "There was a problem";
+                    }
+                } else {
+                    return 'Invalid password';
+                }
+            } else {
+                return 'Invalid password';
+            }
+
+            return "There was an error with the request";
+        }
+
+
+
+
         /* MISC */
         public function hideConnect() {
             $st = $this->app->db->prepare('UPDATE users SET `oauth_id` = 0 WHERE `user_id` = :uid');
