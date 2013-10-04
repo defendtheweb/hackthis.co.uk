@@ -19,7 +19,11 @@
 
             // Setup google events class
             require('vendor/class.ss-ga.php');
-            $this->ssga = new ssga($this->config['ssga-ua'], $this->config['domain']);
+            if (isset($this->config['ssga-ua'])) {
+                $this->ssga = new ssga($this->config['ssga-ua'], $this->config['domain']);
+            } else {
+                $this->ssga = new ssga();
+            }
 
             // Create page object
             $this->page = new page();
