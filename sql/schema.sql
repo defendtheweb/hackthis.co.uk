@@ -372,7 +372,7 @@ CREATE TABLE articles_comments (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_favourites (articles
+CREATE TABLE articles_favourites (
     `article_id` int(6) NOT NULL,
     `user_id` int(7) NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -526,7 +526,7 @@ CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
         END IF;
     END;
 
-DROP TRIGGER IF EXISTS insert_friend;articles
+DROP TRIGGER IF EXISTS insert_friend;
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
     BEGIN
         CALL user_notify(NEW.friend_id, 'friend', NEW.user_id, null);
