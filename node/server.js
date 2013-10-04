@@ -33,7 +33,7 @@ io.sockets.on('connection', function (connection) {
     });
 
     socket.on('disconnect', function() {
-        disconnectIRC(socket);
+        disconnectSocket(socket);
     });
 });
 
@@ -92,7 +92,7 @@ global_irc.addListener('message', function (nick, chan, message) {
 
 
 function connectIRC(socket, nick, key) {
-    console.log('New IRC client');
+    console.log(key + ' - New connection');
     socket.nick = nick;
     socket.key = key;
 
@@ -101,7 +101,7 @@ function connectIRC(socket, nick, key) {
         irc_clients[socket.key].connections++;
         socket.irc = irc_clients[socket.key].client;
     } else {
-        console.log('Creating new IRC user');
+        console.log(key + ' - Creating IRC connection');
         socket.irc = new _irc.Client('irc.hackthis.co.uk', nick, {
             userName: nick,
             realName: nick,
@@ -158,11 +158,18 @@ function connectIRC(socket, nick, key) {
     socket.emit('chat', irc_log.slice(-25));
 }
 
-function disconnectIRC(socket) {
-    console.log('Client disconnected');
+function disconnectSocket(socket) {
     key = socket.key;
+    if (key in irc_clients) {
+        console.log(key + ' - Client disconnected: ' + irc_clients[key].connections + ' connections');
+    } else {
+        console.log(key + ' - Client disconnected');
+    }
 
-    setTimeout(function() {
+    (function(key) {
+        setTimeout(function(){disconnectIRC(key)}, 15000);
+    })(key);
+    /*setTimeout(function() {
         // console.log('Deleting connection...');
 
         // irc = socket.irc;
@@ -189,16 +196,31 @@ function disconnectIRC(socket) {
         //     irc.disconnect();
         // }            
 
+        console.log(key + ' - Timeout');
         if (key in irc_clients) {
             irc_clients[key].connections--;
-            console.log('Now ' + irc_clients[key].connections + ' connections');
+            console.log(key + ' - ' + irc_clients[key].connections + ' connections');
             
             if (irc_clients[key].connections == 0) {
                 irc_clients[key].client.disconnect();
                 delete irc_clients[key];
             }
         }
-    }, 15000, key);
+    }, 15000, key);*/
 
     connections.splice(connections.indexOf(socket), 1);
+}
+
+function disconnectIRC(key) {
+    if (key in irc_clients) {
+        irc_clients[key].connections--;
+        console.log(key + ' - Timeout: ' + irc_clients[key].connections + ' connections');
+        
+        if (irc_clients[key].connections == 0) {
+            irc_clients[key].client.disconnect();
+            delete irc_clients[key];
+        }
+    } else {
+        console.log(key + ' - Timeout');
+    }
 }
