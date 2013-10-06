@@ -36,10 +36,6 @@
                             </ul></li>
                         </ul></li>
 <?php
-    else:
-?>
-                        <li><a href='/news/'>news</a></li>
-<?php
     endif;
 
     $categories = $app->articles->getCategories(null, false);

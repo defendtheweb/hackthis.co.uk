@@ -15,6 +15,8 @@
     if ($app->user->loggedIn) {
         require_once("news.php");
     } else {
+        define("_SIDEBAR", false);
+
         require_once('header.php');
 
         if (isset($_GET['deleted'])) {
