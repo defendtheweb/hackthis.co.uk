@@ -18,4 +18,9 @@
     $config['twitter']['public'] = '';
 
     $config['lastfm']['public'] = '';
+
+    $config['socket']['address'] = '';
+    $config['socket']['key'] = '';
+
+    $config['ssga-ua'] = '';
 ?>
