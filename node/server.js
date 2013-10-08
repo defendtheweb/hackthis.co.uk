@@ -20,10 +20,7 @@ app.listen(8080);
 
 var api_key = 'PML758e0UW4oqT8js9vAg5SZY3w6JgkJ';
 
-var socket = null;
-io.sockets.on('connection', function (connection) {
-    socket = connection;
-
+io.sockets.on('connection', function (socket) {
     //Send feed history
     socket.emit('feed', feed_log.slice(-10));
 
@@ -131,15 +128,21 @@ function connectIRC(socket, nick, key) {
     //redefine handler
     socket.irc.setMaxListeners(0);
     socket.irc.addListener('message', function (nick, chan, message) {
-        socket.emit('chat', {nick: nick, chan: chan, msg: message});
+        // Check for ctcp
+        var action = message.match(/^\u0001ACTION (.*)\u0001$/);
+        if (action) {
+            socket.emit('chat', {nick: nick, chan: chan, msg: action[1], info: 'action'});
+        } else {
+            socket.emit('chat', {nick: nick, chan: chan, msg: message});
+        }
     }).addListener('join', function (chan, nick, message) {
         socket.emit('chat', {nick: nick, chan: chan, msg: message, info: 'join'});
     }).addListener('part', function (chan, nick, reason, message) {
         socket.emit('chat', {nick: nick, chan: chan, msg: message, info: 'part'});
     }).addListener('quit', function (nick, reason, channels, message) {
-        irc_log.push({nick: nick, info: 'part'});
+        socket.emit('chat', {nick: nick, info: 'part'});
     }).addListener('registered', function (message) {
-        socket.emit('chat', {nick: message.args[0], info: 'registered'});
+        socket.emit('chat', {info: 'registered'});
     }).addListener('topic', function (chan, topic, nick) {
         socket.emit('chat', {nick: nick, topic: topic, info: 'topic'});
     });
