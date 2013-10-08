@@ -1,5 +1,6 @@
 <?php
     $custom_css = array('settings.scss');
+    $custom_js = array('highlight.js');
     require_once('init.php');
 
     $app->page->title = 'Settings - Userbar';
