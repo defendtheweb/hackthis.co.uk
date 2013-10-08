@@ -267,7 +267,7 @@
         }
     }
 
-    .post-list li {
+    .post-list > li {
         list-style: none;
         background: $light_bg;
         margin-bottom: 2px;
@@ -299,12 +299,19 @@
                 margin: 4px;
             }
 
-            .forum-medal {
-                position: relative;
-                top: -14px;
-                border-radius: 0;
-                width: 60px;
-                text-align: center;
+            ul li {
+                padding: 2px 0;
+
+                &.highlight {
+                    background: $light_bg;
+                    padding: 4px 0;
+                    margin: 2px 0;
+                }
+
+                i {
+                    padding-right: 3px;
+                    color: $dark;
+                }
             }
 
             .button {

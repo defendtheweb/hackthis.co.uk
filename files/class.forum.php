@@ -72,6 +72,134 @@
             return $result;
         }
 
+        public function printThreadPost($post, $first=false) {
+
+            $post->body = $this->app->parse($post->body);
+            if (isset($post->signature)) {
+                $post->signature = $this->app->parse($post->signature);
+            }
+
+            $return = <<< POST
+        <li class='row fluid clr' data-id='{$post->post_id}'>
+            <div id="post-{$post->post_id}" class="col span_5 post_header">
+
+POST;
+
+            if ($post->username):
+                if ($post->donator):
+
+                    $return .= <<< POST
+                <div class="label corner">
+                    <i class="icon-heart"></i>
+                </div>
+
+POST;
+
+                endif;
+
+                $posted = date('c', strtotime($post->posted));
+                $return .= <<< POST
+                <a href="/user/{$post->username}" class="user">
+                    {$post->username}<br/>
+                    <img src="{$post->image}" width="60" height="60" alt="{$post->username}'s profile picture">
+                </a>
+                <br/>
+                <ul class='plain'>
+                    <li class='highlight'><i class='icon-clock'></i> <time class='short' itemprop='datePublished' pubdate datetime="{$posted}">{$this->app->utils->timeSince($post->posted, true)}</time></li>
+                    <li><i class='icon-trophy'></i> {$post->score}</li>
+                    <li><i class='icon-chat'></i> {$post->posts}</li>
+                </ul>
+                <br/>
+
+POST;
+
+            else: // Deleted user
+
+                $return .= <<< POST
+                <div class='strong dark'>[deleted user]</div>
+                <br/>
+
+POST;
+
+            endif;
+            if ($post->user_id === $this->app->user->uid || $this->app->user->forum_priv > 1):
+                if (!$first):
+
+                    $return .= <<< POST
+                <a href='#' class='button icon'><i class='icon-edit'></i></a>
+                <a href='#' class='button icon remove'><i class='icon-trash'></i></a>
+
+POST;
+
+                else:
+
+                    $return .= <<< POST
+                <a href='#' class='button'><i class='icon-edit'></i> Edit post</a>
+
+POST;
+
+                endif;
+            else:
+
+                $return .= <<< POST
+                <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
+
+POST;
+
+            endif;
+
+            $return .= <<< POST
+            </div>
+            <article class="col span_19 post_content">
+                <div class="karma small">
+POST;
+
+            if ($post->user_id === $this->app->user->uid):
+
+                $return .= <<< POST
+                <span>{$post->karma}</span>
+POST;
+
+            else:
+
+                $cancel_down = $post->user_karma < 0?'karma-cancel':'';
+                $cancel_up = $post->user_karma > 0?'karma-cancel':'';
+                $return .= <<< POST
+            <a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>
+            <span>{$post->karma}</span>
+            <a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>
+POST;
+                if ($first) {
+                    $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                }
+
+            endif;
+
+            $return .= <<< POST
+                </div>
+                <div class="post_body">
+                    {$post->body}
+
+POST;
+
+            if (isset($post->signature)) {
+                $return .= "                    <div class='post_signature'>
+                        {$post->signature}
+                    </div>\n";
+            }
+
+            $return .= <<< POST
+                </div>
+            </article>
+        </li>
+
+POST;
+
+            print $return;
+
+
+        }
+
         public function printSectionsList($cat, $menu = false, $current = null, $level = 1) {
             if ($menu) {
                 $c = '';
