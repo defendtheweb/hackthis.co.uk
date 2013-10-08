@@ -46,7 +46,11 @@ $(function() {
                         '            <img src="{{if username}}${image}{{else}}/users/images/no_pic.jpg{{/if}}"/>'+
                         '        </a>'+
                         '        <div class="content">'+
-                        '            <a class="author" href=\'/user/${username}\'>${username}</a>'+
+                        '            {{if username != 0}}'+
+                        '                <a class="author" href=\'/user/${username}\'>${username}</a>'+
+                        '            {{else}}'+
+                        '                <span class="dark">[deleted user]</span>'+
+                        '            {{/if}}'+
                         '            <time class="small dark" pubdate datetime="${time}">${timeSince(time)}</time>'+
                         '            <div class="controls small dark">'+
                         '                <a href="#" class="comment-reply"><i class="icon-reply"></i> Reply</a> '+
