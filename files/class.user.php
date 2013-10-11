@@ -298,6 +298,9 @@
                 
                 $this->app->stats->users_activity($this, true);
 
+                // Set cookie to say they are already a registered user
+                setcookie("member", true, time()+60*60*24*30);
+
                 // Redirect user back to where they came from
                 header("location: " . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
             }     
@@ -439,17 +442,12 @@
             return (isset($this->username)) ? $this->username : '';
         }
 
-        public function updateForum($signature, $medal, $token) {
+        public function updateForum($signature, $token) {
             if (!$this->app->checkCSRFKey("settings", $token))
                 return "Invalid request";
 
             $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `forum_signature`) VALUES (:uid, :signature) ON DUPLICATE KEY UPDATE forum_signature = :signature');
             $result = $st->execute(array(':signature' => $signature, ':uid' => $this->uid));
-
-            $st = $this->app->db->prepare('UPDATE users_medals SET highlight = 0 WHERE user_id = :uid');
-            $st->execute(array(':uid' => $this->uid));
-            $st = $this->app->db->prepare('UPDATE users_medals SET highlight = 1 WHERE user_id = :uid AND medal_id = :medal LIMIT 1');
-            $st->execute(array(':medal' => $medal, ':uid' => $this->uid));
 
             if ($result)
                 return true;
