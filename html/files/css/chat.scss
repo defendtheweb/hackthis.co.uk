@@ -1,0 +1,59 @@
+html {
+    height: 100%;
+}
+
+body {
+    background: $black;
+
+    height: 100%;
+}
+
+
+#chat-main {
+    height: 100%;
+
+    .chat-bar-title {
+        background: $light_bg;
+        width: 100%;
+        padding: 4px 6px;
+        color: $white;
+    }
+
+    .unread {
+        display: none;
+    }
+
+    .chat-container {
+        border: none;
+
+        height: 85%;
+        width: 80%;
+        float: left;
+    }
+
+    .chat-names {
+        height: 85%;
+        width: 20%;
+        float: right;
+        background: $bg;
+
+        li {
+            list-style: none;
+            padding: 4px 4px;
+
+            &:hover {
+                background: $light_bg;
+                cursor: pointer;
+            }
+        }
+    }
+
+    input {
+        border: none;
+        border-top: 1px solid $light_bg;
+        background: $black;
+        padding: 4px 6px;
+        margin-bottom: 0;
+        font-size: 1em;
+    }
+}

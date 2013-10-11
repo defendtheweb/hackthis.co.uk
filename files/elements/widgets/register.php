@@ -1,5 +1,5 @@
-                    <article class="widget">
-                        <h1>Registration</h1>
+                    <article class="widget widget-register">
+<!--                         <h1>Registration</h1> -->
 <?php
     if (isset($app->user->reg_error)):
 ?>
@@ -22,4 +22,11 @@
                             <input type="text" name="reg_email" id="reg_email" value="<?=isset($_POST['reg_email'])?htmlspecialchars($_POST['reg_email']):''?>">
                             <input type="submit" value="Register" class="button right">
                         </form>
+
+                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
+                            Login with Facebook
+                        </a>
+                        <a class='stop-external twitter-login' href='#'>
+                            Login with Twitter
+                        </a>
                     </article>

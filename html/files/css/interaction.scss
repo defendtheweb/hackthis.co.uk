@@ -721,6 +721,22 @@ div.lite-pagination {
         }
     }
 
+    input {
+        position: absolute;
+        border: none;
+        border-top: 1px solid $bg;
+        border-left: 2px solid $bg;
+        border-right: 2px solid $bg;
+        background: $black;
+        bottom: 0;
+        left: 0;
+        padding: 4px 6px;
+        margin-bottom: 0;
+        display: none;
+    }
+}
+
+#chat-bar, #chat-main {
     .chat-container {
         border-left: 2px solid $bg;
         border-right: 2px solid $bg;
@@ -741,20 +757,6 @@ div.lite-pagination {
                 color: $dark;
             }
         }
-    }
-
-    input {
-        position: absolute;
-        border: none;
-        border-top: 1px solid $bg;
-        border-left: 2px solid $bg;
-        border-right: 2px solid $bg;
-        background: $black;
-        bottom: 0;
-        left: 0;
-        padding: 4px 6px;
-        margin-bottom: 0;
-        display: none;
     }
 }
 

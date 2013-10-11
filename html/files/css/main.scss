@@ -31,7 +31,7 @@ body {
     .page-wrap {
         min-height: 100%;
         /* equal to footer height */
-        margin-bottom: -125px;
+        margin-bottom: -159px;
     }
     .page-wrap:after {
         content: "";
@@ -39,7 +39,7 @@ body {
     }
     #page-footer, .page-wrap:after {
         /* .push must be the same height as footer */
-        height: 120px;
+        height: 159px;
     }
 }
 

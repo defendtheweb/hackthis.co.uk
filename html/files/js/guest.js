@@ -68,6 +68,15 @@ $(function() {
     });
 
 
+    // Landing page forms
+    $('.landing .registration > div').on('click', function(e) {
+        if (!$(this).hasClass('hidden')) return;
+        
+        $('.landing .registration > div').toggleClass('hidden');
+        $(this).children('.widget').slideToggle();
+        $('.landing .registration > div').not(this).children('.widget').slideToggle();
+    });
+
 
     // Navigation forms
     var dropdown = $('.nav-extra-dropdown');

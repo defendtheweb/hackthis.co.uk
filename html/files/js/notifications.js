@@ -1,12 +1,15 @@
 $(function() {
     var favcounter = new FavCounter();
+    var counter_chat = 0;
+    var counter_notifications = 0;
 
     var username = $('body').attr('data-username');
     var key = $('body').attr('data-key');
 
     var socket = null;
     if (typeof io !== 'undefined') {
-        socket = io.connect('http://192.168.1.66:8080/');
+        // socket = io.connect('http://192.168.1.66:8080/');
+        socket = io.connect('http://hackthis.co.uk:8080/');
     }
 
     var feedTmpl = '<tmpl>'+
@@ -61,13 +64,16 @@ $(function() {
 
 
     /* CHAT */
+    var chat_topic = 'Global chat';
+    var chat_names = {};
+
     function connectChat() {
         if (connected)
             return;
 
         connected = true;
         socket.emit('chat_register', { nick: username, key: key });
-        $chat_bar.addClass('connected');
+        $chat.addClass('connected');
 
         // Keep them connected for another day
         createCookie("chat-connected", "true", 1);
@@ -76,56 +82,76 @@ $(function() {
     if (socket) {
         var connected = false;
         var unread = 0;
+        var chat_main = $('#chat-main').length;
 
-        chat_bar = '   <div id="chat-bar">\
-                            <div class="chat-bar-title">\
-                                <i class="mobile-hide right icon-new-tab"></i>\
-                                <span class="unread hide">0</span>\
-                                <span class="topic">Global chat</span>\
-                            </div>\
-                            <div class="chat-container scroll">\
-                                <a href="#" class="left button chat-connect">Connect</a>\
-                                <ul>\
-                                </ul>\
-                            </div>\
-                            <input type="text"/>\
-                        </div>';
+        if (!chat_main) {
+            chat_bar = '   <div id="chat-bar">\
+                                <div class="chat-bar-title">\
+                                    <i class="mobile-hide right icon-new-tab"></i>\
+                                    <span class="unread hide">0</span>\
+                                    <span class="topic">Global chat</span>\
+                                </div>\
+                                <div class="chat-container scroll">\
+                                    <a href="#" class="left button chat-connect">Connect</a>\
+                                    <ul>\
+                                    </ul>\
+                                </div>\
+                                <input type="text"/>\
+                            </div>';
 
-        $('body').append(chat_bar);
-        $chat_bar = $('#chat-bar');
-        $unread = $chat_bar.find('.unread');
-        $chat_bar.find('.scroll').mCustomScrollbar();
+            $('body').append(chat_bar);
 
-        // Is chat open
-        result = new RegExp('(?:^|; )chat=([^;]*)').exec(document.cookie);
-        if (result && result[1] == 'open') {
-            $chat_bar.addClass('show');
-        }
-        result = new RegExp('(?:^|; )chat-connected=([^;]*)').exec(document.cookie);
-        if (result && result[1] == 'true') {
+            $chat = $('#chat-bar');
+
+            // Is chat open
+            result = new RegExp('(?:^|; )chat=([^;]*)').exec(document.cookie);
+            if (result && result[1] == 'open') {
+                $chat.addClass('show');
+            }
+            result = new RegExp('(?:^|; )chat-connected=([^;]*)').exec(document.cookie);
+            if (result && result[1] == 'true') {
+                connectChat();
+            }
+
+            $chat.find('.chat-connect').on('click', function(e) {
+                e.preventDefault();
+                connectChat();
+            });
+
+        } else {
+            $chat = $('#chat-main');
+
             connectChat();
         }
 
-        $chat_bar.find('.chat-connect').on('click', function(e) {
-            e.preventDefault();
-            connectChat();
-        })
+        $unread = $chat.find('.unread');
+        $chat.find('.scroll').mCustomScrollbar();
 
-        $chat_bar.find('.chat-bar-title').on('click', function(e) {
+        $chat.find('.chat-bar-title').on('click', function(e) {
             e.stopPropagation();
 
-            if ($chat_bar.hasClass('show')) {
-                $chat_bar.removeClass('show');
+            if ($chat.hasClass('show')) {
+                $chat.removeClass('show');
                 createCookie("chat", "closed");
             } else {
-                $chat_bar.addClass('show');
+                $chat.addClass('show');
                 createCookie("chat", "open");
                 unread = 0;
-                $unread.text(0).addClass('hide');;
+                $unread.text(0).addClass('hide');
+
+                counter_chat = unread;
+                favcounter.set(counter_notifications + counter_chat);
             }
         });
 
-        $chat_bar.find('input').keypress(function(event) {
+        $chat.find('.chat-bar-title .icon-new-tab').on('click', function(e) {
+            e.stopPropagation();
+            $chat.removeClass('show');
+            createCookie("chat", "closed");
+            window.open('/chat.php', 'hackthis-chat', "height=400, width=600, scrollbars=no");
+        });
+
+        $chat.find('input').keypress(function(event) {
             if (event.keyCode == 13) {
                 msg = $(this).val();
                 socket.emit('chat', { msg: msg });
@@ -144,15 +170,33 @@ $(function() {
                 if (data.info === 'registered') {
 
                 } else if (data.info === 'topic') {
-                    $chat_bar.find('.chat-bar-title .topic').text(data.topic);
+                    chat_topic = data.topic;
+                    $chat.find('.chat-bar-title .topic').text(chat_topic + ' [' + Object.keys(chat_names).length + ' online]');
+                } else if (data.info === 'names') {
+                    chat_names = data.names;
+                    renderMsg(data);
+                    $chat.find('.chat-bar-title .topic').text(chat_topic + ' [' + Object.keys(chat_names).length + ' online]');
+
+                    if (chat_main) {
+                        $.each(data.names, function(key, val) {
+                            c = stringToColour(key);
+                            span = $('<span/>', {style: 'color: '+c}).text(val + key);
+                            data = $('<li>').text(data.msg).prepend(span);
+                            $chat.find('.chat-names ul').append(data);
+                        });
+                    }
+
                 } else {
                     renderMsg(data);
 
                     if (!data.info) {                                
                         // Unread message
-                        if (!$chat_bar.hasClass('show')) {
+                        if (!$chat.hasClass('show')) {
                             unread++;
                             $unread.text(unread).removeClass('hide');
+
+                            counter_chat = unread;
+                            favcounter.set(counter_notifications + counter_chat);
                         }
                     }
                 }
@@ -164,19 +208,26 @@ $(function() {
             if (data.info) {
                 if (data.info == 'join')
                     data = $('<li>', {class: 'info'}).text('* '+data.nick+' has joined '+data.chan);
+                else if (data.info == 'names') {
+                    var online = '';
+                    $.each(data.names, function(key, val) {
+                        online += val+key+', ';
+                    });
+                    data = $('<li>', {class: 'info'}).text('* Users online: ' + online.substring(0, online.length-2));
+                }
                 else
                     data = $('<li>', {class: 'info'}).text('* '+data.nick+' has left');
-                $chat_bar.find('.chat-container ul').append(data);
+                $chat.find('.chat-container ul').append(data);
             } else {
                 // Get users colour
                 c = stringToColour(data.nick);
 
                 span = $('<span/>', {style: 'color: '+c}).text(data.nick + ' ');
                 data = $('<li>').text(data.msg).prepend(span);
-                $chat_bar.find('.chat-container ul').append(data);
+                $chat.find('.chat-container ul').append(data);
             }
 
-            $chat_bar.find('.scroll').mCustomScrollbar("scrollTo", "li:nth-last-child(2)");
+            $chat.find('.scroll').mCustomScrollbar("scrollTo", "li:nth-last-child(2)");
         }
 
         var stringToColour = function(str) {
@@ -211,7 +262,8 @@ $(function() {
                 $('#pm-counter').fadeOut(200);
             }
 
-            favcounter.set(data.counts.events + data.counts.pm);
+            counter_notifications = data.counts.events + data.counts.pm;
+            favcounter.set(counter_notifications + counter_chat);
 
             // if (data.feed.length) {
             //     lastUpdate = data.feed[0].timestamp;
@@ -356,7 +408,7 @@ $(function() {
         }
 
         $.getJSON(uri, function(data) {
-            data = data.items;
+            var data = data.items;
             if (data.length || data.items.length) {
                 if (parent.hasClass('active-events')) {
                     var items = $(notificationsTmpl).tmpl(data.items);

@@ -1,5 +1,5 @@
-                    <article class="widget">
-                        <h1>Login</h1>
+                    <article class="widget widget-login">
+<!--                         <h1>Login</h1> -->
 <?php
     if (isset($app->user->login_error)):
 ?>

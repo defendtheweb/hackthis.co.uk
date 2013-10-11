@@ -11,47 +11,16 @@
 	display: none;
 }
 
-/* Index page site feature bubbles */
-section.features {
-    margin: 15px 2px;
-    text-align: center;
-    color: $white;
 
-    .col {
-        margin: 15px 0;
+.cookies {
+    background: $bg;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: -20px;
 
-        h2, .blurb, .circle {
-            opacity: 0;
-        }
-
-        .circle {
-            display: inline-block;
-            height: 108px;
-            width: 108px;     
-            background: darken($green, 10%);
-            @include border-radius(50%);       
-            padding: 19px;
-            cursor: default;
-            @include transition(background-color, 200ms, ease-in-out);
-            margin-bottom: 8px;
-            transform: scale(0);
-
-            &:hover {
-                background: $green;
-            }
-        }
-
-        i {
-            margin-top: -1px;
-            display: inline-block;
-            font-size: 5em;
-        }
-    }
-}
-
-.no-js section.features {
-    h2, .blurb, .circle {
-        opacity: 1;
-        transform: scale(1);
+    h3 {
+        margin: 0;
+        margin-right: 6px;
+        display: inline-block;
     }
 }
