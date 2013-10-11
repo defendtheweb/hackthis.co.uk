@@ -14,6 +14,7 @@ var irc_clients = [];
 var global_irc;
 
 var irc_topic = "Global chat";
+var irc_names = {};
 
 app.listen(8080);
 
@@ -57,9 +58,7 @@ function handler(req, res) {
 
 function feed(data) {
     feed_log.push(data);
-    if (socket) {
-        socket.broadcast.emit('feed', data);
-    }
+    io.sockets.emit('feed', data);
 }
 
 
@@ -85,6 +84,8 @@ global_irc.addListener('message', function (nick, chan, message) {
     irc_log.push({nick: nick, info: 'part'});
 }).addListener('topic', function (chan, topic, nick) {
     irc_topic = topic;
+}).addListener('names', function (chan, names) {
+    irc_names = names;
 });
 
 
@@ -157,8 +158,9 @@ function connectIRC(socket, nick, key) {
     connections.push(socket);
 
     //Send history
-    socket.emit('chat', {topic: irc_topic, info: 'topic'});
     socket.emit('chat', irc_log.slice(-25));
+    socket.emit('chat', {topic: irc_topic, info: 'topic'});
+    socket.emit('chat', {names: irc_names, info: 'names'});
 }
 
 function disconnectSocket(socket) {
