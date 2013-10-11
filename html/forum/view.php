@@ -36,6 +36,19 @@
     $breadcrumb = $forum->getBreadcrumb($section, true) . "<a href='/forum/{$thread->slug}'>{$thread->title}</a>";
 
     $app->page->title = $thread->title;
+    if ($thread_page == 1) {
+        $app->page->canonical = 'https://www.hackthis.co.uk/forum/'.$thread->slug;
+    } else {
+        $app->page->canonical = 'https://www.hackthis.co.uk/forum/'.$thread->slug.'?page='.$thread_page;
+    }
+
+    if ($thread_page < $thread_page_count) {
+        $app->page->next = 'https://www.hackthis.co.uk/forum/'.$thread->slug.'?page='.($thread_page + 1);
+    }
+
+    if ($thread_page > 1) {
+        $app->page->prev = 'https://www.hackthis.co.uk/forum/'.$thread->slug.'?page='.($thread_page - 1);
+    }
 
     require_once('header.php');
 ?>
@@ -43,7 +56,7 @@
 <?php
         include('elements/sidebar_forum.php');
 ?>    
-                        <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>">
+                        <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
 
 <?php if ($app->user->loggedIn): ?>
     <a href='#submit' class='post-reply button right'><i class='icon-chat'></i> Post reply</a>
@@ -56,7 +69,7 @@
       endif;
 ?>
 
-                            <h1 class='no-margin'><?=$thread->title;?></h1>
+                            <h1 class='no-margin' itemprop="name"><?=$thread->title;?></h1>
                             <?=$breadcrumb;?><br/><br/>
 
 <?php
@@ -71,6 +84,8 @@
                             <ul class='post-list'>
 <?php
     $post = $thread->question;
+    echo '<meta itemprop="interactionCount" content="UserComments:'.count($thread->posts).'"/>';
+    echo '<meta itemprop="wordCount" content="'.str_word_count($post->body).'"/>';
     $forum->printThreadPost($post, true);
 ?>
                             </ul>

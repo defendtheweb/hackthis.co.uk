@@ -98,14 +98,16 @@ POST;
                 endif;
 
                 $posted = date('c', strtotime($post->posted));
+                $tmp1 = $first?'rel="author" itemprop="author"':'';
+                $tmp2 = $first?'itemprop="datePublished"':'';
                 $return .= <<< POST
-                <a href="/user/{$post->username}" class="user">
+                <a href="/user/{$post->username}" class="user" {$tmp1}>
                     {$post->username}<br/>
                     <img src="{$post->image}" width="60" height="60" alt="{$post->username}'s profile picture">
                 </a>
                 <br/>
                 <ul class='plain'>
-                    <li class='highlight'><i class='icon-clock'></i> <time class='short' itemprop='datePublished' pubdate datetime="{$posted}">{$this->app->utils->timeSince($post->posted, true)}</time></li>
+                    <li class='highlight'><i class='icon-clock'></i> <time class='short' {$tmp2} pubdate datetime="{$posted}">{$this->app->utils->timeSince($post->posted, true)}</time></li>
                     <li><i class='icon-trophy'></i> {$post->score}</li>
                     <li><i class='icon-chat'></i> {$post->posts}</li>
                 </ul>
@@ -175,9 +177,10 @@ POST;
 
             endif;
 
+            $tmp1 = $first?'itemprop="articleBody"':'';
             $return .= <<< POST
                 </div>
-                <div class="post_body">
+                <div class="post_body" {$tmp1}>
                     {$post->body}
 
 POST;
@@ -576,8 +579,14 @@ POST;
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
 
-                // Add to feed
-                $this->app->feed->call($this->app->user->username, 'forum_post', "cat", "dog");
+                // Add to socket feed
+                $st = $this->app->db->prepare('SELECT title, slug
+                                    FROM forum_threads
+                                    WHERE thread_id = :thread_id');
+                $st->execute(array(':thread_id' => $thread_id));
+                $thread = $st->fetch();
+
+                $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug);
             }
 
             return $status;
