@@ -426,7 +426,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM users_friends WHERE OLD.user_id = user_id OR OLD.user_id = friend_id;
         DELETE FROM users_blocks WHERE OLD.user_id = user_id OR OLD.user_id = blocked_id;
         DELETE FROM users_activity WHERE OLD.user_id = user_id;
-        DELETE FROM users_notifications WHERE OLD.user_id = user_id OR OLD.userd_id = from_id;
+        DELETE FROM users_notifications WHERE OLD.user_id = user_id OR OLD.user_id = from_id;
         DELETE FROM users_medals WHERE OLD.user_id = user_id;
         DELETE FROM users_levels WHERE OLD.user_id = user_id;
         DELETE FROM reports WHERE OLD.user_id = user_id;
