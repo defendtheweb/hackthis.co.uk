@@ -3,7 +3,7 @@
 <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-    <head>
+    <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>HackThis!!<?=$app->page->title?' - '.$app->page->title:' - The Hackers Playground';?></title>
@@ -15,9 +15,20 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon" /> 
         <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
 
-<?=isset($app->page->canonical)?"        <link rel='canonical' href='{$app->page->canonical}'/>\n":'';?>
-<?=isset($app->page->prev)?"        <link rel='prev' href='{$app->page->prev}'/>\n":'';?>
-<?=isset($app->page->next)?"        <link rel='next' href='{$app->page->next}'/>\n":'';?>
+<?php
+    echo isset($app->page->canonical)?"        <link rel='canonical' href='{$app->page->canonical}'/>\n":'';
+    echo isset($app->page->prev)?"        <link rel='prev' href='{$app->page->prev}'/>\n":'';
+    echo isset($app->page->next)?"        <link rel='next' href='{$app->page->next}'/>\n":'';
+
+    if (count($app->page->meta)) {
+        foreach($app->page->meta AS $id=>$content) {
+            echo "        <meta name='{$id}' content='{$content}'>\n";
+        }
+    }
+?>
+        <meta property="fb:app_id" content="163820353667417" />
+        <meta name='twitter:site' content='@hackthisuk'>
+        <meta name='og:site_name' content='HackThis!!'>
 
         <link href='//fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 

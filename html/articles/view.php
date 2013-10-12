@@ -30,8 +30,18 @@
             $review = true;
     }
 
-    if ($article)
+    if ($article) {
         $app->page->title = $app->parse($article->title, false);
+        $app->page->canonical = 'https://www.hackthis.co.uk/articles/'.$article->slug;
+
+        $app->page->meta['twitter:card'] = "summary";
+        $app->page->meta['twitter:title'] = $app->page->title;
+        $app->page->meta['twitter:description'] = substr($app->parse($article->body, false), 0, 300);
+        $app->page->meta['og:type'] = "article";
+        $app->page->meta['og:url'] = $app->page->canonical;
+        $app->page->meta['og:title'] = $app->page->title;
+        $app->page->meta['og:description'] = substr($app->parse($article->body, false), 0, 300);
+    }
     else
         $app->page->title = 'Articles';
 
