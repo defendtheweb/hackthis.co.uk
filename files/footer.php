@@ -33,8 +33,8 @@
         <script>window.jQuery || document.write('<script src="/files/js/jquery-1.9.1.min.js"><\/script>')</script>
         <?= $minifier->load("js"); ?>
 <?php
-        if (isset($currentLevel) && isset($currentLevel->data['code']->pos3)) {
-            echo '        '.$currentLevel->data['code']->pos3 . "\n";
+        if (isset($currentLevel) && isset($currentLevel->data['code']->pos5)) {
+            echo '        '.$currentLevel->data['code']->pos5 . "\n";
         }
 ?>
 
