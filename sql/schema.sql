@@ -37,6 +37,16 @@ CREATE TABLE users_levels (
     -- Level constraint added later
 ) ENGINE=InnoDB;
 
+CREATE TABLE users_levels_data (
+    `user_id` int(7) NOT NULL,
+    `level_id` tinyint(3) UNSIGNED NOT NULL,
+    `data` text,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`, `level_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+    -- Level constraint added later
+) ENGINE=InnoDB;
+
 CREATE TABLE users_profile (
     `user_id` int(7) NOT NULL,
     `name` varchar(32),
@@ -199,13 +209,15 @@ CREATE TABLE levels (
 
 CREATE TABLE levels_data (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution') NOT NULL,
+    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code') NOT NULL,
     `value` text NOT NULL,
     PRIMARY KEY (`level_id`, `key`),
     FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
 ) ENGINE=InnoDB;
 
 ALTER TABLE users_levels
+ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
+ALTER TABLE users_levels_data
 ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
 
 /*
