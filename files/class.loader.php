@@ -89,7 +89,7 @@ class loader {
                 $path = "{$this->css_base}min/extra_{$id}.css";
 
                 if ($this->generate($path, $this->custom_css, 'css')) {
-                    $css_includes .= "<link rel='stylesheet' href='{$path}' type='text/css'/>\n";
+                    $css_includes .= "        <link rel='stylesheet' href='{$path}' type='text/css'/>\n";
                 }
             }
 
@@ -109,7 +109,7 @@ class loader {
                 $path = "{$this->js_base}min/extra_{$id}.js";
                 
                 if ($this->generate($path, $this->custom_js, 'js')) {
-                    $js_includes .= "<script type='text/javascript' src='{$path}'></script>\n";
+                    $js_includes .= "        <script type='text/javascript' src='{$path}'></script>\n";
                 }
             }
 

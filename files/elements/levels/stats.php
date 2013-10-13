@@ -35,7 +35,6 @@
                                     </td>
                                 </tr>
 <?php endif; ?>
-							</tr>
 							</tbody>
 						</table>
                     </article>

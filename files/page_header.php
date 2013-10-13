@@ -34,6 +34,12 @@
 
         <script src="//<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
 
+<?php
+    if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
+        echo '        '.$currentLevel->data['code']->pos1;
+    }
+?>
+
         <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
         <!--[if lt IE 9]>
@@ -56,7 +62,12 @@
 
     if ($app->user->loggedIn || !(defined('LANDING_PAGE') && LANDING_PAGE)):
 ?>
-      <div class="page-wrap">
+    <div class="page-wrap">
+<?php
+    if (isset($currentLevel) && isset($currentLevel->data['code']->pos2)) {
+        echo '        '.$currentLevel->data['code']->pos2 . "\n";
+    }
+?>
         <div id="header-wrap" class="container">
             <header>
                 <div class="col span_11 banner">

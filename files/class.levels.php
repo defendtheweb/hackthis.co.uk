@@ -127,6 +127,10 @@
                 $level->data[$d->key] = $d->value;
             }
 
+            if (isset($level->data['code'])) {
+                $level->data['code'] = json_decode($level->data['code']);
+            }
+
             // Set page details
             $this->app->page->title = ucwords($level->title);
 
