@@ -21,7 +21,7 @@
         require_once('header.php');
 ?>
                 <div class='row header'>
-                    <img src="/files/images/logo_landing.png" style="width: 65%;" alt="HackThis!! - The hackers playground">
+                    <img src="/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
                 </div>
 <?php
         if (isset($_GET['deleted'])) {
@@ -30,7 +30,7 @@
 ?>
                 <div class='row landing'>
                     <div class='col span_17'>
-                        <h1>Want to learn about hackers, hacking and network security?</h1>
+                        <h1>Want to learn about hacking and network security? Learn how to secure your website against hackers with HackThis!!</h1>
                         <section class='row fluid features'>
                             <div class='clr'>
                                 <div class='col span_5'>
@@ -43,7 +43,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class='clr'>
+                            <div class='clr show-feature' data-show='#latest-threads'>
                                 <div class='col span_5'>
                                     <div class='circle'><i class='icon-domain2'></i></div>
                                 </div>
@@ -55,7 +55,10 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class='clr'>
+                            <div class='clr feature-extra' id='latest-threads'>
+<?php include('elements/forum_latest.php'); ?>
+                            </div>
+                            <div class='clr show-feature' data-show='#latest-articles'>
                                 <div class='col span_5'>
                                     <div class='circle'><i class='icon-insertpictureleft'></i></div>
                                 </div>
@@ -66,6 +69,30 @@
                                         Learn from our collection of articles covering all aspects of security and technology.
                                     </span>
                                 </div>
+                            </div>
+                            <div class='clr feature-extra' id='latest-articles'>
+<?php
+    $n = 0;
+    $hot = $app->articles->getHotArticles();
+    foreach($hot AS $article):
+        if ($n++ == 3)
+            break;
+?>
+
+                                <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
+<?php   if (isset($article->thumbnail)): ?>
+                                    <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
+<?php   elseif (isset($article->video)): ?>
+                                    <img src="http://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+<?php   endif; ?>
+                                    <div class="caption">
+                                        <h3><?=$article->title;?></h3>
+                                    <p><?=$app->parse($article->body, false);?></p>
+                                    </div>
+                                </a>
+<?php
+    endforeach;
+?>
                             </div>
                         </section>
                     </div>

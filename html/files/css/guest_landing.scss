@@ -10,16 +10,8 @@ body {
     text-align: center;
     margin: 30px 0 75px;
 
-    h1 {
-        font-size: 5em;
-        margin: 0;
-        line-height: 1em;
-        color: $green;
-    }
-
-    h2 {
-        color: $text;
-        text-transform: uppercase;
+    img {
+        max-width: 65%;
     }
 }
 
@@ -53,10 +45,6 @@ section.features {
         @include transition(background-color, 200ms, ease-in-out);
         margin: 5px 0 13px;
         transform: scale(0);
-
-        &:hover {
-            background: $green;
-        }
     }
 
     i {
@@ -65,15 +53,32 @@ section.features {
         font-size: 4.1em;
         color: $white;
     }
+
+    > div:hover {
+        cursor: pointer;
+
+        .circle {
+            background: $green;
+        }
+    }
+}
+
+.feature-extra {
+    margin-top: 10px;
+    display: none;
+
+    .col {
+        margin-left: 2% !important;
+
+        &:first-child {
+            margin-left: 0 !important;
+        }
+    }
 }
 
 @media (max-width: 550px) {
-    .header h1 {
-        font-size: 3em;
-    }
-
-    .header h2 {
-        font-size: 1em;
+    .header img {
+        max-width: 90%;
     }
 
     section.features .span_5 {
