@@ -36,6 +36,8 @@
 	if (isset($level->attempt)) {
 		if ($level->attempt === true)
 			$app->utils->message('Level complete'.(isset($level->level_after_uri)?", <a href='$level->level_after_uri'>next level</a>":''), 'good');
+		else if (isset($level->errorMsg))
+			$app->utils->message($level->errorMsg);
 		else
 			$app->utils->message('Invalid details');
 	} else if (isset($_GET['skipped'])) {

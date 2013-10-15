@@ -28,6 +28,14 @@
 .level-area {
     text-align: center;
 
+    .msg {
+        text-align: left;
+        width: 350px;
+        max-width: 95%;
+        margin-bottom: 0px;
+        margin-top: 30px;
+    }
+
     .level-header {
         /* background: $bg; */
         padding-top: 16px;
@@ -62,14 +70,6 @@
         .next-level.hint--left:hover {
             color: red;
         }
-
-        .msg {
-            text-align: left;
-            width: 300px;
-            max-width: 95%;
-            margin-bottom: 0px;
-            margin-top: 30px;
-        }
     }
 
     .level-form {
@@ -95,6 +95,10 @@
                 }
             }
         }
+    }
+
+    .timer span {
+        color: red;
     }
 
     .info {
