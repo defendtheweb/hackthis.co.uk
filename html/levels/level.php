@@ -25,7 +25,11 @@
     }
 
     //Check if user completed level
-    $app->levels->check($currentLevel);
+    if (isset($currentLevel->data['form']) && $page = realpath($app->config('path') . '/files/elements/levels/'.basename($currentLevel->data['form']).'_logic.php')) {
+        include($page);
+    } else {
+        $app->levels->check($currentLevel);
+    }
 
 	require_once('header.php');
 
