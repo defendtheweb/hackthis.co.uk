@@ -141,7 +141,7 @@
             curl_setopt($ch, CURLOPT_URL, $s['address'] . '/feed?api=' . $s['key']);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, 
-                http_build_query(array('username' => $username, 'type' => $type, 'title' => $title, 'uri' => $uri)));
+                http_build_query(array('username' => $username, 'type' => $type, 'title' => $title, 'uri' => $uri, 'timestamp' => date('c'))));
 
             curl_exec($ch);
 
