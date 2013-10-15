@@ -32,15 +32,16 @@
 
         <link href='//fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 
-        <script src="//<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
+        <?= $minifier->load("css"); ?>
 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/files/js/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="//<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
 <?php
     if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
-        echo '        '.$currentLevel->data['code']->pos1;
+        echo '        '.$currentLevel->data['code']->pos1."\n";
     }
 ?>
-
-        <?= $minifier->load("css"); ?>
         <script src="/files/js/modernizr-2.6.2.min.js"></script>
         <!--[if lt IE 9]>
             <script src="/files/js/respond.min.js"></script>
