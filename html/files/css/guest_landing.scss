@@ -54,12 +54,8 @@ section.features {
         color: $white;
     }
 
-    > div:hover {
-        cursor: pointer;
-
-        .circle {
-            background: $green;
-        }
+    > div:hover .circle {
+        background: $green;
     }
 }
 
