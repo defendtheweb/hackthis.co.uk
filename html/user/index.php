@@ -80,7 +80,7 @@
 
         <h1 class='lower'><?=$profile->username;?></h1> 
 <?php if ($app->user->admin_site_priv):
-        echo '#'.$profile->user_id;
+        echo '#'.$profile->uid;
       endif;
       if ($profile->admin): ?>
         <strong>Administrator</strong>

@@ -44,8 +44,6 @@ $(function() {
         socket.on('feed', function (data) {
             var item = $(feedTmpl).tmpl(data);
 
-            // console.log(item);
-
             if ($('sidebar .feed ul').length) {
                 item.hide().prependTo($('sidebar .feed ul')).slideDown();
             } else {
