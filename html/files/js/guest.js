@@ -9,14 +9,6 @@ $(function() {
         $($('.features .blurb')[i]).transition({ opacity: 1, delay: (i*delay) }, 2000);
     }
 
-    // Feature listeners
-    $('.show-feature').on('click', function(e) {
-        e.preventDefault();
-        console.log('hello');
-        $($(this).attr('data-show')).slideToggle();
-    });
-
-
     var tests = {
         user: function (val) {
             return val.length > 3 &&
