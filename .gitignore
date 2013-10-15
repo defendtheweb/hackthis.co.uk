@@ -8,9 +8,9 @@ html/levels/extras
 files/uploads
 files/cache
 files/sqlite
-files/elemets/levels
-!files/elemets/levels/header.php
-!files/elemets/levels/level.php
-!files/elemets/levels/stats.php
+files/elements/levels
+!files/elements/levels/header.php
+!files/elements/levels/level.php
+!files/elements/levels/stats.php
 
 sql/levels.sql
