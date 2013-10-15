@@ -2,6 +2,15 @@ files/config.php
 html/.htaccess
 html/files/css/min
 html/files/js/min
+html/files/vendor/slir/cache
+html/levels/extras
+
 files/uploads
 files/cache
-html/files/vendor/slir/cache
+files/sqlite
+files/elemets/levels
+!files/elemets/levels/header.php
+!files/elemets/levels/level.php
+!files/elemets/levels/stats.php
+
+sql/levels.sql
