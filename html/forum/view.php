@@ -109,9 +109,10 @@
                             <ul class='post-list reply-list'>
 <?php 
         $n = 0;
+        $l = count($thread->posts);
         foreach($thread->posts AS $post):
             $n++;
-            $forum->printThreadPost($post);
+            $forum->printThreadPost($post, false, $thread_page == $thread_page_count && $l == $n);
         endforeach;
 ?>
 

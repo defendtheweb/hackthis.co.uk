@@ -72,18 +72,22 @@
             return $result;
         }
 
-        public function printThreadPost($post, $first=false) {
+        public function printThreadPost($post, $first=false, $last=false) {
 
             $post->body = $this->app->parse($post->body);
             if (isset($post->signature)) {
                 $post->signature = $this->app->parse($post->signature);
             }
 
-            $return = <<< POST
-        <li class='row fluid clr' data-id='{$post->post_id}'>
-            <div id="post-{$post->post_id}" class="col span_5 post_header">
+            $return = "        <li class='row fluid clr' data-id='{$post->post_id}'";
+            if ($last) {
+                $return .= ' id="latest">';
+            } else {
+                $return .= '>';
+            }
 
-POST;
+
+            $return .= "            <div id='post-{$post->post_id}' class='col span_5 post_header'>";
 
             if ($post->username):
                 if ($post->donator):
