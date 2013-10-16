@@ -43,14 +43,7 @@
     }
 
 
-    if (isset($convo)):
-?>
-    <div class='mobile-hide' id="conversation-search">
-        <input placeholder='Search conversation'/>
-        <i class='icon-search'></i>
-    </div>
-<?php
-    else:
+    if (!isset($convo)):
 ?>
     <a class='button right' href='/inbox/compose'>
         <i class="icon-envelope-alt"></i> New Message
@@ -76,7 +69,8 @@
     </h1>
 
     <section class="inbox row">
-        <div class="col span_6 inbox-list scroll">
+
+        <div class="col span_6 inbox-list sticky">
             <ul class='plain'>
 <?php    
     foreach($inbox as $message):
@@ -105,8 +99,18 @@
     endforeach;
 ?>
             </ul>
+<?php
+    if (isset($convo)):
+?>
+            <div class='mobile-hide' id="conversation-search">
+                <input placeholder='Search conversation'/>
+                <i class='icon-search'></i>
+            </div>
+<?php
+    endif;
+?>
         </div>
-        <div class="col span_18 inbox-main scroll">
+        <div class="col span_18 inbox-main right">
 <?php
     if (isset($convo) && $convo):
 ?>
