@@ -156,11 +156,14 @@ POST;
                 <div class="karma small">
 POST;
 
-            if ($post->user_id === $this->app->user->uid):
+            if (!$this->app->user->loggedIn || $post->user_id === $this->app->user->uid):
 
                 $return .= <<< POST
                 <span>{$post->karma}</span>
 POST;
+                if ($first):
+                    $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                endif;
 
             else:
 
