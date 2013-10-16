@@ -5,14 +5,16 @@ $(function() {
     $(".inbox .sticky").sticky({topSpacing:45});
 
 
-    if (container.find('.new').length) {
-        offset = $(".inbox-main ul li.new:first").offset().top;
-    } else {
-        offset = $(document).height() - $(".inbox-main textarea").offset().top;
+    if ($(".inbox-main ul").length) {
+        if (container.find('.new').length) {
+            offset = $(".inbox-main ul li.new:first").offset().top;
+        } else {
+            offset = $(document).height() - $(".inbox-main textarea").offset().top;
+        }
+        $('html, body').animate({
+            scrollTop: offset
+        }, 800);
     }
-    $('html, body').animate({
-        scrollTop: offset
-    }, 800);
 
     var conversationSkip = 0;
     $('#conversation-search input').on('keyup', function(e) {

@@ -532,6 +532,13 @@ ul.autosuggest {
             float: right;
         }
     }
+
+    &.autosuggest-alt {
+        width: 50%;
+        border-width: 0 1px 1px;
+        border-color: $lighter_bg;
+        margin-top: -9px;
+    }
 }
 
 
@@ -700,7 +707,7 @@ div.lite-pagination {
         color: $white;
         background: $bg;
         padding: 4px 6px;
-
+input
         i:hover {
             color: $bright_green;
         }

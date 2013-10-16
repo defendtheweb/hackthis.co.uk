@@ -27,11 +27,18 @@ $.fn.autosuggest = function() {
 
             var max = $this.attr('data-suggest-max')?$this.attr('data-suggest-max'):5;
             
+            if (word.length < 3)
+                return false;
+
             //lookup word
             $.get('/files/ajax/autosuggest.php', {user: word, max: max}, function(data) {
                 $this.siblings('.autosuggest').remove();
                 
                 var list = $('<ul>', {class: 'autosuggest'});
+                if (!auto) {
+                    list.addClass('autosuggest-alt');
+                }
+
                 if (data.status == false)
                     return;
 
