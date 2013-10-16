@@ -1,4 +1,5 @@
 $(function() {
+    $(".article-sidebar .sticky").css('width', $(".article-sidebar .sticky").width()-2);
     $(".article-sidebar .sticky").sticky({topSpacing:45});
     $(".article-sidebar ul.categories a").on('click', function(e) {
         if (!$(this).siblings('ul').length)

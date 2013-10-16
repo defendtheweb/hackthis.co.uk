@@ -1,6 +1,8 @@
 $(function() {
     var container = $('.inbox-main');
 
+    $(".inbox .sticky").css('width', $(".inbox .sticky").width()-2);
+    $(".inbox .sticky").sticky({topSpacing:45});
     if (container.find('.new').length) {
         container.mCustomScrollbar("scrollTo", "ul li.new:first");
     } else {

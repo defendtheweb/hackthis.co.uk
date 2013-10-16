@@ -1,4 +1,5 @@
 $(function() {
+    $(".forum-sidebar .sticky").css('width', $(".forum-sidebar .sticky").width()-2);
     $(".forum-sidebar .sticky").sticky({topSpacing:45});
 
     $('.new-thread').on('click', function(e) {

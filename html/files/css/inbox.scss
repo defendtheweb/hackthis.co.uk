@@ -26,64 +26,65 @@
 }
 
 .inbox {
-    max-height: 500px;
-    overflow: hidden;
-
-    > div {
-        max-height: 100%;
-        overflow: hidden;
+    .sticky-wrapper {
+        float: left;
     }
 
-    .inbox-list li {
-        &:hover,
-        &.active {
-            background: $bg;
-        }
-
-        a {
-            display: block;
-            height: 42px;
-            position: relative;
-
-            &:hover {
-                text-decoration: none;
+    .inbox-list {
+        max-height: 100%;
+        overflow: hidden;
+    
+        li {
+            &:hover,
+            &.active {
+                background: $bg;
             }
 
-            &.new:before {
-                content:"\a0";
+            a {
                 display: block;
-                position: absolute;
-                left: 42px;
-                border-left: 3px solid $white; 
                 height: 42px;
-            }
+                position: relative;
 
-            div {
-                padding: 3px;
-                color: $text;
-
-                overflow: hidden;
-                o-text-overflow: ellipsis;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-
-                time {
-                    padding-left: 4px;
+                &:hover {
+                    text-decoration: none;
                 }
 
-                span {
+                &.new:before {
+                    content:"\a0";
                     display: block;
-                    color: $white;
+                    position: absolute;
+                    left: 42px;
+                    border-left: 3px solid $white; 
+                    height: 42px;
+                }
+
+                div {
+                    padding: 3px;
+                    color: $text;
 
                     overflow: hidden;
                     o-text-overflow: ellipsis;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                }
-            }
 
-            img {
-                margin-right: 6px;
+                    time {
+                        padding-left: 4px;
+                    }
+
+                    span {
+                        display: block;
+                        color: $white;
+
+                        overflow: hidden;
+                        o-text-overflow: ellipsis;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+
+                img {
+                    margin-right: 6px;
+                }
             }
         }
     }
@@ -158,12 +159,6 @@
             }
         }
     }
-}
-
-
-.no-js .inbox > div {
-    height: 588px;
-    overflow: auto;
 }
 
 @media ( max-width : 768px ) {
