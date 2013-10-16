@@ -139,7 +139,7 @@
                             </form>
                         </li>
 <?php
-    elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
+    else: // right, if not logged in
 ?>
                         <li class='right nav-extra-login-item <?=isset($app->user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($app->user->login_error))?"data-error='{$app->user->login_error}'":'';?>>Login</a></li>
                         <li class='right nav-extra-register-item <?=isset($app->user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($app->user->reg_error))?"data-error='{$app->user->reg_error}'":'';?>>Register</a></li>
@@ -154,7 +154,7 @@
                         Hey there :)
                     </div>
 <?php
-    elseif (defined('_SIDEBAR') && !_SIDEBAR): // right, if not logged in
+    else: // right, if not logged in
 ?>
                     <div id='nav-extra-login' class='nav-extra-dropdown'>
                         <?php include('elements/widgets/login.php'); ?>
