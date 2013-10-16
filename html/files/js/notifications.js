@@ -407,7 +407,7 @@ $(function() {
 
         $.getJSON(uri, function(data) {
             var data = data.items;
-            if (data.length || data.items.length) {
+            if (data.length || (data.items && data.items.length)) {
                 if (parent.hasClass('active-events')) {
                     var items = $(notificationsTmpl).tmpl(data.items);
 
