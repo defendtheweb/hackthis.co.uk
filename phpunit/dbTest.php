@@ -22,7 +22,6 @@ class DBTest extends PHPUnit_Framework_TestCase {
         $row = $st->fetch();
         $this->assertEquals('pass', $row['password']);
         $this->assertEquals(0, $row['score']);
-        $this->assertEquals(1, $row['status']);
     }
 
     /**

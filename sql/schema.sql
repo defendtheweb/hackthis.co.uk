@@ -12,7 +12,6 @@ CREATE TABLE users (
     `email` varchar(128) NOT NULL,
     `verified` tinyint(1) NOT NULL DEFAULT 0,
     `score` mediumint(6) NOT NULL DEFAULT 0,
-    `status` tinyint(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (`user_id`),
     UNIQUE KEY (`username`),
     UNIQUE KEY (`email`)

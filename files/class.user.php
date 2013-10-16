@@ -50,7 +50,7 @@
         private function get_details() {
             $this->app->stats->users_activity($this);
 
-            $st = $this->app->db->prepare('SELECT username, score, status, email, (oauth_id IS NOT NULL) as connected,
+            $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
                     profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most
