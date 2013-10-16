@@ -11,13 +11,11 @@ html {
 
 body {
     background: {
-        image: url("/files/images/bg.png");
         color: $black;
         repeat: no-repeat; 
-        position: center -50px;
 
         image: url("/files/images/bg2.png");
-        position: center -31px;
+        position: center -32px;
     }
 
     margin: 0px;
@@ -493,7 +491,7 @@ sidebar h1 {
 
 @media (max-width: 1000px) {
     body {
-        background-position: -175px -50px;
+        background-position: -149px -32px;
     }
 }
 
