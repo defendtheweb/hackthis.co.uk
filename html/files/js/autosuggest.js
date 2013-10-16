@@ -85,6 +85,71 @@ $.fn.autosuggest = function() {
     });
 };
 
+
+function searchsuggest() {
+    var $this = $('.nav-search input'),
+    value = $this[0].value;
+
+    if (value.length <= 3) {
+        $this.parent().siblings('.searchsuggest').remove();
+        return false;
+    }
+
+    $.get('/files/ajax/autosuggest.php', {search: value}, function(data) {
+        console.log(data);
+
+        if (data.status) {
+            var suggest = $('<div>', {class: 'searchsuggest'});
+
+            if (data.data.users) {
+                var users = data.data.users;
+                title = $('<h3>', {text: 'Users'});
+                suggest.append(title);
+
+                len = users.length < 5 ? users.length : 5;
+                for (var i = 0; i < len; ++i) {
+                    link = $('<a>', {text: users[i].username, href: '/user/'+users[i].username});
+                    suggest.append(link);
+                }
+            }
+
+            if (data.data.articles) {
+                var articles = data.data.articles;
+                title = $('<h3>', {text: 'Articles'});
+                suggest.append(title);
+
+                len = articles.length < 5 ? articles.length : 5;
+                for (var i = 0; i < len; ++i) {
+                    link = $('<a>', {text: articles[i].title, href: '/articles/'+articles[i].slug});
+                    suggest.append(link);
+                }
+            }
+
+
+            $this.parent().siblings('.searchsuggest').remove();
+            $this.parent().after(suggest);
+        } else {
+            $this.parent().siblings('.searchsuggest').remove();
+        }
+    }, 'json');
+
+    $(document).bind('click.search-hide', function(e) {
+        if ($(e.target).closest('.searchsuggest').length != 0 || $(e.target).hasClass('suggest')) return true;
+        $('.searchsuggest').remove();
+        $(document).unbind('click.search-hide');
+    });
+}
+
 $(function() {
+    var timer = null;
     $('.suggest').autosuggest();
+
+    // navigation search bar
+    $('.nav-search input').keyup(function(event) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(searchsuggest, 200);
+    });
 });

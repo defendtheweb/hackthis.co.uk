@@ -352,6 +352,33 @@
                                 color: $text;
                             }
                         }
+
+                        .searchsuggest {
+                            width: 187px;
+                            background: $lighter_bg;
+                            margin-top: 0px;
+                            padding: 10px;
+
+                            h3 {
+                                margin: 0;
+                                margin-bottom: 5px;
+                                font-size: 1.2em;
+
+                                &:not(:first-child) {
+                                    margin-top: 10px;
+                                }
+                            }
+
+                            a {
+                                padding: 2px 0;
+                                margin-top: 0;
+                                display: block;
+                                font-weight: normal;
+                                font-size: 1em;
+                                color: $text;
+                                text-transform: none;
+                            }
+                        }
                     }
                 }
 
@@ -436,6 +463,9 @@
 
             .nav-search input {
                 width: 135px !important;
+            }
+            .nav-search .searchsuggest {
+                width: 157px !important;
             }
         }
     }

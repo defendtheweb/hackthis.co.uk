@@ -16,6 +16,14 @@
             $result['status'] = true;
             $result['users'] = $users;
         }
+    } else if (isset($_GET['search'])) {
+        $search = new search($app);
+        $q = preg_replace('/[^a-zA-Z0-9"@._-\s]/', '', strip_tags(html_entity_decode($_GET['search'])));
+        $result['data'] = $search->go($q);
+
+        if ($result['data']['articles'] || $result['data']['users']) {
+            $result['status'] = true;
+        }
     }
 
     $json = json_encode($result);
