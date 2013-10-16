@@ -1,4 +1,6 @@
 <?php
+    define("PAGE_PUBLIC", true);
+
     $custom_css = array('faq.scss');
     require_once('init.php');
     $app->page->title = 'Terms';
@@ -99,8 +101,8 @@
     The disclaimer of warranties, the limitation of liability and the jurisdiction and applicable law provisions shall survive any termination. The license grants mentioned herein shall continue in effect subject to the terms of the applicable license. Your warranties and indemnification obligations shall survive any termination for one year.
 </p>
 <p>
-    <strong class='white'>These Terms of Use are Effective as of September 4, 2013.</strong><br/><Br/>
-    These terms have been modified from those originally found at <a href='http://creativecommons.org/terms'>http://creativecommons.org/terms</a> licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>HackThis!! Attribution 3.0 License</a>.
+    <strong class='white'>These Terms of Use are Effective as of November 5, 2013.</strong><br/><Br/>
+    These terms have been modified from those originally found at <a href='http://creativecommons.org/terms'>http://creativecommons.org/terms</a> licensed under a <a href='http://creativecommons.org/licenses/by/3.0/'>Creative Commons Attribution 3.0 License</a>.
 </p>
 
 <?php  
