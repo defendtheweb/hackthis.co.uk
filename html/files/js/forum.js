@@ -79,26 +79,26 @@ $(function() {
             value = parseInt($value.text())-1;
         }
 
+        if ($this.hasClass('karma-cancel')) {
+            uri += '&cancel';
+            if ($this.hasClass('karma-up')) {
+                value -= 2;
+            } else {
+                value += 2;
+            }
+        } else if ($this.siblings().hasClass('karma-cancel')) {
+            if ($this.hasClass('karma-up')) {
+                value += 1;
+            } else {
+                value -= 1;
+            }            
+        }
+
         $.getJSON(uri, function(data) {
             if (data['status'] == false)
                 return false;
 
             $value.text(value);
-
-            if ($this.hasClass('karma-cancel')) {
-                uri += '&cancel';
-                if ($this.hasClass('karma-up')) {
-                    $value.text(parseInt($value.text())-2);
-                } else {
-                    $value.text(parseInt($value.text())+2);
-                }
-            } else if ($this.siblings().hasClass('karma-cancel')) {
-                if ($this.hasClass('karma-up')) {
-                    $value.text(parseInt($value.text())+1);
-                } else {
-                    $value.text(parseInt($value.text())-1);
-                }            
-            }
 
             $this.siblings().removeClass('karma-cancel');
             $this.toggleClass('karma-cancel');
