@@ -14,7 +14,7 @@
     }
 
     if ($app->user->loggedIn) {
-        require_once("news.php");
+        require_once("home.php");
     } else {
         define("_SIDEBAR", false);
 

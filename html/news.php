@@ -1,19 +1,16 @@
 <?php
-    if(!defined('PAGE_PUBLIC'))
-        define('PAGE_PUBLIC', false);
+    define('PAGE_PUBLIC', false);
     
     require_once('init.php');
     
     $minifier->add_file('highlight.js', 'js');
     $minifier->add_file('articles.js', 'js');
 
-    $minifier->add_file('forum.scss', 'css');
     $minifier->add_file('highlight.css', 'css');
     $minifier->add_file('articles.css', 'css');
 
     // Set canonical link
-    $app->page->canonical = "https://www.hackthis.co.uk";
-
+    $app->page->canonical = "https://www.hackthis.co.uk/news";
 
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
@@ -28,13 +25,14 @@
         $app->page->title = $app->parse($newsArticle->title, false);
     } else {
         $newsArticles = $app->articles->getArticles(0, $limit, $page);
+        $app->page->title = 'News';
     }
 
     require_once('header.php');
 ?>
                     <section class='news'>
 <?php
-    if (!isset($newsArticles) || !count($newsArticles)):
+    if (isset($_GET['slug']) && (!isset($newsArticles) || !count($newsArticles))):
 ?>
                         <div class='msg msg-error'>
                             <i class='icon-error'></i>
@@ -42,12 +40,10 @@
                         </div>
 <?php
     else:
-        if (!$single)
-            include('elements/forum_latest.php');
-
-        foreach ($newsArticles['articles'] as $article):
-            $article->title = $app->parse($article->title, false);
-            $article->body = $app->parse($article->body);
+        if ($newsArticles):
+            foreach ($newsArticles['articles'] as $article):
+                $article->title = $app->parse($article->title, false);
+                $article->body = $app->parse($article->body);
 ?>
                         <article class='bbcode body'>
                             <header class='title clearfix'>
@@ -76,7 +72,8 @@
                             ?>
                         </article>
 <?php
-        endforeach;
+            endforeach;
+        endif;
 
         if ($single) {
             $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);

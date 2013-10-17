@@ -55,6 +55,24 @@ a.twitter-login {
 .widget {
     margin-bottom: 1.75em;
 
+    &.dashboard-tasks {
+        background: $bg;
+        padding: 8px 6px;
+        margin-bottom: 0.75em;
+
+        .tasks-progress-container {
+            margin-top: 6px;
+            height: 1px;
+            background: $black;
+
+            div {
+                background: $green;
+                height: 1px;
+            }
+        }
+
+    }
+
     &.dashboard {
         background: $bg;
         padding: 12px 6px 0 6px;

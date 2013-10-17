@@ -7,6 +7,7 @@
 <?php
     if ($app->user->loggedIn):
 ?>
+                        <li><a href='/news'>news</a></li>
                         <li><a href='/levels'>levels</a>
                         <ul>
 <?php

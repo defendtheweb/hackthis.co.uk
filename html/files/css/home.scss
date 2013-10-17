@@ -1,0 +1,90 @@
+.home-module {
+    background: $bg;
+    margin-bottom: 12px;
+    padding: 12px 8px;
+
+    &.home-module-light {
+        background: $light_bg;
+    }
+
+    a.remove {
+        margin-top: -8px;
+        font-size: 1.2em;
+
+        &:hover {
+            color: red;
+            text-decoration: none;
+        }
+    }
+
+    h3.no-margin {
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+        margin-top: 6px; 
+    }
+}
+
+.home-articles {
+    .thumbnail {
+        background: $bg;
+        margin-bottom: 0;
+        height: 245px;
+        margin-top: 0.5em;
+
+        &:hover {
+            background: darken($bg, 2%);
+        }
+    }
+}
+
+.forum-latest {
+    padding: 0;
+
+    tr {
+        border-left: 2px solid #141414;
+
+        &:hover {
+            background: $bg;
+            border-left: 2px solid #1e1e1e;
+        }
+
+        &.highlight {
+            border-left: 2px solid $green;
+
+            &:hover {
+                border-left: 2px solid lighten($green, 25%);
+            }
+        }
+
+        &.new {
+            border-left: 2px solid $lighter_bg;
+
+            &:hover {
+                border-left: 2px solid lighten($light_bg, 20%);
+            }
+        }
+
+        &.closed {
+            border-left: 2px solid $red;
+
+            &:hover {
+                border-left: 2px solid lighten($red, 25%);
+            }
+        }
+    
+        td {
+            padding: 4px 6px;
+        }
+    }
+
+    span.medal-green {
+        background: #00b300;
+    }
+
+    .forum-latest span.medal-green.medal-green-dark {
+        background: #004d00;
+    }
+}
