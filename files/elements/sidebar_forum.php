@@ -18,7 +18,7 @@
         </ul>
 
         <h1 class='no-margin'>View</h1>
-        Filter topics <?=isset($section)?'in this section':'in all sections';?><br/><br/>
+        <div class='dark small'>Filter topics <?=isset($section)?'in this section':'in all sections';?></div>
 
         <ul class='plain'>
             <li <?=!(isset($_GET['popular']) || isset($_GET['watching']) || isset($_GET['no-replies']))?'class="active"':'';?>><a href='?'>View all</a></li>
