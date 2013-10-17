@@ -2,7 +2,7 @@
     array_push($minifier->custom_js, 'share.js');
 ?>
 
-<ul class='share <?=(isset($share->right)&&$share->right)?'right':'';?>'
+<ul class='mobile-hide share <?=(isset($share->right)&&$share->right)?'right':'';?>'
   data-id="<?=(isset($share->item))?$share->item:'0';?>"
   data-title="<?=(isset($share->title))?$share->title:'0';?>"
   data-link='<?=(isset($share->link))?$share->link:'0';?>'>
