@@ -1,3 +1,13 @@
+                    <article class="widget dashboard-tasks">
+                        <section class="fluid clr">
+                            <span class='strong'>To-do:</span> Complete <a href='/levels/main/1'>Main 1</a><br/>
+                            <div class='tasks-progress-container'>
+                                <div style='width: 63%'></div>
+                            </div>
+                        </section>
+                    </article>
+
+
 <?php
     if ($app->user->connect_msg):
 ?>
