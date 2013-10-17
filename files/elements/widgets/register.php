@@ -20,7 +20,9 @@
                             <input type="password" name="reg_password_2" id="reg_password_2" autocomplete="off">
                             <label for="reg_email">Email:</label>
                             <input type="text" name="reg_email" id="reg_email" value="<?=isset($_POST['reg_email'])?htmlspecialchars($_POST['reg_email']):''?>">
-                            <input type="submit" value="Register" class="button right">
+
+                            <div class='small'>By submitting this form, I confirm that I have read and agree to the following terms and privacy policy.</div><br/>
+                            <input type="submit" value="Register" class="button right clr">
                         </form>
 
                         <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
