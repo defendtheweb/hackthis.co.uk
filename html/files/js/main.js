@@ -58,6 +58,43 @@ $(function() {
         });
         e.preventDefault();
     });
+
+
+    // Carousel slider
+    $('.slider').each(function() {
+        var $this = $(this),
+        tallest = 0;
+
+        $this.children('li').each(function(i) {
+            $(this).width($(this).width()).css({position: 'absolute', top: 0}).css('left', (110*i)+'%');
+
+            if ($(this).height() > tallest)
+                tallest = $(this).height();
+        });
+
+        $(this).height(tallest);
+
+        setTimeout(function(){slide_carousel($this)}, 5000);
+    });
+
+    function slide_carousel(target) {
+        var children = target.children('li');
+        children.each(function(i) {
+            var left = parseFloat($(this)[0].style.left);
+            if (left < 0) {
+                left = (children.length-2) * 110;
+                $(this).css('visibility', 'hidden');
+            } else {
+                left -= 110;
+                $(this).css('visibility', 'visible');
+            }
+            $(this).css('left', left + '%');
+        });
+
+        setTimeout(function(){slide_carousel(target)}, 5000);
+    }
+
+
 });
 
 var thecode = 'getinthere';

@@ -17,6 +17,11 @@
         }
     }
 
+    h3 {
+        margin: 0;
+        margin-bottom: 0.5em;
+    }
+
     h3.no-margin {
         margin: 0;
     }
@@ -31,11 +36,22 @@
     .thumbnail {
         background: $bg;
         margin-bottom: 0;
-        height: 245px;
+        height: 225px;
         margin-top: 0.5em;
 
         &:hover {
             background: darken($bg, 2%);
+        }
+    }
+
+    .external-articles ul {
+        overflow: hidden;
+        position: relative;
+
+        li {
+            -webkit-transition: left 1.2s ease-in-out;
+            -moz-transition: left 1.2s ease-in-out;
+            -o-transition: left 1.2s ease-in-out;
         }
     }
 }
