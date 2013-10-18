@@ -21,7 +21,7 @@
                             <label for="reg_email">Email:</label>
                             <input type="text" name="reg_email" id="reg_email" value="<?=isset($_POST['reg_email'])?htmlspecialchars($_POST['reg_email']):''?>">
 
-                            <div class='small'>By submitting this form, I confirm that I have read and agree to the following terms and privacy policy.</div><br/>
+                            <div class='small'>By providing my information and clicking on the register button, I confirm that I have read and agree to this website's terms and conditions and privacy policy.</div><br/>
                             <input type="submit" value="Register" class="button right clr">
                         </form>
 
