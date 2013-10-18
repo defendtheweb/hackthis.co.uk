@@ -80,13 +80,13 @@
             $visible = true;
 ?>
                     <div class='col span_7 registration'>
-                        <div class='row <?=!$visible?'default-hidden hidden':'';?>'>
-                            <h2>Register</h2>
-                            <?php include('elements/widgets/register.php'); ?>
-                        </div>
-                        <div class='<?=$visible?'default-hidden hidden':'';?>'>
+                        <div class='row <?=$visible?'default-hidden hidden':'';?>'>
                             <h2>Login</h2>
                             <?php include('elements/widgets/login.php'); ?>
+                        </div>
+                        <div class='<?=!$visible?'default-hidden hidden':'';?>'>
+                            <h2>Register</h2>
+                            <?php include('elements/widgets/register.php'); ?>
                         </div>
                     </div>
                 </div>
