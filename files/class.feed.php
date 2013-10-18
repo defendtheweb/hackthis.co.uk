@@ -135,6 +135,9 @@
         }
 
         public function call($username, $type, $title, $uri) {
+            if (!function_exists('curl_version'))
+                return;
+
             $ch = curl_init();
 
             $s = $this->app->config['socket'];
