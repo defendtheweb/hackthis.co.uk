@@ -449,7 +449,7 @@ POST;
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator, medals.label AS medal_label, medals.colour AS medal_colour
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -463,8 +463,6 @@ POST;
                 ON forum_karma.post_id = post.post_id
                 LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
-                LEFT JOIN (SELECT users_medals.user_id, medals.label, medals_colours.colour FROM users_medals LEFT JOIN medals ON users_medals.medal_id = medals.medal_id LEFT JOIN medals_colours ON medals.colour_id = medals_colours.colour_id WHERE highlight = 1) medals
-                ON users.user_id = medals.user_id
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT 1");
@@ -484,7 +482,7 @@ POST;
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator, medals.label AS medal_label, medals.colour AS medal_colour
+                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -498,8 +496,6 @@ POST;
                 ON forum_karma.post_id = post.post_id
                 LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
-                LEFT JOIN (SELECT users_medals.user_id, medals.label, medals_colours.colour FROM users_medals LEFT JOIN medals ON users_medals.medal_id = medals.medal_id LEFT JOIN medals_colours ON medals.colour_id = medals_colours.colour_id WHERE highlight = 1) medals
-                ON users.user_id = medals.user_id
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
                 LIMIT :l1, :l2");
