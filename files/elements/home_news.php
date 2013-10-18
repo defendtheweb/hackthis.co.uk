@@ -1,5 +1,6 @@
 <?php
-    $latestNews = $app->articles->getArticles(0, 1)['articles'][0];
+    $latestNews = $app->articles->getArticles(0, 1);
+    $latestNews = $latestNews['articles'][0];
     $latestNews->title = $app->parse($latestNews->title, false);
     $latestNews->body = $app->parse($latestNews->body, false);
 ?>
