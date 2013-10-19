@@ -309,7 +309,7 @@ POST;
             return $crumb;
         }
 
-        public function getThreads($section, $page=1, $no_replies = false, $most_popular = false, $watching = false, $limit = 10) {
+        public function getThreads($section=null, $page=1, $no_replies = false, $most_popular = false, $watching = false, $limit = 10) {
             $section_slug = '';
             if ($section)
                 $section_slug = $section->slug;
@@ -351,7 +351,8 @@ POST;
             else
                 $sql .= " ORDER BY sticky DESC, latest DESC";
 
-            $sql .= " LIMIT ". ($page-1)*$limit .", $limit";
+            if ($limit)
+                $sql .= " LIMIT ". ($page-1)*$limit .", $limit";
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':section_slug'=>$section_slug, ':uid'=>$this->app->user->uid));

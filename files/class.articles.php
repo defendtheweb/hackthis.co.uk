@@ -116,13 +116,19 @@
             }
 
             $sql .= 'GROUP BY a.article_id
-                    ORDER BY submitted DESC
-                    LIMIT :limit1, :limit2';
+                    ORDER BY submitted DESC';
+
+            if ($limit !== null)
+                $sql .= ' LIMIT :limit1, :limit2';
+
             $st = $this->app->db->prepare($sql);
             $st->bindValue(':cat_id', $cat_id);
             $st->bindValue(':uid', $this->app->user->uid);
-            $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
-            $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
+
+            if ($limit !== null) {
+                $st->bindValue(':limit1', ($page-1)*$limit, PDO::PARAM_INT);
+                $st->bindValue(':limit2', $limit, PDO::PARAM_INT);
+            }
             $st->execute();
             $result = $st->fetchAll();
 
