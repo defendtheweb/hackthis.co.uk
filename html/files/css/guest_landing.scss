@@ -17,6 +17,7 @@ body {
 
 h1 {
     text-transform: none;
+    font-size: 1.4em;
 }
 
 /* Index page site feature bubbles */
@@ -27,6 +28,10 @@ section.features {
 
     h2, .blurb, .circle {
         opacity: 0;
+    }
+
+    .blurb strong {
+        color: $green;
     }
 
     h2 {
