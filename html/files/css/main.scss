@@ -29,7 +29,7 @@ body {
     .page-wrap {
         min-height: 100%;
         /* equal to footer height */
-        margin-bottom: -159px;
+        margin-bottom: -194px;
     }
     .page-wrap:after {
         content: "";
@@ -37,7 +37,7 @@ body {
     }
     #page-footer, .page-wrap:after {
         /* .push must be the same height as footer */
-        height: 159px;
+        height: 194px;
     }
 }
 
@@ -433,51 +433,43 @@ sidebar h1 {
             padding: 10px 0;
         }
 
-        #page-footer-2 {
-            background: $light_bg;
+        h3 {
+            margin-bottom: 6px;
+        }
 
-            .right a {
-                font-size: 1.9em;
-                margin-left: 6px;
+        a {
+            color: $text;
 
-                &:hover {
-                    text-decoration: none;
+            .icon-facebook, .icon-twitter, .icon-feed {
+                padding-right: 3px;
+            }
+
+            &:hover {
+                color: $white;
+                text-decoration: none;
+
+                .icon-facebook {
+                    color: #3B5998;
                 }
-
-                i.icon-facebook {
-                    color: darken(#3B5998, 15%);
-                    &:hover {
-                        color: #3B5998;
-                    }
+                .icon-twitter {
+                    color: #00ACED;
                 }
-
-                i.icon-twitter {
-                    color: darken(#00ACED, 15%);
-                    &:hover {
-                        color: #00ACED;
-                    }
+                .icon-feed {
+                    color: #F88B02;
                 }
+            }
+        }
 
-                i.icon-feed {
-                    color: darken(#F88B02, 15%);
-                    &:hover {
-                        color: #F88B02;
-                    }
-                }
+        .span_15 {
+            padding-right: 25px;
+        }
 
-                i.icon-google-plus {
-                    color: darken(#d34836, 15%);
-                    &:hover {
-                        color: #d34836;
-                    }
-                }
+        .version {
+            border-top: 1px solid $lighter_bg;
+            padding-top: 16px;
 
-                i.icon-youtube {
-                    color: darken(#CD332D, 15%);
-                    &:hover {
-                        color: #CD332D;
-                    }
-                }
+            a {
+                color: $white;
             }
         }
     }

@@ -6,24 +6,42 @@
         <div id="page-footer">
             <footer>
                 <div class="container row">
-                    <span class='strong'>Disclaimer:</span><br/>
-                    The owner of this site does not accept responsibility for the actions of any users of this site.
-                    Users are solely responsible for any content that they place on this site This site does not encourage or condone any illegal activity,
-                    or attempts to hack into any network where they do not have authority to do so. <br/>
-                    <br/>
-                    <a href='/privacy'>Privacy</a> &middot; <a href='/terms'>Terms of Use</a> &middot; <a href='/contact'>Contact Us</a> 
+                    <div class='col span_15'>
+                        <h3>Disclaimer</h3>
+                        The owner of this site does not accept responsibility for the actions of any users of this site.
+                        Users are solely responsible for any content that they place on this site This site does not encourage or condone any illegal activity,
+                        or attempts to hack into any network where they do not have authority to do so.
+                    </div>
+                    <div class='col span_3'>
+                        <ul class='plain'>
+                            <li><h3>Links</h3></li>
+                            <li><a href='#'>Home</a></li>
+                            <li><a href='#'>News</a></li>
+                            <li><a href='#'>Articles</a></li>
+                            <li><a href='#'>Forum</a></li>
+                        </ul>
+                    </div>
+                    <div class='col span_3'>
+                        <ul class='plain'>
+                            <li><h3>Legal</h3></li>
+                            <li><a href='/privacy'>Privacy</a></li>
+                            <li><a href='/terms'>Terms of Use</a></li>
+                            <li><a href='/contact'>Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class='col span_3'>
+                        <ul class='plain'>
+                            <li><h3>Connect</h3></li>
+                            <li><a href='#'><i class='icon-facebook'></i> Facebook</a></li>
+                            <li><a href='#'><i class='icon-twitter'></i> Twitter</a></li>
+                            <li><a href='#'><i class='icon-feed'></i> Feed</a></li>
+                        </ul>
+                    </div>
                 </div>
-                <div id="page-footer-2">
-                    <div class="container row">
-                        <div class='right'>
-                            <a class='hide-external' href='https://www.facebook.com/hackthisuk'><i class='icon-facebook'></i></a>
-                            <a class='hide-external' href='https://twitter.com/hackthisuk'><i class='icon-twitter'></i></a>
-                            <a class='hide-external' href='http://feeds.feedburner.com/hackthisuk'><i class='icon-feed'></i></a>
-                            <!-- <a class='hide-external' href='https://plus.google.com/u/1/111391128364055041923'><i class='icon-google-plus'></i></a>
-                            <a class='hide-external' href='https://www.youtube.com/channel/UCCfqc6ZuCSLdLMKYJl5hLyg'><i class='icon-youtube'></i></a> -->
-                        </div>
+                <div class="container row">
+                    <div class='center version'>
                         Current Version: <a href='https://github.com/HackThis/hackthis.co.uk/tree/<?=trim($app->version);?>'><?=trim($app->version);?></a><br/>
-                        Copyright © 2008 - <?=date('Y');?> <a href='//www.hackthis.co.uk'>hackthis.co.uk</a> || Icons: <a href='http://fortawesome.github.io/Font-Awesome/'>Font Awesome</a>
+                        Copyright © 2008 - <?=date('Y');?> <a href='//www.hackthis.co.uk'>hackthis.co.uk</a>
                     </div>
                 </div>
             </footer>
