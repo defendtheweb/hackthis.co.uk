@@ -28,13 +28,14 @@
 ?>
         </div>
     </div>
-    <div class='home-module col span_8 external-articles mobile-hide'>
+    <div class='home-module home-module-black col span_8 external-articles mobile-hide'>
         <ul class='plain slider'>
             <li>
                 <a href='#'>
                     <h3>[BBC] Four UK men arrested over Silk Road links</h3>
-                    <img src='http://news.bbcimg.co.uk/media/images/70343000/jpg/_70343563_70285124.jpg'/>
                 </a>
+                Four men have been arrested in the UK over their role in illegal online marketplace Silk Road. 
+                Three men in their early 20s were arrested in Manchester while a fourth man, in his 50s, was detained in Devon.
             </li>
             <li>
                 <a href='#'>
@@ -45,8 +46,8 @@
             <li>
                 <a href='#'>
                     <h3>[SecurityWeek] Argentina Nabs Young 'Super Hacker'</h3>
-                    A 19-year-old Argentine has been arrested on charges of hacking into online gambling pages and international money transfer sites, authorities said Friday. 
                 </a>
+                A 19-year-old Argentine has been arrested on charges of hacking into online gambling pages and international money transfer sites, authorities said Friday. 
             </li>
         </ul>
     </div>

@@ -7,6 +7,10 @@
         background: $light_bg;
     }
 
+    &.home-module-black {
+        background: $black;
+    }
+
     a.remove {
         margin-top: -8px;
         font-size: 1.2em;
@@ -63,7 +67,7 @@
         border-left: 2px solid #141414;
 
         &:hover {
-            background: $bg;
+            background: $light_bg;
             border-left: 2px solid #1e1e1e;
         }
 

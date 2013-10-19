@@ -2,7 +2,7 @@
     $latest = $app->forum->getLatest();
 ?>
 
-<table class='home-module home-module-light forum-latest dark'>
+<table class='home-module forum-latest dark'>
     <tbody>
 <?php
     foreach($latest AS $post):
