@@ -1,6 +1,4 @@
-<?php
-    define('PAGE_PUBLIC', false);
-    
+<?php  
     require_once('init.php');
     
     $minifier->add_file('highlight.js', 'js');
