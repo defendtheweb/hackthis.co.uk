@@ -71,8 +71,7 @@
                     display: inline-block;
                     margin: 0 2px;
 
-                    &.active, &:hover {
-                        cursor: pointer;
+                    &.active {
                         background: $white;
                     }
                 }
