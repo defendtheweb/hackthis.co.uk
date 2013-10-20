@@ -420,13 +420,6 @@
 
 
         /* MISC */
-        public function hideConnect() {
-            $st = $this->app->db->prepare('UPDATE users SET `oauth_id` = 0 WHERE `user_id` = :uid');
-            $result = $st->execute(array(':uid' => $this->uid));
-           
-            return $result;
-        }
-
         public function __get($property) {
             // check for admin privilages
             if (substr($property, 0, 6) === "admin_") {

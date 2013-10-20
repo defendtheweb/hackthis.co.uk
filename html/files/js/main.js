@@ -47,19 +47,6 @@ $(function() {
     // });
 
 
-    // Hide facebook connect link
-    $('.facebook-connect .remove').on('click', function(e) {
-        var uri = '/files/ajax/user.php?action=connect.hide';
-        var $elem = $(this).parent();
-        $.getJSON(uri, function(data) {
-            if (data.status) {
-                $elem.slideUp();
-            }
-        });
-        e.preventDefault();
-    });
-
-
     // Carousel slider
     var timer;
     $('.slider').each(function() {

@@ -44,22 +44,6 @@
 <?php
         endif;
     endif;
-
-    if ($app->user->connect_msg):
-?>
-                        <div class='msg msg-info'>
-                            <i class='icon-info'></i>
-                            <?=$app->user->connect_msg;?>
-                        </div>
-<?php
-    endif;
-    if (!$app->user->connected):
-?>
-                        <a class='stop-external facebook-connect' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
-                            Connect to Facebook <i class='remove icon-remove right'></i>
-                        </a>
-<?php
-    endif;
 ?>
                     <article class="widget dashboard">
                         <section class="fluid clr center">
