@@ -61,6 +61,7 @@ $(function() {
 
 
     // Carousel slider
+    var timer;
     $('.slider').each(function() {
         var $this = $(this),
         tallest = 0;
@@ -74,12 +75,30 @@ $(function() {
 
         $(this).height(tallest);
 
-        setTimeout(function(){slide_carousel($this)}, 5000);
+        // Add locator
+        $ul = $('<ul>', {class: 'locator'});
+        $this.children('li').each(function(i) {
+            if (i == 0)
+                $ul.append($('<li>', {class: 'active'}));
+            else
+                $ul.append($('<li>'));
+        });
+        $this.parent().append($ul);
+
+        //
+        timer = setTimeout(function(){slide_carousel($this)}, 5000);
+
+        $this.parent().on('mouseover', function(e) {
+            clearTimeout(timer);
+        }).on('mouseout', function(e) {
+            timer = setTimeout(function(){slide_carousel($this)}, 5000);
+        });
     });
 
     function slide_carousel(target) {
-        var children = target.children('li');
-        children.each(function(i) {
+        var children = target.children('li'),
+        active;
+        children.each(function(index) {
             var left = parseFloat($(this)[0].style.left);
             if (left < 0) {
                 left = (children.length-2) * 110;
@@ -89,9 +108,16 @@ $(function() {
                 $(this).css('visibility', 'visible');
             }
             $(this).css('left', left + '%');
+
+            if (left == 0)
+                active = index;
         });
 
-        setTimeout(function(){slide_carousel(target)}, 5000);
+        var $locators = target.siblings('.locator').children('li');
+        $locators.removeClass('active');
+        $($locators[active]).addClass('active');
+
+        timer = setTimeout(function(){slide_carousel(target)}, 5000);
     }
 
 

@@ -48,14 +48,35 @@
         }
     }
 
-    .external-articles ul {
-        overflow: hidden;
-        position: relative;
+    .external-articles {
+        ul {
+            overflow: hidden;
+            position: relative;
 
-        li {
-            -webkit-transition: left 1.2s ease-in-out;
-            -moz-transition: left 1.2s ease-in-out;
-            -o-transition: left 1.2s ease-in-out;
+            li {
+                -webkit-transition: left 1.2s ease-in-out;
+                -moz-transition: left 1.2s ease-in-out;
+                -o-transition: left 1.2s ease-in-out;
+            }
+
+            &.locator {
+                bottom: 0;
+
+                li {
+                    width: 6px; 
+                    height: 6px;
+                    @include border-radius(30%);
+
+                    background: $lighter_bg;
+                    display: inline-block;
+                    margin: 0 2px;
+
+                    &.active, &:hover {
+                        cursor: pointer;
+                        background: $white;
+                    }
+                }
+            }
         }
     }
 }
