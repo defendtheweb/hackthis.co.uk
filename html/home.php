@@ -23,7 +23,7 @@
     } else {
         include('elements/home_news.php');
     }
-    include('elements/forum_latest.php');
+    include('elements/home_forum.php');
     include('elements/home_articles.php');
 ?>
                     </section>
