@@ -5,7 +5,7 @@
     $latestNews->body = $app->parse($latestNews->body, false);
 ?>
 
-<div class='home-module home-news'>
+<div class='home-module home-news clr'>
     <?php
         $share = new stdClass();
         $share->item = $latestNews->id;
@@ -25,4 +25,5 @@
     </div>
 
     <p><?=$latestNews->body;?></p>
+    <div class='right'><a href='<?=$latestNews->uri;?>'>Read post</a> &middot; <a href='/news'>More news</a></div>
 </div>
