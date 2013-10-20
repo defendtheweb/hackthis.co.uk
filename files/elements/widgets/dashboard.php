@@ -1,14 +1,50 @@
+<?php
+    // To do list
+    $medal_id = 20;
+    $todo_position = 0;
+    $todo = array("Complete <a href='/levels/main/1'>Main 1</a>",
+                  "Upload a <a href='/settings/image'>profile image</a>");
+    
+    // Does user have todo medal?
+    $st = $app->db->prepare('SELECT medal_id FROM users_medals
+                             WHERE user_id = :uid AND medal_id = :medal_id');
+    $st->execute(array(':uid' => $app->user->uid, ':medal_id' => $medal_id));
+    $result = $st->fetch();
+
+    if (!$result):
+        $levels = $app->levels->getList();
+        if ($levels[0]->completed) {
+            $todo_position = 1;
+
+            // Does user have cheese medal?
+            $st = $app->db->prepare('SELECT medal_id FROM users_medals
+                                     WHERE user_id = :uid AND medal_id = :medal_id');
+            $st->execute(array(':uid' => $app->user->uid, ':medal_id' => 11));
+            $result = $st->fetch();
+            if ($result) {
+                $todo_position = 2;
+            }
+        }
+
+        if ($todo_position == count($todo)):
+            $app->awardMedal($medal_id, $app->user->uid);
+        else:
+?>
+
                     <article class="widget dashboard-tasks">
                         <section class="fluid clr">
-                            <span class='strong'>To-do:</span> Complete <a href='/levels/main/1'>Main 1</a><br/>
+                            <span class='strong'>To-do:</span> <?=$todo[$todo_position];?><br/>
                             <div class='tasks-progress-container'>
-                                <div style='width: 63%'></div>
+                                <div style='width: <?=($todo_position/count($todo)) * 100;?>%'></div>
                             </div>
                         </section>
                     </article>
 
 
 <?php
+        endif;
+    endif;
+
     if ($app->user->connect_msg):
 ?>
                         <div class='msg msg-info'>
