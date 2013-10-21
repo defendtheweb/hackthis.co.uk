@@ -6,3 +6,5 @@ Disallow: /levels/
 Disallow: /levels/extras/userpass.txt
 Disallow: /users/
 Disallow: /ctf/8/php/*
+
+Sitemap: https://www.hackthis.co.uk/sitemap.xml
