@@ -36,6 +36,8 @@
             if ($app->checkCSRFKey("closeThread", $_GET['close'])) {
                 $forum->closeThread($thread->id);
             }
+
+            header('Location: /forum/'.$thread->slug);
         }
     }
 
@@ -139,7 +141,7 @@
                             </div>
 
 <?php
-        if (!$thread->closed) {
+        if (!$thread->closed && $thread->question->user_id === $app->user->uid) {
             $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread")."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
         }
     endif; // End reply count check
