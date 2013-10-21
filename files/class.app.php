@@ -31,12 +31,12 @@
             $this->utils = new utils($this);
 
             $this->stats = new stats($this);
+            $this->feed = new feed($this);
 
             // Create user object
             $this->user = new user($this);
 
             $this->notifications = new notifications($this);
-            $this->feed = new feed($this);
 
             //get version number
             $this->cache = new cache($this);

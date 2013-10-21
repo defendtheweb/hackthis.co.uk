@@ -275,6 +275,9 @@
                         $this->loggedIn = true;
                         $this->uid = $uid;
 
+                        // Add to feed
+                        $this->app->feed->call($username, 'join');
+
                         // Setup GA event
                         $this->app->ssga->set_event('user', 'register', 'OAuth', $uid);
                         $this->app->ssga->send();
@@ -350,6 +353,8 @@
             $this->loggedIn = true;
             $this->uid = $uid;
 
+            // Add to feed
+            $this->app->feed->call($username, 'join');
 
             // Setup GA event
             $this->app->ssga->set_event('user', 'register', 'default', $uid);

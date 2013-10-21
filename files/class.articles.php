@@ -545,6 +545,17 @@
             }
 
 
+            // Add to feed
+            $st = $this->app->db->prepare('SELECT articles.title, CONCAT(IF(articles.category_id = 0, "/news/", "/articles/"), articles.slug) AS uri
+                                    FROM articles_comments
+                                    INNER JOIN articles
+                                    ON articles.article_id = articles_comments.article_id
+                                    WHERE articles_comments.comment_id = :comment_id LIMIT 1');
+            $st->execute(array(':comment_id' => $comment_id));
+            $article = $st->fetch();
+            $this->app->feed->call($this->app->user->username, 'comment', $article->title, $article->uri.'#comment-'.$comment_id);
+
+
             return $this->getComment($comment_id);
         }
 
