@@ -79,7 +79,7 @@
                 $post->signature = $this->app->parse($post->signature);
             }
 
-            $return = "        <li class='row fluid clr' data-id='{$post->post_id}'";
+            $return = "        <li class='row clr' data-id='{$post->post_id}'";
             if ($last) {
                 $return .= ' id="latest">';
             } else {
@@ -107,13 +107,13 @@ POST;
                 $return .= <<< POST
                 <a href="/user/{$post->username}" class="user" {$tmp1}>
                     {$post->username}<br/>
-                    <img src="{$post->image}" width="60" height="60" alt="{$post->username}'s profile picture">
+                    <img class='mobile-hide' src="{$post->image}" width="60" height="60" alt="{$post->username}'s profile picture">
                 </a>
                 <br/>
                 <ul class='plain'>
                     <li class='highlight'><i class='icon-clock'></i> <time class='short' {$tmp2} pubdate datetime="{$posted}">{$this->app->utils->timeSince($post->posted, true)}</time></li>
-                    <li><i class='icon-trophy'></i> {$post->score}</li>
-                    <li><i class='icon-chat'></i> {$post->posts}</li>
+                    <li class='mobile-hide'><i class='icon-trophy'></i> {$post->score}</li>
+                    <li class='mobile-hide'><i class='icon-chat'></i> {$post->posts}</li>
                 </ul>
                 <br/>
 
@@ -132,7 +132,7 @@ POST;
                 if (!$first):
 
                     $return .= <<< POST
-                <a href='#' class='button icon'><i class='icon-edit'></i></a>
+                <a href='?edit={$post->post_id}' class='button icon'><i class='icon-edit'></i></a>
                 <a href='#' class='button icon remove'><i class='icon-trash'></i></a>
 
 POST;
@@ -140,24 +140,25 @@ POST;
                 else:
 
                     $return .= <<< POST
-                <a href='#' class='button'><i class='icon-edit'></i> Edit post</a>
+                <a href='?edit={$post->post_id}' class='button'><i class='icon-edit'></i> Edit post</a>
 
 POST;
 
                 endif;
             else:
 
-                $return .= <<< POST
-                <a href='#' class='button'><i class='icon-flag'></i> Flag post</a>
-
-POST;
+                if ($post->flag <= 0) {
+                    $return .= "                <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>";
+                } else {
+                    $return .= "                <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>";
+                }
 
             endif;
 
             $return .= <<< POST
             </div>
             <article class="col span_19 post_content">
-                <div class="karma small">
+                <div class="karma small mobile-hide">
 POST;
 
             if (!$this->app->user->loggedIn || $post->user_id === $this->app->user->uid):
@@ -427,9 +428,35 @@ POST;
             return '/forum/' . $slug;
         }
 
+        public function closeThread($thread_id) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            $status = false;
+            if ($this->app->user->forum_priv == 1) {
+                $st = $this->app->db->prepare("SELECT thread_id
+                                               FROM forum_threads
+                                               WHERE thread_id = :pid AND owner = :uid");
+                $st->execute(array(':pid'=>$thread_id, ':uid'=>$this->app->user->uid));
+                if ($st->fetch()) {
+                    $status = true;
+                }
+            } else if ($this->app->user->forum_priv > 1) {
+                $status = true;
+            }
+
+            if (!$status)
+                return false;
+
+            $st = $this->app->db->prepare("UPDATE forum_threads
+                                           SET closed = '1'
+                                           WHERE thread_id = :pid");
+            return $st->execute(array(':pid'=>$thread_id));            
+        }
+
 
         public function getThread($thread_id, $page = 1, $limit = 10) {
-            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`
+            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky, section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`
                 FROM forum_threads thread
                 LEFT JOIN forum_users
                 ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
@@ -446,11 +473,15 @@ POST;
                 return false;
 
             $thread->title = $this->app->parse($thread->title, false);
+            if ($thread->closed)
+                $thread->title = '[closed] ' . $thread->title;
+            if ($thread->sticky)
+                $thread->title = '[sticky] ' . $thread->title;
 
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -460,9 +491,9 @@ POST;
                 ON users.user_id = donate.user_id AND donate.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
-                LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma
-                ON forum_karma.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
+                LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
+                ON users_forum.post_id = post.post_id
+                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -483,7 +514,7 @@ POST;
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(forum_karma.karma, 0) AS `karma`, coalesce(user_karma.amount, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -493,9 +524,9 @@ POST;
                 ON users.user_id = donate.user_id AND donate.medal_id = 19
                 LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                 ON forum_posts.author = post.author
-                LEFT JOIN (SELECT post_id, SUM(amount) AS `karma` FROM forum_karma GROUP BY post_id) forum_karma
-                ON forum_karma.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, amount FROM forum_karma) user_karma
+                LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
+                ON users_forum.post_id = post.post_id
+                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -623,6 +654,49 @@ POST;
             return $status;
         }
 
+        public function getPost($post_id, $thread_id) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            if ($this->app->user->forum_priv >= 1) {
+                $st = $this->app->db->prepare("SELECT post_id, body, author
+                                               FROM forum_posts
+                                               WHERE post_id = :pid AND thread_id = :tid");
+                $st->execute(array(':pid'=>$post_id, ':tid'=>$thread_id));
+                $post = $st->fetch();
+
+                if (!$post)
+                    return false;
+
+                if ($post->author === $this->app->user->uid) {
+                    $post->owner = true;
+                } else if ($this->app->user->forum_priv > 1) {
+                    $post->owner = false;
+                } else {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+
+            return $post;
+        }
+
+        public function editPost($post_id, $thread_id, $body) {
+            if (!$this->getPost($post_id, $thread_id))
+                return false;
+
+            if (!$this->validatePost($body))
+                return false;
+
+            $st = $this->app->db->prepare("UPDATE forum_posts
+                                           SET body = :body, updated = now()
+                                           WHERE post_id = :pid
+                                           LIMIT 1");
+            return $st->execute(array(':pid'=>$post_id, ':body'=>$body));
+        }
+
         public function watchThread($thread_id, $watch=true) {
             if ($watch) $watch = '1'; else $watch = '0';
 
@@ -647,16 +721,22 @@ POST;
                 return false;
 
             if (!$cancel) {
-                $st = $this->app->db->prepare("INSERT INTO forum_karma (`user_id`, `post_id`, `amount`)
-                        VALUES (:uid, :post_id, :value) ON DUPLICATE KEY UPDATE `amount` = :value, `time` = now()");
+                $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `karma`)
+                        VALUES (:uid, :post_id, :value) ON DUPLICATE KEY UPDATE `karma` = :value, `time` = now()");
                 $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':value'=>$value));
             } else {
-                $st = $this->app->db->prepare("DELETE IGNORE FROM forum_karma WHERE user_id = :uid
+                $st = $this->app->db->prepare("DELETE IGNORE FROM users_forum WHERE user_id = :uid
                                                AND post_id = :post_id LIMIT 1");
                 $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
             }
 
             return true;
+        }
+
+        public function flagPost($post_id) {
+            $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `flag`)
+                VALUES (:uid, :post_id, NOW()) ON DUPLICATE KEY UPDATE `flag` = NOW()");
+            return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
         }
 
 

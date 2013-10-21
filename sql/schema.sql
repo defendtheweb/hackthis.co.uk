@@ -300,10 +300,11 @@ CREATE TABLE forum_users (
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE forum_karma (
+CREATE TABLE users_forum (
     `user_id` int(7) NOT NULL,
     `post_id` int(6) NOT NULL,
-    `amount` tinyint(1) DEFAULT 0,
+    `karma` tinyint(1) DEFAULT 0,
+    `flag` timestamp,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`, `post_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),

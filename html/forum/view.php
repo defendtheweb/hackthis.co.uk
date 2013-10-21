@@ -22,12 +22,20 @@
         }
     }
 
-    if (isset($_GET['submit']) && isset($_POST['body'])) {
-        $submitted = $forum->newPost($thread->id, $_POST['body']);
+    if (!$thread->closed) {
+        if (isset($_GET['submit']) && isset($_POST['body'])) {
+            $submitted = $forum->newPost($thread->id, $_POST['body']);
 
-        if ($submitted) {
-            header('Location: '. strtok($_SERVER["REQUEST_URI"], '?') . '?submitted#latest');
-            die();
+            if ($submitted) {
+                header('Location: '. strtok($_SERVER["REQUEST_URI"], '?') . '?submitted#latest');
+                die();
+            }
+        }
+
+        if (isset($_GET['close'])) {
+            if ($app->checkCSRFKey("closeThread", $_GET['close'])) {
+                $forum->closeThread($thread->id);
+            }
         }
     }
 
@@ -59,11 +67,11 @@
                         <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
 
 <?php if ($app->user->loggedIn): ?>
-    <a href='#submit' class='post-reply button right'><i class='icon-chat'></i> Post reply</a>
+    <a href='#submit' class='post-reply button right mobile-hide'><i class='icon-chat'></i> Post reply</a>
 <?php   if ($thread->watching): ?>
-    <a href='#' class='post-watch post-unwatch button right'><i class='icon-eye-blocked'></i> Unwatch</a>
+    <a href='#' class='post-watch post-unwatch button right mobile-hide'><i class='icon-eye-blocked'></i> Unwatch</a>
 <?php   else: ?>
-    <a href='#' class='post-watch button right'><i class='icon-eye'></i> Watch</a>
+    <a href='#' class='post-watch button right mobile-hide'><i class='icon-eye'></i> Watch</a>
 <?php
         endif;
       endif;
@@ -129,10 +137,14 @@
 ?>
                                 Viewing <?=count($thread->posts);?> repl<?=(count($thread->posts) == 1)?'y':'ies';?> - <?=$thread->p_start;?> through <?=$thread->p_end;?> (of <?=$thread->replies;?> total)
                             </div>
+
 <?php
+        if (!$thread->closed) {
+            $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread")."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
+        }
     endif; // End reply count check
 
-    if ($app->user->loggedIn && $app->user->forum_priv > 0):
+    if ($app->user->loggedIn && $app->user->forum_priv > 0 && !$thread->closed):
 ?>
 
                             <form id="submit" class='forum-thread-reply' method="POST" action="?submit#submit">
@@ -149,6 +161,8 @@
                             </form>
 
 <?php
+    elseif ($thread->closed):
+        $app->utils->message('This thread has been closed, you can not add new posts', 'error');
     elseif ($app->user->loggedIn):
         $app->utils->message('You have been banned from posting content in the forum', 'error');
     else:

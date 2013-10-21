@@ -18,7 +18,10 @@
         // Section or thread?
         $thread = $forum->isThread($_GET['slug']);
         if ($thread) {
-            include('view.php');
+            if (isset($_GET['edit']))
+                include('edit.php');
+            else
+                include('view.php');
             die();
         }
 

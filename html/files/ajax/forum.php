@@ -14,10 +14,10 @@
                 $result['status'] = $forum->giveKarma(true, $_GET['id'], $cancel);
             else
                 $result['status'] = $forum->giveKarma(false, $_GET['id'], $cancel);
-        } else {
-            if ($_GET['action'] == "post.remove" && isset($_GET['id'])) {
-                $result['status'] = $forum->deletePost($_GET['id']);
-            }
+        } else if ($_GET['action'] == "post.flag" && isset($_GET['id'])) {
+            $result['status'] = $forum->flagPost($_GET['id']);
+        } else if ($_GET['action'] == "post.remove" && isset($_GET['id'])) {
+            $result['status'] = $forum->deletePost($_GET['id']);
         }
     }
 

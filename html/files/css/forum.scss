@@ -178,6 +178,10 @@
 
 
 .forum-main {
+    h1 {
+        text-transform: none;
+    }
+
     .forum-pagination {
         margin: 8px 0;
         padding: 8px 0;
@@ -258,6 +262,12 @@
                     padding-right: 3px;
                     color: $dark;
                 }
+            }
+
+            .flagged {
+                background: none;
+                color: $dark;
+                cursor: default;
             }
 
             .button {
@@ -346,5 +356,43 @@
     }
     .section_replies {
         width: 15% !important;
+    }
+
+
+    .post-list > li {
+        margin-bottom: 8px !important;
+    }
+
+    .post_header {
+        height: auto !important;
+        padding: 8px 0 6px 2% !important;
+
+        br {
+            display: none;
+        }
+
+        a {
+            width: auto !important;
+            float: left;
+            margin-right: 10px;
+
+            &.user {
+                padding: 0 !important;
+            }
+        }
+
+        ul li {
+            width: auto !important;
+            float: left;
+
+            padding: 0 !important;
+            margin: 0 !important;
+
+            margin-right: 10px !important;
+            background: none !important;
+        }
+    }
+    .post_body {
+        padding-left: 2% !important;
     }
 }

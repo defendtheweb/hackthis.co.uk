@@ -61,6 +61,35 @@ $(function() {
         });
     });
 
+    $('a.flag').click(function(e) {
+        e.preventDefault();
+        var $this = $(this),
+        $elem = $(this).closest('li'),
+        id = $elem.attr('data-id');
+
+        $.confirm({
+            title   : 'Delete post',
+            message : 'Are you sure you want to flag this post as inappropriate?',
+            buttons : {
+                Cancel  : {
+                    class: 'cancel'
+                },
+                Confirm : {
+                    action: function(){
+                        // Remove item from feed
+                        var uri = '/files/ajax/forum.php?action=post.flag&id=' + id;
+                        $.getJSON(uri, function(data) {
+                            console.log(data);
+                            if (data.status) {
+                                $this.html("<i class='icon-flag'></i> Flagged").addClass('flagged').removeClass('flag');
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+
 
 
     $('a.karma').on('click', function(e) {
