@@ -18,7 +18,6 @@
     }
     margin: 0px;
 
-    background: #000000;
     background: rgba(0,0,0,0.8);
 
     #nav-extra-dropdown,
@@ -234,12 +233,13 @@
 
                     > ul {
                         display: block;
+                        background: $black;
                         z-index: 100;
                     }
 
                     > a {
                         text-decoration: none;
-                        color: $bright_green;
+                        color: $white;
                     }
                 }
 
