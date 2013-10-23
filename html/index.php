@@ -80,6 +80,15 @@
             $visible = true;
 ?>
                     <div class='col span_7 registration'>
+<?php
+        if (isset($_GET['request'])):
+?>
+                        <div class='row'>
+                            <?php include('elements/widgets/request.php'); ?>
+                        </div>
+<?php
+        endif;
+?>
                         <div class='row <?=$visible?'default-hidden hidden':'';?>'>
                             <h2>Login</h2>
                             <?php include('elements/widgets/login.php'); ?>

@@ -322,7 +322,7 @@
                 return "Username already in use";
 
             $pass = $_POST['reg_password'];
-            if (!isset($pass))
+            if (!isset($pass) || strlen($pass) < 5)
                 return "Invalid password";
             if ($pass !== $_POST['reg_password_2'])
                 return "Passwords don't match";
@@ -538,7 +538,83 @@
                 $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
             }
 
-            $this->app->awardMedal(11, $this->uid);         
+            $this->app->awardMedal(11, $this->uid);
+        }
+
+        public function setData($type, $value, $uid = null, $replace = false) {
+            if (!$uid)
+                $uid = $this->uid;
+
+            if ($replace) {
+                $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND `type` = :type');
+                $st->execute(array(':uid' => $uid, ':type' => $type));                
+            }
+
+            $st = $this->app->db->prepare('INSERT INTO users_data (`user_id`, `type`, `value`) VALUES (:uid, :type, :value)');
+            return $st->execute(array(':uid' => $uid, ':type' => $type, ':value' => $value));
+        }
+
+        public function request($user) {
+            if (strlen($user) < 3)
+                return "Details not found";
+
+            // Find users details
+            $st = $this->app->db->prepare('SELECT user_id, username, email, password
+                    FROM users
+                    WHERE username = :user OR email = :user
+                    LIMIT 1');
+            $st->execute(array(':user' => $user));
+            $row = $st->fetch();
+
+            if (!$row) {
+                return "Details not found";
+            }
+
+            if (!$row->password) {
+                return "OAuth only account";
+            }
+
+            $token = base64_encode(openssl_random_pseudo_bytes(32));
+            $this->setData('reset', $token, $row->user_id, true);
+
+            // Send email
+            $body = "We received a request for your HackThis!! account details.<br/><br/>Username: {$row->username}<br/>To reset your password, click on this link: <a href='http://www.hackthis.co.uk/?request={$token}'>http://www.hackthis.co.uk/?request={$token}</a><br/><br/>If you feel you have received this message in error, delete this email. Your password can only be reset via this email.";
+            $this->app->email->queue($row->email, "Password request", $body);
+
+            return true;
+        }
+
+        public function checkRequest($request) {
+            $st = $this->app->db->prepare('SELECT user_id
+                    FROM users_data
+                    WHERE `type` = "reset" AND `value` = :req AND `time` > date_sub(now(), interval 10 minute)
+                    LIMIT 1');
+            $st->execute(array(':req' => $request));
+            $row = $st->fetch();
+
+            return $row;
+        }
+
+        public function changePassword($pass, $pass2, $uid = null) {
+            if (!$uid)
+                $uid = $this->uid;
+
+            if (!isset($pass) || strlen($pass) < 5)
+                return "Invalid password";
+            if ($pass !== $pass2)
+                return "Passwords don't match";
+
+            $hash = crypt($pass, $this->salt());
+            $st = $this->app->db->prepare('UPDATE users SET password = :hash WHERE user_id = :uid LIMIT 1');
+            $status = $st->execute(array(':uid' => $uid, ':hash' => $hash));
+
+            if ($status) {
+                $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND `type` = "reset"');
+                $st->execute(array(':uid' => $uid));      
+                return true;
+            } else {
+                return "Something went wrong";
+            }
         }
     }
 ?>

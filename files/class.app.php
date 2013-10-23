@@ -32,6 +32,7 @@
 
             $this->stats = new stats($this);
             $this->feed = new feed($this);
+            $this->email = new email($this);
 
             // Create user object
             $this->user = new user($this);
