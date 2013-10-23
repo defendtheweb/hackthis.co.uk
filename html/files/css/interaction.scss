@@ -37,8 +37,10 @@ form {
 }
 
 label {
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     display: inline-block;
+    font-weight: bold;
+    color: $white;
 }
 
 textarea,

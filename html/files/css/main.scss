@@ -340,7 +340,10 @@ blockquote {
         background-color: #FBB829;
     }
     &.medal-green {
-        background-color: green;
+        background-color: $green;
+        &.medal-green-dark {
+            background-color: darken(green, 12%);
+        }
     }
 }
 
