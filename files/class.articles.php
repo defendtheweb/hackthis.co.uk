@@ -403,6 +403,13 @@
                 return "Something went horribly wrong";
             }
 
+            // Add to Feed
+            if ($result->category_id == 0)
+                $slug = '/news/' . $result->slug;
+            else
+                $slug = '/articles/' . $result->slug;
+            $this->app->feed->call($result->user_id, 'article', $result->slug, $slug);
+
             return true;
         }
 
@@ -577,6 +584,16 @@
 
             $st = $this->app->db->prepare('INSERT INTO articles_favourites (`article_id`, `user_id`) VALUES (:article_id, :uid)');
             $result = $st->execute(array(':article_id' => $article_id, ':uid' => $this->app->user->uid));
+
+            // Add to feed
+            $st = $this->app->db->prepare('SELECT articles.title, CONCAT(IF(articles.category_id = 0, "/news/", "/articles/"), articles.slug) AS uri
+                                    FROM articles
+                                    WHERE article_id = :article_id
+                                    LIMIT 1');
+            $st->execute(array(':article_id' => $article_id));
+            $article = $st->fetch();
+            $this->app->feed->call($this->app->user->username, 'favourite', $article->title, $article->uri);
+
             return $result;
         }
 
