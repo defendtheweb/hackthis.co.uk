@@ -27,7 +27,7 @@
         }
 
         if ($todo_position == count($todo)):
-            $app->awardMedal($medal_id, $app->user->uid);
+            $app->user->awardMedal('to-do');
         else:
 ?>
 
