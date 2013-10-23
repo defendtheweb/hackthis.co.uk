@@ -152,12 +152,14 @@ CREATE TABLE users_feed (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_donations (
+CREATE TABLE users_data (
     `user_id` int(7) NOT NULL,
-    `amount` DECIMAL(6,2),
+    `type` enum('donation', 'verification', 'reset') NOT NULL,
+    `value` text,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
+
 
 /*
     MEDALS
@@ -290,6 +292,17 @@ CREATE TABLE forum_posts (
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE forum_posts_audit (
+    `audit_id` int(7) NOT NULL AUTO_INCREMENT,
+    `post_id` int(6) NOT NULL,
+    `field` varchar(32) NOT NULL,
+    `old_value` TEXT NOT NULL,
+    `new_value` TEXT NOT NULL,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`audit_id`,`post_id`,`field`)-- ,
+    -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
+) ENGINE=InnoDB;
+
 CREATE TABLE forum_users (
     `user_id` int(7) NOT NULL,
     `thread_id` int(6) NOT NULL,
@@ -407,6 +420,19 @@ CREATE TABLE reports (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+
+/*
+    EMAIL TABLES
+*/
+CREATE TABLE email_queue (
+    `email_id` int(6) NOT NULL AUTO_INCREMENT,
+    `recipient` varchar(128) NOT NULL,
+    `subject` text NOT NULL,
+    `body` text NOT NULL,
+    `sent` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `status` tinyint(1) DEFAULT 0, -- 0 waiting, 1 sending, 2 sent, 3+ error (error * 3mins = wait)
+    PRIMARY KEY (`email_id`)
+) ENGINE=InnoDB;
 
 
 /*
@@ -598,6 +624,15 @@ DROP TRIGGER IF EXISTS insert_forum_post;
 CREATE TRIGGER insert_forum_post AFTER INSERT ON forum_posts FOR EACH ROW
     BEGIN
         CALL user_feed(NEW.author, 'forum_post', NEW.post_id);
+    END;
+
+DROP TRIGGER IF EXISTS forum_posts_update_audit;
+CREATE TRIGGER forum_posts_update_audit BEFORE UPDATE ON forum_posts FOR EACH ROW
+    BEGIN
+        IF OLD.body <> NEW.body THEN
+            INSERT INTO forum_posts_audit (post_id, field, old_value, new_value) 
+                VALUES(NEW.post_id, 'body', OLD.body, NEW.body);
+        END IF;
     END;
 
 

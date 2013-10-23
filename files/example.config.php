@@ -9,6 +9,12 @@
     $config['db']['password'] = 'pass';
     $config['db']['database'] = 'hackthis';
 
+    // SMTP configuration
+    $config['smtp']['host'] = '';
+    $config['smtp']['port'] = '';
+    $config['smtp']['username'] = '';
+    $config['smtp']['password'] = '';
+
     $config['git'] = 'anystring';
     
     $config['facebook']['secret'] = '';
