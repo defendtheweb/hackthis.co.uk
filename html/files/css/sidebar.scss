@@ -197,6 +197,19 @@ a.twitter-login {
                     display: inline-block;
                     width: 12px;
                     text-align: center;
+
+                    &.colour-1 {
+                        color: #693909;
+                    }
+                    &.colour-2 {
+                        color: silver;
+                    }
+                    &.colour-3 {
+                        color: #FBB829;
+                    }
+                    &.colour-4 {
+                        color: $green;
+                    }
                 }
 
                 a {

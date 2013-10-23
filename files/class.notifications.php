@@ -109,7 +109,7 @@
                     $res->slug = "{$res->slug}#post-{$res->item_id}";
                 } else if ($res->type == 'article') {
                     // uri, title
-                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT_WS('/', articles_categories.slug, articles.slug) AS slug
+                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS slug
                         FROM articles
                         LEFT JOIN articles_categories
                         ON articles_categories.category_id = articles.category_id
@@ -124,7 +124,7 @@
                         continue;
                     }
 
-                    $res->slug = "/{$res->slug}";
+                    $res->slug = "{$res->slug}";
                 }
 
                 // Parse title

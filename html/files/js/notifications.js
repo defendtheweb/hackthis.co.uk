@@ -20,7 +20,7 @@ $(function() {
     '        {{else type == "friend"}}'+
     '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="dark">and</span> <a href="/user/${username_2}">${username_2}</a>'+
     '        {{else type == "medal"}}'+
-    '            <i class="icon-trophy colour-${colour}"></i><a href="/user/${username}">${username}</a> <span class="dark">awarded</span> <a href="/settings/medals.php#${label.toLowerCase()}">${label}</a>'+
+    '            <i class="icon-trophy colour-${uri}"></i><a href="/settings/medals.php#${title.toLowerCase()}">${title}</a> <span class="dark">to</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "comment"}}'+
     '            <i class="icon-comments"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "forum_post"}}'+
@@ -28,11 +28,11 @@ $(function() {
     '        {{else type == "favourite"}}'+
     '            <i class="icon-heart"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "article"}}'+
-    '            <i class="icon-books"></i><a href="${uri}">${title}</a>'+
+    '            <i class="icon-books"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "news"}}'+
-    '            <i class="icon-article"></i><a href="${uri}">${title}</a>'+
+    '            <i class="icon-article"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "level"}}'+
-    '            <i class="icon-good"></i><a href="/user/${username}">${username}</a> <span class="dark">·</span> <a href="${uri}">${title}</a>'+
+    '            <i class="icon-good"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{/if}}'+
     '        </div>'+
     '        <div class="col span_6 time right"><time class="short" datetime="${timestamp}"></time></div>'+

@@ -423,6 +423,12 @@ POST;
 
                 $thread_id = $this->app->db->lastInsertId();
 
+                // Update slug
+                $slug = $section->slug . '/' . $this->app->utils->generateSlug($thread_id . '-' .$title);
+                $st = $this->app->db->prepare("UPDATE forum_threads SET `slug` = :slug WHERE thread_id = :tid");
+                $st->execute(array(':tid'=>$thread_id, ':slug'=>$slug));
+
+
                 $status = $this->newPost($thread_id, $body);
                 if (!$status) {
                     $this->app->db->rollback();

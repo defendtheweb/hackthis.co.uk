@@ -369,8 +369,10 @@
 
         public function acceptArticle($article_id) {
             // Find article
-            $sql = 'SELECT a.user_id, a.article_id AS id, a.category_id, a.title, a.body
+            $sql = 'SELECT a.user_id, a.article_id AS id, a.category_id, a.title, a.body, users.username
                     FROM articles_draft a
+                    INNER JOIN users
+                    ON users.user_id = a.user_id
                     WHERE a.article_id = :id';
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':id' => $article_id));
@@ -404,11 +406,17 @@
             }
 
             // Add to Feed
-            if ($result->category_id == 0)
+            if ($result->category_id == 0) {
                 $slug = '/news/' . $result->slug;
-            else
+                $type = 'news';
+            } else {
                 $slug = '/articles/' . $result->slug;
-            $this->app->feed->call($result->user_id, 'article', $result->slug, $slug);
+                $type = 'article';
+            }
+            $this->app->feed->call($result->username, $type, $result->title, $slug);
+
+            // Award medal to user
+            $this->app->user->awardMedal('writer', 2, $result->user_id);
 
             return true;
         }

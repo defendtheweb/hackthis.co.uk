@@ -149,6 +149,23 @@
             curl_exec($ch);
 
             curl_close ($ch);
+
+            // If article post on twitter
+            if ($type == 'article' || $type == 'news') {
+                require_once('vendor/twitteroauth.php');
+
+                $config = $this->app->config('twitter');
+                $tConsumerKey       = $config['key'];
+                $tConsumerSecret    = $config['secret'];
+                $tAccessToken       = $config['access-key'];
+                $tAccessTokenSecret = $config['access-secret'];
+                        
+                $tweet = new TwitterOAuth($tConsumerKey, $tConsumerSecret, $tAccessToken, $tAccessTokenSecret);
+                 
+                $message = "{$title} - https://www.hackthis.co.uk{$uri}" ;
+
+                //$msg = $tweet->post('statuses/update', array('status' => $message));
+            }
         }
 
         public function remove($id) {

@@ -53,7 +53,7 @@
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
                     IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
                     profile.gravatar, profile.img as `image`,
-                    activity.consecutive, activity.consecutive_most
+                    activity.consecutive, activity.consecutive_most, activity.joined
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -84,12 +84,21 @@
             else
                 $this->image = profile::getImg(null, 100);
 
-
+            // Check score and award medal?
             if ($this->score >= $this->app->max_score)
                 $this->score_perc = 100;
             else
                 $this->score_perc = $this->score/$this->app->max_score * 100;
 
+            if ($this->score >= 5000) {
+                $this->awardMedal('score', 3);
+            } else if ($this->score >= 2500) {
+                $this->awardMedal('score', 2);
+            } else if ($this->score >= 1000) {
+                $this->awardMedal('score');
+            }
+
+            // Check consecutive logins
             if ($this->consecutive <= 7)
                 $consecutive_target = 7;
             elseif ($this->consecutive <= 14)
@@ -101,6 +110,26 @@
                 $this->consecutive_perc = 100;
             else
                 $this->consecutive_perc = $this->consecutive/$consecutive_target * 100;
+
+            if ($this->consecutive == 7) {
+                $this->awardMedal('visits');
+            } else if ($this->consecutive == 14) {
+                $this->awardMedal('visits', 2);
+            } else if ($this->consecutive == 30) {
+                $this->awardMedal('visits', 3);
+            }
+
+            // Veteran medal
+            $joined = strtotime($this->joined);
+            $target = strtotime('-1 year');
+            if ($joined < $target) {
+                $this->awardMedal('veteran', 2);
+            } else {
+                $target = strtotime('-1 month');
+                if ($joined < $target) {
+                    $this->awardMedal('veteran', 1);
+                }
+            }
         }
 
         private function salt() {
@@ -479,7 +508,7 @@
             switch($changes['gender']) {
                 case 'm': $updates['gender'] = 'male'; break;
                 case 'f': $updates['gender'] = 'female'; break;
-                case 'a': $this->app->awardMedal(10, $this->uid); $updates['gender'] = 'alien'; break;
+                case 'a': $this->awardMedal('alien'); $updates['gender'] = 'alien'; break;
                 default: return "Invalid gender";
             }
             $updates['show_gender'] = (isset($changes['display_gender'])?'1':'0');
@@ -538,7 +567,7 @@
                 $result = $st->execute(array(':path' => $path, ':uid' => $this->uid));
             }
 
-            $this->app->awardMedal(11, $this->uid);
+            $this->awardMedal('Cheese');
         }
 
         public function setData($type, $value, $uid = null, $replace = false) {
@@ -615,6 +644,26 @@
             } else {
                 return "Something went wrong";
             }
+        }
+
+
+
+
+
+
+        public function awardMedal($label, $colour=1, $uid=null) {
+            if (!$uid)
+                $uid = $this->uid;
+
+            $st = $this->app->db->prepare('INSERT IGNORE INTO users_medals (`user_id`, `medal_id`) SELECT :uid, medal_id FROM medals WHERE label = :label AND colour_id = :colour');
+            $result = $st->execute(array(':label' => $label, ':colour' => $colour, ':uid' => $uid));
+
+            if ($st->rowCount() && $uid == $this->uid) {
+                // Add to feed
+                $this->app->feed->call($this->username, 'medal', $label, $colour);
+            }
+
+            return (bool) $result;
         }
     }
 ?>

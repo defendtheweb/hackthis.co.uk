@@ -100,14 +100,6 @@
             return true;
         }
 
-
-        public function awardMedal($medalId, $uid) {
-            $st = $this->db->prepare('INSERT IGNORE INTO users_medals (`user_id`, `medal_id`) VALUES (:uid, :medalId)');
-            $result = $st->execute(array(':medalId' => $medalId, ':uid' => $uid));
-
-            return (bool) $result;
-        }
-
         public function parse($text, $bbcode=true, $mentions=true) {
             return $this->utils->parse($text, $bbcode, $mentions);
         }
