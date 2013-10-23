@@ -13,7 +13,7 @@
 	putenv("TZ=Europe/London");
 
 	function __autoload($class) {
-		require_once 'class.'.$class.'.php';
+		@include_once 'class.'.$class.'.php';
 	}
 
 	// Setup app
