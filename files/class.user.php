@@ -665,5 +665,21 @@
 
             return (bool) $result;
         }
+
+        public function removeMedal($label, $colour=1, $uid=null) {
+            if (!$uid)
+                $uid = $this->uid;
+
+            $st = $this->app->db->prepare('SELECT medal_id FROM medals WHERE label = :label AND colour_id = :colour');
+            $st->execute(array(':label' => $label, ':colour' => $colour));
+            $result = $st->fetch();
+
+            if ($result) {
+                $st = $this->app->db->prepare('DELETE IGNORE FROM users_medals WHERE user_id = :uid AND medal_id = :mid');
+                $result = $st->execute(array(':uid' => $uid, ':mid' => $result->medal_id));
+            }
+
+            return (bool) $result;
+        }
     }
 ?>

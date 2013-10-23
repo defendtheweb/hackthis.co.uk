@@ -645,6 +645,22 @@ POST;
                 $thread = $st->fetch();
 
                 $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug);
+
+
+
+                // Check for forum medal
+                $st = $this->app->db->prepare('SELECT COUNT(post_id) AS posts FROM forum_posts
+                                   WHERE deleted = 0 AND author = :uid');
+                $st->execute(array(':uid' => $this->app->user->uid));
+                $res = $st->fetch();
+
+                if ($res->posts == 50) {
+                    $this->app->user->awardMedal('forum');
+                } else if ($res->posts == 100) {
+                    $this->app->user->awardMedal('forum', 2);
+                } else if ($res->posts == 1000) {
+                    $this->app->user->awardMedal('forum', 3);
+                }
             }
 
             return $status;
@@ -671,7 +687,23 @@ POST;
                                                SET deleted = 1
                                                WHERE post_id = :pid
                                                LIMIT 1");
-                $st->execute(array(':pid'=>$post_id));                
+                $st->execute(array(':pid'=>$post_id));
+
+                // Check for forum medal
+                $st = $this->app->db->prepare('SELECT COUNT(forum_posts.post_id) AS posts FROM forum_posts
+                                    INNER JOIN forum_posts tmp
+                                    ON tmp.post_id = :pid AND forum_posts.author = tmp.author
+                                    WHERE forum_posts.deleted = 0');
+                $st->execute(array(':pid'=>$post_id));
+                $res = $st->fetch();
+
+                if ($res->posts == 49) {
+                    $this->app->user->removeMedal('forum', 1);
+                } else if ($res->posts == 99) {
+                    $this->app->user->removeMedal('forum', 2);
+                } else if ($res->posts == 999) {
+                    $this->app->user->removeMedal('forum', 3);
+                }
             }
 
             return $status;
@@ -792,14 +824,16 @@ POST;
 
             if (!$edit)  {
                 //check when last post was made
-                $st = $this->app->db->prepare('SELECT author
+                $st = $this->app->db->prepare('SELECT author, posted
                                                FROM forum_posts
                                                WHERE author = :uid AND posted > NOW() - INTERVAL 15 SECOND
                                                ORDER BY posted DESC
                                                LIMIT 1');
                 $st->execute(array(':uid'=>$this->app->user->uid));
-                if ($st->fetch()) {
-                    $this->error = "You can only post a message once every 15 seconds, please wait and try again";
+                if ($res = $st->fetch()) {
+
+                    $left = 15 - (strtotime('now') - strtotime($res->posted));
+                    $this->error = "You can only post a message once every 15 seconds. Please wait {$left} seconds and try again.";
                     return false;
                 }
             }
