@@ -128,7 +128,7 @@ POST;
 POST;
 
             endif;
-            if ($post->user_id === $this->app->user->uid || $this->app->user->forum_priv > 1):
+            if ($post->user_id === $this->app->user->uid):
                 if (!$first):
 
                     $return .= <<< POST
@@ -141,6 +141,23 @@ POST;
 
                     $return .= <<< POST
                 <a href='?edit={$post->post_id}' class='button'><i class='icon-edit'></i> Edit post</a>
+
+POST;
+
+                endif;
+            elseif ($this->app->user->forum_priv > 1):
+                if (!$first):
+
+                    $return .= <<< POST
+                <a href='/admin/forum.php?post={$post->post_id}&edit' class='button icon'><i class='icon-edit'></i></a>
+                <a href='/admin/forum.php?post={$post->post_id}&remove' class='button icon'><i class='icon-trash'></i></a>
+
+POST;
+
+                else:
+
+                    $return .= <<< POST
+                <a href='/admin/forum.php?post={$post->post_id}&edit' class='button'><i class='icon-edit'></i> Edit post</a>
 
 POST;
 
@@ -654,15 +671,22 @@ POST;
             return $status;
         }
 
-        public function getPost($post_id, $thread_id) {
+        public function getPost($post_id, $thread_id=null) {
             if (!$this->app->user->loggedIn)
                 return false;
 
             if ($this->app->user->forum_priv >= 1) {
-                $st = $this->app->db->prepare("SELECT post_id, body, author
-                                               FROM forum_posts
-                                               WHERE post_id = :pid AND thread_id = :tid");
-                $st->execute(array(':pid'=>$post_id, ':tid'=>$thread_id));
+                if (isset($thread_id)) {
+                    $st = $this->app->db->prepare("SELECT post_id, body, author
+                                                   FROM forum_posts
+                                                   WHERE post_id = :pid AND thread_id = :tid AND deleted = 0");
+                    $st->execute(array(':pid'=>$post_id, ':tid'=>$thread_id));
+                } else {
+                    $st = $this->app->db->prepare("SELECT post_id, body, author
+                                                   FROM forum_posts
+                                                   WHERE post_id = :pid");
+                    $st->execute(array(':pid'=>$post_id));                    
+                }
                 $post = $st->fetch();
 
                 if (!$post)
