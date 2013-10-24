@@ -1,0 +1,21 @@
+.donate {
+    background: $bg;
+    padding: 10px;
+
+ 
+    input {
+        float: none !important;
+        min-width: 150px !important;
+        width: 25% !important;
+
+        &.button {
+            padding: 4px !important;
+            margin: 0 !important;
+        }
+    }   
+
+    label {
+        margin-top: 6px;
+        margin-bottom: 0;
+    }
+}

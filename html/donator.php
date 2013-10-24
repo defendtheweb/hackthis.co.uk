@@ -3,6 +3,24 @@
     require_once('header.php');
 
     $donations = new donations($app);
+
+    if (isset($_POST['donate'])) {
+        $amount = floatval(ltrim($_POST['donate'],"£"));
+
+        $_SESSION['donate_anon'] = (isset($_POST['anon']) && $_POST['anon']);
+
+        if ($amount)
+            $donations->makeTransaction($amount);
+    }
+
+    if (isset($_GET['token']) && isset($_GET['PayerID'])) {
+        $status = $donations->confirmPayment($_GET['token'], $_GET['PayerID']);
+        if ($status) {
+            $app->utils->message('Thank you for your donation, you are awesome!', 'good');
+        } else {
+            $app->utils->message('Something went wrong');
+        }
+    }
 ?>
     <h1>Become a Donator</h1>
     In order to support our growth and the costs of maintaining and developing new features for our color loving community, we've added some great extended features and are offering them as a thank you to those who support us with a small donation:<br/>
@@ -19,6 +37,14 @@
         <h2 class='no-margin'>£20 or more</h2>
         As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
     </p>
+    <br/>
+    <form method="POST" class='center donate'>
+        <input name="donate" class='tiny' placeholder="Amount to donate"/><br/>
+        <input type="submit" value="Donate" class="button"/><Br/>
+                <input type="checkbox" id="anon" name="anon"/>
+        <label for="anon">donate anonymously</label>
+    </form>
+
     <br/>
     <p>
         <h2 class='no-margin'>Recent Donations</h2>
