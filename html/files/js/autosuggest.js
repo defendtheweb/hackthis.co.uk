@@ -103,7 +103,7 @@ function searchsuggest() {
     }
 
     $.get('/files/ajax/autosuggest.php', {search: value}, function(data) {
-        console.log(data);
+        // console.log(data);
 
         if (data.status) {
             var suggest = $('<div>', {class: 'searchsuggest'});

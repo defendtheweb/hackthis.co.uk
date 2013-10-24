@@ -20,7 +20,7 @@ $(function() {
         watching = $(this).hasClass('post-unwatch');
 
         $.get('/files/ajax/forum.php', {action: 'watch', thread_id: thread_id, watch: !watching}, function(data) {
-            console.log(data);
+            // console.log(data);
         }, 'json');
 
         if (!watching) {
@@ -51,7 +51,7 @@ $(function() {
                             if (data.status) {
                                $elem.slideUp();
                                numbers =$($('.forum-pagination')[0]).clone().children().remove().end().text().match(/[0-9]+/g);
-                               console.log(numbers);
+                               // console.log(numbers);
                                $('.forum-pagination').text('Viewing '+(numbers[0]-1)+' replies - '+numbers[1]+' through '+(numbers[2]-1)+' (of '+(numbers[3]-1)+' total)')
                             }
                         });
@@ -79,7 +79,7 @@ $(function() {
                         // Remove item from feed
                         var uri = '/files/ajax/forum.php?action=post.flag&id=' + id;
                         $.getJSON(uri, function(data) {
-                            console.log(data);
+                            // console.log(data);
                             if (data.status) {
                                 $this.html("<i class='icon-flag'></i> Flagged").addClass('flagged').removeClass('flag');
                             }
