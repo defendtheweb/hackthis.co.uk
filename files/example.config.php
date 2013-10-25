@@ -19,6 +19,7 @@
     
     $config['facebook']['secret'] = '';
     $config['facebook']['public'] = '';
+    $config['facebook']['token'] = '';
 
     $config['twitter']['secret'] = '';
     $config['twitter']['public'] = '';

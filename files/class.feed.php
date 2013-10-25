@@ -150,22 +150,43 @@
 
             curl_close ($ch);
 
-            // If article post on twitter
-            if ($type == 'article' || $type == 'news') {
-                require_once('vendor/twitteroauth.php');
+            // If article post on twitter and facebook
+            // if ($type == 'article' || $type == 'news') {
+            //     // TWITTER
+            //     require_once('vendor/twitteroauth.php');
 
-                $config = $this->app->config('twitter');
-                $tConsumerKey       = $config['key'];
-                $tConsumerSecret    = $config['secret'];
-                $tAccessToken       = $config['access-key'];
-                $tAccessTokenSecret = $config['access-secret'];
+            //     $config = $this->app->config('twitter');
+            //     $tConsumerKey       = $config['key'];
+            //     $tConsumerSecret    = $config['secret'];
+            //     $tAccessToken       = $config['access-key'];
+            //     $tAccessTokenSecret = $config['access-secret'];
                         
-                $tweet = new TwitterOAuth($tConsumerKey, $tConsumerSecret, $tAccessToken, $tAccessTokenSecret);
+            //     $tweet = new TwitterOAuth($tConsumerKey, $tConsumerSecret, $tAccessToken, $tAccessTokenSecret);
                  
-                $message = "{$title} - https://www.hackthis.co.uk{$uri}" ;
+            //     $message = "{$title} - https://www.hackthis.co.uk{$uri}" ;
 
-                //$msg = $tweet->post('statuses/update', array('status' => $message));
-            }
+            //     $msg = $tweet->post('statuses/update', array('status' => $message));
+
+            //     // FACEBOOK
+            //     $config = $this->app->config('facebook');
+            //     $args = array(
+            //         'message' => "New article: {$title}",
+            //         'link' => "https://www.hackthis.co.uk{$uri}",
+            //         'access_token' => urlencode($config['token']),
+            //     );
+
+            //     $ch = curl_init();
+            //     $url = 'https://graph.facebook.com/me/feed';
+            //     curl_setopt($ch, CURLOPT_URL, $url);
+            //     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            //     curl_setopt($ch, CURLOPT_HEADER, false);
+            //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            //     curl_setopt($ch, CURLOPT_POST, true);
+            //     curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
+            //     $result = curl_exec($ch);
+            //     curl_close($ch);
+            // }
         }
 
         public function remove($id) {
