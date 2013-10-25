@@ -2,6 +2,7 @@
     class forum {
         private $app;
         private $error;
+        private $banned = array('ccv', 'sell');
 
         public function __construct($app) {
             $this->app = $app;
@@ -410,7 +411,16 @@ POST;
 
         public function newThread($section, $title, $body) {
             if (!$title || strlen($title) < 3)
-                return false;
+                return "Title must be longer than three characters";
+
+            // Check for spam - pretty much always new threads
+            $regex = "/(". implode('|', $this->banned) .")/i";
+            $matched = preg_match_all($regex, $title, $matches) + preg_match_all($regex, $body, $matches);
+            if ($matched > 3) {
+                // Could implement http://www.stopforumspam.com and ban user
+                return "Banned words found in content";
+            }
+
 
             $section_id = $section->id;
             $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
@@ -432,7 +442,7 @@ POST;
                 $status = $this->newPost($thread_id, $body);
                 if (!$status) {
                     $this->app->db->rollback();
-                    return false;
+                    return "Post content is too short";
                 }
                 // $st = $this->app->db->prepare("INSERT INTO forum_posts (`thread_id`, `body`, `author`)
                 //     VALUES (:thread_id, :body, :uid)");
@@ -441,7 +451,7 @@ POST;
                 $this->app->db->commit();
             } catch(PDOExecption $e) {
                 $this->app->db->rollback();
-                return false;
+                return "There was an error!";
             }
 
             // Setup GA event

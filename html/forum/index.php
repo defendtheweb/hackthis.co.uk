@@ -33,10 +33,11 @@
 
         if (!$section->child && isset($_GET['submit'])) {
             if (isset($_POST['title']) && isset($_POST['body'])) {
-                $new_slug = $forum->newThread($section, $_POST['title'], $_POST['body']);
+                $newThreadResult = $forum->newThread($section, $_POST['title'], $_POST['body']);
 
-                if ($new_slug)
-                    header('Location: '. $new_slug);
+                if (strpos($newThreadResult, '/') === 0) {
+                    header('Location: '. $newThreadResult);
+                }
             }
         }
 
@@ -62,9 +63,19 @@
 ?>    
                         <div class="col span_18 article-main">
 
-<?php if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child): ?>
+<?php
+    if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child):
+        if (isset($newThreadResult)):
+?>
+    <a class="new-thread button right" href="#"><i class="icon-caret-left"></i> Thread list</a>
+<?php
+        else:
+?>
     <a href='#' class='new-thread button right'><i class='icon-chat'></i> New thread</a>
-<?php endif; ?>
+<?php
+        endif;
+    endif;
+?>
 
                             <h1 class='no-margin'>Forum</h1>
                             <?=$breadcrumb;?><br/><br/>
@@ -73,7 +84,7 @@
         $app->utils->message('You have been banned from posting content in the forum', 'error');
     }
 ?>
-                            <div class='forum-container clearfix'>
+                            <div class='forum-container clearfix <?=isset($newThreadResult)?'new-thread':'';?>'>
                                 <div class='forum-topics'>
 <?php
     if (count($threads)):
@@ -145,6 +156,11 @@
 ?>
                                 </div>
                                 <div class='forum-new-thread'>
+<?php
+    if (isset($newThreadResult)) {
+        $app->utils->message($newThreadResult);
+    }
+?>
                                     <form method="POST" action="?submit">
                                         <label>Title:</label><br/>
                                         <input type="text" id='title' name='title' class='short'/>
