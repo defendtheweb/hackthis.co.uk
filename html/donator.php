@@ -1,6 +1,7 @@
 <?php
     $custom_css = array('faq.scss');
-    require_once('header.php');
+    $custom_js = array('faq.js');
+    require_once('init.php');
 
     $donations = new donations($app);
 
@@ -10,8 +11,10 @@
         $_SESSION['donate_anon'] = (isset($_POST['anon']) && $_POST['anon']);
 
         if ($amount)
-            $donations->makeTransaction($amount);
+            $donations->makeTransaction($amount, $_POST['size']);
     }
+
+    require_once('header.php');
 
     if (isset($_GET['token']) && isset($_GET['PayerID'])) {
         $status = $donations->confirmPayment($_GET['token'], $_GET['PayerID']);
@@ -23,7 +26,7 @@
     }
 ?>
     <h1>Become a Donator</h1>
-    In order to support our growth and the costs of maintaining and developing new features for our color loving community, we've added some great extended features and are offering them as a thank you to those who support us with a small donation:<br/>
+    In order to support our growth and the costs of maintaining and developing new features, we've added some perks and are offering them as a thank you to those who support us with a small donation:<br/>
     <p>
         <h2 class='no-margin'>£1 or more</h2>
         Get yourself listed on our donator hall of fame.
@@ -40,8 +43,18 @@
     <br/>
     <form method="POST" class='center donate'>
         <input name="donate" class='tiny' placeholder="Amount to donate"/><br/>
+        <div class='donate-perk hide'>
+            <label style="display: inline-block; width: 25%; min-width: 160px; text-align: left; margin-top: 0; margin-bottom: 4px" for="size">T-Shirt size</label><br/>
+            <select class='tiny' id="size" name="size">
+                <option value="s">Small</option> 
+                <option value="m" selected="selected">Medium</option>
+                <option value="l">Large</option>
+                <option value="xl">XLarge</option>
+                <option value="xxl">XXLarge</option>
+            </select>
+        </div>
         <input type="submit" value="Donate" class="button"/><Br/>
-                <input type="checkbox" id="anon" name="anon"/>
+        <input type="checkbox" id="anon" name="anon"/>
         <label for="anon">donate anonymously</label>
     </form>
 
@@ -62,7 +75,7 @@
     foreach($donators as $donation):
 ?>
                 <tr>
-                    <td><?=$app->utils->userLink($donation->username);?></td>
+                    <td><?=($donation->username)?$app->utils->userLink($donation->username):'Anonymous';?></td>
                     <td>£<?=$donation->amount;?></td>
                     <td><time datetime="<?=date('c', strtotime($donation->time));?>"><?=$app->utils->timeSince($donation->time);?></time></td>
                 </tr>

@@ -1,6 +1,7 @@
 <?php
     class donations {
         private $app;
+        private $sizes = array('s', 'm', 'l', 'xl', 'xxl');
 
         public function __construct($app) {
             $this->app = $app;
@@ -21,7 +22,23 @@
 
 
 
-        public function makeTransaction($amount) {
+        public function makeTransaction($amount, $size) {
+            $items = '{
+                        "quantity": 1,
+                        "name": "Donation",
+                        "price": "'.number_format($amount,2).'",
+                        "currency": "GBP"
+                    }';
+
+            if ($amount >= 20 && in_array($size, $this->sizes)) {
+                $items .= ', {
+                        "quantity": 1,
+                        "name": "Free T-Shirt, size '.strtoupper($size).'",
+                        "price": "0.00",
+                        "currency": "GBP"
+                    }';
+            }
+
             $config = $this->app->config('paypal');
 
             // Get bearer token
@@ -84,19 +101,21 @@
                     "total":"'.number_format($amount,2).'",
                     "currency":"GBP"
                   },
-                  "description":"HackThis!! donation"
+                  "description":"HackThis!! donation",
+                  "item_list": {
+                    "items": ['.$items.']
+                  }
                 }
               ]
             }';
             $options[CURLOPT_CUSTOMREQUEST] = 'POST';
 
-            print_r($options[CURLOPT_POSTFIELDS]);
-            echo "<Br/><Br/>";
-
             curl_setopt_array($ch, $options);
 
 
             $response = curl_exec($ch);
+            print_r($response);
+
             $header = substr($response, 0, curl_getinfo($ch,CURLINFO_HEADER_SIZE));
             $body = json_decode(substr($response, curl_getinfo($ch,CURLINFO_HEADER_SIZE)));
 
@@ -153,6 +172,10 @@
                 $st = $this->app->db->prepare('INSERT INTO users_donations (`user_id`, `amount`, `id`)
                     VALUES (:uid, :amount, :id)');
                 $result = $st->execute(array(':uid' => $this->app->user->uid, ':amount' => $amount, ':id' => $id));
+            } else {
+                $st = $this->app->db->prepare('INSERT INTO users_donations (`user_id`, `amount`, `id`)
+                    VALUES (:uid, :amount, :id)');
+                $result = $st->execute(array(':uid' => null, ':amount' => $amount, ':id' => $id));
             }
 
             if ($amount >= 5) {
