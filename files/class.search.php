@@ -17,8 +17,9 @@
             $this->lastSearch = $q;
 
             $articles = $this->searchArticles($q);
+            $forum = $this->searchForum($q);
             $users = $this->searchUsers($q);
-            return array('articles'=>$articles, 'users'=>$users);
+            return array('articles'=>$articles, 'forum'=>$forum, 'users'=>$users);
         }
 
         private function searchArticles($term) {
@@ -70,6 +71,66 @@
                     GROUP BY a.article_id
                     ORDER BY search.`matches` DESC, `submitted` DESC
                     LIMIT 5";
+
+            $st = $this->app->db->prepare($sql);
+            $st->execute($searchValues);
+            $result = $st->fetchAll();
+
+            if (!count($result))
+                return false;
+
+            return $result;
+        }
+
+        private function searchForum($term) {
+            // Build search query
+            preg_match_all('/(?<!")\b[a-zA-Z0-9"@._-]+\b|(?<=")\b[^"]+/', $term, $terms, PREG_PATTERN_ORDER);
+            if (!count($terms[0]))
+                return false;
+
+            $searchQuery = '';
+            for ($i = 0; $i < count($terms[0]); $i++) {
+                $term = strtolower($terms[0][$i]);
+                
+                //Check if word is valid
+                if (strlen($term) <= 2 || in_array($term, $this->disallowedWords))
+                    continue;
+                
+                $searchQuery .= "(( LENGTH(title) - LENGTH(REPLACE(LOWER(title), :{$i}, '')) )
+                   / CHAR_LENGTH(:{$i}))
+                 + ";
+                $searchValues[":$i"] = $term;
+            }
+            $searchQuery = substr($searchQuery, 0, -2);
+
+            if (!strlen($searchQuery))
+                return false;
+
+            $sql = "SELECT SQL_CALC_FOUND_ROWS threads.thread_id AS id, users.username, threads.title, threads.slug, threads.closed, users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
+                latest.username AS latest_author, search.matches, posts.voices
+                    FROM forum_threads threads
+                    LEFT JOIN users
+                    ON users.user_id = threads.owner
+                    LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count`, Count(Distinct author) AS `voices` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
+                    ON posts.thread_id = threads.thread_id
+                    LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0) latest
+                    ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
+                    INNER JOIN (
+                         SELECT
+                            thread_id,
+                           SUM(
+                             {$searchQuery}
+                           ) AS matches
+                         FROM `forum_threads` 
+                         GROUP BY `thread_id`
+                         HAVING matches > 0
+                       ) search
+                    ON search.thread_id = threads.thread_id
+                    WHERE threads.deleted = 0
+                    GROUP BY threads.thread_id
+                    ORDER BY search.`matches` DESC, latest DESC
+                    LIMIT 5";
+
 
             $st = $this->app->db->prepare($sql);
             $st->execute($searchValues);

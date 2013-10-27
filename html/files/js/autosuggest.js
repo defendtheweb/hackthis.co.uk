@@ -97,7 +97,7 @@ function searchsuggest() {
     var $this = $('.nav-search input'),
     value = $this[0].value;
 
-    if (value.length <= 3) {
+    if (value.length < 3) {
         $this.parent().siblings('.searchsuggest').remove();
         return false;
     }
@@ -128,6 +128,18 @@ function searchsuggest() {
                 len = articles.length < 5 ? articles.length : 5;
                 for (var i = 0; i < len; ++i) {
                     link = $('<a>', {text: articles[i].title, href: '/articles/'+articles[i].slug});
+                    suggest.append(link);
+                }
+            }
+
+            if (data.data.forum) {
+                var forum = data.data.forum;
+                title = $('<h3>', {text: 'Forum'});
+                suggest.append(title);
+
+                len = forum.length < 5 ? forum.length : 5;
+                for (var i = 0; i < len; ++i) {
+                    link = $('<a>', {text: forum[i].title, href: '/forum/'+forum[i].slug});
                     suggest.append(link);
                 }
             }
