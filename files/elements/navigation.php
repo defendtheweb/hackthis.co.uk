@@ -87,6 +87,7 @@
                                 <li><a href='/'>about</a></li>
                             </ul>
                         </li>
+                        <li><a href='/donator.php'>Donate</a></li>
                         <li><a href='/'>contact us</a></li>
 
 <?php
