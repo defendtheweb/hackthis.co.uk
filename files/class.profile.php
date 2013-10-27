@@ -28,7 +28,7 @@
                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                     IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
-                    forum_posts.posts, articles.articles, (medals.medal_id IS NOT NULL) AS donator
+                    forum_posts.posts, articles.articles, (medals.medal_id IS NOT NULL) AS donator, karma.karma
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -44,6 +44,8 @@
                     ON u.user_id = priv.user_id
                     LEFT JOIN users_medals medals
                     ON u.user_id = medals.user_id AND medals.medal_id = 19
+                    LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
+                    ON karma.author = u.user_id
                     WHERE u.username = :profile");
                 $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);

@@ -7,4 +7,7 @@ Disallow: /levels/extras/userpass.txt
 Disallow: /users/
 Disallow: /ctf/8/php/*
 
+User-agent: Mediapartners-Google
+Disallow:
+
 Sitemap: https://www.hackthis.co.uk/sitemap.xml

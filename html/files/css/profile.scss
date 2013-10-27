@@ -382,3 +382,9 @@ ul.users-list {
         }
     }
 }
+
+@media (max-width: 768px) {
+    .profile .progress-container {
+        margin-bottom: 12px;
+    }
+}
