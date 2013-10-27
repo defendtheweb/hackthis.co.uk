@@ -15,10 +15,10 @@
                     <div class='col span_3'>
                         <ul class='plain'>
                             <li><h3>Links</h3></li>
-                            <li><a href='#'>Home</a></li>
-                            <li><a href='#'>News</a></li>
-                            <li><a href='#'>Articles</a></li>
-                            <li><a href='#'>Forum</a></li>
+                            <li><a href='/'>Home</a></li>
+                            <li><a href='/news'>News</a></li>
+                            <li><a href='/articles'>Articles</a></li>
+                            <li><a href='/forum'>Forum</a></li>
                         </ul>
                     </div>
                     <div class='col span_3'>
