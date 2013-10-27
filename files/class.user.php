@@ -6,6 +6,7 @@
 
         public function __construct($app) {
             $this->app = $app;
+            $app->user = $this;
 
             //Check if user is logging in
             if (isset($_GET['logout'])) {
@@ -51,7 +52,7 @@
             $this->app->stats->users_activity($this);
 
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
-                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv,
+                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv, verified,
                     profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most, activity.joined
                     FROM users u
@@ -292,8 +293,8 @@
                                 $gender = NULL;
                         }
 
-                        $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `name`, `gender`)
-                                VALUES (:uid, :name, :gender)');
+                        $st = $this->app->db->prepare('INSERT INTO users_profile (`user_id`, `name`, `show_name`, `gender`)
+                                VALUES (:uid, :name, 0, :gender)');
                         $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
                         if (!$result) {
                             $this->login_error = 'Error registering';
@@ -381,6 +382,10 @@
             // Login user
             $this->loggedIn = true;
             $this->uid = $uid;
+            $this->email = $email;
+
+            // Send email
+            $this->sendVerficationEmail(true);
 
             // Add to feed
             $this->app->feed->call($username, 'join');
@@ -583,6 +588,21 @@
             return $st->execute(array(':uid' => $uid, ':type' => $type, ':value' => $value));
         }
 
+        public function checkData($type, $value, $interval=false) {
+            $sql = 'SELECT user_id
+                    FROM users_data
+                    WHERE `type` = :type AND `value` = :value AND user_id = :uid';
+            if ($interval)
+                $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
+            $sql .= ' LIMIT 1';
+
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':type' => $type, ':uid' => $this->uid, ':value' => $value));
+            $row = $st->fetch();
+
+            return $row;
+        }
+
         public function request($user) {
             if (strlen($user) < 3)
                 return "Details not found";
@@ -603,7 +623,7 @@
                 return "OAuth only account";
             }
 
-            $token = base64_encode(openssl_random_pseudo_bytes(32));
+            $token = md5(openssl_random_pseudo_bytes(32));
             $this->setData('reset', $token, $row->user_id, true);
 
             // Send email
@@ -614,14 +634,7 @@
         }
 
         public function checkRequest($request) {
-            $st = $this->app->db->prepare('SELECT user_id
-                    FROM users_data
-                    WHERE `type` = "reset" AND `value` = :req AND `time` > date_sub(now(), interval 10 minute)
-                    LIMIT 1');
-            $st->execute(array(':req' => $request));
-            $row = $st->fetch();
-
-            return $row;
+            return $this->checkData("reset", $request, true);
         }
 
         public function changePassword($pass, $pass2, $uid = null) {
@@ -646,7 +659,31 @@
             }
         }
 
+        public function sendVerficationEmail($new=false) {
+            $token = md5(openssl_random_pseudo_bytes(32));
+            $this->setData('verification', $token, $this->uid, true);
 
+            // Send email
+            $body = "Click on the following link to verify your e-mail address:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/settings/account.php?verify={$token}'>https://www.hackthis.co.uk/settings/account.php?verify={$token}</a>";
+
+            if ($new) {
+                $body = "Thank you for signing up for a <a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/'>HackThis!!</a> account.<br/><br/>" . $body;
+            }
+
+            $this->app->email->queue($this->email, "Confirm your email address", $body);
+
+            return true;
+        }
+
+        public function confirmVerification($code) {
+            if ($this->checkData("verification", $code)) {
+                $st = $this->app->db->prepare('UPDATE users SET verified = 1 WHERE user_id = :uid LIMIT 1');
+                $st->execute(array(':uid' => $this->uid));
+                return true;
+            } else {
+                return false;
+            }
+        }
 
 
 

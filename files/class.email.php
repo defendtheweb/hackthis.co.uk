@@ -7,15 +7,22 @@
         }
 
         public function queue($recipient, $subject, $body) {
-            $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `subject`, `body`) VALUES (:rec, :sub, :body)');
-            return $st->execute(array(':rec' => $recipient, ':sub' => $subject, ':body' => $body));
+            if ($this->app->user->loggedIn) {
+                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `user_id`, `subject`, `body`) VALUES (:rec, :uid, :sub, :body)');
+                return $st->execute(array(':rec' => $recipient, ':uid' => $this->app->user->uid, ':sub' => $subject, ':body' => $body));
+            } else {
+                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `subject`, `body`) VALUES (:rec, :sub, :body)');
+                return $st->execute(array(':rec' => $recipient, ':sub' => $subject, ':body' => $body));
+            }
         }
 
         public function getNext() {
-            $st = $this->app->db->prepare("SELECT *
+            $st = $this->app->db->prepare("SELECT email_queue.*, users.username
                      FROM email_queue
-                     WHERE (`status` = 0 OR (`status` > 2 AND `status`< 9)) AND date_add(sent, INTERVAL (status-2)*5 MINUTE) < NOW()
-                     ORDER BY `sent` ASC
+                     LEFT JOIN users
+                     ON users.user_id = email_queue.user_id
+                     WHERE (email_queue.`status` = 0 OR (email_queue.`status` > 2 AND email_queue.`status`< 9)) AND date_add(email_queue.sent, INTERVAL (status-2)*5 MINUTE) < NOW()
+                     ORDER BY email_queue.`sent` ASC
                      LIMIT 1");
             $st->execute();
             $email = $st->fetch();

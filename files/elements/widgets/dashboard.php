@@ -2,9 +2,10 @@
     // To do list
     $medal_id = 20;
     $todo_position = 0;
-    $todo = array("Complete <a href='/levels/main/1'>Main 1</a>",
+    $todo = array("<a href='/settings/account.php'>Verify email address</a>",
+                  "Complete <a href='/levels/main/1'>Main 1</a>",
                   "Upload a <a href='/settings/image'>profile image</a>");
-    
+
     // Does user have todo medal?
     $st = $app->db->prepare('SELECT medal_id FROM users_medals
                              WHERE user_id = :uid AND medal_id = :medal_id');
@@ -12,17 +13,22 @@
     $result = $st->fetch();
 
     if (!$result):
-        $levels = $app->levels->getList();
-        if ($levels[0]->completed) {
+        // Had user verified email
+        if ($app->user->verified) {
             $todo_position = 1;
 
-            // Does user have cheese medal?
-            $st = $app->db->prepare('SELECT medal_id FROM users_medals
-                                     WHERE user_id = :uid AND medal_id = :medal_id');
-            $st->execute(array(':uid' => $app->user->uid, ':medal_id' => 11));
-            $result = $st->fetch();
-            if ($result) {
+            $levels = $app->levels->getList();
+            if ($levels[0]->completed) {
                 $todo_position = 2;
+
+                // Does user have cheese medal?
+                $st = $app->db->prepare('SELECT medal_id FROM users_medals
+                                         WHERE user_id = :uid AND medal_id = :medal_id');
+                $st->execute(array(':uid' => $app->user->uid, ':medal_id' => 11));
+                $result = $st->fetch();
+                if ($result) {
+                    $todo_position = 3;
+                }
             }
         }
 
@@ -48,6 +54,13 @@
                     <article class="widget dashboard">
                         <section class="fluid clr center">
                             <h1 class='lower'><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></h1>
+                            <script>
+                                // Resize username
+                                while( $('.dashboard h1 a').width() > $('.dashboard').width() ) {
+                                    $('.dashboard h1 a').css('font-size', (parseInt($('.dashboard h1 a').css('font-size')) - 1) + "px" );
+                                }
+                            </script>
+
                             <div class='profile-pic'>
                                 <img src='<?=$app->user->image;?>'/>
                                 <a href='/settings/image' class='upload'>

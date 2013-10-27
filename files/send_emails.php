@@ -26,7 +26,16 @@
     do {
         $email = $app->email->getNext();
         if ($email) {
-            print_r($email);
+            // build body
+            $template = file_get_contents('elements/email_template.html', true);
+
+            $vars = array(
+                '{username}' => $email->username,
+                '{message}' => $email->body
+            );
+
+            $email->body = str_replace(array_keys($vars), $vars, $template);
+
             $app->email->send($email);
         }
     } while ($email);
