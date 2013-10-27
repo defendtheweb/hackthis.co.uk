@@ -88,7 +88,7 @@
         <strong>Moderator</strong>
 <?php endif; ?>
 
-        <section class='fluid clr'>
+        <section class='clr'>
             <div class='col span_7 clr'>
                 <div class="image">
 <?php if ($profile->donator): ?>
@@ -126,7 +126,7 @@
             </div>
         </section>
 
-        <section class='profile-extra row fluid'>
+        <section class='profile-extra row'>
             <div class='col span_7 clr'>
 <?php
     /* MEDALS */
@@ -191,7 +191,7 @@
 
     if ($profile->lastfm):
 ?>
-                <section class='row music'>
+                <section class='row music mobile-hide'>
                     <a class='right hide-external icon-hover' href='http://www.last.fm/'><i class='icon-lastfm'></i></a>
                     <h2><a href='http://www.last.fm/user/<?=$profile->lastfm;?>'>Music</a></h2>
                     <div data-user="<?=$profile->lastfm;?>" class="profile-music loading">
@@ -208,10 +208,10 @@
                 <section class='profile-details row fluid' data-graph-start='<?=date('d/m/Y', strtotime($profile->joined));?>' data-graph-end='<?=date('d/m/Y');?>'>
                     <ul class='clr line1'>
 <?php
-    $profile->printItem("Score", $profile->score);
-    $profile->printItem("<a href='#' class='show-posts'>Posts</a>", $profile->posts);
-    $profile->printItem("<a href='#' class='show-articles'>Articles</a>", $profile->articles);
-    $profile->printItem("<a href='' class='show-karma'>Karma</a>", 0);
+    $profile->printItem("<a href='#' class='show-levels' title='Click to view more detail'>Score</a>", $profile->score);
+    $profile->printItem("<a href='#' class='show-posts' title='Click to view more detail'>Posts</a>", $profile->posts);
+    $profile->printItem("<a href='#' class='show-articles' title='Click to view more detail'>Articles</a>", $profile->articles);
+    $profile->printItem("Karma", $profile->karma > 0 ? $profile->karma : $profile->karma);
 ?>
                     </ul>
                     <ul class='clr'>
