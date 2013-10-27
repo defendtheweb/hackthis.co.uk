@@ -49,12 +49,12 @@ CREATE TABLE users_levels_data (
 CREATE TABLE users_profile (
     `user_id` int(7) NOT NULL,
     `name` varchar(32),
-    `show_name` tinyint(1) DEFAULT 0,
+    `show_name` tinyint(1) DEFAULT 1,
     `img` varchar(32),
     `gravatar` tinyint(1) DEFAULT 0,
     `country` tinyint(3) UNSIGNED,
     `dob` DATE,
-    `show_dob` tinyint(1),
+    `show_dob` tinyint(1) DEFAULT 0,
     `gender` enum('male','female','alien'),
     `show_gender` tinyint(1) DEFAULT 0,
     `show_email` tinyint(1) DEFAULT 0,
@@ -153,10 +153,12 @@ CREATE TABLE users_feed (
 ) ENGINE=InnoDB;
 
 CREATE TABLE users_data (
+    `data_id` int(4)  NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('donation', 'verification', 'reset') NOT NULL,
     `value` text,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`data_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
@@ -317,7 +319,7 @@ CREATE TABLE users_forum (
     `user_id` int(7) NOT NULL,
     `post_id` int(6) NOT NULL,
     `karma` tinyint(1) DEFAULT 0,
-    `flag` timestamp,
+    `flag` timestamp DEFAULT 0,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`, `post_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
@@ -426,12 +428,14 @@ CREATE TABLE reports (
 */
 CREATE TABLE email_queue (
     `email_id` int(6) NOT NULL AUTO_INCREMENT,
+    `user_id` int(7),
     `recipient` varchar(128) NOT NULL,
     `subject` text NOT NULL,
     `body` text NOT NULL,
     `sent` timestamp DEFAULT CURRENT_TIMESTAMP,
     `status` tinyint(1) DEFAULT 0, -- 0 waiting, 1 sending, 2 sent, 3+ error (error * 3mins = wait)
-    PRIMARY KEY (`email_id`)
+    PRIMARY KEY (`email_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
 
