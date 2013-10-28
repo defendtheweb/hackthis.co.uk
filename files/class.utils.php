@@ -334,5 +334,24 @@
                             {$msg}
                         </div>";
         }
+
+        function get_browser() {
+            $visitor_user_agent = $_SERVER["HTTP_USER_AGENT"];
+            if (stristr($visitor_user_agent, 'MSIE') && !stristr($visitor_user_agent, 'Opera')) {
+                $bname = 'IE';
+            } elseif (stristr($visitor_user_agent, 'Firefox')) {
+                $bname = "Firefox";
+            } elseif (stristr($visitor_user_agent, 'Chrome')) {
+                $bname = 'Chrome';
+            } elseif (stristr($visitor_user_agent, 'Safari')) {
+                $bname = 'Safari';
+            } elseif (stristr($visitor_user_agent, 'Opera')) {
+                $bname = 'Opera';
+            } else {
+                $bname = "Unknown";
+            }
+
+            return $bname;
+        }
     }
 ?>
