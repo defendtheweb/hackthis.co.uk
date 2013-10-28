@@ -30,7 +30,7 @@
             $template = file_get_contents('elements/email_template.html', true);
 
             $vars = array(
-                '{username}' => $email->username,
+                '{greeting}' => $email->username?"Hello " . $email->username:"Hello",
                 '{message}' => $email->body
             );
 

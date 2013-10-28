@@ -6,10 +6,13 @@
             $this->app = $app;
         }
 
-        public function queue($recipient, $subject, $body) {
+        public function queue($recipient, $subject, $body, $uid=false) {
             if ($this->app->user->loggedIn) {
+                if ($uid === false)
+                    $uid = $this->app->user->uid;
+
                 $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `user_id`, `subject`, `body`) VALUES (:rec, :uid, :sub, :body)');
-                return $st->execute(array(':rec' => $recipient, ':uid' => $this->app->user->uid, ':sub' => $subject, ':body' => $body));
+                return $st->execute(array(':rec' => $recipient, ':uid' => $uid, ':sub' => $subject, ':body' => $body));
             } else {
                 $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `subject`, `body`) VALUES (:rec, :sub, :body)');
                 return $st->execute(array(':rec' => $recipient, ':sub' => $subject, ':body' => $body));
