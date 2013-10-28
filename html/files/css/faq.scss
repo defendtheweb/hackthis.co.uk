@@ -19,3 +19,12 @@
         margin-bottom: 0;
     }
 }
+
+
+table tr td.new {
+    color: red;
+}
+
+table tr td.old {
+    color: $green;
+}

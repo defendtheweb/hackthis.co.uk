@@ -1,8 +1,6 @@
 <?php
     $custom_css = array('faq.scss');
     require_once('header.php');
-
-    $donations = new donations($app);
 ?>
 
     <h1>Frequently Asked Questions</h1>

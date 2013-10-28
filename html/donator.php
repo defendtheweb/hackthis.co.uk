@@ -44,7 +44,7 @@
     <form method="POST" class='center donate'>
         <input name="donate" class='tiny' placeholder="Amount to donate"/><br/>
         <div class='donate-perk hide'>
-            <label style="display: inline-block; width: 25%; min-width: 160px; text-align: left; margin-top: 0; margin-bottom: 4px" for="size">T-Shirt size</label><br/>
+            <label style="display: inline-block; width: 25%; min-width: 160px; text-align: left; margin-top: 0; margin-bottom: 4px" for="size">Shirt size</label><br/>
             <select class='tiny' id="size" name="size">
                 <option value="s">Small</option> 
                 <option value="m" selected="selected">Medium</option>
