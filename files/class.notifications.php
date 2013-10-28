@@ -125,6 +125,8 @@
                     }
 
                     $res->slug = "{$res->slug}";
+                } else if ($res->type == 'mod_contact') {
+                    $res->ticket = $res->item_id;
                 }
 
                 // Parse title
@@ -197,6 +199,9 @@
             } else if ($event->type === 'friend_accepted') {
                 $icon = 'addfriend';
                 $text = $this->app->utils->userLink($event->username) . ' accepted your friend request';
+            } else if ($event->type == 'mod_contact') {
+                $icon = 'envelope-alt';
+                $text = $this->app->utils->userLink($event->username) . ' replied to your <a href="/contact?view='.$event->ticket.'">ticket</a>';
             } else {
                 return 'N/A';
             }

@@ -118,6 +118,7 @@ CREATE TABLE users_activity (
     `login_count` int(5) DEFAULT 0,
     `consecutive` int(4) DEFAULT 0,
     `consecutive_most` int(4) DEFAULT 0,
+    `days` int(5) DEFAULT 0,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
@@ -129,7 +130,7 @@ CREATE TABLE users_activity (
 CREATE TABLE users_notifications (
     `notification_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
-    `type` enum('friend','friend_accepted', 'medal','forum_post','forum_mention','comment_reply','comment_mention','article') NOT NULL,
+    `type` enum('friend','friend_accepted', 'medal','forum_post','forum_mention','comment_reply','comment_mention','article', 'mod_contact') NOT NULL,
     `from_id` int(7),
     `item_id` int(7),
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -411,7 +412,7 @@ CREATE TABLE articles_favourites (
 /*
     MODERATOR TABLES
 */
-CREATE TABLE reports (
+CREATE TABLE mod_reports (
     `report_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('comment', 'article', 'user', 'forum', 'level') NOT NULL,
@@ -422,13 +423,24 @@ CREATE TABLE reports (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE mod_contact (
+    `message_id` int(6) NOT NULL AUTO_INCREMENT,
+    `parent_id` int(6),
+    `user_id` int(7) NOT NULL,
+    `from` varchar(128),
+    `body` text,
+    `javascript` tinyint(1) DEFAULT NULL,
+    `browser` varchar(32) DEFAULT NULL,
+    `sent` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`message_id`)
+) ENGINE=InnoDB;
 
 /*
     EMAIL TABLES
 */
 CREATE TABLE email_queue (
     `email_id` int(6) NOT NULL AUTO_INCREMENT,
-    `user_id` int(7),
+    `user_id` int(7) DEFAULT NULL,
     `recipient` varchar(128) NOT NULL,
     `subject` text NOT NULL,
     `body` text NOT NULL,
@@ -471,7 +483,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM users_notifications WHERE OLD.user_id = user_id OR OLD.user_id = from_id;
         DELETE FROM users_medals WHERE OLD.user_id = user_id;
         DELETE FROM users_levels WHERE OLD.user_id = user_id;
-        DELETE FROM reports WHERE OLD.user_id = user_id;
+        DELETE FROM mod_reports WHERE OLD.user_id = user_id;
         DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
         DELETE FROM articles_draft WHERE OLD.user_id = user_id;
         DELETE FROM forum_karma WHERE OLD.user_id = user_id;

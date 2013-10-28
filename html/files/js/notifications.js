@@ -318,6 +318,8 @@ $(function() {
                             '            <a href="/user/${username}">${username}<a/> mentioned you in <a href="${slug}">${title}</a><br/>'+
                             '    {{else type == "article"}}'+
                             '            Your article has been published <a href="${slug}">${title}</a><br/>'+
+                            '    {{else type == "mod_contact"}}'+
+                            '            <a href="/user/${username}">${username}</a> replied to your <a href="/contact?view=${ticket}">ticket</a><br/>'+
                             '    {{/if}}'+
                             '    </li>'+
                             '</tmpl>';
