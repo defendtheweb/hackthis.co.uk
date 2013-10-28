@@ -250,7 +250,9 @@
             
             $result = array("status"=>true);
 
-            if ($type == 'posts') {
+            if ($type == 'levels') {
+                $result['data'] = $app->levels->getList();
+            } else if ($type == 'posts') {
                 $st = $app->db->prepare('SELECT date_format(posted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM forum_posts
                     WHERE deleted = 0 AND author = :uid
                     GROUP BY `d`

@@ -120,11 +120,13 @@ $(function() {
                     </div>\
                 </div>').hide();
 
-    $details.find('.show-posts, .show-articles, .show-karma').on('click', function(e) {
+    $details.find('.show-levels, .show-posts, .show-articles').on('click', function(e) {
         e.preventDefault();
 
         var type = '';
-        if ($(this).hasClass('show-posts'))
+        if ($(this).hasClass('show-levels'))
+            type = 'levels'
+        else if ($(this).hasClass('show-posts'))
             type = 'posts'
         else
             type = 'articles'
@@ -135,35 +137,62 @@ $(function() {
                 $.getJSON(uri, function(data) {
                     $details.find('.loading').hide();
                     $details.find('.profile-stats-extra').slideDown();
-                    drawChart(data['graph']);
 
-                    if (data['data'] && data['data'].length) {
-                        data_page = 1;
-                        $ul = writeList(data['data'], data_page);
-                        
-                        $more = $details.find('.profile-stats-extra .more');
-                        $more.append($ul);
+                    if (data['graph']) {
+                        $details.find('#profile-stats-chart').show();
+                        drawChart(data['graph']);
 
-                        $('<span>', {class: 'dark', html: 'Showing <span class="indicator">1 - ' + ((data['data'].length > 10)?'10':data['data'].length) + '</span> of ' + data['data'].length}).appendTo($more);
+                        if (data['data'] && data['data'].length) {
+                            data_page = 1;
+                            $ul = writeList(data['data'], data_page);
+                            
+                            $more = $details.find('.profile-stats-extra .more');
+                            $more.append($ul);
 
-                        if (data['data'].length > 10) {
-                            $('<a>', {text: 'NEXT', class: 'button right', href: '#'}).on('click', function(e) {
-                                e.preventDefault();
-                                $list = writeList(data['data'], ++data_page);
-                                if ($list)
-                                    $details.find('.profile-stats-extra .more ul').replaceWith($list);
-                                else
-                                    data_page--;
-                            }).appendTo($more);
-                            $('<a>', {text: 'PREV', class: 'button right', href: '#'}).on('click', function(e) {
-                                e.preventDefault();
-                                $list = writeList(data['data'], --data_page);
-                                if ($list)
-                                    $details.find('.profile-stats-extra .more ul').replaceWith($list);
-                                else
-                                    data_page++;
-                            }).appendTo($more);
+                            $('<span>', {class: 'dark', html: 'Showing <span class="indicator">1 - ' + ((data['data'].length > 10)?'10':data['data'].length) + '</span> of ' + data['data'].length}).appendTo($more);
+
+                            if (data['data'].length > 10) {
+                                $('<a>', {text: 'NEXT', class: 'button right', href: '#'}).on('click', function(e) {
+                                    e.preventDefault();
+                                    $list = writeList(data['data'], ++data_page);
+                                    if ($list)
+                                        $details.find('.profile-stats-extra .more ul').replaceWith($list);
+                                    else
+                                        data_page--;
+                                }).appendTo($more);
+                                $('<a>', {text: 'PREV', class: 'button right', href: '#'}).on('click', function(e) {
+                                    e.preventDefault();
+                                    $list = writeList(data['data'], --data_page);
+                                    if ($list)
+                                        $details.find('.profile-stats-extra .more ul').replaceWith($list);
+                                    else
+                                        data_page++;
+                                }).appendTo($more);
+                            }
                         }
+                    } else {
+                        $details.find('#profile-stats-chart').hide();
+
+                        var $ul = $('<ul>'),
+                            $li = null,
+                            group = null;
+
+                        for (var i = 0; i < data.data.length; i++) {
+                            var d = data.data[i];
+                            if (group != d.group) {
+                                $ul.append($li);
+
+                                group = d.group;
+                                $li = $('<li>', {text: d.group});
+                                $li.append($('<ul>'));
+                            }
+
+                            $a = $('<a>', {href: d.uri, text: d.name, class: 'progress_'+d.completed});
+                            $li.find('ul').append($('<li>').append($a));
+                        }
+                        $ul.append($li);
+
+                        $details.find('.profile-stats-extra .more').append($ul);
                     }
                 }); 
             });

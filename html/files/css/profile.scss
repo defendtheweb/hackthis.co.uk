@@ -188,7 +188,7 @@
             .profile-stats-extra {
                 display: none;
 
-                ul li {
+                .more > ul > li {
                     padding: 6px;
                     &:nth-child(odd) {
                         background: $light_bg;
@@ -200,8 +200,21 @@
                     }
                 }
 
-                ul {
-                    margin-bottom: 10px;
+                .more > ul > li > ul {
+                    display: inline-block;
+                    margin-left: 10px;
+
+                    > li {
+                        display: inline;
+                        padding-right: 6px;
+
+                        a.progress_1 {
+                            color: green;
+                        }
+                        a.progress_0 {
+                            color: red;
+                        }
+                    }
                 }
             }
 
