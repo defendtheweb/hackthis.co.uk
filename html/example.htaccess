@@ -13,6 +13,7 @@ RewriteEngine On
 RewriteRule ^terms/?$ /terms.php [L]
 RewriteRule ^privacy/?$ /privacy.php [L]
 RewriteRule ^faq/?$ /faq.php [L]
+RewriteRule ^contact/?$ /contact.php [L]
 
 #IMAGES
 RewriteRule ^users/images/(.+)/(.+)/(.+)$ /files/vendor/slir/?h=$1&c=$2&i=$3 [L]

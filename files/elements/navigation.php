@@ -80,15 +80,14 @@
 ?>
                             </ul>
                         </li>
-                        <li><a href='/irc/'>irc</a>
-                            <ul>
-                                <li><a href='/'>Chat Online</a></li>
-                                <li><a href='/'>stats</a></li>
-                                <li><a href='/'>about</a></li>
-                            </ul>
-                        </li>
+<?php
+    if ($app->user->loggedIn):
+?>
                         <li><a href='/donator.php'>Donate</a></li>
-                        <li><a href='/'>contact us</a></li>
+<?php
+    endif;
+?>
+                        <li><a href='/contact'>contact us</a></li>
 
 <?php
     if ($app->user->loggedIn):
