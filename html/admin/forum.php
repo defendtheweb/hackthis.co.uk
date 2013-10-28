@@ -31,7 +31,7 @@
 
             if (isset($updated) && $updated === true):
                 // Add to reports
-                $st = $app->db->prepare("INSERT INTO reports (`user_id`, `type`, `about`, `subject`, `body`)
+                $st = $app->db->prepare("INSERT INTO mod_reports (`user_id`, `type`, `about`, `subject`, `body`)
                         VALUES (:uid, 'forum', :post_id, 'Edited post', :body)");
                 $st->execute(array(':post_id'=>$post->post_id, ':uid'=>$app->user->uid, ':body'=>$_POST['reason']));
 
