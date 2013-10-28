@@ -24,7 +24,11 @@
 
     if (!$thread->closed) {
         if (isset($_GET['submit']) && isset($_POST['body'])) {
-            $submitted = $forum->newPost($thread->id, $_POST['body']);
+            if ($app->checkCSRFKey("forumPost", $_POST['token'])) {
+                $submitted = $forum->newPost($thread->id, $_POST['body']);
+            } else {
+                $submitted = false;
+            }
 
             if ($submitted) {
                 header('Location: '. strtok($_SERVER["REQUEST_URI"], '?') . '?submitted#latest');
@@ -146,29 +150,32 @@
         }
     endif; // End reply count check
 
-    if ($app->user->loggedIn && $app->user->forum_priv > 0 && !$thread->closed):
+    if ($thread_page == $thread_page_count):
+        if ($app->user->loggedIn && $app->user->forum_priv > 0 && !$thread->closed):
 ?>
 
                             <form id="submit" class='forum-thread-reply' method="POST" action="?submit#submit">
 <?php
-    if (isset($_GET['submit']) && isset($_POST['body'])) {
-        $app->utils->message($forum->getError(), 'error');
-        $wysiwyg_text = $_POST['body'];
-    } else if (isset($_GET['submitted'])) {
-        $app->utils->message('Posted submitted', 'good');
-    }
-    include('elements/wysiwyg.php');
+        if (isset($_GET['submit']) && isset($_POST['body'])) {
+            $app->utils->message($forum->getError(), 'error');
+            $wysiwyg_text = $_POST['body'];
+        } else if (isset($_GET['submitted'])) {
+            $app->utils->message('Posted submitted', 'good');
+        }
+        include('elements/wysiwyg.php');
 ?>
+                                <input type="hidden" value="<?=$app->generateCSRFKey("forumPost");?>" name="token">
                                 <input type='submit' class='button' value='Submit'/>
                             </form>
 
 <?php
-    elseif ($thread->closed):
-        $app->utils->message('This thread has been closed, you can not add new posts', 'error');
-    elseif ($app->user->loggedIn):
-        $app->utils->message('You have been banned from posting content in the forum', 'error');
-    else:
-        $app->utils->message('You must be logged in to reply to this topic', 'info');
+        elseif ($thread->closed):
+            $app->utils->message('This thread has been closed, you can not add new posts', 'error');
+        elseif ($app->user->loggedIn):
+            $app->utils->message('You have been banned from posting content in the forum', 'error');
+        else:
+            $app->utils->message('You must be logged in to reply to this topic', 'info');
+        endif;
     endif;
 ?>
 
