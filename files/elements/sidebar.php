@@ -6,6 +6,9 @@
         if ($app->user->loggedIn) {
             include('widgets/dashboard.php');
             include('widgets/feed.php');
+            include('widgets/scoreboard.php');
+        } else {
+            include('widgets/welcome.php');
         }
         include('widgets/adverts.php');
 ?>
