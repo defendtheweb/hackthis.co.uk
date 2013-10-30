@@ -8,19 +8,22 @@
 
         public function parse($text, $bbcode=true, $mentions=true, $twitterfy=true) {
             if ($bbcode) {
-                $text = $this->app->bbcode->Parse($text);
-                if ($mentions) {
-                    $text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
-                }
-
-                if ($twitterfy) {
-                    $text = preg_replace_callback("/\[tweet\](.*?)\[\/tweet\]/is", array($this, 'twitterfy_callback'), $text);
-                }
+                $this->app->bbcode->SetPlainMode(false);
             } else {
-                //$text = preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text); // Strip bbcode
-                $text = trim(preg_replace('|[[\/\!]*?[^\[\]]*?]|si', '', $text)); // Strip bbcode
-                $text = htmlspecialchars($text);
-                //$text = nl2br($text);
+                $this->app->bbcode->SetPlainMode(true);
+            }
+
+            $text = $this->app->bbcode->Parse($text);
+            if ($mentions) {
+                $text = preg_replace_callback("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", array($this, 'mentions_callback'), $text);
+            }
+
+            if ($twitterfy) {
+                $text = preg_replace_callback("/\[tweet\](.*?)\[\/tweet\]/is", array($this, 'twitterfy_callback'), $text);
+            }
+
+            if (!$bbcode) {
+                $text = $this->app->bbcode->UnHTMLEncode(strip_tags($text));
             }
 
             return $text;
