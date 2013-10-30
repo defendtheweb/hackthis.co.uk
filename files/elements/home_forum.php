@@ -2,7 +2,13 @@
     $latest = $app->forum->getLatest();
 ?>
 
-<table class='home-module forum-latest dark'>
+<table class='home-module forum-latest home-module-light'>
+    <thead>
+        <th >Latest forum posts</th>
+        <th class='mobile-hide'>Started by</th>
+        <th class='mobile-hide'>Latest</th>
+        <th class='text-right'>Replies</th>
+    </thead>
     <tbody>
 <?php
     foreach($latest AS $post):

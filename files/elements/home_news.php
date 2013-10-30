@@ -5,7 +5,7 @@
     $latestNews->body = $app->parse($latestNews->body, false);
 ?>
 
-<div class='home-module home-module-light home-news clr'>
+<div class='home-module home-news clr'>
     <?php
         $share = new stdClass();
         $share->item = $latestNews->id;

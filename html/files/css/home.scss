@@ -82,13 +82,22 @@
 
 .forum-latest {
     padding: 0;
+ 
+    td, th {
+        padding: 4px 6px;
+    }
 
-    tr {
+    thead {
+        background: $bg;
+        border-left: 2px solid $bg;
+    }
+
+    tbody tr {
         border-left: 2px solid #141414;
 
         &:hover {
-            background: $light_bg;
-            border-left: 2px solid #1e1e1e;
+            background: $bg;
+            border-left: 2px solid lighten(#141414, 10%);
         }
 
         &.highlight {
@@ -113,10 +122,6 @@
             &:hover {
                 border-left: 2px solid lighten($red, 25%);
             }
-        }
-    
-        td {
-            padding: 4px 6px;
         }
     }
 
