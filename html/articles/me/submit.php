@@ -3,7 +3,7 @@
     $custom_js = array('articles.js', 'highlight.js');
     if (!defined("_SIDEBAR")) define("_SIDEBAR", false);
 
-    require_once('header.php');
+    require_once('init.php');
 
     if (isset($_GET['id']) && $_GET['action'] == 'edit') {
         $myArticle = true;
@@ -29,6 +29,8 @@
             }
         }
     }
+
+    require_once('header.php');
 ?>
                     <section class="row">
 <?php
