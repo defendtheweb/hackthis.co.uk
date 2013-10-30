@@ -131,6 +131,11 @@
                     $this->awardMedal('veteran', 1);
                 }
             }
+
+            // Is donator?
+            $st = $this->app->db->prepare('SELECT medal_id FROM medals WHERE label = :label');
+            $st->execute(array(':label' => 'donator'));
+            $this->donator = (boolean) $st->fetch();
         }
 
         private function salt() {

@@ -69,11 +69,14 @@
         echo '        '.$currentLevel->data['code']->pos2 . "\n";
     }
 ?>
-        <div id="header-wrap" class="container">
+        <div id="header-wrap" class="container clr">
             <header>
                 <div class="col span_11 banner">
                     <a href='/'>&nbsp;</a>
                 </div>
+<?php
+    if (!$app->user->loggedIn || !$app->user->donator):
+?>
                 <div class="col span_13 advert">
                     <script type="text/javascript"><!--
                         google_ad_client = "ca-pub-1120564121036240";
@@ -85,7 +88,9 @@
                     </script>
                     <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
                 </div>
-                <br style='clear: both'/>
+<?php
+    endif;
+?>
             </header>
         </div>
 <?php

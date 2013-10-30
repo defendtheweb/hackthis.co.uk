@@ -1,3 +1,6 @@
+<?php
+    if (!$app->user->loggedIn || !$app->user->donator):
+?>
                     <article class="widget adverts">
                         <h1>Adverts</h1>
                         <div class="center">
@@ -12,3 +15,6 @@
                             <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
                         </div>
                     </article>
+<?php
+    endif;
+?>
