@@ -15,6 +15,12 @@
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':uid' => $user->uid));
             $res = $st->fetch();
+
+            $newday = false;
+            if ($res->diff >= 1) {
+                $newday = true;
+            }
+
             if ($res->diff == -1)
                 $consecutive = 1;
             else if ($res->diff == 0)
@@ -26,6 +32,9 @@
             if ($login) {
                 $sql .= ', last_login = current_login, current_login = NOW(), login_count = login_count + 1';
             }
+            if ($newday) {
+                $sql .= ', days = days + 1';
+            }
             if ($consecutive === false) {
                 $sql .= ', consecutive = 0';
             } else if ($consecutive === 1) {
@@ -36,6 +45,19 @@
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':user_id' => $user->uid));
+        }
+
+
+        public function getLeaderboard($type="score", $limit=10) {
+            $sql = 'SELECT username, score
+                    FROM users
+                    ORDER BY score DESC
+                    LIMIT 10';
+            $st = $this->app->db->prepare($sql);
+            $st->execute();
+            $board = $st->fetchAll();
+
+            return $board;
         }
     }
 ?>
