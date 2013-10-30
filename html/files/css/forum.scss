@@ -98,39 +98,6 @@
                 border: none;
             }
 
-            &.sticky {
-                background: $bg;
-                border-left: 2px solid $bg;
-
-                &.new {
-                    border-left: 2px solid lighten($bg, 20%);
-                }
-            }
-
-            &.highlight {
-                border-left: 2px solid $green;
-
-                &:hover {
-                    border-left: 2px solid lighten($green, 25%);
-                }
-            }
-
-            &.new {
-                border-left: 2px solid $bg;
-
-                &:hover {
-                    border-left: 2px solid lighten($bg, 20%);
-                }
-            }
-
-            &.closed {
-                border-left: 2px solid $red;
-
-                &:hover {
-                    border-left: 2px solid lighten($red, 25%);
-                }
-            }
-
             .thread-sections, .thread-blurb {
                 margin-top: 2px;
                 o-text-overflow: ellipsis;
@@ -141,6 +108,48 @@
             }
         }
     }
+}
+
+.forum-topics .forum-section li.row, .key li {
+    &.sticky {
+        background: $bg;
+        border-left: 2px solid $bg;
+
+        &.new {
+            border-left: 2px solid lighten($bg, 20%);
+        }
+    }
+
+    &.highlight {
+        border-left: 2px solid $green;
+
+        &:hover {
+            border-left: 2px solid lighten($green, 25%);
+        }
+    }
+
+    &.new {
+        border-left: 2px solid $bg;
+
+        &:hover {
+            border-left: 2px solid lighten($bg, 20%);
+        }
+    }
+
+    &.closed {
+        border-left: 2px solid $red;
+
+        &:hover {
+            border-left: 2px solid lighten($red, 25%);
+        }
+    }
+}
+
+.key li {
+    float: left;
+    margin-top: 16px;
+    margin-right: 12px;
+    padding: 2px 6px;
 }
 
 

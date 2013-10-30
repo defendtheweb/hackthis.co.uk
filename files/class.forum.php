@@ -301,9 +301,6 @@ POST;
             if (isset($section->title4))
                 $crumb .= '<a href="/forum/'.$section->slug4.'">'.$section->title4.'</a> ' . $divide . ' ';
 
-            if (!$thread)
-                $crumb .= '<span class="white">Latest threads</span>';
-
             return $crumb;
         }
 

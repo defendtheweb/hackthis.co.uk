@@ -14,6 +14,7 @@
     $viewing_thread = true;
 
     $thread_page_count = ceil($thread->replies/10);
+    $thread_page_count = $thread_page_count == 0?1:$thread_page_count;
 
     if (isset($_GET['submitted']) || isset($_GET['latest'])) {
         if ($thread_page != $thread_page_count) {
@@ -106,6 +107,7 @@
 
 <?php
     if (count($thread->posts)):
+
 ?>
 
                             <div class='forum-pagination'>
@@ -120,6 +122,11 @@
 ?>
                                 Viewing <?=count($thread->posts);?> repl<?=(count($thread->posts) == 1)?'y':'ies';?> - <?=$thread->p_start;?> through <?=$thread->p_end;?> (of <?=$thread->replies;?> total)
                             </div>
+<?php
+        if (!$thread->closed && $thread->question->user_id === $app->user->uid) {
+            $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread")."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
+        }
+?>
                             <ul class='post-list reply-list'>
 <?php 
         $n = 0;
@@ -145,9 +152,6 @@
                             </div>
 
 <?php
-        if (!$thread->closed && $thread->question->user_id === $app->user->uid) {
-            $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread")."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
-        }
     endif; // End reply count check
 
     if ($thread_page == $thread_page_count):

@@ -49,6 +49,25 @@
 
     $breadcrumb = $forum->getBreadcrumb($section);
 
+    if (isset($_GET['watching'])) {
+        $breadcrumb .= '<span class="white">Watched threads</span>';
+        if (isset($_GET['popular']) || isset($_GET['no-replies'])) {
+            $breadcrumb .= ' & ';
+        }
+    }
+    if (isset($_GET['popular'])) {
+        $breadcrumb .= '<span class="white">Most popular threads</span>';
+        if (isset($_GET['no-replies'])) {
+            $breadcrumb .= ' & ';
+        }
+    }
+    if (isset($_GET['no-replies'])) {
+        $breadcrumb .= '<span class="white">Threads with no replies</span>';
+    }
+    if (!isset($_GET['no-replies']) && !isset($_GET['popular']) && !isset($_GET['watching'])) {
+        $breadcrumb .= '<span class="white">Latest threads</span>';
+    }
+
     $threads = $forum->getThreads($section, $page, isset($_GET['no-replies']), isset($_GET['popular']), isset($_GET['watching']));
 
     $threads_count = $threads->count;
@@ -74,6 +93,10 @@
     <a href='#' class='new-thread button right'><i class='icon-chat'></i> New thread</a>
 <?php
         endif;
+    else:
+?>
+    <a class='button button-disabled right hint--left' data-hint="New threads can only be started in sub-sections"><i class='icon-chat'></i> New thread</a>
+<?php
     endif;
 ?>
 
@@ -89,22 +112,22 @@
 <?php
     if (count($threads)):
 ?>
-                                <ul class='fluid'>
-                                    <li class='forum-topic-header row'>
-                                        <div class="section_info col span_16">Thread</div>
-                                        <div class="section_replies col span_2">Replies</div>
-                                        <div class="section_voices col span_2">Voices</div>
-                                        <div class="section_latest col span_4">Latest</div>        
-                                    </li>
-                                    <li class='forum-section'>
-                                        <ul>
+                                    <ul class='fluid'>
+                                        <li class='forum-topic-header row'>
+                                            <div class="section_info col span_16">Thread</div>
+                                            <div class="section_replies col span_2">Replies</div>
+                                            <div class="section_voices col span_2">Voices</div>
+                                            <div class="section_latest col span_4">Latest</div>        
+                                        </li>
+                                        <li class='forum-section'>
+                                            <ul>
 
 <?php
         foreach($threads AS $thread):
 ?>
-                                            <li class='row <?=($app->user->loggedIn)?(!$thread->viewed)?($thread->watching)?'highlight':'new':'':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
-                                                <div class="section_info col span_16">
-                                                    <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
+                                                <li class='row <?=($app->user->loggedIn)?(!$thread->viewed)?($thread->watching)?'highlight':'new':'':'';?> <?=($thread->closed)?'closed':'';?> <?=($thread->sticky)?'sticky':'';?>'>
+                                                    <div class="section_info col span_16">
+                                                        <a class='strong' href="/forum/<?=$thread->slug;?>"><?=$thread->title;?></a>
 <?php
             if (ceil($thread->count/10) > 1) {
                 $pagination = new stdClass();
@@ -116,30 +139,30 @@
             $threadBreadcrumb = $forum->getThreadBreadcrumb($section, $thread);
             if ($threadBreadcrumb):
 ?>
-                                                    <div class='small thread-sections dark'><?=$threadBreadcrumb;?></div>
+                                                        <div class='small thread-sections dark'><?=$threadBreadcrumb;?></div>
 <?php
             else:
 ?>
-                                                    <div class='small thread-blurb dark'>
-                                                        <?=$thread->blurb;?>
-                                                    </div>
+                                                        <div class='small thread-blurb dark'>
+                                                            <?=$thread->blurb;?>
+                                                        </div>
 <?php
             endif;
 ?>
-                                                </div>
-                                                <div class="section_replies col span_2"><?=$thread->count;?></div>
-                                                <div class="section_voices col span_2"><?=$thread->voices;?></div>
-                                                <div class="section_latest col span_4">
-                                                    <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($thread->latest));?>"><?=$app->utils->timeSince($thread->latest);?></time><br/>
-                                                    <a class='strong' href="/user/<?=$thread->latest_author;?>"><?=$thread->latest_author;?></a>
-                                                </div>
-                                            </li>
+                                                    </div>
+                                                    <div class="section_replies col span_2"><?=$thread->count;?></div>
+                                                    <div class="section_voices col span_2"><?=$thread->voices;?></div>
+                                                    <div class="section_latest col span_4">
+                                                        <time itemprop='datePublished' pubdate datetime="<?=date('c', strtotime($thread->latest));?>"><?=$app->utils->timeSince($thread->latest);?></time><br/>
+                                                        <a class='strong' href="/user/<?=$thread->latest_author;?>"><?=$thread->latest_author;?></a>
+                                                    </div>
+                                                </li>
 <?php
         endforeach;
 ?>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                            </ul>
+                                        </li>
+                                    </ul>
 <?php
         else:
             $app->utils->message('No threads found, consider starting your own', 'info');
@@ -154,6 +177,12 @@
             include('elements/pagination.php');
         }
 ?>
+                                    <ul class='key plain clr'>
+                                        <li class='new'>New post</li>
+                                        <li class='highlight'>New post in watched thread</li>
+                                        <li class='closed'>Thread closed</li>
+                                        <li class='sticky'>Sticky thread</li>
+                                    </ul>
                                 </div>
                                 <div class='forum-new-thread'>
 <?php
