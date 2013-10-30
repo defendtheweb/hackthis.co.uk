@@ -127,10 +127,12 @@
 ?>
         <a href='/contact' class='button right'>Back to tickets</a>
         <h1>Ticket #<?=$id;?></h1>
-        <table class='striped'>
+        <table class='striped ticket-conversation'>
             <tbody>
 <?php
+            $n = 0;
             foreach($messages AS $message):
+                $n++;
 ?> 
                     <tr>
                         <td>
@@ -141,7 +143,27 @@
 <?php else: ?>
                             <?=$app->utils->parse($message->from, false);?>
 <?php endif; ?>
-                            </strong><br/>
+                            </strong>
+<?php
+    if ($n == 1):
+        if ($message->browser == "Firefox")
+            echo "<i class='icon-firefox-2'></i>";
+        else if ($message->browser == "IE")
+            echo "<i class='icon-IE'></i>";
+        else if ($message->browser == "Chrome")
+            echo "<i class='icon-chrome'></i>";
+        else if ($message->browser == "Opera")
+            echo "<i class='icon-opera'></i>";
+        else if ($message->browser == "Safari")
+            echo "<i class='icon-safari'></i>";
+
+        if ($message->javascript == 1)
+            echo "<i class='icon-code js-on'></i>";
+        else if ($message->javascript == 0)
+            echo "<i class='icon-code js-off'></i>";
+    endif;
+?>
+                            <br/>
                             <?=$app->utils->parse($message->body);?>
                         </td>
                     </tr>
@@ -209,7 +231,14 @@
 
         // Get existing conversations
         if ($app->user->loggedIn) {
-            $st = $app->db->prepare("SELECT `message_id`, `body`, `sent` FROM mod_contact WHERE `from` = :uid AND parent_id IS NULL ORDER BY `sent` DESC");
+            $st = $app->db->prepare("SELECT `message_id`, `body`, mod_contact.`sent`, COALESCE(latest.`sent`, mod_contact.`sent`) AS `last_sent`, COALESCE(`replies`, 0) AS `replies`, IF(mod_contact.`from` = COALESCE(latest.`from`,mod_contact.`from`),0,1) AS `new`
+                                     FROM mod_contact
+                                     LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact GROUP BY parent_id) replies
+                                     ON replies.parent_id = mod_contact.message_id
+                                     LEFT JOIN (SELECT `from`, `sent`, parent_id FROM mod_contact ORDER BY `sent` DESC LIMIT 1) latest
+                                     ON latest.parent_id = mod_contact.message_id
+                                     WHERE mod_contact.`from` = :uid AND mod_contact.parent_id IS NULL
+                                     ORDER BY `last_sent` DESC");
             $st->execute(array(':uid'=>$app->user->uid));
             $previous = $st->fetchAll();
         }
@@ -257,14 +286,15 @@
             <br/>
             <h2>Previous tickets</h2>
             <table class='striped'>
-                <thead><th>Message</th><th>Sent</th></thead>
+                <thead><th>Message</th><th></th><th>Latest</th></thead>
                 <tbody>
 <?php
             foreach($previous AS $message):
 ?> 
                     <tr>
                         <td><a href='?view=<?=$message->message_id;?>'><?=substr($app->utils->parse($message->body, false), 0, 50);?></a></td>
-                        <td><time datetime="<?=date('c', strtotime($message->sent));?>"><?=$app->utils->timeSince($message->sent);?></time></td>
+                        <td class='<?=$message->new?'new':'old';?>'><?=$message->replies;?></td>
+                        <td><time datetime="<?=date('c', strtotime($message->last_sent));?>"><?=$app->utils->timeSince($message->last_sent);?></time></td>
                     </tr>
 <?php
             endforeach;

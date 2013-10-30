@@ -28,3 +28,41 @@ table tr td.new {
 table tr td.old {
     color: $green;
 }
+
+table.ticket-conversation {
+    td {
+        padding: 6px;
+
+        i {
+            margin-left: 4px;
+
+            &.icon-firefox-2 {
+                color: #E66000;
+            }
+
+            &.icon-chrome {
+                color: #4DB749;
+            }
+
+            &.icon-safari {
+                color: grey;
+            }
+
+            &.icon-opera {
+                color: #F21A1A;
+            }
+
+            &.icon-IE {
+                color: #00AADB;
+            }
+
+            &.js-on {
+                color: green;
+            }
+
+            &.js-off {
+                color: red;
+            }
+        }
+    }
+}
