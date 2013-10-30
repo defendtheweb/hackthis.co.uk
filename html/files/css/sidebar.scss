@@ -241,6 +241,53 @@ a.twitter-login {
             }
         }
     }
+
+    &.scoreboard {
+        li {
+            list-style: none;
+            overflow: hidden;
+            margin: 2px 0;
+            font-size: 0.9em;
+            padding: 0 4px;
+
+            span.position {
+                text-align: right;
+                margin-right: 10px;
+                width: 12px;
+                display: inline-block;
+            }
+
+            span.score {
+                float: right;
+            }
+
+            &.first, &.second, &.third {
+                img {
+                    margin-right: 4px;
+                }
+
+                background: $lighter_bg;
+                padding: 4px;
+
+                span.position {
+                    margin-right: 10px;
+                    display: inline-block;
+                }
+            }
+
+            &.second, &.third {
+                img {
+                    margin-right: 6px;
+                }
+
+                background: $light_bg;
+            }
+
+            &.third {
+                background: $bg;
+            }
+        }
+    }
 }
 
 .no-js .widget.feed,
