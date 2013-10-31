@@ -8,9 +8,11 @@
             $this->app = $app;
         }
 
-        public function getList() {
-            if (isset($this->list))
-                return $this->list;
+        public function getList($uid=null) {
+            if (!$uid) {
+                if (isset($this->list))
+                    return $this->list;
+            }
 
             $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
@@ -21,11 +23,15 @@
                     LEFT JOIN users_levels
                     ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
                     ORDER BY levels_groups.order ASC, levels.level_id ASC');
-            $st->bindValue(':uid', $this->app->user->uid);
+            $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
             $st->execute();
-            $this->list = $st->fetchAll();
+            $list = $st->fetchAll();
 
-            return $this->list;
+            if (!$uid) {
+                $this->list = $list;
+            }
+
+            return $list;
         }
 
         public function getGroups() {
