@@ -25,7 +25,7 @@
                 </div>
 <?php
         if (isset($_GET['deleted'])) {
-            $app->utils->message('Your account has been successfully deleted.<br/><br/>Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
+            $app->utils->message('Your account has been successfully deleted. Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
         }
 ?>
                 <div class='row landing'>

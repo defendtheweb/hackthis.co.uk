@@ -9,6 +9,31 @@ $(function() {
         $($('.features .blurb')[i]).transition({ opacity: 1, delay: (i*delay) }, 2000);
     }
 
+
+    // Registration
+    $('#reg_email').on('blur', function() {
+        $(this).mailcheck({
+            suggested: function(element, suggestion) {
+                $('#reg_email_suggestion').html("<a href='#'>Did you mean <span>"+suggestion.full+"</span>?</a>").fadeIn();
+            }, empty: function(element) {
+                $('#reg_email_suggestion').fadeOut();
+            }
+        });
+    });
+
+    $('#reg_email_suggestion').on('click', 'a', function (e) {
+        e.preventDefault();
+
+        $('#reg_email').mailcheck({
+            suggested: function(element, suggestion) {
+                $('#reg_email').val(suggestion.full);
+            }
+        });
+
+        $(this).fadeOut();
+    });
+
+
     var tests = {
         user: function (val) {
             return val.length > 3 &&

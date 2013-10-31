@@ -1,3 +1,22 @@
+#reg_email_2 {
+    display: none;
+}
+
+#reg_email_suggestion {
+    color: $white;
+
+    margin-top: -4px;
+    margin-bottom: 8px;
+
+    a:hover {
+        text-decoration: none;
+    }
+
+    span {
+        color: $green;
+    }
+}
+
 .nav-extra-dropdown {
 	padding: 8px;
 	width: 250px !important;

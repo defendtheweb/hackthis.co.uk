@@ -34,6 +34,7 @@
         array_push($minifier->custom_js, 'autosuggest.js');
     } else {
         array_push($minifier->custom_js, 'guest.js');
+        array_push($minifier->custom_js, 'mailcheck.min.js');
         array_push($minifier->custom_js, 'jquery.transit.min.js');
         array_push($minifier->custom_css, 'guest.scss');
 
