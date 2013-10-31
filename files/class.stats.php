@@ -48,14 +48,38 @@
         }
 
 
-        public function getLeaderboard($type="score", $limit=10) {
-            $sql = 'SELECT username, score
+        public function getLeaderboard($type="score", $limit=10, $position=false) {
+            // Is there cache
+            if ($cache = $this->app->cache->get('scoreboard', 1)) {
+                return json_decode($cache);
+            }
+
+
+            $sql = 'SELECT username, score, (users_medals.user_id IS NOT NULL) AS donator, profile.gravatar,
+                    IF (profile.gravatar = 1, users.email, profile.img) as `image`
                     FROM users
+                    LEFT JOIN users_profile profile
+                    ON users.user_id = profile.user_id
+                    LEFT JOIN users_medals
+                    ON users.user_id = users_medals.user_id AND users_medals.medal_id = (SELECT medal_id FROM medals WHERE label = "Donator")
                     ORDER BY score DESC
                     LIMIT 10';
+
             $st = $this->app->db->prepare($sql);
             $st->execute();
             $board = $st->fetchAll();
+
+            for ($n = 0; $n < 3; $n++) {
+                $user = $board[$n];
+                if (isset($user->image)) {
+                    $gravatar = isset($user->gravatar) && $user->gravatar == 1;
+                    $user->image = profile::getImg($user->image, $n==0?30:18, $gravatar);
+                } else
+                    $user->image = profile::getImg(null, $n==0?30:18);
+            }
+
+            // Cache
+            $this->app->cache->set('scoreboard', json_encode($board));
 
             return $board;
         }

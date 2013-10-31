@@ -250,41 +250,35 @@ a.twitter-login {
             font-size: 0.9em;
             padding: 0 4px;
 
+            i.icon-heart {
+                margin-left: 4px;
+                color: #A00;
+            }
+
             span.position {
-                text-align: right;
-                margin-right: 10px;
-                width: 12px;
+                text-align: center;
+                padding-right: 8px;
+               // width: 12px;
                 display: inline-block;
             }
 
-            span.score {
-                float: right;
+            img {
+                width: 18px;
             }
 
             &.first, &.second, &.third {
-                img {
-                    margin-right: 4px;
-                }
-
                 background: $lighter_bg;
                 padding: 4px;
-
-                span.position {
-                    margin-right: 10px;
-                    display: inline-block;
-                }
+                line-height: 16px;
             }
 
             &.second, &.third {
-                img {
-                    margin-right: 6px;
-                }
-
                 background: $light_bg;
             }
 
             &.third {
                 background: $bg;
+                margin-bottom: 4px;
             }
         }
     }

@@ -4,13 +4,16 @@
 			$this->app = $app;
 		}
 
-		function get($file) {
+		function get($file, $freshness=null) {
 			$file = $this->app->config['cache'] . $file;
-			$fh = @fopen($file, "rb");
-			if (!$fh)
-				return false;
-			$data = fread($fh, filesize($file));
-			fclose($fh);
+			$data = false;
+			if (file_exists($file) && (!$freshness || filemtime($file) > (time() - 60 * $freshness ))) {
+				$fh = @fopen($file, "rb");
+				if (!$fh)
+					return false;
+				$data = fread($fh, filesize($file));
+				fclose($fh);
+			}
 
 			return $data;
 		}
