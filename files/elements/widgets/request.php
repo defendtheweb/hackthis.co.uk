@@ -1,6 +1,6 @@
 <?php
     $reset = false;
-    if (isset($_POST['username'])):
+    if (isset($_POST['req_username'])):
         $status = $app->user->request($_POST['req_username']);
     else:
         // Lookup request
