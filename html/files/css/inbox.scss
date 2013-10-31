@@ -61,12 +61,33 @@
             }
         }
 
+        #conversation-options {
+            position: relative;
+            margin-bottom: 32px;
+
+            &:after {
+                border-top: 1px solid $dark;
+                content: "";
+                margin: 0 auto;
+                position: absolute;
+                bottom: -16px;
+                left: 0;
+                right: 0;
+                width: 95%;
+            }
+
+            .button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
         #conversation-search {
-            margin-top: 16px;
             border: 1px solid $dark;
             height: 25px;
             padding: 3px;
             font-size: 0.9em;
+            margin-bottom: 6px;
 
             i {
                 color: $dark;
@@ -165,16 +186,8 @@
 }
 
 @media ( max-width : 768px ) {
-    .inbox > div.inbox-list {
-        height: 140px;
-        margin-bottom: 12px;
-
-        padding-bottom: 12px;
-        border-bottom: 1px solid $dark;
-    }
-
-    .inbox > div.inbox-main {
-        height: 300px;
-        margin-bottom: 16px;
+    .inbox div.inbox-list {
+        position: relative !important;
+        top: 0px !important;
     }
 }

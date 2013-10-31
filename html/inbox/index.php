@@ -1,12 +1,16 @@
 <?php
     define("_SIDEBAR", false);
 
-    $custom_css = array('inbox.scss');
-    $custom_js = array('inbox.js');
+    $custom_css = array('inbox.scss', 'confirm.css');
+    $custom_js = array('jquery.confirm.js', 'inbox.js');
     $page_title = 'Inbox';
     require_once('init.php');
 
     $messages = new messages($app);
+
+    if (isset($_GET['delete'])) {
+        $status = $messages->deleteConvo($_GET['delete']);
+    }
 
     if (isset($_POST['body']) && isset($_GET['view'])) {
         $result = $messages->newMessage(null, $_POST['body'], $_GET['view']);
@@ -72,7 +76,20 @@
 
     <section class="inbox row">
 
-        <div class="col span_6 inbox-list sticky">
+        <div class="col span_6 inbox-list sticky <?=isset($convo)||isset($_GET['compose'])?'mobile-hide':'';?>">
+<?php
+    if (isset($convo)):
+?>
+            <div class='mobile-hide' id="conversation-options">
+                <div id="conversation-search">
+                    <input placeholder='Search conversation'/>
+                    <i class='icon-search'></i>
+                </div>
+                <a href='/inbox/?delete=<?=$convo->id;?>' class='button delete-convo clean'><i class='icon-trash'></i> Delete conversation</a>
+            </div>
+<?php
+    endif;
+?>
             <ul class='plain'>
 <?php    
     foreach($inbox as $message):
@@ -101,16 +118,6 @@
     endforeach;
 ?>
             </ul>
-<?php
-    if (isset($convo)):
-?>
-            <div class='mobile-hide' id="conversation-search">
-                <input placeholder='Search conversation'/>
-                <i class='icon-search'></i>
-            </div>
-<?php
-    endif;
-?>
         </div>
         <div class="col span_18 inbox-main right">
 <?php
@@ -143,12 +150,7 @@
             </ul>
 <?php
         if (isset($error)):
-?>
-            <div class='msg msg-error'>
-                <i class='icon-error'></i>
-                <?=$messages->getError($error);?>
-            </div>
-<?php
+            $app->utils->message($messages->getError($error));
         endif;
 ?>
             <form method="POST">
@@ -158,12 +160,7 @@
 <?php
     elseif (isset($_GET['compose'])):
         if (isset($error)):
-?>
-        <div class='msg msg-error'>
-            <i class='icon-error'></i>
-            <?=$messages->getError($error);?>
-        </div>
-<?php
+            $app->utils->message($messages->getError($error));
         endif;
 ?>
             <form method="POST">
@@ -179,6 +176,9 @@
             </form>
 <?php
     else:
+        if (isset($_GET['delete'])) {
+            $app->utils->message($status?'Conversation deleted':'Error deleting conversation', $status?'good':'error');
+        }
 ?>
             <div class="center empty"><i class="icon-envelope-alt icon-4x"></i><?=count($inbox)?'No conversation selected':'No messages available';?></div>
 <?php

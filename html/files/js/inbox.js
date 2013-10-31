@@ -16,6 +16,26 @@ $(function() {
         }, 800);
     }
 
+    $('.delete-convo').click(function(e) {
+        e.preventDefault();
+
+        var $this = $(this);
+        $.confirm({
+            title   : 'Delete Confirmation',
+            message : 'Are you sure you want to remove this activity from your feed? <br />It cannot be restored at a later time! Continue?',
+            buttons : {
+                Cancel  : {
+                    class: 'cancel'
+                },
+                Confirm : { 
+                    action: function() {
+                        window.location = $this.attr('href');
+                    }
+                }
+            }
+        });
+    });
+
     var conversationSkip = 0;
     $('#conversation-search input').on('keyup', function(e) {
         container.find('.conversation .body span.highlight').contents().unwrap();

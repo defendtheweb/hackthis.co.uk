@@ -25,7 +25,7 @@
                    ON pm.pm_id = pm_users.pm_id
                    INNER JOIN pm_messages
                    ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm.pm_id ORDER BY time DESC LIMIT 1)
-                   WHERE pm_users.user_id = :user_id
+                   WHERE pm_users.user_id = :user_id AND (pm_users.deleted IS NULL OR time > pm_users.deleted)
                    ORDER BY time DESC";
 
             if ($limit)
@@ -84,7 +84,6 @@
         }
 
         public function getConvo($id, $limit=true) {
-            
             $sql = "SELECT message, messages.time as timestamp, IF (messages.time <= seen, 1, 0) AS seen,
                    username, profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
                    FROM pm_messages messages
@@ -94,7 +93,7 @@
                    ON messages.user_id = users.user_id
                    LEFT JOIN users_profile profile
                    ON profile.user_id = users.user_id
-                   WHERE messages.pm_id = :pm_id
+                   WHERE messages.pm_id = :pm_id AND (pm_users.deleted IS NULL OR messages.time > pm_users.deleted)
                    ORDER BY messages.time DESC";
             if ($limit) {
                 $sql .= ' LIMIT 5';
@@ -148,6 +147,12 @@
                 $result = array(array("username"=>$this->app->user->username));
 
             return $result;
+        }
+
+        public function deleteConvo($id) {
+            // Mark thread as deleted
+            $st = $this->app->db->prepare("UPDATE pm_users SET `deleted` = NOW() WHERE user_id = :uid AND pm_id = :pm_id LIMIT 1");
+            return $st->execute(array(':uid' => $this->app->user->uid, ':pm_id' => $id));
         }
 
         public function newMessage($to, $body, $pm_id=null) {
