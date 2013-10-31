@@ -3,11 +3,11 @@
     require_once('init.php');
 
     if (!$app->user->loggedIn) {
-        header('HTTP/1.0 403 Forbidden');
-    $app->page->title = "Permission denied";
+        header('HTTP/1.0 401 Not Authorized');
+        $app->page->title = "Permission denied";
     } else {
         header("HTTP/1.0 404 Not Found");
-    $app->page->title = "Page not found";
+        $app->page->title = "Page not found";
     }
 
     require_once('header.php');
