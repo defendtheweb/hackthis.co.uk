@@ -173,6 +173,13 @@ ul {
     }
 }
 
+i {
+    cursor: default;
+}
+
+a i {
+    cursor: inherit;
+}
 
 /* HEADER */
 header .banner a {
@@ -371,7 +378,7 @@ div.image {
     display: inline-block;
     vertical-align: middle;
 
-    border-color: $green !important;
+    border-color: #A00 !important;
     color: #FFFFFF !important;
 
     background-color: transparent;
