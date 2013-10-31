@@ -6,10 +6,20 @@
         font-size: 1.8em;
     }
 
-    .button:first-child {
+    .button-friend {
         width: 105px;
         text-align: center;
         &.removefriend:hover {
+            background: $msg_error;
+        }
+    }
+
+    .button.block {
+        &.blocked {
+            background: $msg_error;
+        }
+
+        &:hover {
             background: $msg_error;
         }
     }

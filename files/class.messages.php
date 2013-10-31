@@ -201,9 +201,14 @@
                 //Add recipients
                 try {
                     $st = $this->app->db->prepare('INSERT INTO pm_users (`pm_id`, `user_id`)
-                                        SELECT :pm_id, u.user_id FROM users u WHERE username = :name');
+                                        SELECT :pm_id, u.user_id
+                                        FROM users u
+                                        LEFT OUTER JOIN users_blocks
+                                        ON users_blocks.user_id = u.user_id AND users_blocks.blocked_id = :uid
+                                        WHERE username = :name AND users_blocks.user_id IS NULL');
                     $st->bindParam(':pm_id', $pm_id);
                     $st->bindParam(':name', $name);
+                    $st->bindParam(':uid', $this->app->user->uid);
 
                     $count = 0;
 
@@ -253,11 +258,23 @@
                     return false;
                 }
 
+                //Check if blocked by any user
+                $st = $this->app->db->prepare('SELECT :pm_id
+                                               FROM pm_users
+                                               INNER JOIN users_blocks
+                                               ON users_blocks.user_id = pm_users.user_id AND users_blocks.blocked_id = :uid
+                                               WHERE pm_id = :pm_id');
+                $st->execute(array(':pm_id' => $pm_id, ':uid' => $this->app->user->uid));
+                if ($st->rowCount()) {
+                    $this->error = '1.4';
+                    return false;                  
+                }
+
                 //Lookup privilages
                 $st = $this->app->db->prepare('INSERT INTO pm_messages (`pm_id`, `user_id`, `message`)
                                     SELECT :pm_id, :uid, :body FROM pm_users
                                     WHERE user_id = :uid AND pm_id = :pm_id');
-                $result = $st->execute(array(':pm_id' => $pm_id, ':uid' => $this->app->user->uid, ':body' => $body));
+                $st->execute(array(':pm_id' => $pm_id, ':uid' => $this->app->user->uid, ':body' => $body));
                 if (!$st->rowCount()) {
                     $this->error = '1.4';
                     return false;
@@ -279,7 +296,7 @@
                 case '1.1': return 'Missing message body';
                 case '1.2': return 'Error creating conversation';
                 case '1.3': return 'No valid recipients found';
-                case '1.3': return 'You do not have permission to reply to this conversation';
+                case '1.4': return 'You do not have permission to reply to this conversation';
                 default: return 'Error';
             }
         }

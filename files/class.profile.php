@@ -28,7 +28,7 @@
                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                     IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
-                    forum_posts.posts, articles.articles, (medals.medal_id IS NOT NULL) AS donator, karma.karma
+                    forum_posts.posts, articles.articles, (donated.user_id IS NOT NULL) AS donator, (users_blocks.user_id IS NOT NULL) AS blocked, (users_blocks_me.user_id IS NOT NULL) AS blockedMe, karma.karma
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -36,14 +36,18 @@
                     ON u.user_id = activity.user_id
                     LEFT JOIN users_friends friends
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
+                    LEFT JOIN users_blocks 
+                    ON users_blocks.user_id = :user AND users_blocks.blocked_id = u.user_id
+                    LEFT JOIN users_blocks users_blocks_me
+                    ON users_blocks_me.user_id = u.user_id AND users_blocks_me.blocked_id = :user
                     LEFT JOIN (SELECT author, COUNT(*) AS `posts` FROM forum_posts WHERE deleted = 0 GROUP BY author) forum_posts
                     ON forum_posts.author = u.user_id
                     LEFT JOIN (SELECT user_id, COUNT(*) AS `articles` FROM articles GROUP BY user_id) articles
                     ON articles.user_id = u.user_id
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
-                    LEFT JOIN users_medals medals
-                    ON u.user_id = medals.user_id AND medals.medal_id = 19
+                    LEFT JOIN users_medals donated
+                    ON u.user_id = donated.user_id AND donated.medal_id = (SELECT medal_id FROM medals WHERE label = 'Donator')
                     LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
                     ON karma.author = u.user_id
                     WHERE u.username = :profile");
@@ -213,6 +217,14 @@
         public function addFriend() {
             $status = ($this->app->user->uid === $this->uid);
 
+            // Check if user is blocked
+            $st = $this->app->db->prepare('SELECT `user_id` FROM users_blocks WHERE `user_id` = :uid2 AND `blocked_id` = :uid');
+            $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid));
+            if ($st->fetch())
+                return false;
+
+
+            // try and make request, if fails there is already a pending request
             $error = false;
             try {
                 $st = $this->app->db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
@@ -222,7 +234,7 @@
                 $error = true;
             }
 
-            // check if row created, else it already exists
+            // check if row created, else it already exists - therefore except pending request
             if ($error || !$st->rowCount()) {
                 $st = $this->app->db->prepare('UPDATE users_friends SET `status` = 1
                                     WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
@@ -251,7 +263,7 @@
             $result = array("status"=>true);
 
             if ($type == 'levels') {
-                $result['data'] = $app->levels->getList();
+                $result['data'] = $app->levels->getList($uid);
             } else if ($type == 'posts') {
                 $st = $app->db->prepare('SELECT date_format(posted, "%d/%m/%Y") AS `d`, COUNT(*) AS `c` FROM forum_posts
                     WHERE deleted = 0 AND author = :uid
@@ -300,6 +312,21 @@
             }
 
             return $result;
+        }
+
+        public static function blockUser($uid, $block=true) {
+            global $app;
+
+            if ($app->user->uid == $uid)
+                return false;
+
+            if ($block) {
+                $st = $app->db->prepare('INSERT IGNORE INTO users_blocks (`user_id`, `blocked_id`)
+                        VALUES (:uid, :uid2)');
+            } else {
+                $st = $app->db->prepare('DELETE FROM users_blocks WHERE user_id = :uid AND blocked_id = :uid2');
+            }
+            return $st->execute(array(':uid' => $app->user->uid, ':uid2' => $uid));
         }
 
         public static function getMusic($id) {

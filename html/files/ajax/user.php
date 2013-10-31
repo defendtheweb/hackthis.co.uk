@@ -32,6 +32,8 @@
                 $result['music'] = $res;
         } else if ($action == 'graph' && isset($_GET['uid']) && isset($_GET['type'])) {
             $result = profile::getStats($_GET['uid'], $_GET['type']);
+        } else if (($action == 'block' || $action == 'unblock') && isset($_GET['uid'])) {
+            $result = profile::blockUser($_GET['uid'], $action=='block');
         }
     }
 

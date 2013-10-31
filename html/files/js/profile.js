@@ -59,6 +59,34 @@ $(function() {
         });
     });
 
+    $('.block').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('blocked')) {
+            var uri = '/files/ajax/user.php?action=unblock&uid=';
+        } else {
+            var uri = '/files/ajax/user.php?action=block&uid=';
+        }
+        uri += uid;
+
+        $this.toggleClass('blocked');
+
+        $.getJSON(uri);
+
+    }).on('mouseover', function(e) {
+        var $this = $(this);
+        if ($this.hasClass('blocked')) {
+            $this.html("<i class='icon-blocked'></i> Unblock");
+        }
+    }).on('mouseout', function(e) {
+        var $this = $(this);
+        if ($this.hasClass('blocked')) {
+            $this.html("<i class='icon-blocked'></i> Blocked");
+        } else {
+            $this.html("<i class='icon-blocked'></i> Block");
+        }
+    });
+
     var $music = $('.profile-music');
     if ($music.length) {
         var lastfm = $music.attr('data-user');

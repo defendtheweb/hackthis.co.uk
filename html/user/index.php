@@ -60,23 +60,38 @@
     /* USERS PROFILE STARTS */
 ?>
     <article class='profile' data-uid='<?=$profile->uid;?>'>
-<?php if ($profile->friends):?>
-        <a href='#' class='button button-blank right removefriend'><i class='icon-user'></i> Friends</a>
-<?php elseif ($profile->friends !== NULL && $profile->friend != $profile->uid): ?>
-        <a href='#' class='button right button-disabled'>Pending</a>
-<?php elseif ($profile->friends !== NULL && $profile->friend == $profile->uid): ?>
-        <a href='#' class='button right acceptfriend'><i class='icon-addfriend'></i> Accept</a>
-<?php else: ?>
-        <a href='#' class='button right addfriend'><i class='icon-addfriend'></i> Add friend</a>
 <?php
+    if (!$profile->blockedMe):
+        if ($profile->friends):
+?>
+        <a href='#' class='button button-blank right button-friend removefriend'><i class='icon-user'></i> Friends</a>
+<?php   elseif ($profile->friends !== NULL && $profile->friend != $profile->uid): ?>
+        <a href='#' class='button right button-disabled button-friend pendingfriend'>Pending</a>
+<?php   elseif ($profile->friends !== NULL && $profile->friend == $profile->uid): ?>
+        <a href='#' class='button right button-friend acceptfriend'><i class='icon-addfriend'></i> Accept</a>
+<?php   else: ?>
+        <a href='#' class='button right button-friend addfriend'><i class='icon-addfriend'></i> Add friend</a>
+<?php
+        endif;
     endif;
 
     if ($profile->owner):
 ?>
         <a href='/settings/' class='button right'><i class='icon-edit'></i> Edit profile</a>
-<?php else: ?>
+<?php
+    else:
+        if (!$profile->blockedMe):
+?>
         <a href='/inbox/compose?to=<?=$profile->username;?>' class='messages-new button right' data-to="<?=$profile->username;?>"><i class='icon-envelope-alt'></i> PM user</a>
-<?php endif; ?>
+<?php
+        endif;
+        if (!$profile->friends):
+?>
+        <a href='#' class='block <?=$profile->blocked?'blocked':'';?> button button-blank right'><i class='icon-blocked'></i> <?=$profile->blocked?'Blocked':'Block';?></a>
+<?php
+        endif;
+    endif;
+?>
 
         <h1 class='lower'><?=$profile->username;?></h1> 
 <?php if ($app->user->admin_site_priv):
@@ -219,7 +234,7 @@
     if ($profile->show_name) { $profile->printItem("Name", $profile->name); }
     if ($profile->show_email) { $profile->printItem("Email", $profile->email); }
     if ($profile->show_gender) { $profile->printItem("Gender", $profile->gender, false, true); }
-    $profile->printItem("DOB", $profile->getDob());
+    if ($profile->getDob()) { $profile->printItem("DOB", $profile->getDob()); }
     $profile->printItem("Joined", $profile->joined, true);
     $profile->printItem("Last seen", $profile->last_active, true);
 ?>

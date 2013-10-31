@@ -4,7 +4,7 @@
     $custom_css = array('inbox.scss');
     $custom_js = array('inbox.js');
     $page_title = 'Inbox';
-    require_once('header.php');
+    require_once('init.php');
 
     $messages = new messages($app);
 
@@ -41,6 +41,8 @@
                 unset($convo);
         }
     }
+
+    require_once('header.php');
 
 
     if (!isset($convo)):

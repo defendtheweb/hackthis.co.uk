@@ -147,9 +147,11 @@
 
             $sql = 'SELECT u.username, IFNULL(friends.status, 0) AS friends
                     FROM users u
+                    LEFT OUTER JOIN users_blocks
+                    ON users_blocks.user_id = u.user_id AND users_blocks.blocked_id = :user
                     LEFT JOIN users_friends friends
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE u.username LIKE :username AND u.user_id != :user
+                    WHERE u.username LIKE :username AND u.user_id != :user AND users_blocks.user_id IS NULL
                     ORDER BY friends DESC, u.username
                     LIMIT :limit';
             $st = $this->app->db->prepare($sql);
