@@ -80,10 +80,7 @@
 
                     $updated = $app->articles->updateArticle($article->id, $changes, isset($_POST['update']));
                     if ($updated) {
-                        $uri = "http://{$_SERVER[HTTP_HOST]}{$_SERVER[REQUEST_URI]}";
-                        if (!isset($_GET['update'])) $uri .= '&update';
-                        header('Location: '.$uri);
-                        die();
+                        $app->utils->message('Article updated, <a href="'.$article->uri.'">view here</a>', 'good');
                     } else {
 ?>
         <div class='msg msg-error'>
