@@ -21,7 +21,7 @@
         $q = preg_replace('/[^a-zA-Z0-9"@._-\s]/', '', strip_tags(html_entity_decode($_GET['search'])));
         $result['data'] = $search->go($q);
 
-        if ($result['data']['articles'] || $result['data']['users']) {
+        if ($result['data']['articles'] || $result['data']['users'] || $result['data']['forum']) {
             $result['status'] = true;
         }
     }
