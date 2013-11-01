@@ -508,7 +508,11 @@
 
             // Email
             if ($changes['email'] && $this->app->utils->check_email($changes['email'])) {
-                //$updates['email'] = $changes['email'];
+                $st = $this->app->db->prepare('UPDATE users SET email = :email WHERE user_id = :uid');
+                $changed = $st->execute(array(':email' => $changes['email'], ':uid' => $this->uid));
+
+                if (!$changed)
+                    return "Email already in use";
             } else {
                 return "Invalid email address";
             }
