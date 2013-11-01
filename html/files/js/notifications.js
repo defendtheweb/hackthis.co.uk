@@ -9,7 +9,7 @@ $(function() {
     var socket = null;
     if (typeof io !== 'undefined') {
         // socket = io.connect('http://192.168.1.66:8080/');
-        socket = io.connect('http://hackthis.co.uk:8080/');
+        socket = io.connect('https://hackthis.co.uk:8080/', { secure: true });
     }
 
     var feedTmpl = '<tmpl>'+
