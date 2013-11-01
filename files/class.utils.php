@@ -23,7 +23,7 @@
             }
 
             if (!$bbcode) {
-                $text = $this->app->bbcode->UnHTMLEncode(strip_tags($text));
+                $text = strip_tags($text);
             }
 
             return $text;
