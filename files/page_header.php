@@ -36,7 +36,7 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="/files/js/jquery-1.9.1.min.js"><\/script>')</script>
-        <script src="//<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
+        <script src="http://<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
 <?php
     if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
         echo '        '.$currentLevel->data['code']->pos1."\n";
