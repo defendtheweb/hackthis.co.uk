@@ -171,3 +171,47 @@ AddDefaultCharset utf-8
     Deny from all
     Satisfy All
 </FilesMatch>
+
+
+
+php_value session.cookie_httponly true
+
+<ifModule mod_deflate.c>
+    <filesMatch "\.(js|css|php)$">
+        SetOutputFilter DEFLATE
+    </filesMatch>
+</ifModule>
+
+<ifModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 seconds"
+    ExpiresByType text/html "access plus 1 seconds"
+    ExpiresByType image/gif "access plus 2592000 seconds"
+    ExpiresByType image/jpeg "access plus 2592000 seconds"
+    ExpiresByType image/png "access plus 2592000 seconds"
+    ExpiresByType text/css "access plus 604800 seconds"
+    ExpiresByType text/javascript "access plus 216000 seconds"
+    ExpiresByType application/x-javascript "access plus 216000 seconds"
+</ifModule>
+
+<ifModule mod_headers.c>
+    <filesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|swf)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </filesMatch>
+    <filesMatch "\\.(css)$">
+        Header set Cache-Control "max-age=60, public"
+    </filesMatch>
+    <filesMatch "\\.(js)$">
+        Header set Cache-Control "max-age=60, private"
+    </filesMatch>
+    <filesMatch "\\.(xml|txt)$">
+        Header set Cache-Control "max-age=216000, public, must-revalidate"
+    </filesMatch>
+    <filesMatch "\\.(html|htm|php)$">
+        Header set Cache-Control "max-age=1, private, must-revalidate"
+    </filesMatch>
+</ifModule>
+
+<IfModule mod_php4.c>
+    php_value magic_quotes_gpc off
+</IfModule>
