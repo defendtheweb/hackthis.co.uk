@@ -27,7 +27,7 @@
                             <input type="submit" value="Register" class="button right clr">
                         </form>
 
-                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
+                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=<?=$app->config('domain');?>/?facebook&scope=email'>
                             Login with Facebook
                         </a>
                     </article>

@@ -78,7 +78,7 @@
     <p>
         <h3>Facebook</h3>
         Connect your HackThis!! account to your facebook account. This will allow you to login to your account via the facebook button and releasing you from the burden of remembering another password. We will never post anything to your profile.<br/>
-        <a class='stop-external facebook-connect' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=http://dev.hackthis/?facebook&scope=email'>
+        <a class='stop-external facebook-connect' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=<?=$app->config('domain');?>/?facebook&scope=email'>
             Connect to Facebook
         </a>
         <br/><br/>

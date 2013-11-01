@@ -185,7 +185,7 @@
 
         public function oauth($provider, $id) {
             if ($provider === 'facebook') {
-                $redirect = urlencode('http://dev.hackthis/?facebook');
+                $redirect = urlencode($this->app->config('domain').'/?facebook');
 
                 $fb = $this->app->config('facebook');
                 $uri = "https://graph.facebook.com/oauth/access_token?client_id={$fb['public']}&redirect_uri={$redirect}&client_secret={$fb['secret']}&code={$id}";

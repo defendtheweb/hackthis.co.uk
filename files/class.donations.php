@@ -89,8 +89,8 @@
             $options[CURLOPT_POSTFIELDS] = '{
               "intent":"sale",
               "redirect_urls":{
-                "return_url":"http://dev.hackthis/donator.php",
-                "cancel_url":"http://dev.hackthis/donator.php"
+                "return_url":"'.$this->app->config('domain').'/donator.php",
+                "cancel_url":"'.$this->app->config('domain').'/donator.php"
               },
               "payer":{
                 "payment_method":"paypal"
