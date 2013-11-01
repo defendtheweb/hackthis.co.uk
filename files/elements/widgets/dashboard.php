@@ -63,7 +63,7 @@
 
                             <div class='profile-pic'>
                                 <img src='<?=$app->user->image;?>'/>
-                                <a href='/settings/image' class='upload'>
+                                <a href='/settings/image.php' class='upload'>
                                     <i class="icon-image"></i><br/>
                                     Change Picture
                                 </a>
