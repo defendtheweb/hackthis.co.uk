@@ -24,6 +24,7 @@
                             <div class='small'>Enter your username or email address and we will email instructions to you on how to reset your password.</div><br/>
                             <label for="req_username">Email address or username:</label><br/>
                             <input type="text" name="req_username" id="req_username">
+                            <input type="hidden" value="<?=$app->generateCSRFKey("requestDetails");?>" name="token">
                             <input type="submit" value="Submit" class="button">
                         </form>
 <?php
@@ -43,6 +44,7 @@
                             <input type="password" name="pass" id="pass">
                             <label for="pass2">Repeat password:</label><br/>
                             <input type="password" name="pass2" id="pass2">
+                            <input type="hidden" value="<?=$app->generateCSRFKey("changePassword");?>" name="token">
                             <input type="submit" value="Submit" class="button">
                         </form>
 <?php

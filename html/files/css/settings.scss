@@ -74,6 +74,16 @@
     }
 }
 
+div.warning h3 {
+    background: $red;
+    padding: 6px;
+    margin-bottom: 6px;
+}
+
+div.warning strong {
+    color: #C00;
+}
+
 .no-js {
 	#upload-form {	
 		width: auto;

@@ -613,6 +613,9 @@
         }
 
         public function request($user) {
+            if (!$this->app->checkCSRFKey("requestDetails", $_POST['token']))
+                return "Invalid request";
+            
             if (strlen($user) < 3)
                 return "Details not found";
 
@@ -647,6 +650,9 @@
         }
 
         public function changePassword($pass, $pass2, $uid = null) {
+            if (!$this->app->checkCSRFKey("changePassword", $_POST['token']))
+                return "Invalid request";
+
             if (!$uid)
                 $uid = $this->uid;
 
