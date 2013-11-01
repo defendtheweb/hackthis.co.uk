@@ -4,7 +4,7 @@ USE hackthis;
 /*
     USERS
 */
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     `user_id` int(7) NOT NULL AUTO_INCREMENT,
     `username` varchar(32) NOT NULL,
     `password` varchar(64),
@@ -17,7 +17,7 @@ CREATE TABLE users (
     UNIQUE KEY (`email`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_oauth (
+CREATE TABLE IF NOT EXISTS users_oauth (
     id int(7) AUTO_INCREMENT,
     uid varchar(128),
     provider enum('facebook','twitter'),
@@ -25,7 +25,7 @@ CREATE TABLE users_oauth (
     UNIQUE (`uid`, `provider`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_levels (
+CREATE TABLE IF NOT EXISTS users_levels (
     `user_id` int(7) NOT NULL,
     `level_id` tinyint(3) UNSIGNED NOT NULL,
     `started` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -36,7 +36,7 @@ CREATE TABLE users_levels (
     -- Level constraint added later
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_levels_data (
+CREATE TABLE IF NOT EXISTS users_levels_data (
     `user_id` int(7) NOT NULL,
     `level_id` tinyint(3) UNSIGNED NOT NULL,
     `data` text,
@@ -46,7 +46,7 @@ CREATE TABLE users_levels_data (
     -- Level constraint added later
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_profile (
+CREATE TABLE IF NOT EXISTS users_profile (
     `user_id` int(7) NOT NULL,
     `name` varchar(32),
     `show_name` tinyint(1) DEFAULT 1,
@@ -71,7 +71,7 @@ CREATE TABLE users_profile (
  * Default of 1 indicates accesses, 0 being no access
  * Values above 1 indicated extended privileges
  */
-CREATE TABLE users_priv (
+CREATE TABLE IF NOT EXISTS users_priv (
     `user_id` int(7) NOT NULL,
     `site_priv` tinyint(1) NOT NULL DEFAULT 1,
     `pm_priv` tinyint(1) NOT NULL DEFAULT 1,
@@ -86,7 +86,7 @@ CREATE TABLE users_priv (
  * status shows if the relationship has been accepted
  * or denied by friend_id
  */
-CREATE TABLE users_friends (
+CREATE TABLE IF NOT EXISTS users_friends (
     `user_id` int(7) NOT NULL,
     `friend_id` int(7) NOT NULL,
     `status` tinyint(1) NOT NULL DEFAULT 0,
@@ -100,7 +100,7 @@ CREATE TABLE users_friends (
  * Remove the ability for blocked_id from contacting
  * user_id via any communication channel
  */
-CREATE TABLE users_blocks (
+CREATE TABLE IF NOT EXISTS users_blocks (
     `user_id` int(7) NOT NULL,
     `blocked_id` int(7) NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -109,7 +109,7 @@ CREATE TABLE users_blocks (
     FOREIGN KEY (`blocked_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_activity (
+CREATE TABLE IF NOT EXISTS users_activity (
     `user_id` int(7) NOT NULL,
     `joined` timestamp DEFAULT CURRENT_TIMESTAMP,
     `last_active` timestamp,
@@ -127,7 +127,7 @@ CREATE TABLE users_activity (
  * Notification types:
  * see https://github.com/HackThis/hackthis.co.uk/wiki/Database#notification-types
  */
-CREATE TABLE users_notifications (
+CREATE TABLE IF NOT EXISTS users_notifications (
     `notification_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('friend','friend_accepted', 'medal','forum_post','forum_mention','comment_reply','comment_mention','article', 'mod_contact') NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE users_notifications (
  * Feed types:
  * see https://github.com/HackThis/hackthis.co.uk/wiki/Database#feed-types
  */
-CREATE TABLE users_feed (
+CREATE TABLE IF NOT EXISTS users_feed (
     `feed_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('join','level','friend','medal','thread','forum_post','karma','comment','favourite','article','image') NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE users_feed (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_data (
+CREATE TABLE IF NOT EXISTS users_data (
     `data_id` int(4)  NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('donation', 'verification', 'reset') NOT NULL,
@@ -163,18 +163,26 @@ CREATE TABLE users_data (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS `users_donations` (
+  `user_id` int(7) DEFAULT NULL,
+  `amount` decimal(6,2) DEFAULT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` text NOT NULL,
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB;
+
 
 /*
     MEDALS
 */
-CREATE TABLE medals_colours (
+CREATE TABLE IF NOT EXISTS medals_colours (
     `colour_id` tinyint(1) NOT NULL AUTO_INCREMENT,
     `reward` int(4) NOT NULL DEFAULT 0,
     `colour` varchar(6) NOT NULL,
     PRIMARY KEY (`colour_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE medals (
+CREATE TABLE IF NOT EXISTS medals (
     `medal_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
     `label` varchar(16) NOT NULL,
     `colour_id` tinyint(1) NOT NULL,
@@ -183,7 +191,7 @@ CREATE TABLE medals (
     FOREIGN KEY (`colour_id`) REFERENCES medals_colours (`colour_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_medals (
+CREATE TABLE IF NOT EXISTS users_medals (
     `user_id` int(7) NOT NULL,
     `medal_id` tinyint(3) UNSIGNED NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -196,13 +204,13 @@ CREATE TABLE users_medals (
 /*
     LEVELS
 */
-CREATE TABLE levels_groups (
+CREATE TABLE IF NOT EXISTS levels_groups (
     `title` varchar(16),
     `order` tinyint(1),
     PRIMARY KEY (`title`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE levels (
+CREATE TABLE IF NOT EXISTS levels (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` varchar(8) NOT NULL,
     `group` varchar(16) NOT NULL,
@@ -211,7 +219,7 @@ CREATE TABLE levels (
     FOREIGN KEY (`group`) REFERENCES levels_groups (`title`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE levels_data (
+CREATE TABLE IF NOT EXISTS levels_data (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
     `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code') NOT NULL,
     `value` text NOT NULL,
@@ -227,13 +235,13 @@ ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
 /*
     MESSAGES
 */
-CREATE TABLE pm (
+CREATE TABLE IF NOT EXISTS pm (
     `pm_id` int(7) NOT NULL AUTO_INCREMENT,
     `title` varchar(64) NOT NULL,
     PRIMARY KEY (`pm_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE pm_messages (
+CREATE TABLE IF NOT EXISTS pm_messages (
     `message_id` int(7) NOT NULL AUTO_INCREMENT,
     `pm_id` int(7) NOT NULL,
     `user_id` int(7),
@@ -244,7 +252,7 @@ CREATE TABLE pm_messages (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE pm_users (
+CREATE TABLE IF NOT EXISTS pm_users (
     `pm_id` int(7) NOT NULL,
     `user_id` int(7) NOT NULL,
     `seen` timestamp NULL DEFAULT NULL,
@@ -258,7 +266,7 @@ CREATE TABLE pm_users (
 /*
     FORUM
 */
-CREATE TABLE forum_sections (
+CREATE TABLE IF NOT EXISTS forum_sections (
     `section_id` int(3) NOT NULL AUTO_INCREMENT,
     `parent_id` int(3),
     `title` varchar(32),
@@ -268,7 +276,7 @@ CREATE TABLE forum_sections (
     UNIQUE (`slug`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE forum_threads (
+CREATE TABLE IF NOT EXISTS forum_threads (
     `thread_id` int(6) NOT NULL AUTO_INCREMENT,
     `section_id` int(3) NOT NULL,
     `title` varchar(128) NOT NULL,
@@ -283,7 +291,7 @@ CREATE TABLE forum_threads (
     FOREIGN KEY (`section_id`) REFERENCES forum_sections (`section_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE forum_posts (
+CREATE TABLE IF NOT EXISTS forum_posts (
     `post_id` int(6) NOT NULL AUTO_INCREMENT,
     `thread_id` int(6) NOT NULL,
     `body` TEXT  NOT NULL,
@@ -296,7 +304,7 @@ CREATE TABLE forum_posts (
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE forum_posts_audit (
+CREATE TABLE IF NOT EXISTS forum_posts_audit (
     `audit_id` int(7) NOT NULL AUTO_INCREMENT,
     `post_id` int(6) NOT NULL,
     `field` varchar(32) NOT NULL,
@@ -307,7 +315,7 @@ CREATE TABLE forum_posts_audit (
     -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
 ) ENGINE=InnoDB;
 
-CREATE TABLE forum_users (
+CREATE TABLE IF NOT EXISTS forum_users (
     `user_id` int(7) NOT NULL,
     `thread_id` int(6) NOT NULL,
     `viewed` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -317,7 +325,7 @@ CREATE TABLE forum_users (
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE users_forum (
+CREATE TABLE IF NOT EXISTS users_forum (
     `user_id` int(7) NOT NULL,
     `post_id` int(6) NOT NULL,
     `karma` tinyint(1) DEFAULT 0,
@@ -332,7 +340,7 @@ CREATE TABLE users_forum (
 /*
     ARTICLES
 */
-CREATE TABLE articles_categories (
+CREATE TABLE IF NOT EXISTS articles_categories (
     `category_id` int(3) NOT NULL AUTO_INCREMENT,
     `parent_id` int(3),
     `title` varchar(32),
@@ -342,7 +350,7 @@ CREATE TABLE articles_categories (
 ) ENGINE=InnoDB;
 
 -- TODO: Timestamps man TIME!!
-CREATE TABLE articles (
+CREATE TABLE IF NOT EXISTS articles (
     `article_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7),
     `title` varchar(128) NOT NULL,
@@ -359,7 +367,7 @@ CREATE TABLE articles (
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_draft (
+CREATE TABLE IF NOT EXISTS articles_draft (
     `article_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `title` varchar(128) NOT NULL,
@@ -372,7 +380,7 @@ CREATE TABLE articles_draft (
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`) 
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_audit (
+CREATE TABLE IF NOT EXISTS articles_audit (
     `audit_id` int(7) NOT NULL AUTO_INCREMENT,
     `article_id` int(6) NOT NULL, 
     `draft` tinyint(1) NOT NULL,
@@ -386,7 +394,7 @@ CREATE TABLE articles_audit (
     -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_comments (
+CREATE TABLE IF NOT EXISTS articles_comments (
     `comment_id` int(6) NOT NULL AUTO_INCREMENT,
     `article_id` int(6) NOT NULL,
     `user_id` int(7),
@@ -400,7 +408,7 @@ CREATE TABLE articles_comments (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE articles_favourites (
+CREATE TABLE IF NOT EXISTS articles_favourites (
     `article_id` int(6) NOT NULL,
     `user_id` int(7) NOT NULL,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -413,7 +421,7 @@ CREATE TABLE articles_favourites (
 /*
     MODERATOR TABLES
 */
-CREATE TABLE mod_reports (
+CREATE TABLE IF NOT EXISTS mod_reports (
     `report_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` enum('comment', 'article', 'user', 'forum', 'level') NOT NULL,
@@ -424,7 +432,7 @@ CREATE TABLE mod_reports (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE mod_contact (
+CREATE TABLE IF NOT EXISTS mod_contact (
     `message_id` int(6) NOT NULL AUTO_INCREMENT,
     `parent_id` int(6),
     `user_id` int(7) NOT NULL,
@@ -439,7 +447,7 @@ CREATE TABLE mod_contact (
 /*
     EMAIL TABLES
 */
-CREATE TABLE email_queue (
+CREATE TABLE IF NOT EXISTS email_queue (
     `email_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) DEFAULT NULL,
     `recipient` varchar(128) NOT NULL,
