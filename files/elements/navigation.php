@@ -124,8 +124,7 @@
 <?php
             endif;
 ?>
-                                <li><a href='/admin/tickets.php'>Tickets</a></li>
-                                <li><a href='/admin/misc.php'>Misc</a></li>
+                                <li><a href='/contact'>Tickets</a></li>
                             </ul>
                         </li>
 <?php
