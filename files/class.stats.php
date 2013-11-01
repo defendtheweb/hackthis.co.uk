@@ -48,38 +48,67 @@
         }
 
 
-        public function getLeaderboard($type="score", $limit=10, $position=false) {
+        public function getLeaderboard($limit=10) {
+            $widget = ($limit == 10);
+
             // Is there cache
-            if ($cache = $this->app->cache->get('scoreboard', 1)) {
+            if ($widget && $cache = $this->app->cache->get('scoreboard', 1)) {
                 return json_decode($cache);
             }
 
-
-            $sql = 'SELECT username, score, (users_medals.user_id IS NOT NULL) AS donator, profile.gravatar,
+            $sql = 'SELECT users.user_id, username, score, (users_medals.user_id IS NOT NULL) AS donator, profile.gravatar,
                     IF (profile.gravatar = 1, users.email, profile.img) as `image`
                     FROM users
                     LEFT JOIN users_profile profile
                     ON users.user_id = profile.user_id
+                    LEFT JOIN users_priv
+                    ON users_priv.user_id = users.user_id
                     LEFT JOIN users_medals
                     ON users.user_id = users_medals.user_id AND users_medals.medal_id = (SELECT medal_id FROM medals WHERE label = "Donator")
-                    ORDER BY score DESC
-                    LIMIT 10';
+                    WHERE COALESCE(users_priv.site_priv, 0) != 2
+                    ORDER BY score DESC, user_id ASC
+                    LIMIT '.$limit;
 
             $st = $this->app->db->prepare($sql);
             $st->execute();
             $board = $st->fetchAll();
 
-            for ($n = 0; $n < 3; $n++) {
+            $found = false;
+            for ($n = 0; $n < ($widget?3:count($board)); $n++) {
                 $user = $board[$n];
                 if (isset($user->image)) {
                     $gravatar = isset($user->gravatar) && $user->gravatar == 1;
-                    $user->image = profile::getImg($user->image, $n==0?30:18, $gravatar);
+                    $user->image = profile::getImg($user->image, $widget?18:22, $gravatar);
                 } else
-                    $user->image = profile::getImg(null, $n==0?30:18);
+                    $user->image = profile::getImg(null, $widget?18:22);
+
+                if ($user->user_id == $this->app->user->uid) {
+                    $user->highlight = true;
+                    $found = true;
+                }
             }
 
+            if (!$widget && !$found) {
+                // find users position
+                $sql = 'SELECT COUNT(user_id) AS `position` FROM users WHERE score > :score';
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':score' => $this->app->user->score));
+                $result = $st->fetch();
+                $result->extra = true;
+                $result->highlight = true;
+                $result->score = $this->app->user->score;
+                $result->username = $this->app->user->username;
+                $result->donator = $this->app->user->donator;
+                $result->image = $this->app->user->image;
+
+                $board[$limit] = $result;
+            }
+
+
             // Cache
-            $this->app->cache->set('scoreboard', json_encode($board));
+            if ($widget) {
+                $this->app->cache->set('scoreboard', json_encode($board));
+            }
 
             return $board;
         }
