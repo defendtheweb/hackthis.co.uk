@@ -20,7 +20,7 @@ $(function() {
     '        {{else type == "friend"}}'+
     '            <i class="icon-addfriend"></i><a href="/user/${username}">${username}</a> <span class="dark">and</span> <a href="/user/${username_2}">${username_2}</a>'+
     '        {{else type == "medal"}}'+
-    '            <i class="icon-trophy colour-${uri}"></i><a href="/settings/medals.php#${title.toLowerCase()}">${title}</a> <span class="dark">to</span> <a href="/user/${username}">${username}</a>'+
+    '            <i class="icon-trophy colour-${uri}"></i><a href="/medals.php#${title.toLowerCase()}">${title}</a> <span class="dark">to</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "comment"}}'+
     '            <i class="icon-comments"></i><a href="${uri}">${title}</a> <span class="dark">by</span> <a href="/user/${username}">${username}</a>'+
     '        {{else type == "forum_post"}}'+
