@@ -127,7 +127,7 @@ function searchsuggest() {
 
                 len = articles.length < 5 ? articles.length : 5;
                 for (var i = 0; i < len; ++i) {
-                    link = $('<a>', {text: articles[i].title, href: '/articles/'+articles[i].slug});
+                    link = $('<a>', {html: articles[i].title, href: '/articles/'+articles[i].slug});
                     suggest.append(link);
                 }
             }
@@ -139,7 +139,7 @@ function searchsuggest() {
 
                 len = forum.length < 5 ? forum.length : 5;
                 for (var i = 0; i < len; ++i) {
-                    link = $('<a>', {text: forum[i].title, href: '/forum/'+forum[i].slug});
+                    link = $('<a>', {html: forum[i].title, href: '/forum/'+forum[i].slug});
                     suggest.append(link);
                 }
             }
