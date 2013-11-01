@@ -4,14 +4,14 @@ $.fn.share = function() {
         $self = $(self);
 
         var item_id = $self.attr("data-id");
-        var link = "http://www.hackthis.co.uk"+$self.attr('data-link');
+        var link = "https://www.hackthis.co.uk"+$self.attr('data-link');
         var title = escape($self.attr('data-title'));
 
         //Closures rock!
         loadData = function() {
             var $tmp = $self;
             // Grab twitter stats
-            $.getJSON("http://urls.api.twitter.com/1/urls/count.json?url="+link+"&callback=?", function(data) {
+            $.getJSON("https://cdn.api.twitter.com/1/urls/count.json?url="+link+"&callback=?", function(data) {
                 count = data.count?data.count:'0';
                 $tmp.find('a.twitter').append($('<span>', {text: count}));
             });
