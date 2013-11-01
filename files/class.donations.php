@@ -43,7 +43,7 @@
 
             // Get bearer token
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v1/oauth2/token');
+            curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com/v1/oauth2/token');
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             curl_setopt($ch, CURLOPT_USERPWD, $config['client'] . ":" . $config['secret']);
             curl_setopt($ch, CURLOPT_SSLVERSION, 3);
@@ -75,7 +75,7 @@
 
             // Make actually request
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v1/payments/payment');
+            curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com/v1/payments/payment');
 
             $options = array(
                 CURLOPT_HEADER => true,
@@ -137,7 +137,7 @@
 
             // confirm
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v1/payments/payment/'.$_SESSION['paypal_id'].'/execute');
+            curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com/v1/payments/payment/'.$_SESSION['paypal_id'].'/execute');
 
             $options = array(
                 CURLOPT_HEADER => true,
