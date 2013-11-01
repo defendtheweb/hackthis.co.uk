@@ -798,7 +798,8 @@ POST;
                 $this->app->user->awardMedal('karma', 1, $result->author);
 
                 // Give yourself medal
-                $this->app->user->awardMedal('rewarder');
+                if ($positive)
+                    $this->app->user->awardMedal('rewarder');
             } else {
                 $st = $this->app->db->prepare("DELETE IGNORE FROM users_forum WHERE user_id = :uid
                                                AND post_id = :post_id LIMIT 1");
