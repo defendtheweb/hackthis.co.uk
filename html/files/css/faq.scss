@@ -20,6 +20,10 @@
     }
 }
 
+.medals-list .new-section:not(:first-child) {
+    margin-top: 24px;
+}
+
 
 table tr td.new {
     color: red;
