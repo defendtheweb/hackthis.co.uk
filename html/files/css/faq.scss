@@ -25,6 +25,58 @@
 }
 
 
+.main-scoreboard {
+    li {
+        list-style: none;
+        overflow: hidden;
+        margin: 2px 0;
+        padding: 1px 4px;
+
+        i.icon-heart {
+            margin-left: 4px;
+            color: #A00;
+        }
+
+        span.position {
+            text-align: center;
+            padding-right: 8px;
+           // width: 12px;
+            display: inline-block;
+        }
+
+        img {
+            width: 20px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        &.first, &.second, &.third {
+            background: $lighter_bg;
+            padding: 4px;
+            line-height: 16px;
+        }
+
+        &.second, &.third {
+            background: $light_bg;
+        }
+
+        &.third {
+            background: $bg;
+            margin-bottom: 4px;
+        }
+
+        &.highlight {
+            background: $green !important;
+            color: white;
+        }
+
+        &.extra {
+            margin-top: 24px;
+        }
+    }
+}
+
+
 table tr td.new {
     color: red;
 }
