@@ -311,7 +311,7 @@
                         $this->uid = $uid;
 
                         // Add to feed
-                        $this->app->feed->call($username, 'join');
+                        $this->app->feed->call($token_details->username, 'join');
 
                         // Setup GA event
                         $this->app->ssga->set_event('user', 'register', 'OAuth', $uid);
