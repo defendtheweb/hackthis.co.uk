@@ -793,6 +793,12 @@ POST;
                 $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `karma`)
                         VALUES (:uid, :post_id, :value) ON DUPLICATE KEY UPDATE `karma` = :value, `time` = now()");
                 $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':value'=>$value));
+
+                // Give user medal
+                $this->app->user->awardMedal('karma', 1, $result->author);
+
+                // Give yourself medal
+                $this->app->user->awardMedal('rewarder');
             } else {
                 $st = $this->app->db->prepare("DELETE IGNORE FROM users_forum WHERE user_id = :uid
                                                AND post_id = :post_id LIMIT 1");
