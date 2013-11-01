@@ -113,7 +113,7 @@
 <?php endif; ?>
                     <img src='<?=$profile->image;?>' width='100%' alt='<?=$profile->username;?> profile picture'/>
                 </div>
-                <div class='progress-container'><div class='progress' style='width: 90%'>90%</div></div>            
+                <div class='progress-container'><div class='progress' style='width: <?=$profile->score_perc;?>%'><span><?=ceil($profile->score_perc);?>%</span></div></div>            
             </div>
 
             <div class='col span_17 clr'>

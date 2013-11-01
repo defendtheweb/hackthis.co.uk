@@ -35,8 +35,12 @@
 
             color: $white;
             text-align: right;
-            padding: 1px 3px;
             font-weight: bold;
+
+            span {
+                padding: 1px 3px;
+                display: inline-block;
+            }
         }
     }
 

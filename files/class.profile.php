@@ -104,6 +104,12 @@
             $this->social = $this->getSocial();
 
             $this->owner = ($this->app->user->uid === $this->uid);
+
+            // Check score and award medal?
+            if ($this->score >= $this->app->max_score)
+                $this->score_perc = 100;
+            else
+                $this->score_perc = $this->score/$this->app->max_score * 100;
         }
 
         public function getFeed() {
