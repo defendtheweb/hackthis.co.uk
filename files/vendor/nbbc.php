@@ -890,7 +890,7 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
         }
         $content = preg_replace("/[^A-Za-z0-9- ]/", '', $content);
 
-        $template = "\n<div class='bbcode-vimeo' style='width: 100%; height: 400px; text-align: center'>\n<iframe src='https://player.vimeo.com/video/{$content}?title=0&amp;byline=0&amp;portrait=0&amp;color=008000' width='100%' height='100%' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>\n</div>\n";
+        $template = "\n<div class='bbcode-vimeo' style='width: 100%; height: 400px; text-align: center'>\n<iframe src='https://player.vimeo.com/video/{$content}?title=0&amp;byline=0&amp;portrait=0&amp;color=00CC00' width='100%' height='100%' frameborder='0' webkitAllowFullScreen allowFullScreen></iframe>\n</div>\n";
 
         return $template;
     }

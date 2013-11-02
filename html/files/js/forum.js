@@ -141,6 +141,8 @@ $(function() {
 
         if ($(self).find('.post_content .bbcode-youtube').length)
             setTimeout(resizePostInfo(self), 5);
+        else if ($(self).find('.post_content .bbcode-vimeo').length)
+            setTimeout(resizePostInfo(self), 5);
         else
             resizePostInfo(self)();
     });
