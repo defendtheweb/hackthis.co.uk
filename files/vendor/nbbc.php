@@ -876,6 +876,9 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
         <param name=\"wmode\" value=\"transparent\">\n
         <embed src=\"https://www.youtube.com/v/{$content}?version=3&autohide=1&fs=1&rel=0&showinfo=0&feature=player_embedded\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowScriptAccess=\"always\" wmode=\"transparent\" width=\"100%\" height=\"100%\"></object>\n</div>\n";
 
+
+        $template = "\n<div class='bbcode-youtube' style='width: 100%; height: 400px; text-align: center'>\n<iframe width='560' height='315' src='https://www.youtube-nocookie.com/embed/CS01Hmjv1pQ?rel=0&autohide=1&showinfo=0' frameborder='0' allowfullscreen></iframe>\n</div>\n";
+
         return $template;
     }
 
