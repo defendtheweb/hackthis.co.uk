@@ -2,7 +2,7 @@
     $scoreboard = $app->stats->getLeaderboard();
 ?>
                    <article class="widget scoreboard">
-                        <h1><a href='leaderboards.php'>Scoreboard</a></h1>
+                        <h1><a href='/leaderboards.php'>Scoreboard</a></h1>
                         <ul class='plain'>
 <?php
     for ($i = 0; $i < count($scoreboard); $i++):
