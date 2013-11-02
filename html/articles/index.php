@@ -61,7 +61,7 @@
 <?php               if (isset($article->thumbnail)): ?>
                                     <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
 <?php               elseif (isset($article->video)): ?>
-                                    <img src="http://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+                                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
 <?php               endif; ?>
                                     <div class="caption">
                                         <h3><?=$article->title;?></h3>

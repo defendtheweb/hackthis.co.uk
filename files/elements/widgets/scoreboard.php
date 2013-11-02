@@ -16,7 +16,7 @@
                                 <span class='col span_14'>
                                     <a href='/user/<?=$position->username;?>'><?=$position->username;?></a>
                                     <?php if ($position->donator) echo "<i class='icon-heart'></i>"; ?>
-                                    <img src='<?=$position->image;?>' class='right'/>
+                                    <?php if ($n <= 3): ?><img src='<?=$position->image;?>' class='right'/><?php endif; ?>
                                 </span>
                                 <span class='score text-right col span_7'><?=number_format($position->score);?> pts</span>
                             </li>

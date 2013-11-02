@@ -16,7 +16,7 @@
 <?php   if (isset($article->thumbnail)): ?>
                     <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
 <?php   elseif (isset($article->video)): ?>
-                    <img src="http://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
 <?php   endif; ?>
                     <div class="caption">
                         <h3><?=$article->title;?></h3>
@@ -40,7 +40,7 @@
             <li>
                 <a href='#'>
                     <h3>[BBC] Symantec disables 500,000 botnet-infected computers</h3>
-                    <img src='http://news.bbcimg.co.uk/media/images/70210000/jpg/_70210113_148056808.jpg'/>
+                    <img src='https://news.bbcimg.co.uk/media/images/70210000/jpg/_70210113_148056808.jpg'/>
                 </a>
             </li>
             <li>

@@ -54,13 +54,6 @@
                     <article class="widget dashboard">
                         <section class="fluid clr center">
                             <h1 class='lower'><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></h1>
-                            <script>
-                                // Resize username
-                                while( $('.dashboard h1 a').width() > $('.dashboard').width() ) {
-                                    $('.dashboard h1 a').css('font-size', (parseInt($('.dashboard h1 a').css('font-size')) - 1) + "px" );
-                                }
-                            </script>
-
                             <div class='profile-pic'>
                                 <img src='<?=$app->user->image;?>'/>
                                 <a href='/settings/image.php' class='upload'>
