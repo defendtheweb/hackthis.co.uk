@@ -1,5 +1,7 @@
 <?php
     $custom_css = array('faq.scss');
+    require_once('init.php');
+    $app->page->title = 'FAQ';
     require_once('header.php');
 ?>
 
