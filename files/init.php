@@ -1,12 +1,12 @@
 <?php
-	session_start();
-	error_reporting(E_ALL);
-	ini_set('display_errors', '0');
+    session_start();
+    error_reporting(E_ALL);
+    ini_set('display_errors', '0');
 
-	// Session security flags
-	ini_set('session.cookie_httponly', 1);
-	ini_set('session.use_only_cookies', 1);
-	ini_set('session.cookie_secure', 1);
+    // Session security flags
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', 1);
 
     // Content Security Policy
     $csp_rules = "
@@ -16,27 +16,27 @@
         img-src *";
     header("Content-Security-Policy: " . $csp_rules);
 
-	//Set timezone
-	date_default_timezone_set("Europe/London");
-	putenv("TZ=Europe/London");
+    //Set timezone
+    date_default_timezone_set("Europe/London");
+    putenv("TZ=Europe/London");
 
-	function __autoload($class) {
-		@include_once 'class.'.$class.'.php';
-	}
+    function __autoload($class) {
+        @include_once 'class.'.$class.'.php';
+    }
 
-	// Setup app
-	try {
-		$app = new app();
-	} catch (Exception $e) {
-		die($e->getMessage());
-	}
+    // Setup app
+    try {
+        $app = new app();
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
 
-	$minifier = new loader($custom_css, $custom_js);
+    $minifier = new loader($custom_css, $custom_js);
 
-	if ($app->user->loggedIn) {
+    if ($app->user->loggedIn) {
         if (defined('PAGE_PRIV') && !$app->user->{PAGE_PRIV.'_priv'}) {
-	        require_once('error.php');
-	    }	
+            require_once('error.php');
+        }   
 
         array_push($minifier->custom_js, 'notifications.js');
         array_push($minifier->custom_js, 'autosuggest.js');
@@ -51,7 +51,7 @@
         }
 
         if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
-	        require_once('error.php');
-	    }
+            require_once('error.php');
+        }
     }
 ?>
