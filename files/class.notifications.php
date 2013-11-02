@@ -81,10 +81,12 @@
                     $st->fetch();
                 } else if ($res->type == 'comment_reply' || $res->type == 'comment_mention') {
                     // uri, title
-                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT('/articles/', articles.slug) AS slug
+                    $st = $this->app->db->prepare("SELECT articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS slug
                         FROM articles_comments
                         LEFT JOIN articles
                         ON articles_comments.article_id = articles.article_id
+                        LEFT JOIN articles_categories
+                        ON articles_categories.category_id = articles.category_id
                         WHERE comment_id = :item_id
                         LIMIT 1");
                     $st->execute(array(':item_id' => $res->item_id));
