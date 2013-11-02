@@ -272,7 +272,6 @@
                 <?php include('elements/wysiwyg.php'); ?>
 
                 <input type="hidden" value="false" name="js">
-                <script>$('input[name="js"]').val('true');</script>
                 <input type="hidden" value="<?=$app->generateCSRFKey("contact");?>" name="token">
                 <input type="submit" value="Send" class="button">
             </fieldset>
