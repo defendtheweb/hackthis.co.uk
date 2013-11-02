@@ -14,7 +14,7 @@
         script-src 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com;
         style-src 'unsafe-inline' https://*.googleapis.com;
         img-src *;
-        object-src 'self' https://*.youtube.com";
+        object-src 'self' https://*.youtube.com  https://*.ytimg.com";
     header("Content-Security-Policy: " . $csp_rules);
 
     //Set timezone
