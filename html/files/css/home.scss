@@ -93,11 +93,11 @@
     }
 
     tbody tr {
-        border-left: 2px solid #141414;
+        border-left: 2px solid $light_bg;
 
         &:hover {
             background: $bg;
-            border-left: 2px solid lighten(#141414, 10%);
+            border-left: 2px solid $bg;
         }
 
         &.highlight {
