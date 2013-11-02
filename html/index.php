@@ -7,12 +7,6 @@
     // Set canonical link
     $app->page->canonical = "https://www.hackthis.co.uk";
 
-    if (isset($_POST['payload']) && $_POST['payload'] && isset($_GET['hook']) && $_GET['hook'] == $app->config('git')) {
-        header("Content-type: text/plain");
-        shell_exec("../deploy.sh");
-        die();
-    }
-
     if ($app->user->loggedIn) {
         require_once("home.php");
     } else {
