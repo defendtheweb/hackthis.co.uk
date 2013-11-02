@@ -1,7 +1,8 @@
 <?php
     $scoreboard = $app->stats->getLeaderboard();
 ?>
-                   <article class="widget scoreboard">
+
+                    <article class="widget scoreboard">
                         <h1><a href='/leaderboards.php'>Scoreboard</a></h1>
                         <ul class='plain'>
 <?php
@@ -15,8 +16,14 @@
                                 <span class='position col span_3'><?=$joint?'~':$n;?></span>
                                 <span class='col span_14'>
                                     <a href='/user/<?=$position->username;?>'><?=$position->username;?></a>
-                                    <?php if ($position->donator) echo "<i class='icon-heart'></i>"; ?>
-                                    <?php if ($n <= 3): ?><img src='<?=$position->image;?>' class='right'/><?php endif; ?>
+<?php if ($position->donator): ?>
+                                    <i class='icon-heart'></i>
+<?php
+    endif;
+    if ($n <= 3):
+?> 
+                                    <img src='<?=$position->image;?>' class='right'/>
+<?php endif; ?>
                                 </span>
                                 <span class='score text-right col span_7'><?=number_format($position->score);?> pts</span>
                             </li>
