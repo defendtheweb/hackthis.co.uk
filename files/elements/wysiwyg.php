@@ -23,7 +23,6 @@
 ?>
         <li><a href='#' class='hint--top' data-hint='Insert link' data-tag='url'><i class='icon-link'></i></a></li>
         <li class='mobile-hide'><a href='#' class='hint--top' data-hint='Insert image' data-tag='img'><i class='icon-image'></i></a></li>
-        <li class='seperator mobile-hide'><a href='#' class='hint--top show-upload' data-hint='Upload image'><i class='icon-upload'></i></a></li>
 
         <li class='mobile-hide'><a href='#' class='hint--top' data-hint='Quote' data-tag='quote' data-value='author'><i class='icon-quote'></i></a></li>
         <li class='seperator mobile-hide'><a href='#' class='hint--top' data-hint='Code' data-tag='code'><i class='icon-console'></i></a></li>
