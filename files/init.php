@@ -8,6 +8,14 @@
 	ini_set('session.use_only_cookies', 1);
 	ini_set('session.cookie_secure', 1);
 
+    // Content Security Policy
+    $csp_rules = "
+        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com;
+        script-src 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com;
+        style-src 'unsafe-inline' https://*.googleapis.com;
+        img-src *";
+    header("Content-Security-Policy: " . $csp_rules);
+
 	//Set timezone
 	date_default_timezone_set("Europe/London");
 	putenv("TZ=Europe/London");
