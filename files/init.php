@@ -11,10 +11,11 @@
     // Content Security Policy
     $csp_rules = "
         default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com;
-        script-src 'self' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com;
         style-src 'self' 'unsafe-inline' https://*.googleapis.com;
         img-src *;
-        object-src 'self' https://*.youtube.com  https://*.ytimg.com";
+        object-src 'self' https://*.youtube.com  https://*.ytimg.com;
+        frame-src 'self' https://googleads.g.doubleclick.net";
     header("Content-Security-Policy: " . $csp_rules);
 
     //Set timezone
