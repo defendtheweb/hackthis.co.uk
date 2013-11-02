@@ -20,8 +20,8 @@
 
             // Check if user is logged in
             if (isset($_SESSION['uid'])) {
-                // Quick hijacking check
-                if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR'] || $_SESSION['user_agent_id'] !== md5($_SERVER['HTTP_USER_AGENT'])) {
+                // Quick hijacking check, unless basic+ 2
+                if ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) {
                     $this->logout();
                 } else {        
                     $this->loggedIn = true;
