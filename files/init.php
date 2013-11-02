@@ -15,7 +15,7 @@
         style-src 'self' 'unsafe-inline' https://*.googleapis.com;
         img-src *;
         object-src 'self' https://*.youtube.com  https://*.ytimg.com;
-        frame-src 'self' https://googleads.g.doubleclick.net";
+        frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com";
     header("Content-Security-Policy: " . $csp_rules);
 
     //Set timezone
