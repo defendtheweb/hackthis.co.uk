@@ -344,14 +344,10 @@
                             }
                         }
 
-                        a {
+                        i.icon-search {
                             display: inline-block;
                             margin-top: -6px;
                             padding: 4px;
-
-                            &:hover i {
-                                color: $text;
-                            }
                         }
 
                         .searchsuggest {

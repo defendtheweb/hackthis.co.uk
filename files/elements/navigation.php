@@ -135,7 +135,7 @@
                         <li class='right icon mobile-hide nav-search'>
                             <form action='/search.php' method='get'>
                                 <input autocomplete="off" placeholder='Search: topic, user, article..' name='q'/>
-                                <a href='#' onclick="$(this).parent().submit();"><i class='icon-search'></i></a>
+                                <i class='icon-search'></i>
                             </form>
                         </li>
 <?php
