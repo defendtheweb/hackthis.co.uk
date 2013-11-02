@@ -7,4 +7,6 @@ $(function() {
         else
             $('.donate-perk').slideUp();
     });
+
+    $('input[name="js"]').val('true');
 });

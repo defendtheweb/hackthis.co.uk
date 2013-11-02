@@ -2,6 +2,7 @@
     define("PAGE_PUBLIC", true);
 
     $custom_css = array('faq.scss');
+    $custom_js = array('faq.js');
     require_once('init.php');
     $app->page->title = 'Contact Us';
     $app->page->canonical = 'http://www.hackthis.co.uk/contact';
@@ -188,7 +189,6 @@
                 <?php include('elements/wysiwyg.php'); ?>
 
                 <input type="hidden" value="false" name="js">
-                <script>$('input[name="js"]').val('true');</script>
                 <input type="hidden" value="<?=$app->generateCSRFKey("contact");?>" name="token">
                 <input type="submit" value="Send" class="button">
             </fieldset>
