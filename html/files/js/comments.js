@@ -76,7 +76,6 @@ $(function() {
     $.template("commentsTmpl", commentsTmpl);
 
     $.get("/files/ajax/comments.php", {"action": "get", "id": item_id}, function(data) {
-        console.log(data);
         renderComment(data);
     }, "json");
 
