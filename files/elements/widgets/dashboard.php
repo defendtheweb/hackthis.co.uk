@@ -4,7 +4,7 @@
     $todo_position = 0;
     $todo = array("<a href='/settings/account.php'>Verify email address</a>",
                   "Complete <a href='/levels/main/1'>Main 1</a>",
-                  "Upload a <a href='/settings/image'>profile image</a>");
+                  "Upload a <a href='/settings/image.php'>profile image</a>");
 
     // Does user have todo medal?
     $st = $app->db->prepare('SELECT medal_id FROM users_medals
