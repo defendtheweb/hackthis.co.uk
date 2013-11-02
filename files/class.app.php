@@ -17,6 +17,14 @@
             // Connect to database
             $this->connectDB($this->config['db']);
 
+            //get version number
+            $this->cache = new cache($this);
+            $this->version = substr($this->cache->get('version'), 1);
+
+            //get max score
+            $this->max_score = $this->getMaxScore();
+
+
             // Setup google events class
             require('vendor/class.ss-ga.php');
             if (isset($this->config['ssga-ua'])) {
@@ -38,10 +46,6 @@
             $this->user = new user($this);
 
             $this->notifications = new notifications($this);
-
-            //get version number
-            $this->cache = new cache($this);
-            $this->version = substr($this->cache->get('version'), 1);
 
             // Create level object
             $this->levels = new levels($this);
@@ -73,12 +77,42 @@
                 $dsn .= (!empty($config['port'])) ? ';port=' . $config['port'] : '';
                 $dsn .= ";dbname={$config['database']}";
                 $this->db = new PDO($dsn, $config['username'], $config['password']);
-                // $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
                 $this->db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
             } catch(PDOException $e) {
                 die($e->getMessage());
             }
+        }
+
+        private function getMaxScore() {
+            $score = $this->cache->get('maxscore', 60);
+
+            if (!$score) {
+                // Level total
+                $sql = 'SELECT SUM(`value`) AS `score`
+                        FROM levels
+                        INNER JOIN levels_data
+                        ON levels_data.level_id = levels.level_id AND levels_data.key = "reward"';
+                $st = $this->db->prepare($sql);
+                $st->execute();
+                $levels = $st->fetch();
+
+                // Medal total
+                $sql = 'SELECT SUM(`reward`) AS `score`
+                        FROM medals
+                        INNER JOIN medals_colours
+                        ON medals_colours.colour_id = medals.colour_id';
+                $st = $this->db->prepare($sql);
+                $st->execute();
+                $medals = $st->fetch();
+
+                $score = $levels->score + $medals->score;
+
+                $this->cache->set('maxscore', $score);
+            }
+
+            return $score;
         }
 
         public function generateCSRFKey($key) {
