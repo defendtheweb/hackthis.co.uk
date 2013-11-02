@@ -429,8 +429,7 @@
         public function getComments($article_id, $parent_id=0, $bbcode=true) {
             // Group by required for count
             $st = $this->app->db->prepare('SELECT comments.comment_id as id, comments.comment, comments.deleted,
-                               DATE_FORMAT(comments.time, \'%Y-%m-%dT%T+01:00\') as `time`,
-                               coalesce(users.username, 0) as username, users_profile.gravatar,
+                               comments.time, coalesce(users.username, 0) as username, users_profile.gravatar,
                                IF (users_profile.gravatar = 1, users.email , users_profile.img) as `image`
                     FROM articles_comments comments
                     LEFT JOIN users
@@ -443,6 +442,8 @@
             $result = $st->fetchAll();
 
             foreach($result as $key=>$comment) {
+                $comment->time = $this->app->utils->fdate($comment->time);
+
                 if (!$comment->deleted) {
                     if ($bbcode)
                         $comment->comment = $this->app->parse($comment->comment);
