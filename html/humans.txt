@@ -2,11 +2,11 @@
 
 /* TEAM */                           
 flabbyrabbit
-Site: http://hackthis.co.uk
+Site: https://www.hackthis.co.uk
 Email: flabbyrabbit@hackthis.co.uk
 Location: United Kingdom
 
 /* SITE */
 Created: 5th January 2008
-Components: Modernizr, jQuery, H5DP, Normalize.css
+Components: jQuery, SASS
 Software: Sublime Text 2
