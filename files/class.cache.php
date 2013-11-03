@@ -20,9 +20,11 @@
 
 		function set($file, $content) {
 			$file = preg_replace("/[^A-Za-z0-9_-]/", '', $file);
-			$fp = fopen($this->app->config['cache'] . $file, 'w');
-			fwrite($fp, $content);
-			fclose($fp);
+			
+			if (($fp = fopen($this->app->config['cache'] . $file, 'w')) !== false) {
+				fwrite($fp, $content);
+				fclose($fp);
+			}
 		}
 	}
 ?>
