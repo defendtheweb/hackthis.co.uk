@@ -1,3 +1,4 @@
+deploy.sh
 files/config.php
 html/.htaccess
 html/files/css/min
