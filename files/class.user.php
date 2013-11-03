@@ -140,10 +140,10 @@
             $st->execute(array(':uid' => $this->uid, ':label1' => 'donator', ':label2' => 'karma'));
             $res = $st->fetchAll();
             foreach($res AS $medal) {
-                if (strcasecmp($medal->label == 'donator') === 0)
+                if (strcasecmp($medal->label, 'donator') === 0)
                     $this->donator = true;
 
-                if (strcasecmp($medal->label == 'karma') === 0) {
+                if (strcasecmp($medal->label, 'karma') === 0) {
                     $this->karma_priv++;
                 }
             }
