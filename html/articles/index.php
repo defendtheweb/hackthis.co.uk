@@ -58,8 +58,8 @@
                             <div class="row fluid article-hot">
 <?php           endif; ?>
                                 <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
-<?php               if (isset($article->thumbnail)): ?>
-                                    <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
+<?php               if (isset($article->thumbnail) && $article->thumbnail): ?>
+                                    <img src="/images/200/4:3/<?=$article->thumbnail;?>">
 <?php               elseif (isset($article->video)): ?>
                                     <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
 <?php               endif; ?>
