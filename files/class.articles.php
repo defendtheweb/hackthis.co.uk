@@ -190,6 +190,10 @@
                 $result->next = $st->fetch();
             }
 
+            $result->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($result) {
+                    $result->video = $match[1];
+            }, $result->body);
+
             //increment read count
             $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
             $st->execute(array(':aid' => $result->id));
