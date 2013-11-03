@@ -86,9 +86,9 @@
                                 <li class="<?=isset($article->thumbnail) || isset($article->video)?'img':'';?>">
                                     <a href='<?=$article->uri;?>'>
 <?php               if (isset($article->thumbnail) && $article->thumbnail): ?>
-                                    <img src="/images/200/4:3/<?=$article->thumbnail;?>">
+                                    <img src="/images/200/4:3/<?=$article->thumbnail;?>" class='mobile-hide'>
 <?php               elseif (isset($article->video)): ?>
-                                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+                                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg" class='mobile-hide'>
 <?php               endif; ?>
                                     <h2><?=$article->title;?></h2></a>
                                     <a href='/articles/<?=$article->cat_slug;?>' class='category'><?=$article->cat_title;?></a><br/>
