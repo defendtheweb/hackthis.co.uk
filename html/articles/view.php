@@ -44,7 +44,7 @@
         $app->page->meta['og:description'] = substr($app->parse($article->body, false), 0, 300);
 
         if (isset($article->thumbnail) && $article->thumbnail) {
-            $app->page->meta['og:image'] = "https://www.hackthis.co.uk/images/200/4:3/{$article->thumbnail}";
+            $app->page->meta['og:image'] = "http://sheldon.hackthis.co.uk/images/200/4:3/{$article->thumbnail}";
             $app->page->meta['twitter:image'] = $app->page->meta['og:image'];
         } else if (isset($article->video)) {
             $app->page->meta['og:image'] = "https://img.youtube.com/vi/{$article->video}/0.jpg";
