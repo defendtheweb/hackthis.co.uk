@@ -42,7 +42,11 @@ $(function() {
             var uri = '/files/ajax/user.php?action=friend.add&uid=';
         else
             var uri = '/files/ajax/user.php?action=friend.remove&uid=';
-        uri += uid;
+
+        if (uid)
+            uri += uid;
+        else
+            uri += $this.attr('data-uid');
 
         $.getJSON(uri, function(data) {
             if ($this.hasClass('removefriend-hide')) {
