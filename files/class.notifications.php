@@ -108,7 +108,7 @@
                     $st->setFetchMode(PDO::FETCH_INTO, $res);
                     $st->fetch();
 
-                    $res->slug = "{$res->slug}#post-{$res->item_id}";
+                    $res->slug = "{$res->slug}?post={$res->item_id}";
                 } else if ($res->type == 'article') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT articles.title, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS slug

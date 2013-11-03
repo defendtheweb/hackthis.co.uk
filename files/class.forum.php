@@ -766,6 +766,16 @@ POST;
             return $st->execute(array(':pid'=>$post_id, ':body'=>$body));
         }
 
+        public function findPost($thread_id, $post_id) {
+            $st = $this->app->db->prepare("SELECT COUNT(`post_id`) AS `posts`
+                                           FROM forum_posts
+                                           WHERE post_id < :pid AND thread_id = :tid AND deleted = 0");
+            $st->execute(array(':pid'=>$post_id, ':tid'=>$thread_id));
+            $posts = $st->fetch();
+
+            return ceil($posts->posts/10);           
+        }
+
         public function watchThread($thread_id, $watch=true) {
             if ($watch) $watch = '1'; else $watch = '0';
 

@@ -16,6 +16,22 @@
     $thread_page_count = ceil($thread->replies/10);
     $thread_page_count = $thread_page_count == 0?1:$thread_page_count;
 
+
+
+    if (isset($_GET['post'])) {
+        // redirect user to correct page with #
+        if ($_GET['post'] == 'latest') {
+            header('Location: /forum/' . $thread->slug . '?page=' . $thread_page_count . '#latest');
+        } else {
+            // find page of post
+            $p = $forum->findPost($thread->id, $_GET['post']);
+            if ($p) {
+                header('Location: /forum/' . $thread->slug . '?page=' . ($p>0?$p:1) . '#post-' . $_GET['post']);
+            }
+        }
+    }
+
+
     if (isset($_GET['submitted']) || isset($_GET['latest'])) {
         if ($thread_page != $thread_page_count) {
             $thread_page = $thread_page_count;
@@ -74,7 +90,7 @@
                         <div class="col span_18 forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
 
 <?php if ($app->user->loggedIn): ?>
-    <a href='#submit' class='post-reply button right mobile-hide'><i class='icon-chat'></i> Post reply</a>
+    <a href='?page=<?=$thread_page_count;?>#submit' class='post-reply button right mobile-hide'><i class='icon-chat'></i> Post reply</a>
 <?php   if ($thread->watching): ?>
     <a href='#' class='post-watch post-unwatch button right mobile-hide'><i class='icon-eye-blocked'></i> Unwatch</a>
 <?php   else: ?>
@@ -158,7 +174,7 @@
         if ($app->user->loggedIn && $app->user->forum_priv > 0 && !$thread->closed):
 ?>
 
-                            <form id="submit" class='forum-thread-reply' method="POST" action="?submit#submit">
+                            <form id="submit" class='forum-thread-reply' method="POST" action="?page=<?=$thread_page_count;?>&submit#submit">
 <?php
         if (isset($_GET['submit']) && isset($_POST['body'])) {
             $app->utils->message($forum->getError(), 'error');
