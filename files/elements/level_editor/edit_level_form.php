@@ -13,11 +13,14 @@
                 $updated = $app->levels->editLevelForm($_GET['edit']);
 
                 if ($updated) {
-                    if (!isset($_GET['done']))
-                        header('Location: '.$_SERVER[REQUEST_URI].'&done');
-                    else
-                        header('Location: '.$_SERVER[REQUEST_URI]);
-                    die();
+                    // if (!isset($_GET['done']))
+                    //     header('Location: '.$_SERVER[REQUEST_URI].'&done');
+                    // else
+                    //     header('Location: '.$_SERVER[REQUEST_URI]);
+                    // die();
+
+                    $app->utils->message('Level updated', 'good');
+                    $level = $app->levels->getLevelFromID($_GET['edit']);
                 }
             }
         }

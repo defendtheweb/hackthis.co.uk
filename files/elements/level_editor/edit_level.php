@@ -13,11 +13,13 @@
                 $updated = $app->levels->editLevel($_GET['edit']);
 
                 if ($updated) {
-                    if (!isset($_GET['done']))
+                   /* if (!isset($_GET['done']))
                         header('Location: '.$_SERVER[REQUEST_URI].'&done');
                     else
-                        header('Location: '.$_SERVER[REQUEST_URI]);
-                    die();
+                        header('Location: '.$_SERVER[REQUEST_URI]); */
+
+                    $app->utils->message('Level updated', 'good');
+                    $level = $app->levels->getLevelFromID($_GET['edit']);
                 }
             }
         }
@@ -25,9 +27,10 @@
         if (isset($_POST['save'])) {
             $id = $app->levels->newLevel();
 
-            if ($id !== false)
-                header('Location: levels.php?done&edit='.$id);
-            else {
+            if ($id !== false) {
+                $app->utils->message('Level created', 'good');
+                $level = $app->levels->getLevelFromID($id);
+            } else {
                 $app->utils->message('Error creating level');
             }
             die();
