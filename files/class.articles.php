@@ -190,7 +190,7 @@
                 $result->next = $st->fetch();
             }
 
-            $result->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($result) {
+            preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($result) {
                     $result->video = $match[1];
             }, $result->body);
 
