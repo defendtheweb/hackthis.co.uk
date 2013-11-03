@@ -192,11 +192,13 @@ POST;
 
                 $cancel_down = $post->user_karma < 0?'karma-cancel':'';
                 $cancel_up = $post->user_karma > 0?'karma-cancel':'';
-                $return .= <<< POST
-            <a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>
-            <span>{$post->karma}</span>
-            <a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>
-POST;
+
+                if ($this->app->user->karma_priv >= 2)
+                    $return .= "<a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>";
+                $return .= "<span>{$post->karma}</span>";
+                if ($this->app->user->karma_priv >= 1)
+                    $return .= "<a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>";
+
                 if ($first) {
                     $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
                 }
@@ -704,10 +706,13 @@ POST;
                 $st->execute(array(':pid'=>$post_id));
                 $res = $st->fetch();
 
-                if ($res->posts == 49) {
+                if ($res->posts == 9) {
+                    $this->app->user->removeMedal('karma', 1);
+                } else if ($res->posts == 49) {
                     $this->app->user->removeMedal('forum', 1);
                 } else if ($res->posts == 99) {
                     $this->app->user->removeMedal('forum', 2);
+                    $this->app->user->removeMedal('karma', 2);
                 } else if ($res->posts == 999) {
                     $this->app->user->removeMedal('forum', 3);
                 }
@@ -788,6 +793,12 @@ POST;
 
         public function giveKarma($positive = true, $post_id, $cancel=false) {
             $value = $positive?1:-1;
+
+            // Check if user has privilages to give this karma
+            if (!$positive && $this->app->user->karma_priv < 2)
+                return false;
+            if ($this->app->user->karma_priv < 1)
+                return false;
 
             // Does post exist? Is user owner of post?
             $st = $this->app->db->prepare("SELECT author

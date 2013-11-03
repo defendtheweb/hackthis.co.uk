@@ -52,7 +52,7 @@
             $this->app->stats->users_activity($this);
 
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
-                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv, verified,
+                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv, verified, `posts`.posts,
                     profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most, activity.joined
                     FROM users u
@@ -62,6 +62,8 @@
                     ON u.user_id = priv.user_id
                     LEFT JOIN users_activity activity
                     ON u.user_id = activity.user_id
+                    LEFT JOIN (SELECT COUNT(post_id) AS `posts`, author FROM forum_posts WHERE deleted = 0 GROUP BY author) `posts`
+                    ON `posts`.author = u.user_id
                     WHERE u.user_id = :user_id');
             $st->execute(array(':user_id' => $this->uid));
             $st->setFetchMode(PDO::FETCH_INTO, $this);
@@ -132,10 +134,33 @@
                 }
             }
 
-            // Is donator?
-            $st = $this->app->db->prepare('SELECT medal_id FROM medals WHERE label = :label');
-            $st->execute(array(':label' => 'donator'));
-            $this->donator = (boolean) $st->fetch();
+            // Is donator / karma priv?
+            $this->karma_priv = 0;
+            $st = $this->app->db->prepare('SELECT medals.medal_id, medals.colour_id, medals.label FROM medals INNER JOIN users_medals ON medals.medal_id = users_medals.medal_id WHERE (label = :label1 OR label = :label2) AND users_medals.user_id = :uid');
+            $st->execute(array(':uid' => $this->uid, ':label1' => 'donator', ':label2' => 'karma'));
+            $res = $st->fetchAll();
+            foreach($res AS $medal) {
+                if (strcasecmp($medal->label == 'donator') === 0)
+                    $this->donator = true;
+
+                if (strcasecmp($medal->label == 'karma') === 0) {
+                    $this->karma_priv++;
+                }
+            }
+
+            if ($this->karma_priv == 0) {
+                if ($this->score >= 500 && $this->posts >= 10) {
+                    $this->awardMedal('karma', 1);
+                    $this->karma_priv++;
+                }
+            }
+
+            if ($this->karma_priv == 1) {
+                if ($this->score >= 3000 && $this->posts >= 100) {
+                    $this->awardMedal('karma', 2);
+                    $this->karma_priv++;
+                }
+            }
         }
 
         private function salt() {
@@ -597,17 +622,33 @@
             return $st->execute(array(':uid' => $uid, ':type' => $type, ':value' => $value));
         }
 
-        public function checkData($type, $value, $interval=false) {
-            $sql = 'SELECT user_id
-                    FROM users_data
-                    WHERE `type` = :type AND `value` = :value AND user_id = :uid';
-            if ($interval)
-                $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
-            $sql .= ' LIMIT 1';
+        public function checkData($type, $value, $interval=false, $uid=0) {
+            if ($uid === 0)
+                $uid = $this->uid;
 
-            $st = $this->app->db->prepare($sql);
-            $st->execute(array(':type' => $type, ':uid' => $this->uid, ':value' => $value));
-            $row = $st->fetch();
+            if (!$uid) {
+                $sql = 'SELECT user_id
+                        FROM users_data
+                        WHERE `type` = :type AND `value` = :value';
+                if ($interval)
+                    $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
+                $sql .= ' LIMIT 1';
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':type' => $type, ':value' => $value));
+                $row = $st->fetch();
+            } else {
+                $sql = 'SELECT user_id
+                        FROM users_data
+                        WHERE `type` = :type AND `value` = :value AND user_id = :uid';
+                if ($interval)
+                    $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
+                $sql .= ' LIMIT 1';
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':type' => $type, ':uid' => $this->uid, ':value' => $value));
+                $row = $st->fetch();
+            }
 
             return $row;
         }
@@ -646,7 +687,7 @@
         }
 
         public function checkRequest($request) {
-            return $this->checkData("reset", $request, true);
+            return $this->checkData("reset", $request, true, null);
         }
 
         public function changePassword($pass, $pass2, $uid = null) {
