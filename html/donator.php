@@ -10,7 +10,7 @@
 
         $_SESSION['donate_anon'] = (isset($_POST['anon']) && $_POST['anon']);
 
-        if ($amount)
+        if ($amount && $amount > 0 && $amount < 10000)
             $donations->makeTransaction($amount, $_POST['size']);
     }
 

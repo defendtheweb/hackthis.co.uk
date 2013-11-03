@@ -114,7 +114,6 @@
 
 
             $response = curl_exec($ch);
-            print_r($response);
 
             $header = substr($response, 0, curl_getinfo($ch,CURLINFO_HEADER_SIZE));
             $body = json_decode(substr($response, curl_getinfo($ch,CURLINFO_HEADER_SIZE)));
