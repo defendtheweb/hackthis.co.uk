@@ -84,11 +84,17 @@
                         <li><a href='#'>more</a>
                             <ul>
                                 <li><a href='/irc.php'>IRC</a></li>
+<?php
+    if ($app->user->loggedIn):
+?>
                                 <li class='parent'><a href='/faq.php'>FAQ</a>
                                     <ul>
                                         <li><a href='/medals.php'>Medals</a></li>
                                     </ul>
                                 </li>
+<?php
+    endif;
+?>
                                 <li><a href='/contact'>contact us</a></li>
 <?php
     if ($app->user->loggedIn):
