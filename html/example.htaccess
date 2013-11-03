@@ -49,10 +49,11 @@ RewriteRule ^forum/(.+)$ /forum/index.php?slug=$1&%{QUERY_STRING}
 RewriteRule ^levels/b3.php$ /levels/level.php?group=basic+&level=3&%{QUERY_STRING} [L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^levels/(.+)/([a-zA-Z0-9]+)$ /levels/level.php?group=$1&level=$2&%{QUERY_STRING} [L]
+RewriteRule ^levels/(.+)/([a-zA-Z0-9]+)/?$ /levels/level.php?group=$1&level=$2&%{QUERY_STRING} [L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^levels/([a-zA-Z0-9]+)$ /levels/index.php?group=$1&%{QUERY_STRING} [L]
+RewriteRule ^levels/([a-zA-Z0-9]+)/?$ /levels/index.php?group=$1&%{QUERY_STRING} [L]
+RewriteRule ^levels/main/extras/ssap.xml$ /levels/extras/ssap.xml [L]
 
 
 # USERS
