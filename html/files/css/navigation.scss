@@ -1,5 +1,10 @@
 #global-nav-sticky-sticky-wrapper {  
     margin-bottom: 18px;
+
+    &.is-sticky #global-nav {
+        background: rgba(0,0,0,0.9);
+
+    }
 }
 
 #global-nav-sticky {
@@ -18,7 +23,7 @@
     }
     margin: 0px;
 
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.7);
 
     #nav-extra-dropdown,
     .nav-extra-dropdown {
