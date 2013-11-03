@@ -80,15 +80,25 @@
 ?>
                             </ul>
                         </li>
+
+                        <li><a href='#'>more</a>
+                            <ul>
+                                <li><a href='/irc.php'>IRC</a></li>
+                                <li class='parent'><a href='/faq.php'>FAQ</a>
+                                    <ul>
+                                        <li><a href='/medals.php'>Medals</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href='/contact'>contact us</a></li>
 <?php
     if ($app->user->loggedIn):
 ?>
-                        <li><a href='/donator.php'>Donate</a></li>
+                                <li><a href='/donator.php'>Donate</a></li>
 <?php
     endif;
 ?>
-                        <li><a href='/contact'>contact us</a></li>
-
+                            </ul>
+                        </li>
 <?php
     if ($app->user->loggedIn):
 ?>
