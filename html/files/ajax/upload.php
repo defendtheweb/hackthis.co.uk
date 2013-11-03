@@ -31,7 +31,7 @@
 
         $id = uniqid('', true);
         $filename = $id . $ext;
-        $filepath = $app->config('path') . "/files/uploads/images/" . $filename;
+        $filepath = $app->config('path') . "/files/uploads/users/" . $filename;
 
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $filepath)) {
             $app->user->setImagePath($filename);
