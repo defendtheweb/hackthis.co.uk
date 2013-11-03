@@ -17,6 +17,8 @@ RewriteRule ^contact/?$ /contact.php [L]
 
 #IMAGES
 RewriteRule ^users/images/(.+)/(.+)/(.+)$ /files/vendor/slir/?h=$1&c=$2&i=$3 [L]
+RewriteRule ^images/(.+)/(.+)/(.+)$ /files/vendor/slir/?h=$1&c=$2&i=$3 [L]
+RewriteRule ^files/media/images/articles/(.+)/(.+)/(.+).jpg$ /files/vendor/slir/?i=$3 [L]
 
 #NEWS
 RewriteRule ^news/?$ /news.php?%{QUERY_STRING}
