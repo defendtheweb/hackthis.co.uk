@@ -58,7 +58,7 @@
                             <div class="row fluid article-hot">
 <?php           endif; ?>
                                 <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
-<?php               if (isset($article->thumbnail) && strlen($article->thumbnail) > 2): ?>
+<?php               if (isset($article->thumbnail) && $article->thumbnail): ?>
                                     <img src="/images/200/4:3/<?=$article->thumbnail;?>">
 <?php               elseif (isset($article->video)): ?>
                                     <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
@@ -85,10 +85,10 @@
 ?>
                                 <li class="<?=isset($article->thumbnail) || isset($article->video)?'img':'';?>">
                                     <a href='<?=$article->uri;?>'>
-<?php               if (isset($article->thumbnail)): ?>
-                                    <img src="/users/images/200/4:3/<?=$article->thumbnail;?>">
+<?php               if (isset($article->thumbnail) && $article->thumbnail): ?>
+                                    <img src="/images/200/4:3/<?=$article->thumbnail;?>">
 <?php               elseif (isset($article->video)): ?>
-                                    <img src="http://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+                                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
 <?php               endif; ?>
                                     <h2><?=$article->title;?></h2></a>
                                     <a href='/articles/<?=$article->cat_slug;?>' class='category'><?=$article->cat_title;?></a><br/>

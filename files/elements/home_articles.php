@@ -13,7 +13,7 @@
             break;
 ?>
                 <a href='<?=$article->slug;?>' class="col span_12 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
-<?php   if (isset($article->thumbnail) && strlen($article->thumbnail) > 2): ?>
+<?php   if (isset($article->thumbnail) && $article->thumbnail): ?>
                     <img src="/images/200/4:3/<?=$article->thumbnail;?>">
 <?php   elseif (isset($article->video)): ?>
                     <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
