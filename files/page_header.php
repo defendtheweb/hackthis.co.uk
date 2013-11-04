@@ -47,7 +47,7 @@
             <script src="/files/js/html5shiv.js"></script>
         <![endif]-->
     </head>
-    <body <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".md5($app->user->username)."'";?>>
+    <body <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php
     if (!isset($_COOKIE["member"]) || !$_COOKIE["member"]):
 ?>

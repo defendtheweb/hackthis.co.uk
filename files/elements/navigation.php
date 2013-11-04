@@ -112,11 +112,11 @@
                             <ul>
                                 <li><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></li>
                                 <li><a href='/settings/'>Settings</a></li>
-                                <li class='seperator'><a href='/?logout'>Logout</a></li>
+                                <li class='seperator'><a href='/?logout=<?=$app->user->csrf_basic;?>'>Logout</a></li>
                             </ul>
                         </li>
                         <li class='mobile-only'><a href='/settings/'>Settings</a></li>
-                        <li class='mobile-only'><a href='/?logout'>Logout</a></li>
+                        <li class='mobile-only'><a href='/?logout=<?=$app->user->csrf_basic;?>'>Logout</a></li>
 <?php
         if ($app->user->admin):
 ?>
