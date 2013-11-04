@@ -291,6 +291,7 @@ $(function() {
         else
             var uri = '/files/ajax/user.php?action=friend.remove&uid=';
         uri += $(this).attr('data-uid');
+        uri += "&token=" + $('body').attr('data-key');
 
         $.getJSON(uri, function(data) {
             if (data.status)

@@ -34,7 +34,7 @@ $(function() {
         });
     });
 
-    $('body').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
+    $('.profile').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
         e.preventDefault();
         var $this = $(this);
 
@@ -47,6 +47,8 @@ $(function() {
             uri += uid;
         else
             uri += $this.attr('data-uid');
+
+        uri += "&token=" + $('body').attr('data-key');
 
         $.getJSON(uri, function(data) {
             if ($this.hasClass('removefriend-hide')) {
@@ -72,6 +74,7 @@ $(function() {
             var uri = '/files/ajax/user.php?action=block&uid=';
         }
         uri += uid;
+        uri += "&token=" + $('body').attr('data-key');
 
         $this.toggleClass('blocked');
 
