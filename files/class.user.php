@@ -9,7 +9,7 @@
             $app->user = $this;
 
             //Check if user is logging in
-            if (isset($_GET['logout'])) {
+            if (isset($_GET['logout']) && $_GET['logout'] == $_SESSION['csrf_basic']) {
                 $this->logout();
             }
 
@@ -161,6 +161,13 @@
                     $this->karma_priv++;
                 }
             }
+
+
+            // Get or make simple request token
+            if (!isset($_SESSION['csrf_basic'])) {
+                $_SESSION['csrf_basic'] = substr(md5(uniqid(rand(), true)), 0, 16);
+            }
+            $this->csrf_basic = $_SESSION['csrf_basic'];
         }
 
         private function salt() {
