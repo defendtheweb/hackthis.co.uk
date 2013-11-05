@@ -408,7 +408,7 @@ POST;
             }
 
             // Get total rows
-            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads threads WHERE ';
+            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads threads LEFT JOIN (SELECT thread_id, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts ON posts.thread_id = threads.thread_id WHERE ';
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
