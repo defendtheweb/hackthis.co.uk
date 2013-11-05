@@ -9,21 +9,38 @@
         }
 
         public function getLatest($limit = 3) {
-            $sql = "SELECT threads.title, threads.slug, threads.closed,
-                users.username AS author, posts.count-1 as `count`, latest.posted AS latest, latest.username AS latest_author, IF (forum_users.viewed >= latest, 1, 0) AS `viewed`, forum_users.watching
-                FROM forum_threads threads
-                LEFT JOIN users
-                ON users.user_id = threads.owner
-                LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
-                ON posts.thread_id = threads.thread_id
-                LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
-                ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
-                LEFT JOIN forum_users
-                ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+            // Get the last three posts
+            $sql = "SELECT posts.thread_id, threads.title, threads.slug, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`
+                    FROM forum_posts posts
 
-                WHERE threads.deleted = 0
-                ORDER BY latest DESC
-                LIMIT :limit";
+                    LEFT JOIN forum_threads threads
+                    ON threads.thread_id = posts.thread_id
+
+                    LEFT JOIN users
+                    ON users.user_id = threads.owner
+
+                    LEFT JOIN forum_users
+                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+
+                    WHERE posts.deleted = 0 GROUP BY posts.thread_id ORDER BY `latest` DESC
+                    LIMIT :limit";
+
+
+            // $sql = "SELECT threads.title, threads.slug, threads.closed,
+            //     users.username AS author, posts.count-1 as `count`, latest.posted AS latest, latest.username AS latest_author, IF (forum_users.viewed >= latest, 1, 0) AS `viewed`, forum_users.watching
+            //     FROM forum_threads threads
+            //     LEFT JOIN users
+            //     ON users.user_id = threads.owner
+            //     LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
+            //     ON posts.thread_id = threads.thread_id
+            //     LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
+            //     ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
+            //     LEFT JOIN forum_users
+            //     ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+
+            //     WHERE threads.deleted = 0
+            //     ORDER BY latest DESC
+            //     LIMIT :limit";
 
             $st = $this->app->db->prepare($sql);
             $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
@@ -32,6 +49,12 @@
             $result = $st->fetchAll();
 
             foreach ($result AS &$res) {
+                // get latest posts username
+                $st2 = $this->app->db->prepare("SELECT username FROM forum_posts LEFT JOIN users ON users.user_id = forum_posts.user_id WHERE forum_posts.thread_id = :tid AND forum_posts.posted = :posted LIMIT 1");
+                $st2->execute(array(':tid' => $res->thread_id, ':poster' => $res->latest));
+                $u = $st->fetch();
+                $res->latest_author = $u->username;
+
                 $res->title = $this->app->parse($res->title, false);
             }
 
@@ -408,7 +431,7 @@ POST;
             }
 
             // Get total rows
-            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads threads LEFT JOIN (SELECT thread_id, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts ON posts.thread_id = threads.thread_id WHERE ';
+            $sql = 'SELECT COUNT(threads.`thread_id`) AS `count` FROM forum_threads threads LEFT JOIN (SELECT thread_id, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts ON posts.thread_id = threads.thread_id WHERE ';
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
