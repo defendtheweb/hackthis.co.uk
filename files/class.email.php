@@ -66,8 +66,7 @@
 
             $sent = false;
 
-            $this->emailer->AddAddress("flabbyrabbit@gmail.com");
-            //$this->emailer->AddAddress($email->recipient);
+            $this->emailer->AddAddress($email->recipient);
             $this->emailer->Subject = $email->subject;
             $this->emailer->MsgHTML($email->body);
 
