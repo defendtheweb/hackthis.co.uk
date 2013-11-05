@@ -43,7 +43,7 @@ class SLIRConfig extends SLIRConfigDefaults
   public static function init()
   {
     if (isset($_GET['users'])) {
-        $documentRoot = '../../../../files/uploads/users';
+        self::$documentRoot = '../../../../files/uploads/users';
     }
     // This must be the last line of this function
     parent::init();
