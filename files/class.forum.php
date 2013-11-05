@@ -408,9 +408,23 @@ POST;
             }
 
             // Get total rows
-           // $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
-           // $st->execute();
-           // $result = $st->fetch();
+            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads WHERE ';
+            if ($section)
+                $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
+
+            $sql .= "threads.deleted = 0 AND posts.count > 0";
+            
+            if ($no_replies)
+                $sql .= ' AND posts.count = 1';
+
+            if ($watching)
+                $sql .= ' AND forum_users.watching = 1';    
+
+            $st = $this->app->db->prepare($sql);
+
+            // $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
+            $st->execute();
+            $result = $st->fetch();
 
             $result->threads = $threads;
 
