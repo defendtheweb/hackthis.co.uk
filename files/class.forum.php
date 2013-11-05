@@ -339,7 +339,7 @@ POST;
                 $section_slug = $section->slug;
                 
 
-            $sql = "SELECT posts.thread_id, threads.title, threads.slug, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
+            $sql = "SELECT posts.thread_id, threads.title, threads.slug, threads.closed, threads.sticky, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
                     IF (forum_users.viewed >= max(posts.`posted`),1, 0) AS `viewed`, t1.title as title1, t1.slug as slug1,
                     t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4
                     FROM forum_posts posts
