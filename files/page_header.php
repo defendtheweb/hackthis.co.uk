@@ -54,7 +54,7 @@
 
     <div class='cookies container'>
         <h3>Privacy &amp; Cookies</h3>
-        This website users cookies. By continuing to use this site you are agreeing to our use of cookies.
+        This website uses cookies. By continuing to use this site you are agreeing to our use of cookies.
     </div>
 
 <?php
