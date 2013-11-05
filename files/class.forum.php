@@ -408,7 +408,7 @@ POST;
             }
 
             // Get total rows
-            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads WHERE ';
+            $sql = 'SELECT COUNT(`thread_id`) AS `count` FROM forum_threads threads WHERE ';
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
