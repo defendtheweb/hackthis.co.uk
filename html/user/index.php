@@ -1,6 +1,6 @@
 <?php
-    $custom_css = array('profile.scss', 'confirm.css');
-    $custom_js = array('jquery.confirm.js', 'profile.js');
+    $custom_css = array('profile.scss', 'highlight.css', 'confirm.css');
+    $custom_js = array('jquery.confirm.js', 'highlight.js', 'profile.js');
     require_once('init.php');
     
     $profile = new profile($_GET['user']);
