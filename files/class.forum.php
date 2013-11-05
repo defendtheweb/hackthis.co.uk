@@ -396,7 +396,7 @@ POST;
             if ($watching)
                 $sql .= ' AND forum_users.watching = 1';            
             
-            $sql .= 'GROUP BY posts.thread_id ORDER BY `latest` DESC';
+            $sql .= ' GROUP BY posts.thread_id';
 
             if ($most_popular)
                 $sql .= " ORDER BY `count` DESC, `voices` DESC, latest DESC";
