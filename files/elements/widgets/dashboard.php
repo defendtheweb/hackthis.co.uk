@@ -55,6 +55,15 @@
                         <section class="fluid clr center">
                             <h1 class='lower'><a href='/user/<?=$app->user->username;?>'><?=$app->user->username;?></a></h1>
                             <div class='profile-pic'>
+<?php
+    if ($app->user->donator):
+?>
+                                <div class="label corner">
+                                    <i class="icon-heart"></i>
+                                </div>
+<?php
+    endif;
+?>
                                 <img src='<?=$app->user->image;?>'/>
                                 <a href='/settings/image.php' class='upload'>
                                     <i class="icon-image"></i><br/>
