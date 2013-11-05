@@ -91,7 +91,7 @@
     </div>
 <?php
     endif;
-    if (!$app->user->connected):
+   /* if (!$app->user->connected):
 ?>
     <div class='row'>
         <h3>Facebook</h3>
@@ -103,6 +103,7 @@
     </div>
 <?php
     endif;
+    */
 ?>
 
     <div class='warning clr'>

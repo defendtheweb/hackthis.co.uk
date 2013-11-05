@@ -183,7 +183,7 @@
         }
 
         public function login($user, $pass) {
-            $st = $this->app->db->prepare('SELECT u.user_id, u.password, IFNULL(priv.site_priv, 1) as site_priv
+            $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
@@ -194,21 +194,47 @@
             // Check if users details exist
             $this->login_error = 'Invalid login details';
             if ($row) {
-                if ($row->password == crypt($pass, $row->password)) {
+                if ($row->old_password == 1) {
+                    $user = strtolower($user);
+                    $userhash = md5($user[0]."h97".md5(md5($pass))."t77Ds");
 
-                    if (!$row->site_priv) {
-                        $this->login_error = 'Account has been banned';
-                        return false;
+                    if ($row->password === $userhash) {
+                        // Store new password
+                        $hash = crypt($pass, $this->salt());
+                        $st = $this->app->db->prepare('UPDATE users SET password = :hash, old_password = 0 WHERE user_id = :uid LIMIT 1');
+                        $status = $st->execute(array(':uid' => $row->user_id, ':hash' => $hash));
+
+                        if (!$row->site_priv) {
+                            $this->login_error = 'Account has been banned';
+                            return false;
+                        }
+
+                        $this->loggedIn = true;
+                        $this->uid = $row->user_id;
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
+                        $this->app->ssga->send();
+
+                        $this->createSession();
                     }
+                } else {
+                    if ($row->password == crypt($pass, $row->password)) {
 
-                    $this->loggedIn = true;
-                    $this->uid = $row->user_id;
+                        if (!$row->site_priv) {
+                            $this->login_error = 'Account has been banned';
+                            return false;
+                        }
 
-                    // Setup GA event
-                    $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
-                    $this->app->ssga->send();
+                        $this->loggedIn = true;
+                        $this->uid = $row->user_id;
 
-                    $this->createSession();
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
+                        $this->app->ssga->send();
+
+                        $this->createSession();
+                    }
                 }
             }
 
@@ -246,23 +272,23 @@
                 $fid = $token_details->id;
 
                 //Is user logged in?
-                if ($this->loggedIn) {
-                    //Connect to existing account
-                    $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
-                            VALUES (:fid, "facebook")');
-                    $result = $st->execute(array(':fid' => $fid));
-                    if (!$result) {
-                        $this->connect_msg = 'Facebook account already connected to another user';
-                        return false;
-                    }
-                    $oauth_id = $this->app->db->lastInsertId();
+                // if ($this->loggedIn) {
+                //     //Connect to existing account
+                //     $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
+                //             VALUES (:fid, "facebook")');
+                //     $result = $st->execute(array(':fid' => $fid));
+                //     if (!$result) {
+                //         $this->connect_msg = 'Facebook account already connected to another user';
+                //         return false;
+                //     }
+                //     $oauth_id = $this->app->db->lastInsertId();
 
-                    $st = $this->app->db->prepare('UPDATE users SET oauth_id = :oauth
-                            WHERE user_id = :uid LIMIT 1');
-                    $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
-                    $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
-                    $this->connected = true;
-                } else { 
+                //     $st = $this->app->db->prepare('UPDATE users SET oauth_id = :oauth
+                //             WHERE user_id = :uid LIMIT 1');
+                //     $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
+                //     $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
+                //     $this->connected = true;
+                // } else { 
                     //Login or register
                     //lookup fid
                     $st = $this->app->db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
@@ -353,7 +379,7 @@
 
                         return false;
                     }
-                }     
+                // }     
             }
         }
 
