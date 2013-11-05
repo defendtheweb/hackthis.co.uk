@@ -51,7 +51,7 @@
             foreach ($result AS &$res) {
                 // get latest posts username
                 $st2 = $this->app->db->prepare("SELECT username FROM forum_posts LEFT JOIN users ON users.user_id = forum_posts.user_id WHERE forum_posts.thread_id = :tid AND forum_posts.posted = :posted LIMIT 1");
-                $st2->execute(array(':tid' => $res->thread_id, ':poster' => $res->latest));
+                $st2->execute(array(':tid' => $res->thread_id, ':posted' => $res->latest));
                 $u = $st->fetch();
                 $res->latest_author = $u->username;
 
