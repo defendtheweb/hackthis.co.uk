@@ -66,6 +66,7 @@
 
             $sent = false;
 
+            $this->emailer->ClearAllRecipients();
             $this->emailer->AddAddress($email->recipient);
             $this->emailer->Subject = $email->subject;
             $this->emailer->MsgHTML($email->body);
