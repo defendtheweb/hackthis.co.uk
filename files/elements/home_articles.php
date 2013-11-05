@@ -28,6 +28,7 @@
 ?>
         </div>
     </div>
+<?php /*
     <div class='home-module home-module-black col span_8 external-articles mobile-hide'>
         <ul class='plain slider'>
             <li>
@@ -50,5 +51,5 @@
                 A 19-year-old Argentine has been arrested on charges of hacking into online gambling pages and international money transfer sites, authorities said Friday. 
             </li>
         </ul>
-    </div>
+    </div> */ ?>
 </div>
