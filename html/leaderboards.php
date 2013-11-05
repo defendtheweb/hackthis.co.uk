@@ -8,7 +8,7 @@
     require_once('header.php');
 ?>
     <div class='row'>
-        <div class='col span_12'>
+        <div class='col span_24'>
             <h2>Top scorers</h2>
             <ul class='plain main-scoreboard'>
 <?php
@@ -31,10 +31,6 @@
     endfor;
 ?>
             </ul>
-        </div>
-        <div class='col span_12'>
-            <h2>Top posters</h2>
-            
         </div>
     </div>
 <?php  
