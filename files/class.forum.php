@@ -339,7 +339,7 @@ POST;
                 $section_slug = $section->slug;
                 
 
-            $sql = "SELECT posts.thread_id, threads.title, threads.slug, threads.closed, threads.sticky, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
+            $sql = "SELECT posts.thread_id, threads.title, threads.slug, threads.closed, threads.sticky, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `first`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
                     IF (forum_users.viewed >= max(posts.`posted`),1, 0) AS `viewed`, t1.title as title1, t1.slug as slug1,
                     t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4
                     FROM forum_posts posts
@@ -351,7 +351,7 @@ POST;
                     ON users.user_id = threads.owner
 
                     LEFT JOIN forum_users
-                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = 69
+                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
 
                     LEFT JOIN forum_sections AS t1 ON t1.section_id = threads.section_id
                     LEFT JOIN forum_sections AS t2 ON t1.parent_id = t2.section_id
@@ -388,15 +388,18 @@ POST;
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
-            $sql .= "threads.deleted = 0 AND count(posts.`thread_id`)-1 > 0";
-            
-            if ($no_replies)
-                $sql .= ' AND count(posts.`thread_id`)-1 = 1';
+            $sql .= "threads.deleted = 0";
 
             if ($watching)
                 $sql .= ' AND forum_users.watching = 1';            
             
             $sql .= ' GROUP BY posts.thread_id';
+
+
+            if ($no_replies)
+                $sql .= ' HAVING `count` = 0';
+            else
+                $sql .= ' HAVING `count` >= 0';
 
             if ($most_popular)
                 $sql .= " ORDER BY `count` DESC, `voices` DESC, latest DESC";
@@ -415,6 +418,19 @@ POST;
             $threads = $st->fetchAll();
 
             foreach($threads AS $res) {
+                // Get latest details
+                // get latest posts username
+                $st2 = $this->app->db->prepare("SELECT username FROM forum_posts LEFT JOIN users ON users.user_id = forum_posts.author WHERE forum_posts.thread_id = :tid AND forum_posts.posted = :posted LIMIT 1");
+                $st2->execute(array(':tid' => $res->thread_id, ':posted' => $res->latest));
+                $u = $st2->fetch();
+                $res->latest_author = $u->username;
+
+                // get first posts
+                $st2 = $this->app->db->prepare("SELECT body FROM forum_posts WHERE forum_posts.thread_id = :tid AND forum_posts.posted = :posted LIMIT 1");
+                $st2->execute(array(':tid' => $res->thread_id, ':posted' => $res->first));
+                $u = $st2->fetch();
+                $res->body = $u->body;
+
                 $res->title = $this->app->parse($res->title, false);
 
                 $res->blurb = $this->app->parse($res->body, false);
@@ -452,7 +468,10 @@ POST;
             $st = $this->app->db->prepare($sql);
 
             // $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
-            $st->execute();
+            if ($section)
+                $st->execute(array(':section_slug'=>$section_slug));
+            else
+                $st->execute();
             $result = $st->fetch();
 
             $result->threads = $threads;
