@@ -15,7 +15,7 @@
 <?php endif; ?>
 
 	<h1 class='no-margin'><?=ucwords($level->title);?></h1>
-<?php if ($level->started): ?>	
+<?php if (!($level->completed && !$level->attempts)): ?>	
 	<span class='dark'>Attempts: <?=$level->attempts;?>
 <?php 	if ($level->completed): ?>
 		&middot; Duration: <?=$app->utils->timeBetween($level->started, $level->completed_time);?>

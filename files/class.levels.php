@@ -63,7 +63,6 @@
             $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
                 IFNULL(users_levels.attempts, 0) as `attempts`,
-                users_levels_count.`count`,
                 levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
                 FROM levels
                 INNER JOIN levels_groups
@@ -74,8 +73,6 @@
                 ON levels_after.level_id > levels.level_id
                 LEFT JOIN users_levels
                 ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
-                LEFT JOIN (SELECT level_id, count(*) AS `count` FROM users_levels WHERE completed > 0 GROUP BY level_id) users_levels_count
-                ON users_levels_count.level_id = levels.level_id
                 WHERE levels.name = :level AND levels.group = :group";
 
             $st = $this->app->db->prepare($sql);
