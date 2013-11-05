@@ -388,10 +388,10 @@ POST;
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
-            $sql .= "threads.deleted = 0 AND `count` > 0";
+            $sql .= "threads.deleted = 0 AND count(posts.`thread_id`)-1 > 0";
             
             if ($no_replies)
-                $sql .= ' AND `count` = 1';
+                $sql .= ' AND count(posts.`thread_id`)-1 = 1';
 
             if ($watching)
                 $sql .= ' AND forum_users.watching = 1';            
