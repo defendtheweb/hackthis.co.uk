@@ -2,8 +2,8 @@
 	if (!isset($_GET['group']) || !isset($_GET['level']))
 		header('Location: /levels/');
 
-    $custom_css = array('levels.scss');
-    $custom_js = array('levels.js');
+    $custom_css = array('levels.scss', 'highlight.css');
+    $custom_js = array('levels.js', 'highlight.js');
     require_once('init.php');
 
     //Load level
