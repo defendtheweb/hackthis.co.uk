@@ -164,7 +164,7 @@
 
 
             // Get or make simple request token
-            if (!isset($_SESSION['csrf_basic'])) {
+            if (!isset($_SESSION['csrf_basic']) || !$_SESSION['csrf_basic']) {
                 $_SESSION['csrf_basic'] = substr(md5(uniqid(rand(), true)), 0, 16);
             }
             $this->csrf_basic = $_SESSION['csrf_basic'];
@@ -471,6 +471,7 @@
             }
 
             $this->loggedIn = false;
+            session_destroy();
             session_regenerate_id(true);
             
             // Redirect user back to index page
