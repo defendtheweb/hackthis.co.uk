@@ -333,7 +333,7 @@ POST;
                 $section_slug = $section->slug;
                 
 
-            $sql = "SELECT SQL_CALC_FOUND_ROWS threads.title, threads.slug, threads.closed, threads.sticky,
+            $sql = "SELECT threads.title, threads.slug, threads.closed, threads.sticky,
                     users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
                     latest.username AS latest_author, posts.voices, posts.created, t1.title as title1,
                     t1.slug as slug1, t2.title as title2,
@@ -356,7 +356,12 @@ POST;
                     LEFT JOIN forum_sections AS t3 ON t2.parent_id = t3.section_id
                     LEFT JOIN forum_sections AS t4 ON t3.parent_id = t4.section_id
 
-                    WHERE threads.slug LIKE CONCAT(:section_slug, '%') AND threads.deleted = 0 AND posts.count > 0";
+                    WHERE ";
+
+            if ($section)
+                $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
+
+            $sql .= "threads.deleted = 0 AND posts.count > 0";
             
             if ($no_replies)
                 $sql .= ' AND posts.count = 1';
@@ -373,7 +378,11 @@ POST;
                 $sql .= " LIMIT ". ($page-1)*$limit .", $limit";
 
             $st = $this->app->db->prepare($sql);
-            $st->execute(array(':section_slug'=>$section_slug, ':uid'=>$this->app->user->uid));
+
+            if ($section)
+                $st->execute(array(':section_slug'=>$section_slug, ':uid'=>$this->app->user->uid));
+            else
+                $st->execute(array(':uid'=>$this->app->user->uid));
             $threads = $st->fetchAll();
 
             foreach($threads AS $res) {
@@ -399,9 +408,9 @@ POST;
             }
 
             // Get total rows
-            $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
-            $st->execute();
-            $result = $st->fetch();
+           // $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
+           // $st->execute();
+           // $result = $st->fetch();
 
             $result->threads = $threads;
 
