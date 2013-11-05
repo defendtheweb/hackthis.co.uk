@@ -68,7 +68,7 @@ $(function() {
         id = $elem.attr('data-id');
 
         $.confirm({
-            title   : 'Delete post',
+            title   : 'Flag post',
             message : 'Are you sure you want to flag this post as inappropriate?',
             buttons : {
                 Cancel  : {
