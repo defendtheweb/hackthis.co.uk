@@ -25,23 +25,6 @@
                     WHERE posts.deleted = 0 GROUP BY posts.thread_id ORDER BY `latest` DESC
                     LIMIT :limit";
 
-
-            // $sql = "SELECT threads.title, threads.slug, threads.closed,
-            //     users.username AS author, posts.count-1 as `count`, latest.posted AS latest, latest.username AS latest_author, IF (forum_users.viewed >= latest, 1, 0) AS `viewed`, forum_users.watching
-            //     FROM forum_threads threads
-            //     LEFT JOIN users
-            //     ON users.user_id = threads.owner
-            //     LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
-            //     ON posts.thread_id = threads.thread_id
-            //     LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
-            //     ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
-            //     LEFT JOIN forum_users
-            //     ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
-
-            //     WHERE threads.deleted = 0
-            //     ORDER BY latest DESC
-            //     LIMIT :limit";
-
             $st = $this->app->db->prepare($sql);
             $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
             $st->bindValue(':uid', $this->app->user->uid);
@@ -356,23 +339,19 @@ POST;
                 $section_slug = $section->slug;
                 
 
-            $sql = "SELECT threads.title, threads.slug, threads.closed, threads.sticky,
-                    users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
-                    latest.username AS latest_author, posts.voices, latest.posted AS `created`, t1.title as title1,
-                    t1.slug as slug1, t2.title as title2,
-                    t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
-                    first.body, IF (forum_users.viewed >= latest.posted, 1, 0) AS `viewed`, forum_users.watching
-                    FROM forum_threads threads
+            $sql = "SELECT posts.thread_id, threads.title, threads.slug, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
+                    IF (forum_users.viewed >= max(posts.`posted`),1, 0) AS `viewed`, t1.title as title1, t1.slug as slug1,
+                    t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4
+                    FROM forum_posts posts
+
+                    LEFT JOIN forum_threads threads
+                    ON threads.thread_id = posts.thread_id
+
                     LEFT JOIN users
                     ON users.user_id = threads.owner
-                    LEFT JOIN (SELECT thread_id, count(*) AS `count`, Count(Distinct author) AS `voices` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
-                    ON posts.thread_id = threads.thread_id
-                    LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
-                    ON latest.thread_id = threads.thread_id
-                    LEFT JOIN (SELECT thread_id, body, posted FROM forum_posts WHERE deleted = 0 ORDER BY posted ASC LIMIT 1) first
-                    ON first.thread_id = threads.thread_id
+
                     LEFT JOIN forum_users
-                    ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = 69
 
                     LEFT JOIN forum_sections AS t1 ON t1.section_id = threads.section_id
                     LEFT JOIN forum_sections AS t2 ON t1.parent_id = t2.section_id
@@ -380,6 +359,31 @@ POST;
                     LEFT JOIN forum_sections AS t4 ON t3.parent_id = t4.section_id
 
                     WHERE ";
+
+            // $sql = "SELECT threads.title, threads.slug, threads.closed, threads.sticky,
+            //         users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
+            //         latest.username AS latest_author, posts.voices, latest.posted AS `created`, t1.title as title1,
+            //         t1.slug as slug1, t2.title as title2,
+            //         t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
+            //         first.body, IF (forum_users.viewed >= latest.posted, 1, 0) AS `viewed`, forum_users.watching
+            //         FROM forum_threads threads
+            //         LEFT JOIN users
+            //         ON users.user_id = threads.owner
+            //         LEFT JOIN (SELECT thread_id, count(*) AS `count`, Count(Distinct author) AS `voices` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
+            //         ON posts.thread_id = threads.thread_id
+            //         LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
+            //         ON latest.thread_id = threads.thread_id
+            //         LEFT JOIN (SELECT thread_id, body, posted FROM forum_posts WHERE deleted = 0 ORDER BY posted ASC LIMIT 1) first
+            //         ON first.thread_id = threads.thread_id
+            //         LEFT JOIN forum_users
+            //         ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+
+            //         LEFT JOIN forum_sections AS t1 ON t1.section_id = threads.section_id
+            //         LEFT JOIN forum_sections AS t2 ON t1.parent_id = t2.section_id
+            //         LEFT JOIN forum_sections AS t3 ON t2.parent_id = t3.section_id
+            //         LEFT JOIN forum_sections AS t4 ON t3.parent_id = t4.section_id
+
+            //         WHERE ";
 
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
@@ -392,6 +396,8 @@ POST;
             if ($watching)
                 $sql .= ' AND forum_users.watching = 1';            
             
+            $sql .= 'GROUP BY posts.thread_id ORDER BY `latest` DESC';
+
             if ($most_popular)
                 $sql .= " ORDER BY `count` DESC, `voices` DESC, latest DESC";
             else
