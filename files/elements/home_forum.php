@@ -1,5 +1,5 @@
 <?php
-    $latest = $app->forum->getLatest();
+    $latest = $app->forum->getLatest(5);
 ?>
 
 <table class='home-module forum-latest home-module-light'>
