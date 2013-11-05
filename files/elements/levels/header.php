@@ -15,10 +15,13 @@
 <?php endif; ?>
 
 	<h1 class='no-margin'><?=ucwords($level->title);?></h1>
+<?php if ($level->started): ?>	
 	<span class='dark'>Attempts: <?=$level->attempts;?>
-<?php if ($level->completed): ?>
+<?php 	if ($level->completed): ?>
 		&middot; Duration: <?=$app->utils->timeBetween($level->started, $level->completed_time);?>
-<?php endif; ?>
+<?php 	endif;
+	  endif;
+?>
 	</span>
 	<span class='hint--top' data-hint="This information is not public and only reflects&#10;the first time you completed the level."><i class='icon-info'></i></span><br/>
 

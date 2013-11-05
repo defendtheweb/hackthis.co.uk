@@ -13,11 +13,15 @@
                                     <td class="white">Reward</td>
                                     <td><?=number_format($level->data['reward']);?> pts</td>
                                 </tr>
+<?php if (isset($level->count)): ?>
 								<tr>
                                     <td class="white">Completed</td>
                                     <td><?=number_format($level->count);?></td>
                                 </tr>
-<?php if (isset($level->last_completed)): ?>
+<?php
+    endif;
+    if (isset($level->last_completed)):
+?>
 								<tr>
                                     <td class="white">Latest</td>
                                     <td><time datetime="<?=date('c', strtotime($level->last_completed));?>"><?=$app->utils->timeSince($level->last_completed);?></time><br>
