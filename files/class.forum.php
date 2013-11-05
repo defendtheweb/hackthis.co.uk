@@ -342,12 +342,12 @@ POST;
                     FROM forum_threads threads
                     LEFT JOIN users
                     ON users.user_id = threads.owner
-                    LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, min(posted) AS `created`, count(*) AS `count`, Count(Distinct author) AS `voices` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
+                    LEFT JOIN (SELECT thread_id, count(*) AS `count`, Count(Distinct author) AS `voices` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
                     ON posts.thread_id = threads.thread_id
-                    LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0) latest
-                    ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
-                    LEFT JOIN (SELECT thread_id, body, posted FROM forum_posts WHERE deleted = 0) first
-                    ON first.thread_id = threads.thread_id AND first.posted = posts.created
+                    LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
+                    ON latest.thread_id = threads.thread_id
+                    LEFT JOIN (SELECT thread_id, body, posted FROM forum_posts WHERE deleted = 0 ORDER BY posted ASC LIMIT 1) first
+                    ON first.thread_id = threads.thread_id
                     LEFT JOIN forum_users
                     ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
 
@@ -376,6 +376,9 @@ POST;
 
             if ($limit)
                 $sql .= " LIMIT ". ($page-1)*$limit .", $limit";
+
+            print_r($sql);
+            die();
 
             $st = $this->app->db->prepare($sql);
 
