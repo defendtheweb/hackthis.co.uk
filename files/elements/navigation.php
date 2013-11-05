@@ -87,11 +87,7 @@
 <?php
     if ($app->user->loggedIn):
 ?>
-                                <li class='parent'><a href='/faq.php'>FAQ</a>
-                                    <ul>
-                                        <li><a href='/medals.php'>Medals</a></li>
-                                    </ul>
-                                </li>
+                                <li><a href='/medals.php'>Medals</a></li>
 <?php
     endif;
 ?>
