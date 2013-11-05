@@ -329,7 +329,8 @@
                                 VALUES (:fid, "facebook")');
                         $result = $st->execute(array(':fid' => $fid));
                         if (!$result) {
-                            $this->login_error = 'Error registering #1';
+                            $this->login_error = 'OAuth ID has already been registered';
+                            $this->reg_error = 'OAuth ID has already been registered';
                             return false;
                         }
                         $oauth_id = $this->app->db->lastInsertId();
@@ -339,7 +340,8 @@
                                 VALUES (:u, :oid, :email, 1)');
                         $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
                         if (!$result) {
-                            $this->login_error = 'Error registering #2';
+                            $this->login_error = 'Username or email already registered';
+                            $this->reg_error = 'Username or email already registered';
                             return false;
                         }
                         $uid = $this->app->db->lastInsertId();
@@ -360,7 +362,8 @@
                                 VALUES (:uid, :name, 0, :gender)');
                         $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
                         if (!$result) {
-                            $this->login_error = 'Error registering #3';
+                            $this->login_error = 'Error registring #3';
+                            $this->reg_error = 'Error registring #3';
                             return false;
                         }
 
