@@ -335,10 +335,10 @@ POST;
 
             $sql = "SELECT threads.title, threads.slug, threads.closed, threads.sticky,
                     users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
-                    latest.username AS latest_author, posts.voices, posts.created, t1.title as title1,
+                    latest.username AS latest_author, posts.voices, latest.posted AS `created`, t1.title as title1,
                     t1.slug as slug1, t2.title as title2,
                     t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
-                    first.body, IF (forum_users.viewed >= latest, 1, 0) AS `viewed`, forum_users.watching
+                    first.body, IF (forum_users.viewed >= latest.posted, 1, 0) AS `viewed`, forum_users.watching
                     FROM forum_threads threads
                     LEFT JOIN users
                     ON users.user_id = threads.owner
