@@ -283,6 +283,7 @@
                     INNER JOIN forum_threads threads
                     ON threads.thread_id = posts.thread_id
                     WHERE posts.deleted = 0 AND posts.author = :uid
+                    AND (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233))
                     ORDER BY posts.`posted` DESC');
                 $st->execute(array(':uid' => $uid));
                 $result['data'] = $st->fetchAll();

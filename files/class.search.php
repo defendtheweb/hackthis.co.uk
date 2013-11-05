@@ -127,6 +127,7 @@
                        ) search
                     ON search.thread_id = threads.thread_id
                     WHERE threads.deleted = 0
+                    AND (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233))
                     GROUP BY threads.thread_id
                     ORDER BY search.`matches` DESC, latest DESC
                     LIMIT 5";

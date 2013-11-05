@@ -22,7 +22,7 @@
                     LEFT JOIN forum_users
                     ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
 
-                    WHERE posts.deleted = 0 GROUP BY posts.thread_id ORDER BY `latest` DESC
+                    WHERE posts.deleted = 0 AND (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233)) GROUP BY posts.thread_id ORDER BY `latest` DESC
                     LIMIT :limit";
 
             $st = $this->app->db->prepare($sql);
@@ -358,7 +358,7 @@ POST;
                     LEFT JOIN forum_sections AS t3 ON t2.parent_id = t3.section_id
                     LEFT JOIN forum_sections AS t4 ON t3.parent_id = t4.section_id
 
-                    WHERE ";
+                    WHERE (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233)) AND ";
 
             // $sql = "SELECT threads.title, threads.slug, threads.closed, threads.sticky,
             //         users.username AS author, posts.count-1 as `count`, latest.posted AS latest,
@@ -567,7 +567,7 @@ POST;
                 ON section.section_id = thread.section_id
                 LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
                 ON replies.thread_id = thread.thread_id
-                WHERE thread.thread_id = :thread_id
+                WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233))
                 LIMIT 1");
             $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             $thread = $st->fetch();
