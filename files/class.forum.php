@@ -377,9 +377,6 @@ POST;
             if ($limit)
                 $sql .= " LIMIT ". ($page-1)*$limit .", $limit";
 
-            print_r($sql);
-            die();
-
             $st = $this->app->db->prepare($sql);
 
             if ($section)
