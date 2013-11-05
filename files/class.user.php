@@ -271,24 +271,24 @@
 
                 $fid = $token_details->id;
 
-                //Is user logged in?
-                // if ($this->loggedIn) {
-                //     //Connect to existing account
-                //     $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
-                //             VALUES (:fid, "facebook")');
-                //     $result = $st->execute(array(':fid' => $fid));
-                //     if (!$result) {
-                //         $this->connect_msg = 'Facebook account already connected to another user';
-                //         return false;
-                //     }
-                //     $oauth_id = $this->app->db->lastInsertId();
+                // Is user logged in?
+                if ($this->loggedIn) {
+                    //Connect to existing account
+                    $st = $this->app->db->prepare('INSERT INTO users_oauth (`uid`, `provider`)
+                            VALUES (:fid, "facebook")');
+                    $result = $st->execute(array(':fid' => $fid));
+                    if (!$result) {
+                        $this->connect_msg = 'Facebook account already connected to another user';
+                        return false;
+                    }
+                    $oauth_id = $this->app->db->lastInsertId();
 
-                //     $st = $this->app->db->prepare('UPDATE users SET oauth_id = :oauth
-                //             WHERE user_id = :uid LIMIT 1');
-                //     $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
-                //     $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
-                //     $this->connected = true;
-                // } else { 
+                    $st = $this->app->db->prepare('UPDATE users SET oauth_id = :oauth
+                            WHERE user_id = :uid LIMIT 1');
+                    $result = $st->execute(array(':oauth' => $oauth_id, ':uid' => $this->uid));
+                    $this->connect_msg = 'Connected, you can now login using your Facebook account or password';
+                    $this->connected = true;
+                } else { 
                     //Login or register
                     //lookup fid
                     $st = $this->app->db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
@@ -382,7 +382,7 @@
 
                         return false;
                     }
-                // }     
+                }     
             }
         }
 

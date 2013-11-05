@@ -46,6 +46,10 @@
     } else if (isset($verifyConfirmed)) {
         $app->utils->message("Incorrect verification code");
     }
+
+    if (isset($app->user->connect_msg)) {
+        $app->utils->message($app->user->connect_msg, 'info');
+    }
 ?>
     <h1>Account</h1>
     <div class='row'>
@@ -91,7 +95,7 @@
     </div>
 <?php
     endif;
-   /* if (!$app->user->connected):
+   if (!$app->user->connected):
 ?>
     <div class='row'>
         <h3>Facebook</h3>
@@ -103,7 +107,6 @@
     </div>
 <?php
     endif;
-    */
 ?>
 
     <div class='warning clr'>
