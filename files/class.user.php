@@ -299,7 +299,7 @@
                             ON u.user_id = priv.user_id
                             WHERE oauth.uid = :fid AND oauth.provider = "facebook"');
                     $st->execute(array(':fid' => $fid));
-                    $row = $st->fetch();   
+                    $row = $st->fetch();
 
                     if ($row) {
                         if (!$row->site_priv) {
@@ -329,7 +329,7 @@
                                 VALUES (:fid, "facebook")');
                         $result = $st->execute(array(':fid' => $fid));
                         if (!$result) {
-                            $this->login_error = 'Error registering';
+                            $this->login_error = 'Error registering #1';
                             return false;
                         }
                         $oauth_id = $this->app->db->lastInsertId();
@@ -339,7 +339,7 @@
                                 VALUES (:u, :oid, :email, 1)');
                         $result = $st->execute(array(':u' => $token_details->username, ':oid' => $oauth_id, ':email' => $token_details->email));
                         if (!$result) {
-                            $this->login_error = 'Error registering';
+                            $this->login_error = 'Error registering #2';
                             return false;
                         }
                         $uid = $this->app->db->lastInsertId();
@@ -360,7 +360,7 @@
                                 VALUES (:uid, :name, 0, :gender)');
                         $result = $st->execute(array(':uid' => $uid, ':name' => $token_details->name, ':gender' => $gender));
                         if (!$result) {
-                            $this->login_error = 'Error registering';
+                            $this->login_error = 'Error registering #3';
                             return false;
                         }
 
