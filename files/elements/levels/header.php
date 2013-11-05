@@ -19,12 +19,10 @@
 	<span class='dark'>Attempts: <?=$level->attempts;?>
 <?php 	if ($level->completed): ?>
 		&middot; Duration: <?=$app->utils->timeBetween($level->started, $level->completed_time);?>
-<?php 	endif;
-	  endif;
-?>
+<?php 	endif; ?>
 	</span>
 	<span class='hint--top' data-hint="This information is not public and only reflects&#10;the first time you completed the level."><i class='icon-info'></i></span><br/>
-
+<?php endif; ?>
 	<span class='strong <?=$level->completed?'green':'red';?>'><?=$level->completed?'Completed':'Incomplete';?></span><br/>
 
 
