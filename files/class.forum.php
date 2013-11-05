@@ -16,7 +16,7 @@
                 ON users.user_id = threads.owner
                 LEFT JOIN (SELECT thread_id, max(posted) AS `latest`, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts
                 ON posts.thread_id = threads.thread_id
-                LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0) latest
+                LEFT JOIN (SELECT thread_id, users.username, posted FROM forum_posts LEFT JOIN users ON users.user_id = author WHERE deleted = 0 ORDER BY posted DESC LIMIT 1) latest
                 ON latest.thread_id = threads.thread_id AND latest.posted = posts.latest
                 LEFT JOIN forum_users
                 ON threads.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
