@@ -3,16 +3,16 @@
 ?>
 
 <div class='home-articles clr'>
-    <div class='home-module home-module-light col span_16'>
+    <div class='home-module home-module-light col span_24'>
         <h3 class='no-margin'>Featured articles</h3>
         <div class='clr'>
 <?php
     $n = 0;
     foreach($hot AS $article):
-        if ($n++ == 2)
+        if ($n++ == 3)
             break;
 ?>
-                <a href='<?=$article->slug;?>' class="col span_12 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
+                <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
 <?php   if (isset($article->thumbnail) && $article->thumbnail): ?>
                     <img src="/images/200/4:3/<?=$article->thumbnail;?>">
 <?php   elseif (isset($article->video)): ?>
