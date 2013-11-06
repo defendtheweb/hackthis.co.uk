@@ -38,7 +38,7 @@
         $app->utils->message($forum->getError(), 'error');
         $wysiwyg_text = $_POST['body'];
     } else if ($updated === true) {
-        $app->utils->message("Posted updated, <a href='/forum/{$thread->slug}'>view thread</a>", 'good');
+        $app->utils->message("Post updated, <a href='/forum/{$thread->slug}'>view thread</a>", 'good');
         $wysiwyg_text = $_POST['body'];
     } else {
         $wysiwyg_text = $post->body;

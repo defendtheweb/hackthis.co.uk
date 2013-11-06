@@ -108,7 +108,7 @@
         $app->utils->message($forum->getError(), 'error');
         $wysiwyg_text = $_POST['body'];
     } else if (isset($_GET['submitted'])) {
-        $app->utils->message('Posted submitted', 'good');
+        $app->utils->message('Post submitted', 'good');
     }
 ?>
 
@@ -180,7 +180,7 @@
             $app->utils->message($forum->getError(), 'error');
             $wysiwyg_text = $_POST['body'];
         } else if (isset($_GET['submitted'])) {
-            $app->utils->message('Posted submitted', 'good');
+            $app->utils->message('Post submitted', 'good');
         }
         include('elements/wysiwyg.php');
 ?>
