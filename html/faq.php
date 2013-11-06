@@ -1,4 +1,5 @@
 <?php
+    define("PAGE_PUBLIC", true);
     $custom_css = array('faq.scss');
     require_once('init.php');
     $app->page->title = 'FAQ';
@@ -6,37 +7,29 @@
 ?>
 
     <h1>Frequently Asked Questions</h1>
+    <br/>
+    <h2>Forum</h2>
+    <h3 id="new-thread">How do I start a thread in the forum‭?</h3>
     <p>
-        These FAQs are designed to provide a better understanding of Creative Commons, our licenses and our other legal and technical tools. They provide basic information, sometimes about fairly complex topics. These FAQs will often link to more detailed information. Please note that several of our tools have their own in-depth FAQs, including our CC0 Public Domain Dedication and Public Domain Mark. If you have any questions about CC that are not covered here or elsewhere on our website, please email info@creativecommons.org. 
+        A new thread can be only started under a sub-section.‭ ‬If you go on the forum,‭ ‬or even under a section,‭ ‬you will see that the button‭ “‬New thread‭” ‬is not active and if you try to click on it,‭ ‬a message will appear saying that you can only start a new thread after you chose a sub-section.‭
+    </p>
+    <img src='/files/images/faq_thread.png'/>
+    <p>
+        After you go to the sub-section in which you want to start your new thread,‭ ‬the‭ “‬New Thread‭” ‬button will become active.‭ ‬Click it and it will take you to the form where you can start your thread.
+    </p>
+    <h2 id="karma">What is karma?</h2>
+    <p>
+        Karma is a way of rating users posts within the forum. The karma rating is displayed as a number in the top of right of each forum post. Users with the bronze <a class='medal medal-bronze' href="/medals.php#karma">Karma</a> medal are allowed to upvote posts and only users with the silver <a class='medal medal-silver' href="/medals.php#karma">Karma</a> medal can down vote. You earn the medals by completing levels and being active within the forum. Posts with karma of -3 or less are automatically hidden although this isn't the main role of the karma system, see reporting posts below.
+    </p>
+    <h2 id="watch">How do I control which threads I get notifications for?</h2>
+    <p>
+        You have the ability to watch and unwatch any thread in the forum. At the top of each thread your current preference is displayed and can be changed simply by clicking the button. By posting in a thread you automatically start watching that thread.
+    </p>
+    <h2 id="report-post">How do I report bad content within the forum?</h2>
+    <p>
+        To the right of every forum post is the authors details, underneath these there should be a "Flag Post" button. If you feel a post contains bad content e.g. level answers, spam, abuse, sole purpose being to sell a product then click the button and it will flag it to a moderator. If a moderator agrees that the content should be removed it will be and the user responsible warned or banned from posting on the site.
     </p>
 
-    <h2>About HackThis!!</h2>
-    <p>
-        <h3>What is it all about?</h3>
-        Stuff I guess
-    </p>
-    <p>
-        <h3>Is this site safe?</h3>
-        Stuff I guess
-    </p>
-    <p>
-        <h3>I love Creative Commons. How can I help?</h3>
-        Stuff I guess
-    </p>
-    <br/>
-    <h2>General Information</h2>
-    <p>
-        <h3>Can you hack (insert program, website here)?</h3>
-        <strong>NO</strong>
-    </p>
-    <p>
-        <h3>Is this site safe?</h3>
-        Stuff I guess
-    </p>
-    <p>
-        <h3>I love Creative Commons. How can I help?</h3>
-        Stuff I guess
-    </p>
 
 <?php  
     require_once('footer.php');
