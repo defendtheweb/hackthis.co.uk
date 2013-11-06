@@ -86,6 +86,12 @@ table tr td.old {
 }
 
 table.ticket-conversation {
+    display: block;
+
+    tbody, tr, td {
+        display: block;
+    }
+
     td {
         padding: 6px;
 
