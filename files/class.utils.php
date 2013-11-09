@@ -6,7 +6,11 @@
             $this->app = $app;
         }
 
-        public function parse($text, $bbcode=true, $mentions=true, $twitterfy=true) {
+        public function parse($text, $bbcode=true, $mentions=true, $twitterfy=true, $length=null) {
+            if (is_numeric($length)) {
+                $this->app->bbcode->SetLimit($length);
+            }
+
             if ($bbcode) {
                 $this->app->bbcode->SetPlainMode(false);
             } else {
@@ -25,6 +29,8 @@
             if (!$bbcode) {
                 $text = strip_tags($text);
             }
+
+            $this->app->bbcode->SetLimit(0);
 
             return $text;
         }

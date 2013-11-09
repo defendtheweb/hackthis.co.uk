@@ -36,7 +36,7 @@
 <?php else: ?>
                         <td><?=$app->utils->parse($message->from, false);?></td>
 <?php endif; ?>
-                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse(substr($message->body, 0, 50), false);?></a></td>
+                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse($message->body, false, false, false, 50);?></a></td>
                         <td class='<?=!$message->new?'new':'old';?>'><?=$message->replies;?></td>
                         <td><time datetime="<?=date('c', strtotime($message->last_sent));?>"><?=$app->utils->timeSince($message->last_sent);?></time></td>
                     </tr>
@@ -291,7 +291,7 @@
             foreach($previous AS $message):
 ?> 
                     <tr>
-                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse(substr($message->body, 0, 50), false);?></a></td>
+                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse($message->body, false, false, false, 50);?></a></td>
                         <td class='<?=$message->new?'new':'old';?>'><?=$message->replies;?></td>
                         <td><time datetime="<?=date('c', strtotime($message->last_sent));?>"><?=$app->utils->timeSince($message->last_sent);?></time></td>
                     </tr>
