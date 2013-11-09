@@ -2,7 +2,7 @@
     class forum {
         private $app;
         private $error;
-        private $banned = array('ccv', 'sell', 'passport', 'visa');
+        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron');
 
         public function __construct($app) {
             $this->app = $app;
