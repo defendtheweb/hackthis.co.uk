@@ -260,8 +260,6 @@
             $st->execute();
             $result = $st->fetchAll();
 
-            print_r($result);
-
             foreach ($result AS $res) {
                 //is this a video piece?
                 $res->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($res) {
