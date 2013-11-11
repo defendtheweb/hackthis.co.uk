@@ -134,7 +134,7 @@
             return $result;
         }
 
-        public function call($username, $type, $title, $uri) {
+        public function call($username, $type, $title=null, $uri=null) {
             if (!function_exists('curl_version'))
                 return;
 
