@@ -125,6 +125,15 @@
     endforeach;
 ?>
             </ul>
+<?php
+    if ($convo_count > 10) {
+        $pagination = new stdClass();
+        $pagination->current = $page;
+        $pagination->count = ceil($convo_count/10);
+        $pagination->root = '?page=';
+        include('elements/pagination.php');
+    }
+?>
         </div>
         <div class="col span_18 inbox-main right">
 <?php

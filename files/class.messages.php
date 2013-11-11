@@ -86,7 +86,7 @@
         }
 
         public function getTotal() {
-            $sql = "SELECT COUNT(pm_users.pm_id) AS `count`
+            $sql = "SELECT COUNT(pm_users.pm_id) AS `total`
                     FROM pm_users
                     INNER JOIN (SELECT pm_id, MAX(`time`) AS `time` FROM pm_messages GROUP BY pm_id) pm_messages
                     ON pm_messages.pm_id = pm_users.pm_id
@@ -96,7 +96,7 @@
             $st->execute(array(':uid' => $this->app->user->uid));
             $result = $st->fetchAll();
 
-            return $result[0]->count || 0;
+            return $result->total;
         }
 
         public function getConvo($id, $limit=true) {
