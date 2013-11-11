@@ -9,7 +9,7 @@ $(function() {
         if (container.find('.new').length) {
             offset = $(".inbox-main ul li.new:first").offset().top;
         } else {
-            offset = $(document).height() - $(".inbox-main textarea").offset().top;
+            offset = $(".inbox-main textarea").offset().top - $(window).height() + $(".inbox-main form").outerHeight();
         }
         $('html, body').animate({
             scrollTop: offset
