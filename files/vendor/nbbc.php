@@ -854,7 +854,7 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
                 }
             }
             else if ($bbcode->IsValidURL($content, false)) {
-                return "<a href=\"" . htmlspecialchars($content) . "\" target=\"_blank\"><img src=\"" . htmlspecialchars($content) . "\" alt=\""
+                return "<a href=\"" . htmlspecialchars($content) . "\" target=\"_blank\" class='fancybox' rel='user-gallery'><img src=\"" . htmlspecialchars($content) . "\" alt=\""
                 . htmlspecialchars(basename($content)) . "\" class=\"bbcode_img\" /></a>";
             }
         //}
