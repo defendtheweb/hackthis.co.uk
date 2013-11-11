@@ -94,7 +94,7 @@
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':uid' => $this->app->user->uid));
-            $result = $st->fetchAll();
+            $result = $st->fetch();
 
             return $result->total;
         }
