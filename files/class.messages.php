@@ -94,9 +94,9 @@
 
             $st = $this->app->db->prepare($sql);
             $st->execute(array(':uid' => $this->app->user->uid));
-            $result = $st->fetch();
+            $result = $st->fetchAll();
 
-            return $result->count || 0;
+            return $result[0]->count || 0;
         }
 
         public function getConvo($id, $limit=true) {
