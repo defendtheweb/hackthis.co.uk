@@ -769,7 +769,8 @@
         },
 
         isImage: function (str) {
-            return isString(str) && str.match(/(^data:image\/.*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg)((\?|#).*)?$)/i);
+            //return isString(str) && str.match(/(^data:image\/.*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg)((\?|#).*)?$)/i);
+            return true;
         },
 
         isSWF: function (str) {
@@ -1939,9 +1940,14 @@
                     }
 
                     if (relVal && relVal !== '' && relVal !== 'nofollow') {
-                        what = selector.length ? $(selector) : that;
+                        what = selector.length ? $(":not('.post_signature') > " + selector) : that;
                         what = what.filter('[' + relType + '="' + relVal + '"]');
                         idx  = what.index(this);
+                    }
+
+                    if (idx < 0) {
+                        what = $(this);
+                        idx = index;
                     }
 
                     options.index = idx;
