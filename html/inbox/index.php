@@ -39,6 +39,8 @@
         $page = 1;
     $inbox = $messages->getAll(42, 10, $page);
 
+    $convo_count = $messages->getTotal();
+
     if (isset($_GET['view'])) {
         $convo = new stdClass();
         $convo->id = $_GET['view'];
@@ -64,7 +66,7 @@
 ?>
 
     <h1>
-        <a href='/inbox'>Inbox</a>
+        <a href='/inbox'>Inbox [<?=$convo_count;?>]</a>
 <?php
     if (isset($convo)) {
         echo " - ";

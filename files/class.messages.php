@@ -85,6 +85,20 @@
             return $result;
         }
 
+        public function getTotal() {
+            $sql = "SELECT COUNT(pm_users.pm_id) AS `count`
+                    FROM pm_users
+                    INNER JOIN (SELECT pm_id, MAX(`time`) AS `time` FROM pm_messages GROUP BY pm_id) pm_messages
+                    ON pm_messages.pm_id = pm_users.pm_id
+                    WHERE pm_users.user_id = :uid AND (pm_users.deleted IS NULL OR pm_messages.time > pm_users.deleted)";
+
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':uid' => $this->app->user->uid));
+            $result = $st->fetch();
+
+            return $result->count || 0;
+        }
+
         public function getConvo($id, $limit=true) {
             $sql = "SELECT message, messages.time as timestamp, IF (messages.time <= seen, 1, 0) AS seen,
                    username, profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
