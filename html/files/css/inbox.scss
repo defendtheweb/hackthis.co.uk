@@ -50,7 +50,7 @@
 
                         overflow: hidden;
                         o-text-overflow: ellipsis;
-                        text-overflow: ellipsis;
+                        text-overflow: ellipsis;total
                         white-space: nowrap;
                     }
                 }
@@ -106,6 +106,17 @@
                 &:focus {
                     @include box-shadow($black, 0);
                 }
+            }
+        }
+
+        .pagination {
+            li {
+                display: none;
+            }
+
+            li.left, li.right {
+                display: block;
+                height: auto;
             }
         }
     }
