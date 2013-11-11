@@ -388,7 +388,7 @@ POST;
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
 
-            $sql .= "threads.deleted = 0";
+            $sql .= "threads.deleted = 0 AND posts.deleted = 0";
 
             if ($watching)
                 $sql .= ' AND forum_users.watching = 1';            
