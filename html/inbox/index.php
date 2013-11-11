@@ -131,7 +131,7 @@
         $pagination->current = $page;
         $pagination->count = ceil($convo_count/10);
         $pagination->root = '?page=';
-        include('elements/lite_pagination.php');
+        include('elements/pagination.php');
     }
 ?>
         </div>
