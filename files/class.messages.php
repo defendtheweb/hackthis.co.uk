@@ -33,7 +33,7 @@
             // Get items
             $st = $this->app->db->prepare($sql);
             $st->bindValue(':user_id', $this->app->user->uid);
-            $st->bindValue(':l1', (int) (($page-1)*$limit)+1, PDO::PARAM_INT); 
+            $st->bindValue(':l1', (int) (($page-1)*$limit), PDO::PARAM_INT); 
             $st->bindValue(':l2', (int) $limit, PDO::PARAM_INT); 
             $st->execute();
             $result = $st->fetchAll();
