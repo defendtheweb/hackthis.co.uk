@@ -66,7 +66,7 @@
 ?>
 
     <h1>
-        <a href='/inbox'>Inbox [<?=$convo_count;?>]</a>
+        <a href='/inbox?page=<?=$page;?>'>Inbox [<?=$convo_count;?>]</a>
 <?php
     if (isset($convo)) {
         echo " - ";
@@ -102,7 +102,7 @@
     foreach($inbox as $message):
 ?>
                 <li <?=(isset($convo->id) && $message->pm_id == $convo->id)?'class="active"':'';?>>
-                    <a href='<?=$message->pm_id;?>' <?=($message->seen || (isset($convo->id) && $message->pm_id == $convo->id))?'':'class="new"';?>>
+                    <a href='<?=$message->pm_id;?>?page=<?=$page;?>' <?=($message->seen || (isset($convo->id) && $message->pm_id == $convo->id))?'':'class="new"';?>>
                         <img width='42px' height='42px' class='left' src='<?=$message->users[0]->img;?>'/>
                         <div>
                             <time class="short dark right" datetime="<?=$message->timestamp;?>"><?=$app->utils->timeSince($message->timestamp, true);?></time>
@@ -131,7 +131,7 @@
         $pagination->current = $page;
         $pagination->count = ceil($convo_count/10);
         $pagination->root = '?page=';
-        include('elements/pagination.php');
+        include('elements/lite_pagination.php');
     }
 ?>
         </div>
