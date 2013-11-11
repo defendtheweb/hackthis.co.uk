@@ -95,7 +95,7 @@ $(function() {
     $('a.karma').on('click', function(e) {
         e.preventDefault();
 
-        $this = $(this);
+        var $this = $(this);
         var id = $this.closest('li').attr('data-id');
         var $value = $this.siblings('span');
         var value;
@@ -128,8 +128,8 @@ $(function() {
                 return false;
 
             $value.text(value);
-
-            $this.siblings().removeClass('karma-cancel');
+            
+            $this.siblings('a').removeClass('karma-cancel');
             $this.toggleClass('karma-cancel');
         });
     });
