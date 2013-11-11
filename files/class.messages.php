@@ -18,7 +18,7 @@
             return $result ? (int) $result->count : 0;
         }
 
-        public function getAll($size=28, $limit=true) {
+        public function getAll($size=28, $limit=5, $page=1) {
             $sql = "SELECT pm.pm_id, pm_messages.user_id as lastSender, message, time as timestamp, IF (time <= seen, 1, 0) AS seen
                    FROM pm
                    INNER JOIN pm_users
@@ -26,14 +26,16 @@
                    INNER JOIN pm_messages
                    ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm.pm_id ORDER BY time DESC LIMIT 1)
                    WHERE pm_users.user_id = :user_id AND (pm_users.deleted IS NULL OR time > pm_users.deleted)
-                   ORDER BY time DESC";
+                   ORDER BY time DESC
+                   LIMIT :l1, :l2";
 
-            if ($limit)
-                $sql .= " LIMIT 5";
 
             // Get items
             $st = $this->app->db->prepare($sql);
-            $st->execute(array(':user_id' => $this->app->user->uid));
+            $st->bindValue(':user_id', $this->app->user->uid);
+            $st->bindValue(':l1', (int) (($page-1)*$limit)+1, PDO::PARAM_INT); 
+            $st->bindValue(':l2', (int) $limit, PDO::PARAM_INT); 
+            $st->execute();
             $result = $st->fetchAll();
 
             // Loop items and create images

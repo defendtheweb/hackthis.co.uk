@@ -32,7 +32,12 @@
             $error = $messages->getError();     
     }
 
-    $inbox = $messages->getAll(42, false);
+
+    if (isset($_GET['page']) && is_numeric($_GET['page']))
+        $page = $_GET['page'];
+    else
+        $page = 1;
+    $inbox = $messages->getAll(42, 10, $page);
 
     if (isset($_GET['view'])) {
         $convo = new stdClass();
