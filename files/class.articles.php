@@ -241,7 +241,7 @@
         }
 
         public function getHotArticles($limit=5) {
-            $st = $this->app->db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)) as total,
+            $st = $this->app->db->prepare('SELECT a.title,SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-(DATEDIFF(NOW(), a.`submitted`))/7) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
                                 a.body, a.thumbnail, cat.title AS `category`
                                 FROM articles a
@@ -259,6 +259,8 @@
                                 LIMIT 5');
             $st->execute();
             $result = $st->fetchAll();
+
+            print_r($result);
 
             foreach ($result AS $res) {
                 //is this a video piece?
