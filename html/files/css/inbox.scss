@@ -116,7 +116,10 @@
 
             li.left, li.right {
                 display: block;
-                height: auto;
+
+                a {
+                    height: auto !important;
+                }
             }
         }
     }
