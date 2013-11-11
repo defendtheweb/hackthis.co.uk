@@ -86,7 +86,7 @@
                 $post->signature = $this->app->parse($post->signature);
             }
 
-            $return = "        <li class='row clr' data-id='{$post->post_id}'";
+            $return = "        <li class='row clr".($post->karma <= -3?' removed-karma':'')."' data-id='{$post->post_id}'";
             if ($last) {
                 $return .= ' id="latest">';
             } else {
@@ -96,7 +96,7 @@
 
             $return .= "            <div id='post-{$post->post_id}' class='col span_5 post_header'>";
 
-            if ($post->username):
+            if ($post->username && $post->karma > -3):
                 if ($post->donator):
 
                     $return .= <<< POST
@@ -125,7 +125,8 @@ POST;
                 <br/>
 
 POST;
-
+            elseif ($post->username): // Removed post
+                $return .= "        <a href='/user/{$post->username}' class='strong dark'>{$post->username}</a>\n";
             else: // Deleted user
 
                 $return .= <<< POST
@@ -135,102 +136,110 @@ POST;
 POST;
 
             endif;
-            if ($post->user_id === $this->app->user->uid):
-                if (!$first):
 
-                    $return .= <<< POST
+            if ($post->karma > -3):
+                if ($post->user_id === $this->app->user->uid):
+                    if (!$first):
+
+                        $return .= <<< POST
                 <a href='?edit={$post->post_id}' class='button icon'><i class='icon-edit'></i></a>
                 <a href='#' class='button icon remove'><i class='icon-trash'></i></a>
 
 POST;
 
-                else:
+                    else:
 
-                    $return .= <<< POST
+                        $return .= <<< POST
                 <a href='?edit={$post->post_id}' class='button'><i class='icon-edit'></i> Edit post</a>
 
 POST;
 
-                endif;
-            elseif ($this->app->user->forum_priv > 1):
-                if (!$first):
+                    endif;
+                elseif ($this->app->user->forum_priv > 1):
+                    if (!$first):
 
-                    $return .= <<< POST
+                        $return .= <<< POST
                 <a href='/admin/forum.php?post={$post->post_id}&edit' class='button icon'><i class='icon-edit'></i></a>
                 <a href='/admin/forum.php?post={$post->post_id}&remove' class='button icon'><i class='icon-trash'></i></a>
 
 POST;
 
-                else:
+                    else:
 
-                    $return .= <<< POST
+                        $return .= <<< POST
                 <a href='/admin/forum.php?post={$post->post_id}&edit' class='button'><i class='icon-edit'></i> Edit post</a>
 
 POST;
 
+                    endif;
+                else:
+
+                    if ($post->flag <= 0) {
+                        $return .= "                <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>";
+                    } else {
+                        $return .= "                <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>";
+                    }
+
                 endif;
-            else:
-
-                if ($post->flag <= 0) {
-                    $return .= "                <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>";
-                } else {
-                    $return .= "                <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>";
-                }
-
             endif;
+            $return .= "            </div>";
 
-            $return .= <<< POST
-            </div>
+            if ($post->karma <= -3):
+                $return .= "<article class='col span_19 post_content'>
+                                <div class='strong dark'>Post hidden due to negative karma</div>
+                            </article>";
+
+            else:
+                $return .= <<< POST
             <article class="col span_19 post_content">
                 <div class="karma small mobile-hide">
 POST;
 
-            if (!$this->app->user->loggedIn || $post->user_id === $this->app->user->uid):
+                if (!$this->app->user->loggedIn || $post->user_id === $this->app->user->uid):
 
-                $return .= <<< POST
-                <span>{$post->karma}</span>
-POST;
-                if ($first):
-                    $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                    $return .= "                <span>{$post->karma}</span>";
+
+                    if ($first):
+                        $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                    endif;
+
+                else:
+
+                    $cancel_down = $post->user_karma < 0?'karma-cancel':'';
+                    $cancel_up = $post->user_karma > 0?'karma-cancel':'';
+
+                    if ($this->app->user->karma_priv >= 2)
+                        $return .= "<a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>";
+                    $return .= "<span>{$post->karma}</span>";
+                    if ($this->app->user->karma_priv >= 1)
+                        $return .= "<a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>";
+
+                    if ($first) {
+                        $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                    }
+
                 endif;
 
-            else:
+                $tmp1 = $first?'itemprop="articleBody"':'';
+                $return .= <<< POST
+                    </div>
+                    <div class="post_body" {$tmp1}>
+                        {$post->body}
 
-                $cancel_down = $post->user_karma < 0?'karma-cancel':'';
-                $cancel_up = $post->user_karma > 0?'karma-cancel':'';
+POST;
 
-                if ($this->app->user->karma_priv >= 2)
-                    $return .= "<a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>";
-                $return .= "<span>{$post->karma}</span>";
-                if ($this->app->user->karma_priv >= 1)
-                    $return .= "<a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>";
-
-                if ($first) {
-                    $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
+                if (isset($post->signature)) {
+                    $return .= "                    <div class='post_signature'>
+                            {$post->signature}
+                        </div>\n";
                 }
 
+                $return .= <<< POST
+                    </div>
+                </article>
+POST;
             endif;
-
-            $tmp1 = $first?'itemprop="articleBody"':'';
-            $return .= <<< POST
-                </div>
-                <div class="post_body" {$tmp1}>
-                    {$post->body}
-
-POST;
-
-            if (isset($post->signature)) {
-                $return .= "                    <div class='post_signature'>
-                        {$post->signature}
-                    </div>\n";
-            }
-
-            $return .= <<< POST
-                </div>
-            </article>
-        </li>
-
-POST;
+            $return .= "        </li>";
 
             print $return;
 
@@ -612,7 +621,7 @@ POST;
                 $thread->question->image = profile::getImg(null, 60);
 
 
-            $thread->p_start = (($page-1)*$limit)+1;            
+            $thread->p_start = (($page-1)*$limit)+1;
 
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,

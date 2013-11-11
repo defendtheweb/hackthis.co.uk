@@ -233,6 +233,16 @@
         margin-bottom: 2px;
         position: relative;
 
+        &.removed-karma {
+            background: $bg;
+            margin: 6px 0;
+
+            .post_content {
+                margin-top: 6px;
+                margin-bottom :6px;
+            }
+        }
+
         .post_info, .post_body {
             padding: 8px;
         }
