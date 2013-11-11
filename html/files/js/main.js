@@ -1,9 +1,3 @@
-var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-g.src='https://www.google-analytics.com/ga.js';
-s.parentNode.insertBefore(g,s)}(document,'script'));
-
-
 // Resize username
 while( $('.dashboard h1 a').width() > $('.dashboard').width() ) {
     $('.dashboard h1 a').css('font-size', (parseInt($('.dashboard h1 a').css('font-size')) - 1) + "px" );
