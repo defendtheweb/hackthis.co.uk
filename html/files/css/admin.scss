@@ -5,3 +5,29 @@
 .level-edit .select-menu {
     width: 100%;
 }
+
+.graph {
+    width: 100%;
+
+    .axis path {
+        display: none;
+    }
+
+    .axis line {
+        shape-rendering: crispEdges;
+        stroke: $lighter_bg;
+    }
+
+    .axis .minor line {
+        stroke: $bg;
+        stroke-dasharray: 2,2;
+    }
+
+    path {
+        stroke: $white;
+    }
+
+    text {
+        fill: $text;
+    }
+}

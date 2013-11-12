@@ -1,6 +1,6 @@
 <?php
     $custom_css = array('admin.scss');
-    $custom_js = array('admin.js');
+    $custom_js = array('admin.js', 'admin_forum.js');
     $page_title = 'Admin - Forum';
     define("PAGE_PRIV", "admin_forum");
 
@@ -13,7 +13,20 @@
 
     require_once('header.php');
 
-    if (isset($_GET['post'])): // POST SPECIFIED
+    if (!isset($_GET['post'])):
+        $sql = "SELECT COUNT(author) AS `count`, DATE_FORMAT(posted, '%d-%m-%Y') AS `date` FROM forum_posts WHERE posted > date_sub(now(), INTERVAL 1 WEEK)  GROUP BY YEAR(posted), MONTH(posted), DAY(posted) ORDER BY posted DESC";
+        $st = $app->db->prepare($sql);
+        $st->execute();
+        $result = $st->fetchAll();
+?>
+    <script type="text/javascript">
+        graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
+    </script>
+
+    <div class='graph'></div>
+    <script type="text/javascript" src="/files/js/d3.js"></script>
+<?php
+    else: // POST SPECIFIED
         if (!$post) {
             $app->utils->message('Post not found');
             require_once('footer.php');
@@ -62,9 +75,6 @@
 <?php
             endif;
         endif;
-
-    else:
-        //
     endif;
 
     require_once('footer.php');
