@@ -19,12 +19,57 @@
         $st->execute();
         $result = $st->fetchAll();
 ?>
-    <script type="text/javascript">
-        graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
-    </script>
+    <p>
+        <script type="text/javascript">
+            graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
+        </script>
 
-    <div class='graph'></div>
-    <script type="text/javascript" src="/files/js/d3.js"></script>
+        <div class='graph'></div>
+        <script type="text/javascript" src="/files/js/d3.js"></script>
+<?php
+    $sql = "SELECT MAX(users_forum.flag) AS `latest`, COUNT(users_forum.post_id) AS `flags`, users.username, forum_threads.thread_id, forum_threads.slug, forum_threads.title, forum_posts.post_id, forum_posts.body
+            FROM users_forum
+            INNER JOIN forum_posts
+            ON users_forum.post_id = forum_posts.post_id
+            INNER JOIN forum_threads
+            ON forum_posts.thread_id = forum_threads.thread_id
+            INNER JOIN users
+            ON users.user_id = forum_posts.author
+            WHERE flag > 0 AND forum_posts.deleted = 0 AND forum_threads.deleted = 0
+            GROUP BY users_forum.post_id
+            ORDER BY `flags` DESC, `latest` DESC";
+    $st = $app->db->prepare($sql);
+    $st->execute();
+    $result = $st->fetchAll();
+?>
+    </p>
+    <p>
+        <table class='striped'>
+            <thead>
+                <tr>
+                    <th>Thread</th>
+                    <th>Author</th>
+                    <th>Flags</th>
+                </tr>
+            </thead>
+            <tbody>
+<?php
+    foreach ($result AS $post):
+        $post->title = $app->parse($post->title, false);
+?>
+                <tr>
+                    <td><a href='/forum/<?=$post->slug;?>?post=<?=$post->post_id;?>'><?=$post->title;?></a></td>
+                    <td><a href='/users/<?=$post->username;?>'><?=$post->username;?></a></td>
+                    <td><?=$post->flags;?></td>
+                </tr>
+<?php
+    endforeach;
+?>
+            </tbody>
+        </table>
+    </p>
+
+
 <?php
     else: // POST SPECIFIED
         if (!$post) {
