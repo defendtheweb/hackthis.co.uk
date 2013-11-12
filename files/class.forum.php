@@ -745,7 +745,7 @@ POST;
 
                 if ($res->posts == 50) {
                     $this->app->user->awardMedal('forum');
-                } else if ($res->posts == 100) {
+                } else if ($res->posts == 250) {
                     $this->app->user->awardMedal('forum', 2);
                 } else if ($res->posts == 1000) {
                     $this->app->user->awardMedal('forum', 3);
@@ -790,8 +790,9 @@ POST;
                     $this->app->user->removeMedal('karma', 1);
                 } else if ($res->posts == 49) {
                     $this->app->user->removeMedal('forum', 1);
-                } else if ($res->posts == 99) {
+                } else if ($res->posts == 249) {
                     $this->app->user->removeMedal('forum', 2);
+                } else if ($res->posts == 99) {
                     $this->app->user->removeMedal('karma', 2);
                 } else if ($res->posts == 999) {
                     $this->app->user->removeMedal('forum', 3);
@@ -913,6 +914,14 @@ POST;
             $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `flag`)
                 VALUES (:uid, :post_id, NOW()) ON DUPLICATE KEY UPDATE `flag` = NOW()");
             return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
+        }
+
+        public function removeFlags($post_id) {
+            if (!$this->app->user->admin_forum_priv)
+                return false;
+
+            $st = $this->app->db->prepare("UPDATE users_forum SET `flag` = 0 WHERE post_id = :post_id");
+            return $st->execute(array(':post_id'=>$post_id));
         }
 
 
