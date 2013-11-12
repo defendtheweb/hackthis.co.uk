@@ -34,7 +34,7 @@
                             <li><h3>Connect</h3></li>
                             <li><a href='https://www.facebook.com/hackthisuk'><i class='icon-facebook'></i> Facebook</a></li>
                             <li><a href='https://twitter.com/hackthisuk'><i class='icon-twitter'></i> Twitter</a></li>
-                            <li><a href='#'><i class='icon-feed'></i> Feed</a></li>
+                            <li><a href='https://github.com/HackThis'><i class='icon-github'></i> GitHub</a></li>
                         </ul>
                     </div>
                 </div>
