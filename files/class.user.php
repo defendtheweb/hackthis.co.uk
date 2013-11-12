@@ -788,9 +788,18 @@
             $st = $this->app->db->prepare('INSERT IGNORE INTO users_medals (`user_id`, `medal_id`) SELECT :uid, medal_id FROM medals WHERE label = :label AND colour_id = :colour');
             $result = $st->execute(array(':label' => $label, ':colour' => $colour, ':uid' => $uid));
 
-            if ($st->rowCount() && $uid == $this->uid) {
-                // Add to feed
-                $this->app->feed->call($this->username, 'medal', $label, $colour);
+            if ($st->rowCount()) {
+                if ($uid == $this->uid) {
+                    // Add to feed
+                    $this->app->feed->call($this->username, 'medal', $label, $colour);
+                } else {
+                    // Lookup username
+                    $st = $this->app->db->prepare('SELECT username FROM users WHERE user_id = :uid');
+                    $st->execute(array(':uid' => $uid));
+                    $result = $st->fetch();
+
+                    $this->app->feed->call($result->username, 'medal', $label, $colour);
+                }
             }
 
             return (bool) $result;
