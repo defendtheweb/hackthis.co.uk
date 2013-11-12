@@ -24,10 +24,15 @@
     }
 
     path {
-        stroke: $white;
+        stroke: $green;
     }
 
     text {
+        fill: $dark;
+    }
+
+    text.title {
         fill: $text;
+        font-size: 16px;
     }
 }
