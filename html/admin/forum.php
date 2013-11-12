@@ -31,7 +31,6 @@
     <p>
         <script type="text/javascript">
             graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
-            graphData = [{ "date" : "12-11-2013", "count" : 32 }, { "date" : "11-11-2013", "count" : 88 }, { "date" : "10-11-2013", "count" : 33 }, { "date" : "09-11-2013", "count" : 91 }, { "date" : "08-11-2013", "count" : 74 }, { "date" : "07-11-2013", "count" : 82 }, { "date" : "06-11-2013", "count" : 85 }, { "date" : "05-11-2013", "count" : 57 }, ];
         </script>
 
         <div class='graph'></div>
