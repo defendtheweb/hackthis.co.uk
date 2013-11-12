@@ -129,6 +129,8 @@
                     $res->slug = "{$res->slug}";
                 } else if ($res->type == 'mod_contact') {
                     $res->ticket = $res->item_id;
+                } else if ($res->type == 'mod_report') {
+                    $res->report = $res->item_id;
                 }
 
                 // Parse title
@@ -204,6 +206,9 @@
             } else if ($event->type == 'mod_contact') {
                 $icon = 'envelope-alt';
                 $text = $this->app->utils->userLink($event->username) . ' replied to your <a href="/contact?view='.$event->ticket.'">ticket</a>';
+            } else if ($event->type == 'mod_report') {
+                $icon = 'envelope-alt';
+                $text = $this->app->utils->userLink($event->username) . ' created a new report, <a href="/contact?report='.$event->report.'">view report</a>';
             } else {
                 return 'N/A';
             }

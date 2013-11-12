@@ -6,6 +6,15 @@
 
     require_once('init.php');
 
+    if (isset($_GET['action'])) {
+        $return = new stdClass();
+        if ($_GET['action'] == 'flag.remove') {
+            $return->status = $app->forum->removeFlags($_GET['id']);
+        }
+        echo json_encode($return);
+        die();
+    }
+
 
     if (isset($_GET['post'])) {
         $post = $app->forum->getPost($_GET['post']);
@@ -22,6 +31,7 @@
     <p>
         <script type="text/javascript">
             graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
+            graphData = [{ "date" : "12-11-2013", "count" : 32 }, { "date" : "11-11-2013", "count" : 88 }, { "date" : "10-11-2013", "count" : 33 }, { "date" : "09-11-2013", "count" : 91 }, { "date" : "08-11-2013", "count" : 74 }, { "date" : "07-11-2013", "count" : 82 }, { "date" : "06-11-2013", "count" : 85 }, { "date" : "05-11-2013", "count" : 57 }, ];
         </script>
 
         <div class='graph'></div>
@@ -43,13 +53,18 @@
     $result = $st->fetchAll();
 ?>
     </p>
+<?php
+        if ($result):
+?>
     <p>
-        <table class='striped'>
+        <table class='striped flags'>
             <thead>
                 <tr>
                     <th>Thread</th>
                     <th>Author</th>
                     <th>Flags</th>
+                    <th>Latest</th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,10 +72,16 @@
     foreach ($result AS $post):
         $post->title = $app->parse($post->title, false);
 ?>
-                <tr>
+                <tr data-pid="<?=$post->post_id;?>">
                     <td><a href='/forum/<?=$post->slug;?>?post=<?=$post->post_id;?>'><?=$post->title;?></a></td>
                     <td><a href='/users/<?=$post->username;?>'><?=$post->username;?></a></td>
                     <td><?=$post->flags;?></td>
+                    <td><time datetime="<?=date('c', strtotime($post->latest));?>"><?=$app->utils->timeSince($post->latest);?></time></td>
+                    <td class='text-right'>
+                        <a href='?post=<?=$post->post_id;?>&edit' class='accept hint--top' data-hint="Edit post"><i class='icon-edit'></i></a>
+                        <a href='?post=<?=$post->post_id;?>&delete' class='trash hint--top' data-hint="Delete post"><i class='icon-trash'></i></a>
+                        <a href='#' class='remove hint--top' data-hint="Delete flag"><i class='icon-remove'></i></a>
+                    </td>
                 </tr>
 <?php
     endforeach;
@@ -71,6 +92,7 @@
 
 
 <?php
+        endif;
     else: // POST SPECIFIED
         if (!$post) {
             $app->utils->message('Post not found');
@@ -79,7 +101,7 @@
         }
 
         if (isset($_GET['edit'])):
-            if (isset($_POST['body']) && isset($_POST['reason'])) {
+            if (isset($_POST['body']) && $_POST['body'] != $post->body && isset($_POST['reason'])) {
                 if ($_POST['body'] && $_POST['reason']) {
                     $updated = $app->forum->editPost($post->post_id, null, $_POST['body']);
                 } else {
@@ -93,7 +115,15 @@
                         VALUES (:uid, 'forum', :post_id, 'Edited post', :body)");
                 $st->execute(array(':post_id'=>$post->post_id, ':uid'=>$app->user->uid, ':body'=>$_POST['reason']));
 
-                $app->utils->message('Post updated', 'good');
+                $id = $app->db->lastInsertId();
+
+                // Notify user
+                $app->notifications->add($post->author, 'mod_report', $app->user->uid, $id);
+
+                // Remove flags and award users who flagged
+                $app->forum->removeFlags($post->post_id, true);
+
+                $app->utils->message('Post updated, <a href="/admin/forum.php">return to admin page</a>', 'good');
 ?>
                 
 
@@ -114,6 +144,53 @@
             <input type="text" name="reason"/><br/>
 
             <?php include('elements/wysiwyg.php'); ?>
+            <input type='submit' class='button' value='Submit'/>
+        </form>
+
+<?php
+            endif;
+        elseif (isset($_GET['remove'])):
+            if (isset($_POST['reason'])) {
+                if ($_POST['reason']) {
+                    $updated = $app->forum->deletePost($post->post_id);
+                } else {
+                    $updated = false;
+                }
+            }
+
+            if (isset($updated) && $updated === true):
+                // Add to reports
+                $st = $app->db->prepare("INSERT INTO mod_reports (`user_id`, `type`, `about`, `subject`, `body`)
+                        VALUES (:uid, 'forum', :post_id, 'Deleted post', :body)");
+                $st->execute(array(':post_id'=>$post->post_id, ':uid'=>$app->user->uid, ':body'=>$_POST['reason']));
+
+                $id = $app->db->lastInsertId();
+
+                // Notify user
+                $app->notifications->add($post->author, 'mod_report', $app->user->uid, $id);
+
+                // Remove flags and award users who flagged
+                $app->forum->removeFlags($post->post_id, true);
+
+                $app->utils->message('Post deleted, <a href="/admin/forum.php">return to admin page</a>', 'good');
+?>
+                
+
+
+<?php
+            else:
+                $wysiwyg_text = $post->body;
+
+                $app->utils->message('Users will be notified of the deletion along with the reason you give, so please make it constructive', 'info');
+
+                if (isset($updated) && $updated === false) {
+                    $app->utils->message('A reason is required');
+                }
+?>
+
+        <form id="submit" class='forum-thread-reply' method="POST">
+            <label for="reason">Reason for deletion:</label><br/>
+            <input type="text" name="reason"/>
             <input type='submit' class='button' value='Submit'/>
         </form>
 

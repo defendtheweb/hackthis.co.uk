@@ -138,6 +138,8 @@ $(function() {
                             '            Your article has been published <a href="${slug}">${title}</a><br/>'+
                             '    {{else type == "mod_contact"}}'+
                             '            <a href="/user/${username}">${username}</a> replied to your <a href="/contact?view=${ticket}">ticket</a><br/>'+
+                            '    {{else type == "mod_report"}}'+
+                            '            <a href="/user/${username}">${username}</a> created a new report, <a href="/contact?report=${report}">view report</a><br/>'+
                             '    {{/if}}'+
                             '    </li>'+
                             '</tmpl>';

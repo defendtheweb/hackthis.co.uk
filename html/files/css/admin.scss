@@ -36,3 +36,24 @@
         font-size: 16px;
     }
 }
+
+a.remove:hover, a.trash:hover {
+    text-decoration: none;
+    i {
+        color: red;
+    }
+}
+a.trash{
+    display: inline-block;
+    margin-right: 8px;
+}
+a.accept {
+    display: inline-block;
+    margin-right: 4px;
+}
+a.accept:hover {
+    text-decoration: none;
+    i {
+        color: $green;
+    }
+}

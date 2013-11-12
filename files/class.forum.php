@@ -779,7 +779,7 @@ POST;
                 $st->execute(array(':pid'=>$post_id));
 
                 // Check for forum medal
-                $st = $this->app->db->prepare('SELECT COUNT(forum_posts.post_id) AS posts FROM forum_posts
+                $st = $this->app->db->prepare('SELECT COUNT(forum_posts.post_id) AS posts, forum_posts.author FROM forum_posts
                                     INNER JOIN forum_posts tmp
                                     ON tmp.post_id = :pid AND forum_posts.author = tmp.author
                                     WHERE forum_posts.deleted = 0');
@@ -787,15 +787,15 @@ POST;
                 $res = $st->fetch();
 
                 if ($res->posts == 9) {
-                    $this->app->user->removeMedal('karma', 1);
+                    $this->app->user->removeMedal('karma', 1, $res->author);
                 } else if ($res->posts == 49) {
-                    $this->app->user->removeMedal('forum', 1);
+                    $this->app->user->removeMedal('forum', 1, $res->author);
                 } else if ($res->posts == 249) {
-                    $this->app->user->removeMedal('forum', 2);
+                    $this->app->user->removeMedal('forum', 2, $res->author);
                 } else if ($res->posts == 99) {
-                    $this->app->user->removeMedal('karma', 2);
+                    $this->app->user->removeMedal('karma', 2, $res->author);
                 } else if ($res->posts == 999) {
-                    $this->app->user->removeMedal('forum', 3);
+                    $this->app->user->removeMedal('forum', 3, $res->author);
                 }
             }
 
@@ -813,7 +813,7 @@ POST;
                                                    WHERE post_id = :pid AND thread_id = :tid AND deleted = 0");
                     $st->execute(array(':pid'=>$post_id, ':tid'=>$thread_id));
                 } else {
-                    $st = $this->app->db->prepare("SELECT post_id, body, author
+                    $st = $this->app->db->prepare("SELECT post_id, body, author, deleted, thread_id
                                                    FROM forum_posts
                                                    WHERE post_id = :pid");
                     $st->execute(array(':pid'=>$post_id));                    
@@ -916,9 +916,18 @@ POST;
             return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
         }
 
-        public function removeFlags($post_id) {
+        public function removeFlags($post_id, $reward=false) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
+
+            // If reward give all users who flagged a medal
+            $st = $this->app->db->prepare("SELECT user_id FROM users_forum WHERE post_id = :post_id AND flag > 0");
+            $st->execute(array(':post_id'=>$post_id));
+            if ($result = $st->fetchAll()) {
+                foreach($result AS $res) {
+                    $this->app->user->awardMedal('Patrol', 1, $res->user_id);
+                }
+            }
 
             $st = $this->app->db->prepare("UPDATE users_forum SET `flag` = 0 WHERE post_id = :post_id");
             return $st->execute(array(':post_id'=>$post_id));

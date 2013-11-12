@@ -4,9 +4,68 @@
     $custom_css = array('faq.scss');
     $custom_js = array('faq.js');
     require_once('init.php');
-    $app->page->title = 'Contact Us';
+    if (isset($_GET['report']))
+        $app->page->title = 'Report';
+    else
+        $app->page->title = 'Contact Us';
     $app->page->canonical = 'http://www.hackthis.co.uk/contact';
     require_once('header.php');
+
+
+    if (isset($_GET['report'])):
+        // Get report
+        $report = $_GET['report'];
+        $st = $app->db->prepare("SELECT * FROM mod_reports WHERE report_id = :rid LIMIT 1");
+        $st->execute(array(':rid'=>$report));
+        $report = $st->fetch();
+
+        if ($report && $report->type == 'forum'):
+            // Get post
+            $post = $app->forum->getPost($report->about);
+            if (!$post):
+                $app->utils->message('Report not found');
+            else:
+                // Get thread
+                $sql = "SELECT title, slug FROM forum_threads WHERE thread_id = :tid";
+                $st = $app->db->prepare($sql);
+                $st->execute(array(':tid'=>$post->thread_id));
+                $post->thread = $st->fetch();
+
+                if ($post->deleted == 0):
+                    // Get changes
+                    $sql = "SELECT old_value FROM forum_posts_audit WHERE post_id = :pid AND field='body' ORDER BY `time` DESC LIMIT 1";
+                    $st = $app->db->prepare($sql);
+                    $st->execute(array(':pid'=>$post->post_id));
+                    $post->audit = $st->fetch();
+                endif;
+?>
+        <h1>Report - <?=($post->deleted == 0)?'Post edited':'Post deleted';?></h1>
+        <div class='report'>
+            Your post in <a href='/forum/<?=$post->thread->slug;?>'><?=$app->parse($post->thread->title, false);?></a> has been <?=($post->deleted == 0)?'modified':'deleted';?>. The reason for the change:<br/>
+            <div class='highlight'><?=$app->parse($report->body);?></div>
+            <br/>
+            The original post:<br/>
+            <div class='highlight'><?=$app->parse($post->audit->old_value);?></div><br/>
+<?php
+                if (isset($post->audit->old_value)):
+?>
+            Has been replaced by:<br/>
+<?php
+                    echo "<div class='highlight'>".$app->parse($post->body)."</div><br/>";
+                endif;
+                $app->utils->message('If you wish to discuss this report please open a <a href="/contact">ticket</a>', 'info');
+?>
+        </div>
+<?php
+            endif;
+        else:
+            $app->utils->message('Report not found');
+        endif;
+
+        require('footer.php');
+        die();
+    endif;
+
 
     if (($app->user->loggedIn && $app->user->admin) && !isset($_GET['view'])):
         // Get all tickets
@@ -16,7 +75,7 @@
                                  ON `from` = users.user_id
                                  LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact GROUP BY parent_id) replies
                                  ON replies.parent_id = mod_contact.message_id
-                                 LEFT JOIN (SELECT `from`, `sent`, parent_id FROM mod_contact ORDER BY `sent` DESC LIMIT 1) latest
+                                 LEFT JOIN (SELECT `from`, `sent`, parent_id FROM mod_contact GROUP BY parent_id) latest
                                  ON latest.parent_id = mod_contact.message_id
                                  WHERE mod_contact.parent_id IS NULL
                                  ORDER BY last_sent DESC");
