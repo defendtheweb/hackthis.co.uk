@@ -106,6 +106,7 @@ $(function() {
                 if ($chat.hasClass('show')) {
                     $chat.removeClass('show');
                     createCookie("chat", "closed");
+                    $chat.find('.scroll').mCustomScrollbar("scrollTo", "bottom");
                 } else {
                     $chat.addClass('show');
                     createCookie("chat", "open");
