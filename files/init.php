@@ -41,6 +41,7 @@
         }   
 
         array_push($minifier->custom_js, 'notifications.js');
+        array_push($minifier->custom_js, 'chat.js');
         array_push($minifier->custom_js, 'autosuggest.js');
     } else {
         array_push($minifier->custom_js, 'guest.js');

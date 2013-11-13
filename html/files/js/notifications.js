@@ -1,16 +1,14 @@
-$(function() {
-    var favcounter = new FavCounter();
-    var counter_chat = 0;
-    var counter_notifications = 0;
+var socket = null;
+if (typeof io !== 'undefined') {
+    socket = io.connect('https://hackthis.co.uk:8080/', { secure: true });
+}
+var favcounter = new FavCounter();
+var counter_chat = 0;
+var counter_notifications = 0;
 
+$(function() {
     var username = $('body').attr('data-username');
     var key = $('body').attr('data-key');
-
-    var socket = null;
-    if (typeof io !== 'undefined') {
-        // socket = io.connect('http://192.168.1.66:8080/');
-        socket = io.connect('https://hackthis.co.uk:8080/', { secure: true });
-    }
 
     var feedTmpl = '<tmpl>'+
     '    <li>'+

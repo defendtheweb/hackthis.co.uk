@@ -675,28 +675,39 @@ div.lite-pagination {
     bottom: 0;
     right: 0;
     z-index: 1000;
-   /* overflow: hidden; */
+    /* overflow: hidden; */
 
-    height: 0;
-    width: 350px;
+    height: 28px;
+    width: 150px;
     max-width: 100%;
     border-top: 3px solid $red;
+
+    .connect-msg {
+        text-align: center;
+        padding: 15px;
+        margin-top: 5px;
+    }
 
     &.connected {
         border-color: $green;
 
-        a.chat-connect {
+        .connect-msg {
             display: none;
+        }
+
+        .chat-bar-title i {
+            display: inline;
         }
     }
 
     background: $black;
 
-    transition: height 0.3s;
+    transition: height 0.3s, width 0.3s;
 
     &.show {
         height: 275px !important;
         max-height: 75%;
+        width: 350px;
 
         input {
             display: block;
@@ -707,18 +718,19 @@ div.lite-pagination {
         }
     }
 
-    &:hover {
-        height: 28px;
-    }
-
     .chat-bar-title {
         cursor: pointer;
         color: $white;
-        background: $bg;
+        background: $light_bg;
         padding: 4px 6px;
-input
+
+        i {
+            display: none;
+        }
+
         i:hover {
-            color: $bright_green;
+            color: red;
+            cursor: pointer;
         }
 
         .unread {
