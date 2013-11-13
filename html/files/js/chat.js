@@ -149,7 +149,7 @@ $(function() {
             socket.on('chat', function (data) {
                 if (data instanceof Array) {
                     for (var i = 0; i < data.length; i++) {
-                        if (data[i].info == 'names')
+                        if (!data[i].info || data[i].info == 'names')
                             renderMsg(data[i]);
                     }
                 } else {
