@@ -59,7 +59,22 @@
 <?php
             endif;
         elseif ($report && $report->type == 'forum_thread'): 
-            print_r($app->forum->getThread($report->about));
+            $thread = $app->forum->getThread($report->about);
+            if (!$thread):
+                $app->utils->message('Report not found');
+            else:
+?>
+        <h1>Report - <?=$report->subject;?></h1>
+        <div class='report'>
+            Your thread <a href='/forum/<?=$thread->slug;?>'><?=$app->parse($thread->title, false);?></a> has been deleted. The reason for the deletion:<br/>
+            <div class='highlight'><?=$app->parse($report->body);?></div>
+            <br/>
+<?php
+            $app->utils->message('If you wish to discuss this report please open a <a href="/contact">ticket</a>', 'info');
+?>
+        </div>
+<?php
+            endif;
         else:
             $app->utils->message('Report not found');
         endif;
