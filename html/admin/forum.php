@@ -89,6 +89,8 @@
 
 
 <?php
+        else:
+            $app->utils->message('No forum reports', 'good');
         endif;
     elseif (isset($_GET['thread'])): // THREAD SPECIFIED
         $thread = $app->forum->getThread($_GET['thread'], 1, 0);
