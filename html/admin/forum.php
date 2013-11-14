@@ -73,7 +73,7 @@
 ?>
                 <tr data-pid="<?=$post->post_id;?>">
                     <td><a target='_blank' href='/forum/<?=$post->slug;?>?post=<?=$post->post_id;?>'><?=$post->title;?></a></td>
-                    <td><a target='_blank' href='/users/<?=$post->username;?>'><?=$post->username;?></a></td>
+                    <td><a target='_blank' href='/user/<?=$post->username;?>'><?=$post->username;?></a></td>
                     <td><?=$post->flags;?></td>
                     <td><time datetime="<?=date('c', strtotime($post->latest));?>"><?=$app->utils->timeSince($post->latest);?></time></td>
                     <td class='text-right'>
