@@ -114,7 +114,7 @@
                 if (isset($deleted) && $deleted === true):
                     // Add to reports
                     $st = $app->db->prepare("INSERT INTO mod_reports (`user_id`, `type`, `about`, `subject`, `body`)
-                            VALUES (:uid, 'forum', :tid, 'Deleted thread', :body)");
+                            VALUES (:uid, 'forum_thread', :tid, 'Deleted thread', :body)");
                     $st->execute(array(':tid'=>$thread->id, ':uid'=>$app->user->uid, ':body'=>$_POST['reason']));
 
                     $id = $app->db->lastInsertId();

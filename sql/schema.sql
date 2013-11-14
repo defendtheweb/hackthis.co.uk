@@ -425,7 +425,7 @@ CREATE TABLE IF NOT EXISTS articles_favourites (
 CREATE TABLE IF NOT EXISTS mod_reports (
     `report_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
-    `type` enum('comment', 'article', 'user', 'forum', 'level') NOT NULL,
+    `type` enum('comment', 'article', 'user', 'forum', 'forum_thread', 'level') NOT NULL,
     `about` int(7) NOT NULL,
     `subject` varchar(64),
     `body` text,

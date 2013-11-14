@@ -19,7 +19,7 @@
         $st->execute(array(':rid'=>$report));
         $report = $st->fetch();
 
-        if ($report && $report->type == 'forum'):
+        if ($report && ($report->type == 'forum'):
             // Get post
             $post = $app->forum->getPost($report->about);
             if (!$post):
@@ -39,13 +39,13 @@
                     $post->audit = $st->fetch();
                 endif;
 ?>
-        <h1>Report - <?=($post->deleted == 0)?'Post edited':'Post deleted';?></h1>
+        <h1>Report - <?=$report->subject;?></h1>
         <div class='report'>
             Your post in <a href='/forum/<?=$post->thread->slug;?>'><?=$app->parse($post->thread->title, false);?></a> has been <?=($post->deleted == 0)?'modified':'deleted';?>. The reason for the change:<br/>
             <div class='highlight'><?=$app->parse($report->body);?></div>
             <br/>
             The original post:<br/>
-            <div class='highlight'><?=$app->parse($post->audit->old_value);?></div><br/>
+            <div class='highlight'><?=($post->deleted == 0)?$app->parse($post->audit->old_value):$app->parse($post->body);?></div><br/>
 <?php
                 if (isset($post->audit->old_value)):
 ?>
@@ -58,6 +58,8 @@
         </div>
 <?php
             endif;
+        elseif ($report && ($report->type == 'forum_thread'): 
+            print_r($app->forum->getThread($report->about));
         else:
             $app->utils->message('Report not found');
         endif;
