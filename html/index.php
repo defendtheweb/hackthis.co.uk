@@ -7,6 +7,20 @@
     // Set canonical link
     $app->page->canonical = "https://www.hackthis.co.uk";
 
+    if (isset($_GET['api']) && isset($_GET['key'])) {
+        header("Content-type: text/plain");
+        
+        // Make call to api
+        try {
+            $api = new api($app, $_GET['key']);
+            $api->process();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        die();
+    }
+
     if ($app->user->loggedIn) {
         require_once("home.php");
     } else {
