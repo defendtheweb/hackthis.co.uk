@@ -30,6 +30,13 @@ $(function() {
         }
     });
 
+    // Admin menu
+    $('.post-admin-container > a.button').on('click', function(e) {
+        e.preventDefault();
+
+        $(this).parent().toggleClass('open');
+    });
+
 
     $('a.remove').click(function(e) {
         e.preventDefault();

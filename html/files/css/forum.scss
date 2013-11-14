@@ -188,6 +188,42 @@
 
 
 .forum-main {
+    .post-admin-container {
+        position: relative;
+
+        ul.post-admin-list {
+            background: $lighter_bg;
+            position: absolute;
+            top: 25px;
+            left: 8px;
+            z-index: 10;
+            width: 115px;
+            display: none;
+
+            li a {
+                padding: 3px 6px;
+                display: block;
+                width: 100%;
+
+                &:hover {
+                    text-decoration: none;
+                    background: $bg;
+                }
+            }
+        }
+
+
+        &.open {
+            ul.post-admin-list {
+                display: block;
+            }
+
+            a.button {
+                background: $lighter_bg;
+            }
+        }
+    }
+
     h1 {
         text-transform: none;
     }

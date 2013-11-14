@@ -97,6 +97,18 @@
     <a href='#' class='post-watch button right mobile-hide'><i class='icon-eye'></i> Watch</a>
 <?php
         endif;
+        if ($app->user->admin_forum_priv):
+?>
+    <div class='post-admin-container right'>
+        <a href='#' class='post-admin button icon mobile-hide'><i class='icon-lock'></i></a>
+        <ul class='post-admin-list plain'>
+            <li><a href='/admin/forum.php?thread=<?=$thread->id;?>&close<?=$thread->closed?'=false':'';?>'><?=$thread->closed?'Reopen':'Close';?></a></li>
+            <li><a href='/admin/forum.php?thread=<?=$thread->id;?>&sticky<?=$thread->sticky?'=false':'';?>'><?=$thread->sticky?'Unstick':'Make sticky';?></a></li>
+            <li><a href='/admin/forum.php?thread=<?=$thread->id;?>&delete'>Delete</a></li>
+        </ul>
+    </div>
+<?php
+        endif;
       endif;
 ?>
 

@@ -540,7 +540,7 @@ POST;
             return '/forum/' . $slug;
         }
 
-        public function closeThread($thread_id) {
+        public function closeThread($thread_id, $close=true) {
             if (!$this->app->user->loggedIn)
                 return false;
 
@@ -560,10 +560,59 @@ POST;
             if (!$status)
                 return false;
 
-            $st = $this->app->db->prepare("UPDATE forum_threads
-                                           SET closed = '1'
-                                           WHERE thread_id = :pid");
+            if ($close)
+                $st = $this->app->db->prepare("UPDATE forum_threads
+                                               SET closed = '1'
+                                               WHERE thread_id = :pid");
+            else
+                $st = $this->app->db->prepare("UPDATE forum_threads
+                                               SET closed = '0'
+                                               WHERE thread_id = :pid");
             return $st->execute(array(':pid'=>$thread_id));            
+        }
+
+        public function stickThread($thread_id, $stick=true) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            $status = false;
+            if ($this->app->user->forum_priv == 1) {
+                $st = $this->app->db->prepare("SELECT thread_id
+                                               FROM forum_threads
+                                               WHERE thread_id = :pid AND owner = :uid");
+                $st->execute(array(':pid'=>$thread_id, ':uid'=>$this->app->user->uid));
+                if ($st->fetch()) {
+                    $status = true;
+                }
+            } else if ($this->app->user->forum_priv > 1) {
+                $status = true;
+            }
+
+            if (!$status)
+                return false;
+
+            if ($stick)
+                $st = $this->app->db->prepare("UPDATE forum_threads
+                                               SET sticky = '1'
+                                               WHERE thread_id = :pid");
+            else
+                $st = $this->app->db->prepare("UPDATE forum_threads
+                                               SET sticky = '0'
+                                               WHERE thread_id = :pid");
+            return $st->execute(array(':pid'=>$thread_id));            
+        }
+
+        public function deleteThread($thread_id) {
+            if ($this->app->user->forum_priv <= 1)
+                return false;
+
+            // delete thread
+            $st = $this->app->db->prepare("UPDATE forum_threads
+                                           SET deleted = '1'
+                                           WHERE thread_id = :tid");
+
+            // all posts will also be marked as deleted by trigger
+            return $st->execute(array(':tid'=>$thread_id)); 
         }
 
 

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     `user_id` int(7) NOT NULL AUTO_INCREMENT,
     `username` varchar(32) NOT NULL,
     `password` varchar(64),
-    `old_password` tinyint(1) NOT NULL DEFAULT 1,
+    `old_password` tinyint(1) NOT NULL DEFAULT 0,
     `oauth_id` int(7),
     `email` varchar(128) NOT NULL,
     `verified` tinyint(1) NOT NULL DEFAULT 0,
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS users_activity (
 CREATE TABLE IF NOT EXISTS users_notifications (
     `notification_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
-    `type` enum('friend','friend_accepted', 'medal','forum_post','forum_mention','comment_reply','comment_mention','article', 'mod_contact') NOT NULL,
+    `type` enum('friend','friend_accepted', 'medal','forum_post','forum_mention','comment_reply','comment_mention','article', 'mod_contact', 'mod_report') NOT NULL,
     `from_id` int(7),
     `item_id` int(7),
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -496,7 +496,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM mod_reports WHERE OLD.user_id = user_id;
         DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
         DELETE FROM articles_draft WHERE OLD.user_id = user_id;
-        DELETE FROM forum_karma WHERE OLD.user_id = user_id;
+        DELETE FROM users_forum WHERE OLD.user_id = user_id;
         DELETE FROM forum_users WHERE OLD.user_id = user_id;
         DELETE FROM pm_users WHERE OLD.user_id = user_id;
         DELETE FROM users_feed WHERE OLD.user_id = user_id;
@@ -542,6 +542,18 @@ CREATE PROCEDURE user_feed_remove(_user_id INT, _type TEXT, _item_id INT)
 
 -- When a user completes a level and an item is added to users_levels
 -- Give user the relevant score and add to users feed
+DROP TRIGGER IF EXISTS insert_user_level;
+CREATE TRIGGER insert_user_level AFTER INSERT ON users_levels FOR EACH ROW
+    BEGIN
+        DECLARE REWARD INT;
+        IF NEW.completed > 0 THEN
+            CALL user_feed(NEW.user_id, 'level', NEW.level_id);
+
+            SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = NEW.level_id AND `key` = 'reward' LIMIT 1);
+            UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
+        END IF;
+    END;
+
 DROP TRIGGER IF EXISTS update_user_level;
 CREATE TRIGGER update_user_level AFTER UPDATE ON users_levels FOR EACH ROW
     BEGIN
@@ -652,6 +664,12 @@ CREATE TRIGGER insert_forum_post AFTER INSERT ON forum_posts FOR EACH ROW
         CALL user_feed(NEW.author, 'forum_post', NEW.post_id);
     END;
 
+DROP TRIGGER IF EXISTS delete_forum_post;
+CREATE TRIGGER delete_forum_post BEFORE DELETE ON forum_posts FOR EACH ROW
+    BEGIN
+        DELETE FROM users_forum WHERE post_id = OLD.post_id;
+    END;
+
 DROP TRIGGER IF EXISTS forum_posts_update_audit;
 CREATE TRIGGER forum_posts_update_audit BEFORE UPDATE ON forum_posts FOR EACH ROW
     BEGIN
@@ -659,6 +677,21 @@ CREATE TRIGGER forum_posts_update_audit BEFORE UPDATE ON forum_posts FOR EACH RO
             INSERT INTO forum_posts_audit (post_id, field, old_value, new_value) 
                 VALUES(NEW.post_id, 'body', OLD.body, NEW.body);
         END IF;
+    END;
+
+DROP TRIGGER IF EXISTS delete_forum_thread;
+CREATE TRIGGER delete_forum_thread BEFORE DELETE ON forum_threads FOR EACH ROW
+    BEGIN
+        DELETE FROM forum_posts WHERE thread_id = OLD.thread_id;
+        DELETE FROM forum_users WHERE thread_id = OLD.thread_id;
+    END;
+
+DROP TRIGGER IF EXISTS update_forum_thread;
+CREATE TRIGGER update_forum_thread AFTER UPDATE ON forum_threads FOR EACH ROW
+    BEGIN
+        IF NEW.deleted = 1 THEN
+            UPDATE forum_posts SET deleted = 1 WHERE thread_id = OLD.thread_id;
+        END;
     END;
 
 
