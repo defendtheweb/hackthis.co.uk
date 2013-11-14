@@ -58,8 +58,12 @@
         </div>
 <?php
             endif;
-        elseif ($report && $report->type == 'forum_thread'): 
-            $thread = $app->forum->getThread($report->about);
+        elseif ($report && $report->type == 'forum_thread'):
+            $sql = "SELECT title, slug FROM forum_threads WHERE thread_id = :tid";
+            $st = $app->db->prepare($sql);
+            $st->execute(array(':tid'=>$report->about));
+            $thread = $st->fetch();
+
             if (!$thread):
                 $app->utils->message('Report not found');
             else:
