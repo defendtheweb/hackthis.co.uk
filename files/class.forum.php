@@ -625,7 +625,7 @@ POST;
                 ON section.section_id = thread.section_id
                 LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
                 ON replies.thread_id = thread.thread_id
-                WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233))
+                WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
                 LIMIT 1");
             $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             $thread = $st->fetch();
