@@ -19,7 +19,7 @@
         $st->execute(array(':rid'=>$report));
         $report = $st->fetch();
 
-        if ($report && ($report->type == 'forum'):
+        if ($report && $report->type == 'forum'):
             // Get post
             $post = $app->forum->getPost($report->about);
             if (!$post):
@@ -58,7 +58,7 @@
         </div>
 <?php
             endif;
-        elseif ($report && ($report->type == 'forum_thread'): 
+        elseif ($report && $report->type == 'forum_thread'): 
             print_r($app->forum->getThread($report->about));
         else:
             $app->utils->message('Report not found');
