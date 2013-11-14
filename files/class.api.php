@@ -25,6 +25,8 @@
             if (!isset($_POST['nick']) || !isset($_POST['chan']) || !isset($_POST['msg']))
                 throw new Exception('Missing data fields');
 
+            $_POST['msg'] = preg_replace('/\x01/', '', $_POST['msg']);
+
             $st = $this->app->db->prepare('INSERT INTO irc_logs (`nick`, `channel`, `log`)
                     VALUES (:nick, :chan, :msg)');
             $result = $st->execute(array(':nick' => $_POST['nick'], ':chan' => $_POST['chan'], ':msg' => $_POST['msg']));
