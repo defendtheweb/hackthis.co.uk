@@ -970,11 +970,13 @@ POST;
                 return false;
 
             // If reward give all users who flagged a medal
-            $st = $this->app->db->prepare("SELECT user_id FROM users_forum WHERE post_id = :post_id AND flag > 0");
-            $st->execute(array(':post_id'=>$post_id));
-            if ($result = $st->fetchAll()) {
-                foreach($result AS $res) {
-                    $this->app->user->awardMedal('Patrol', 1, $res->user_id);
+            if ($reward) {
+                $st = $this->app->db->prepare("SELECT user_id FROM users_forum WHERE post_id = :post_id AND flag > 0");
+                $st->execute(array(':post_id'=>$post_id));
+                if ($result = $st->fetchAll()) {
+                    foreach($result AS $res) {
+                        $this->app->user->awardMedal('Patrol', 1, $res->user_id);
+                    }
                 }
             }
 
