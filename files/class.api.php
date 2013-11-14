@@ -22,17 +22,12 @@
 
         /* IRC */
         public function logIrc() {
-            if (!isset($_POST['data']))
-                throw new Exception('Missing data field');
-
-            $data = json_decode($_POST['data']);
-
-            if (!$data || !isset($data->nick) || !isset($data->chan) || !isset($data->msg))
-                throw new Exception('Invalid data field');
+            if (!isset($_POST['nick']) || !isset($_POST['chan']) || !isset($_POST['msg']))
+                throw new Exception('Missing data fields');
 
             $st = $this->app->db->prepare('INSERT INTO irc_logs (`nick`, `channel`, `log`)
                     VALUES (:nick, :chan, :msg)');
-            $result = $st->execute(array(':nick' => $data->nick, ':chan' => $data->chan, ':msg' => $data->msg));
+            $result = $st->execute(array(':nick' => $_POST['nick'], ':chan' => $_POST['chan'], ':msg' => $_POST['msg']));
 
 
             // Calculate stats
@@ -40,10 +35,10 @@
                     VALUES (:nick, :lines, :words, :chars)
                     ON DUPLICATE KEY UPDATE `lines`=`lines`+:lines, `words`=`words`+:words, `chars`=`chars`+:chars, `time`=NOW()');
 
-            $st->bindValue(':nick', $data->nick, PDO::PARAM_INT);
+            $st->bindValue(':nick', $_POST['nick'], PDO::PARAM_INT);
             $st->bindValue(':lines', 1, PDO::PARAM_INT);
-            $st->bindValue(':words', str_word_count($data->msg), PDO::PARAM_INT);
-            $st->bindValue(':chars', strlen($data->msg), PDO::PARAM_INT);
+            $st->bindValue(':words', str_word_count($_POST['msg']), PDO::PARAM_INT);
+            $st->bindValue(':chars', strlen($_POST['msg']), PDO::PARAM_INT);
             $result = $st->execute();
         }
 
