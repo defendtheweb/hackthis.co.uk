@@ -115,7 +115,10 @@
             return $score;
         }
 
-        public function generateCSRFKey($key) {
+        public function generateCSRFKey($key, $reuseKey=false) {
+            if ($reuseKey && isset($_SESSION['csrf_' . $key]))
+                return $_SESSION['csrf_' . $key];
+            
             $token = base64_encode( openssl_random_pseudo_bytes(16));
             $_SESSION[ 'csrf_' . $key ] = $token;
             return $token;

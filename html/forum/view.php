@@ -196,7 +196,7 @@
         }
         include('elements/wysiwyg.php');
 ?>
-                                <input type="hidden" value="<?=$app->generateCSRFKey("forumPost");?>" name="token">
+                                <input type="hidden" value="<?=$app->generateCSRFKey("forumPost", true);?>" name="token">
                                 <input type='submit' class='button' value='Submit'/>
                             </form>
 
