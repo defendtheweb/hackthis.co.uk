@@ -36,7 +36,7 @@
                 $sql .= ', days = days + 1';
             }
             if ($consecutive === false) {
-                $sql .= ', consecutive = 0';
+                $sql .= ', consecutive = 1';
             } else if ($consecutive === 1) {
                 $sql .= ", consecutive = consecutive + 1, consecutive_most = IF (consecutive_most < consecutive, consecutive, consecutive_most)";
             }
