@@ -101,10 +101,23 @@
                             <h2>Login</h2>
                             <?php include('elements/widgets/login.php'); ?>
                         </div>
-                        <div class='<?=!$visible?'default-hidden hidden':'';?>'>
+                        <div class='row <?=!$visible?'default-hidden hidden':'';?>'>
                             <h2>Register</h2>
                             <?php include('elements/widgets/register.php'); ?>
                         </div>
+                        <article class="widget adverts">
+                            <div class="center">
+                                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                <!-- Sidebar -->
+                                <ins class="adsbygoogle"
+                                     style="display:inline-block;width:250px;height:250px"
+                                     data-ad-client="ca-pub-1120564121036240"
+                                     data-ad-slot="6388918613"></ins>
+                                <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                            </div>
+                        </article>
                     </div>
                 </div>
 <?php
