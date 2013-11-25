@@ -483,6 +483,9 @@ POST;
                 $st->execute();
             $result = $st->fetch();
 
+            if (!$result)
+                return false;
+
             $result->threads = $threads;
 
             return $result;
