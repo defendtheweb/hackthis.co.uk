@@ -1,21 +1,31 @@
 <?php
     class email {
         private $app;
+        private $types = array('password', 'ticket_reply', 'forum_mention', 'forum_reply', 'friend', 'pm', 'email_confirmation', 'digest');
 
         public function __construct($app) {
             $this->app = $app;
         }
 
-        public function queue($recipient, $subject, $body, $uid=false) {
+        public function queue($recipient, $type, $data, $uid=false) {
+            // Check type and data
+            if (!in_array($type, $this->types)) {
+                return false;
+            }
+
+            if (json_decode($data) == null) {
+                return false;
+            }
+
             if ($this->app->user->loggedIn) {
                 if ($uid === false)
                     $uid = $this->app->user->uid;
 
-                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `user_id`, `subject`, `body`) VALUES (:rec, :uid, :sub, :body)');
-                return $st->execute(array(':rec' => $recipient, ':uid' => $uid, ':sub' => $subject, ':body' => $body));
+                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `user_id`, `type`, `data`) VALUES (:rec, :uid, :type, :data)');
+                return $st->execute(array(':rec' => $recipient, ':uid' => $uid, ':type' => $type, ':data' => $data));
             } else {
-                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `subject`, `body`) VALUES (:rec, :sub, :body)');
-                return $st->execute(array(':rec' => $recipient, ':sub' => $subject, ':body' => $body));
+                $st = $this->app->db->prepare('INSERT INTO email_queue (`recipient`, `type`, `data`) VALUES (:rec, :type, :data)');
+                return $st->execute(array(':rec' => $recipient, ':type' => $type, ':data' => $data));
             }
         }
 
@@ -33,6 +43,9 @@
             if ($email) {
                 // Mark email as being processed
                 $this->updateStatus($email->email_id, 1);
+
+                // Check type and get extra details
+                $email->data = json_decode($email->data);
 
                 return $email;
             } else {

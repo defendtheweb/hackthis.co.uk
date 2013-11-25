@@ -187,15 +187,18 @@
                     if ($app->user->uid != $first->from) {
                         //If registered user
                         if ($first->username) {
-                            $body = "A reply has been added to a ticket you opened. To view the message please click the following link:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/contact?view={$id}'>https://www.hackthis.co.uk/contact?view={$id}</a>";
+                            // $body = "A reply has been added to a ticket you opened. To view the message please click the following link:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/contact?view={$id}'>https://www.hackthis.co.uk/contact?view={$id}</a>";
 
                             // Notify user
                             $app->notifications->add($first->from, 'mod_contact', $app->user->uid, $id);
                         } else {
-                            $body = "A reply has been added to a ticket you opened. To view the message please click the following link:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/contact?view={$id}&email={$first->email}'>https://www.hackthis.co.uk/contact?view={$id}&email={$first->email}</a>";
+                            // $body = "A reply has been added to a ticket you opened. To view the message please click the following link:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/contact?view={$id}&email={$first->email}'>https://www.hackthis.co.uk/contact?view={$id}&email={$first->email}</a>";
                         }
 
-                        $app->email->queue($first->email, "Ticket reply", $body, $first->username?$first->from:null);
+                        // $app->email->queue($first->email, "Ticket reply", $body, $first->username?$first->from:null);
+
+                        $data = array('id' => $id, 'email' => ($first->username)?null:$first->email);
+                        $app->email->queue($first->email, 'ticket_reply', json_encode($data), $first->username?$first->from:null);
                     }
                 }
             }

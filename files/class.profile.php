@@ -245,6 +245,17 @@
                 $st = $this->app->db->prepare('UPDATE users_friends SET `status` = 1
                                     WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
                 $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid));
+            } else {
+                if ($st->rowCount()) {
+                    // Inform other user
+                    $st = $this->app->db->prepare('SELECT `email` FROM users WHERE `user_id` = :uid');
+                    $st->execute(array(':uid' => $this->uid));
+                    $res = $st->fetch();
+                    if ($res) {
+                        $data = array('username' => $this->app->user->username, 'image' => $this->app->user->image, 'score' => $this->app->user->score, 'posts' => $this->app->user->posts);
+                        $this->app->email->queue($res->email, 'friend', json_encode($data), $this->uid);
+                    }
+                }
             }
 
             return $st->rowCount();

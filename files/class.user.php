@@ -52,7 +52,7 @@
             $this->app->stats->users_activity($this);
 
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
-                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv, verified, `posts`.posts,
+                    IFNULL(site_priv, 1) as site_priv, IFNULL(pm_priv, 1) as pm_priv, IFNULL(forum_priv, 1) as forum_priv, IFNULL(pub_priv, 0) as pub_priv, verified, IFNULL(`posts`.posts, 0) AS `posts`,
                     profile.gravatar, profile.img as `image`,
                     activity.consecutive, activity.consecutive_most, activity.joined
                     FROM users u
@@ -717,8 +717,11 @@
             $this->setData('reset', $token, $row->user_id, true);
 
             // Send email
-            $body = "We received a request for your HackThis!! account details.<br/><br/>Username: {$row->username}<br/>To reset your password, click on this link: <a href='http://www.hackthis.co.uk/?request={$token}'>http://www.hackthis.co.uk/?request={$token}</a><br/><br/>If you feel you have received this message in error, delete this email. Your password can only be reset via this email.";
-            $this->app->email->queue($row->email, "Password request", $body);
+            // $body = "We received a request for your HackThis!! account details.<br/><br/>Username: {$row->username}<br/>To reset your password, click on this link: <a href='http://www.hackthis.co.uk/?request={$token}'>http://www.hackthis.co.uk/?request={$token}</a><br/><br/>If you feel you have received this message in error, delete this email. Your password can only be reset via this email.";
+            // $this->app->email->queue($row->email, "Password request", $body);
+
+            $data = array('token' => $token, 'username' => $row->username);
+            $this->app->email->queue($row->email, 'password', json_encode($data));
 
             return true;
         }
@@ -757,13 +760,16 @@
             $this->setData('verification', $token, $this->uid, true);
 
             // Send email
-            $body = "Click on the following link to verify your e-mail address:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/settings/account.php?verify={$token}'>https://www.hackthis.co.uk/settings/account.php?verify={$token}</a>";
+            // $body = "Click on the following link to verify your e-mail address:<br/><a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/settings/account.php?verify={$token}'>https://www.hackthis.co.uk/settings/account.php?verify={$token}</a>";
 
-            if ($new) {
-                $body = "Thank you for signing up for a <a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/'>HackThis!!</a> account.<br/><br/>" . $body;
-            }
+            // if ($new) {
+            //     $body = "Thank you for signing up for a <a style='color:#ffffff; text-decoration: none;' href='https://www.hackthis.co.uk/'>HackThis!!</a> account.<br/><br/>" . $body;
+            // }
 
-            $this->app->email->queue($this->email, "Confirm your email address", $body);
+            // $this->app->email->queue($this->email, "Confirm your email address", $body);
+
+            $data = array('new' => $new, 'token' => $token);
+            $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
 
             return true;
         }

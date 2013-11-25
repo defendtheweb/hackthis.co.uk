@@ -452,13 +452,37 @@ CREATE TABLE IF NOT EXISTS email_queue (
     `email_id` int(6) NOT NULL AUTO_INCREMENT,
     `user_id` int(7) DEFAULT NULL,
     `recipient` varchar(128) NOT NULL,
-    `subject` text NOT NULL,
-    `body` text NOT NULL,
+    `type` enum('password', 'ticket_reply', 'forum_mention', 'forum_reply', 'friend', 'pm', 'email_confirmation', 'digest') NOT NULL,
+    `data` text NOT NULL,
     `sent` timestamp DEFAULT CURRENT_TIMESTAMP,
     `status` tinyint(1) DEFAULT 0, -- 0 waiting, 1 sending, 2 sent, 3+ error (error * 3mins = wait)
     PRIMARY KEY (`email_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
+
+/*
+    IRC LOGS
+*/
+CREATE TABLE IF NOT EXISTS `irc_stats` (
+    `nick` varchar(64) NOT NULL,
+    `lines` int(5) NOT NULL,
+    `words` int(8) NOT NULL,
+    `chars` int(10) NOT NULL,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `username` varchar(35) NOT NULL,
+    PRIMARY KEY (`nick`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `irc_logs` (
+    `log_id` int(11) NOT NULL AUTO_INCREMENT,
+    `nick` varchar(64) NOT NULL,
+    `channel` varchar(25) NOT NULL,
+    `log` text NOT NULL,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `removed` int(1) NOT NULL,
+    PRIMARY KEY (`log_id`)
+) ENGINE=MyISAM;
+
 
 
 /*
