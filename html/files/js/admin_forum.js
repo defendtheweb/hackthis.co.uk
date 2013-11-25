@@ -85,7 +85,7 @@ $(function() {
         svg.append("text")
             .attr("text-anchor", "middle")
             .attr("transform", "translate("+ (width/2) +",-18)")
-            .text("New forum posts over the last 7 days")
+            .text(graphTitle)
             .classed("title", true);
 
 

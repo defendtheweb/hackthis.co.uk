@@ -15,12 +15,20 @@
 ?>
 
         <script type="text/javascript">
+            graphTitle = "New members over the last 7 days";
             graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
         </script>
 
         <div class='graph'></div>
         <script type="text/javascript" src="/files/js/d3.js"></script>
-
+        <br/><br/>
 <?php
+    $sql = "SELECT COUNT(user_id) AS `count` FROM users";
+    $st = $app->db->prepare($sql);
+    $st->execute();
+    $result = $st->fetch();
+
+    echo "<strong class='white'>Total:</strong> ". number_format($result->count);
+
     require_once('footer.php');
 ?>

@@ -30,6 +30,7 @@
 ?>
     <p>
         <script type="text/javascript">
+            graphTitle = "New forum posts over the last 7 days";
             graphData = [<?php foreach($result AS $res) { echo '{ "date" : "' . $res->date . '", "count" : ' . $res->count . ' }, '; } ?>];
         </script>
 
