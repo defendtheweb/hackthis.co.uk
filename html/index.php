@@ -36,9 +36,11 @@
             $app->utils->message('Your account has been successfully deleted. Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
         }
 ?>
+                <div class='row landing _blurb'>
+                    <h1>Want to learn about hacking and network security? Discover how hacks, dumps and defacements are performed and secure your website against hackers with HackThis!!</h1>
+                </div>
                 <div class='row landing'>
-                    <div class='col span_17'>
-                        <h1>Want to learn about hacking and network security? Learn how to secure your website against hackers with HackThis!!</h1>
+                    <div class='col span_15'>
                         <section class='row fluid features'>
                             <div class='clr'>
                                 <div class='col span_5'>
@@ -87,7 +89,7 @@
         if (isset($_GET['register']))
             $visible = true;
 ?>
-                    <div class='col span_7 registration'>
+                    <div class='col span_9 registration'>
 <?php
         if (isset($_GET['request'])):
 ?>
@@ -107,12 +109,12 @@
                         </div>
                         <article class="widget adverts">
                             <div class="center">
-                                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                <!-- Sidebar -->
+                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                <!-- landing page -->
                                 <ins class="adsbygoogle"
-                                     style="display:inline-block;width:250px;height:250px"
+                                     style="display:inline-block;width:336px;height:280px"
                                      data-ad-client="ca-pub-1120564121036240"
-                                     data-ad-slot="6388918613"></ins>
+                                     data-ad-slot="7541400418"></ins>
                                 <script>
                                 (adsbygoogle = window.adsbygoogle || []).push({});
                                 </script>
