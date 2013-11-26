@@ -173,7 +173,14 @@
             $pagination = new stdClass();
             $pagination->current = $page;
             $pagination->count = ceil($threads_count/10);
-            $pagination->root = '?page=';
+
+            // Build root
+            $root = '';
+            if (isset($_GET['watching'])) $root = 'watching&';
+            if (isset($_GET['popular'])) $root = 'popular&';
+            if (isset($_GET['no-replies'])) $root = 'no-replies&';
+
+            $pagination->root = '?'.$root.'page=';
             include('elements/pagination.php');
         }
 ?>
