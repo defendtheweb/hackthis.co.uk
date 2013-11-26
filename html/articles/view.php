@@ -58,9 +58,10 @@
 ?>
                     <section class="row">
 <?php
-    include('elements/sidebar_article.php');
+    if (!isset($_GET['view']) || $_GET['view'] != 'app')
+        include('elements/sidebar_article.php');
 ?>    
-                        <div class="col span_18 article-main">
+                        <div class="col span_<?=(!isset($_GET['view']) || $_GET['view'] != 'app')?'18':'24';?> article-main">
 <?php
     if (!isset($article) || !$article):
 ?>
@@ -93,6 +94,9 @@
         $article->body = $app->parse($article->body);
 ?>
                             <article class='bbcode body' itemscope itemtype="http://schema.org/Article">
+<?php
+    if (!isset($_GET['view']) || $_GET['view'] != 'app'):
+?>
                                 <header class='clearfix'>
 <?php if ($myArticle): ?>
                                         <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button icon right'><i class='icon-edit'></i></a>
@@ -117,7 +121,7 @@
 <?php endif; ?>
                                     </div>
                                     <?php
-                                        if (!$myArticle) {
+                                        if (!$myArticle && (!isset($_GET['view']) || $_GET['view'] != 'app')) {
                                             $share = new stdClass();
                                             $share->item = $article->id;
                                             $share->right = true;
@@ -133,6 +137,8 @@
                                 </header>
 
 <?php
+    endif;
+
     $matches = $app->articles->getTOC($article->body);
     if (count($matches[0])):
 ?>
@@ -169,7 +175,7 @@
                                 </div>
                             </article>
 <?php
-        if (!$myArticle) {
+        if (!$myArticle && (!isset($_GET['view']) || $_GET['view'] != 'app')) {
             $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
             include('elements/comments.php');
         }

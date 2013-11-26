@@ -57,4 +57,8 @@
             require_once('error.php');
         }
     }
+
+    if (isset($_GET['view']) && $_GET['view'] == 'app') {
+        array_push($minifier->custom_css, 'app.css');
+    }
 ?>

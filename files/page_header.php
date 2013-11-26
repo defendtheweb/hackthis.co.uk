@@ -41,7 +41,6 @@
         echo '        '.$currentLevel->data['code']->pos1."\n";
     }
 ?>
-        <script src="/files/js/modernizr-2.6.2.min.js"></script>
         <!--[if lt IE 9]>
             <script src="/files/js/respond.min.js"></script>
             <script src="/files/js/html5shiv.js"></script>
@@ -49,7 +48,8 @@
     </head>
     <body <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php
-    if (!isset($_COOKIE["member"]) || !$_COOKIE["member"]):
+    if (!isset($_GET['view']) || $_GET['view'] != 'app'):
+        if (!isset($_COOKIE["member"]) || !$_COOKIE["member"]):
 ?>
 
     <div class='cookies container'>
@@ -58,15 +58,15 @@
     </div>
 
 <?php
-    endif;    
+        endif;    
 
-    if ($app->user->loggedIn || !(defined('LANDING_PAGE') && LANDING_PAGE)):
+        if ($app->user->loggedIn || !(defined('LANDING_PAGE') && LANDING_PAGE)):
 ?>
     <div class="page-wrap">
 <?php
-    if (isset($currentLevel) && isset($currentLevel->data['code']->pos2)) {
-        echo '        '.$currentLevel->data['code']->pos2 . "\n";
-    }
+        if (isset($currentLevel) && isset($currentLevel->data['code']->pos2)) {
+            echo '        '.$currentLevel->data['code']->pos2 . "\n";
+        }
 ?>
         <div id="header-wrap" class="container clr">
             <header>
@@ -74,7 +74,7 @@
                     <a href='/'>&nbsp;</a>
                 </div>
 <?php
-    if (!$app->user->loggedIn || !$app->user->donator):
+        if (!$app->user->loggedIn || !$app->user->donator):
 ?>
                 <div class="col span_13 advert">
                     <script type="text/javascript"><!--
@@ -88,16 +88,17 @@
                     <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
                 </div>
 <?php
-    endif;
+        endif;
 ?>
             </header>
         </div>
 <?php
-        include('elements/navigation.php');
-    else:
+            include('elements/navigation.php');
+        else:
 ?>
-      <div class="page-wrap">
+        <div class="page-wrap">
 <?php
+        endif;
     endif;
 
     //Calculate document width
