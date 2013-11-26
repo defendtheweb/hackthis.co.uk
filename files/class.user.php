@@ -127,6 +127,7 @@
             $target = strtotime('-1 year');
             if ($joined < $target) {
                 $this->awardMedal('veteran', 2);
+                $this->awardMedal('veteran', 1);
             } else {
                 $target = strtotime('-1 month');
                 if ($joined < $target) {
