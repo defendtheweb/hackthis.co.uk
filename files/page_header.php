@@ -41,6 +41,7 @@
         echo '        '.$currentLevel->data['code']->pos1."\n";
     }
 ?>
+        <script src="/files/js/modernizr-2.6.2.min.js"></script>
         <!--[if lt IE 9]>
             <script src="/files/js/respond.min.js"></script>
             <script src="/files/js/html5shiv.js"></script>
