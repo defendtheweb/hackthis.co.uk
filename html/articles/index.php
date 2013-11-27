@@ -9,6 +9,9 @@
     $limit = 5;
     $page = (isset($_GET['page']) && is_numeric($_GET['page']))?$_GET['page']:1;
 
+
+    $app->page->desc = "Learn from the latest hacking and computer security articles. From network and website security
+     to encryption tools and how to wifi hacking.";
     if (isset($_GET['slug'])) {
         $category = $app->articles->getCategory($_GET['slug']);
         if (!$category) {
@@ -23,7 +26,6 @@
         $app->page->title = 'Articles';
     }
 
-
     require_once('header.php');
 ?>
                     <section class="row">
@@ -34,7 +36,11 @@
 <?php
     if ($category):
 ?>
-                            <h1><?=$category->title;?> [<?=$articleList['total'];?>]</h1>
+                            <h1><?=$category->title;?> Articles [<?=$articleList['total'];?>]</h1>
+<?php
+    else:
+?>
+                            <h1>Hacking and Security Articles</h1>
 <?php
     endif;
     if (!isset($articleList) || !$articleList || $articleList['total'] == 0):

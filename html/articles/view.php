@@ -33,6 +33,8 @@
     if ($article && !$myArticle) {
         $app->page->title = $app->parse($article->title, false);
 
+        $app->page->desc = "Learn about " . $app->page->title . " with our range of security and hacking tutorials and articles. Join our security community and test your hacking skills.";
+
         $app->page->canonical = 'https://www.hackthis.co.uk/articles/'.$article->slug;
 
         $app->page->meta['twitter:card'] = "summary";
