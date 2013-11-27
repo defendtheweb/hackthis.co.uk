@@ -19,11 +19,11 @@
             die();
         }
         $articleList = $app->articles->getArticles($category->id, $limit, $page);
-        $app->page->title = 'Articles - ' . $category->title;
+        $app->page->title = $category->title . ' Articles';
     } else {
         $category = null;
         $articleList = $app->articles->getArticles(null, $limit, $page);
-        $app->page->title = 'Articles';
+        $app->page->title = 'Hacking and Security Articles';
     }
 
     require_once('header.php');
