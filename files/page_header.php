@@ -35,7 +35,7 @@
         <?= $minifier->load("css"); ?>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="<?php $s = $app->config['socket']; echo $s['address']; ?>/socket.io/socket.io.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.6/socket.io.min.js"></script>
 <?php
     if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
         echo '        '.$currentLevel->data['code']->pos1."\n";
