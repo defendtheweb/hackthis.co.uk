@@ -37,7 +37,7 @@
         of this a heart will be displayed next to your username throughout the site to show your support.
     </p>
     <p>
-        <h2 class='no-margin'>£20 or more</h2>
+        <h2 class='no-margin'>£15 or more</h2>
         As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
     </p>
     <br/>

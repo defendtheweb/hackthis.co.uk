@@ -30,7 +30,7 @@
                         "currency": "GBP"
                     }';
 
-            if ($amount >= 20 && in_array($size, $this->sizes)) {
+            if ($amount >= 15 && in_array($size, $this->sizes)) {
                 $items .= ', {
                         "quantity": 1,
                         "name": "Free T-Shirt, size '.strtoupper($size).'",
