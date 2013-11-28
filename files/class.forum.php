@@ -755,7 +755,7 @@ POST;
                 // Check for mentions
                 preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
                 foreach($mentions[1] as $mention) {
-                    $st = $this->app->db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
+                    $st = $this->app->db->prepare('SELECT user_id, email FROM users WHERE username = :username LIMIT 1');
                     $st->execute(array(':username' => $mention));
                     $result = $st->fetch();
                     
@@ -763,6 +763,9 @@ POST;
                         if (!in_array($result->user_id, $notified)) {
                             array_push($notified, $result->user_id);
                             $this->app->notifications->add($result->user_id, 'forum_mention', $this->app->user->uid, $post_id);
+
+                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
                         }
                     }
                 }
@@ -782,7 +785,7 @@ POST;
                             $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
 
                             $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $this->uid);
+                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
                         }
                     }
                 }
