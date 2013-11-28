@@ -81,6 +81,16 @@
                     '{posts}' => $email->data->posts,
                     '{image}' => $email->data->image
                 );
+            } else if ($email->type == "forum_reply") {
+                $email->subject = "Forum reply";
+                $content = file_get_contents('elements/emails/forum.html', true); 
+
+                $vars = array(
+                    '{username}' => $email->data->username,
+                    '{post}' => $app->parse($email->data->post, false),
+                    '{title}' => $email->data->title,
+                    '{uri}' => $email->data->uri
+                );
             } else {
                 return false;
             }

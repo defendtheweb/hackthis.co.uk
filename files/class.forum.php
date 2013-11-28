@@ -743,6 +743,15 @@ POST;
 
                 $notified = array($this->app->user->uid);
 
+                // Add to socket feed
+                $st = $this->app->db->prepare('SELECT title, slug
+                                    FROM forum_threads
+                                    WHERE thread_id = :thread_id');
+                $st->execute(array(':thread_id' => $thread_id));
+                $thread = $st->fetch();
+                $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug . '?post=' . $post_id);
+
+
                 // Check for mentions
                 preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
                 foreach($mentions[1] as $mention) {
@@ -759,8 +768,10 @@ POST;
                 }
 
                 // Notify watchers
-                $st = $this->app->db->prepare('SELECT forum_users.user_id AS author FROM forum_users
-                                   WHERE thread_id = :thread_id AND watching = 1');
+                $st = $this->app->db->prepare('SELECT users.email, forum_users.user_id AS author FROM forum_users
+                                               LEFT JOIN users
+                                               ON users.user_id = forum_users.user_id
+                                               WHERE thread_id = :thread_id AND watching = 1');
                 $st->execute(array(':thread_id' => $thread_id));
                 $watchers = $st->fetchAll();
                 
@@ -769,6 +780,9 @@ POST;
                         if (!in_array($watcher->author, $notified)) {
                             array_push($notified, $watcher->author);
                             $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
+
+                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $this->uid);
                         }
                     }
                 }
@@ -778,14 +792,7 @@ POST;
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
 
-                // Add to socket feed
-                $st = $this->app->db->prepare('SELECT title, slug
-                                    FROM forum_threads
-                                    WHERE thread_id = :thread_id');
-                $st->execute(array(':thread_id' => $thread_id));
-                $thread = $st->fetch();
-
-                $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug);
+                
 
 
 
