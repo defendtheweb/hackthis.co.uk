@@ -88,7 +88,7 @@
                 $vars = array(
                     '{username}' => $email->data->username,
                     '{post}' => $app->parse($email->data->post, false),
-                    '{title}' => $email->data->title,
+                    '{title}' => $app->parse($email->data->title, false),
                     '{uri}' => $email->data->uri
                 );
             } else {
