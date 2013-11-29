@@ -395,7 +395,7 @@ POST;
             //         WHERE ";
 
             if ($section)
-                $sql .= "threads.slug LIKE CONCAT(:section_slug, '%') AND ";
+                $sql .= "threads.slug LIKE CONCAT(:section_slug, '/%') AND ";
 
             $sql .= "threads.deleted = 0 AND posts.deleted = 0";
 
