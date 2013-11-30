@@ -6,8 +6,8 @@
     <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>HackThis!!<?=isset($app->page->title)?' - '.$app->page->title:' - The Hackers Playground';?></title>
-        <meta name="description" content="<?=isset($app->page->desc)?$app->page->desc:'Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.';?>">
+        <title>HackThis!!<?=isset($app->page->title) && $app->page->title?' - '.$app->page->title:' - The Hackers Playground';?></title>
+        <meta name="description" content="<?=isset($app->page->desc) && $app->page->desc?$app->page->desc:'Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.';?>">
         <meta name="keywords" content="hack this, hackers playground, hacking challenges, hacking forums, hackers, website security, how to secure a website, how to hack, articles, network security">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 
