@@ -535,6 +535,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM forum_users WHERE OLD.user_id = user_id;
         DELETE FROM pm_users WHERE OLD.user_id = user_id;
         DELETE FROM users_feed WHERE OLD.user_id = user_id;
+        DELETE FROM users_settings WHERE OLD.user_id = user_id;
         -- Add other tables to be removed.
 
         -- Update other contributions to NULL so they aren't lost

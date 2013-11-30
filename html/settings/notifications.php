@@ -40,28 +40,28 @@
             <tbody>
                 <tr>
                     <td>Private message</td>
-                    <td class='center'><input type="radio" name="pm" id="pm1" value="1" <?=$settings->email_pm?'checked':'';?>/><label for="pm1"></label></td>
-                    <td class='center'><input type="radio" name="pm" id="pm2" value="0" <?=!$settings->email_pm?'checked':'';?>/><label for="pm2"></label></td>
+                    <td class='center'><input type="radio" name="pm" id="pm1" value="1" <?=!$settings || $settings->email_pm?'checked':'';?>/><label for="pm1"></label></td>
+                    <td class='center'><input type="radio" name="pm" id="pm2" value="0" <?=$settings && !$settings->email_pm?'checked':'';?>/><label for="pm2"></label></td>
                 </tr>
                 <tr>
                     <td>Friend request</td>
-                    <td class='center'><input type="radio" name="friend" id="friend1" value="1" <?=$settings->email_friend?'checked':'';?>/><label for="friend1"></label></td>
-                    <td class='center'><input type="radio" name="friend" id="friend2" value="0" <?=!$settings->email_friend?'checked':'';?>/><label for="friend2"></label></td>
+                    <td class='center'><input type="radio" name="friend" id="friend1" value="1" <?=!$settings || $settings->email_friend?'checked':'';?>/><label for="friend1"></label></td>
+                    <td class='center'><input type="radio" name="friend" id="friend2" value="0" <?=$settings && !$settings->email_friend?'checked':'';?>/><label for="friend2"></label></td>
                 </tr>
                 <tr>
                     <td>Forum reply</td>
-                    <td class='center'><input type="radio" name="forum_reply" id="forum_reply1" value="1" <?=$settings->email_forum_reply?'checked':'';?>/><label for="forum_reply1"></label></td>
-                    <td class='center'><input type="radio" name="forum_reply" id="forum_reply2" value="0" <?=!$settings->email_forum_reply?'checked':'';?>/><label for="forum_reply2"></label></td>
+                    <td class='center'><input type="radio" name="forum_reply" id="forum_reply1" value="1" <?=!$settings || $settings->email_forum_reply?'checked':'';?>/><label for="forum_reply1"></label></td>
+                    <td class='center'><input type="radio" name="forum_reply" id="forum_reply2" value="0" <?=$settings && !$settings->email_forum_reply?'checked':'';?>/><label for="forum_reply2"></label></td>
                 </tr>
                 <tr>
                     <td>Forum mention</td>
-                    <td class='center'><input type="radio" name="forum_mention" id="forum_mention1" value="1" <?=$settings->email_forum_mention?'checked':'';?>/><label for="forum_mention1"></label></td>
-                    <td class='center'><input type="radio" name="forum_mention" id="forum_mention2" value="0" <?=!$settings->email_forum_mention?'checked':'';?>/><label for="forum_mention2"></label></td>
+                    <td class='center'><input type="radio" name="forum_mention" id="forum_mention1" value="1" <?=!$settings || $settings->email_forum_mention?'checked':'';?>/><label for="forum_mention1"></label></td>
+                    <td class='center'><input type="radio" name="forum_mention" id="forum_mention2" value="0" <?=$settings && !$settings->email_forum_mention?'checked':'';?>/><label for="forum_mention2"></label></td>
                 </tr>
                 <tr>
                     <td>News / Updates</td>
-                    <td class='center'><input type="radio" name="news" id="news1" value="1" <?=$settings->email_news?'checked':'';?>/><label for="news1"></label></td>
-                    <td class='center'><input type="radio" name="news" id="news2" value="0" <?=!$settings->email_news?'checked':'';?>/><label for="news2"></label></td>
+                    <td class='center'><input type="radio" name="news" id="news1" value="1" <?=!$settings || $settings->email_news?'checked':'';?>/><label for="news1"></label></td>
+                    <td class='center'><input type="radio" name="news" id="news2" value="0" <?=$settings && !$settings->email_news?'checked':'';?>/><label for="news2"></label></td>
                 </tr>
             </tbody>
         </table>
