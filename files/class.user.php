@@ -756,6 +756,37 @@
             }
         }
 
+        public function changeNotificationSettings() {
+            if (isset($_POST['pm'])) {
+                $pm = ($_POST['pm'] == '1')?1:0;
+            } else return false;
+
+            if (isset($_POST['friend'])) {
+                $friend = ($_POST['friend'] == '1')?1:0;
+            } else return false;
+
+            if (isset($_POST['forum_reply'])) {
+                $forum_reply = ($_POST['forum_reply'] == '1')?1:0;
+            } else return false;
+
+            if (isset($_POST['forum_mention'])) {
+                $forum_mention = ($_POST['forum_mention'] == '1')?1:0;
+            } else return false;
+
+            if (isset($_POST['news'])) {
+                $news = ($_POST['news'] == '1')?1:0;
+            } else return false;
+
+            $st = $this->app->db->prepare('INSERT INTO users_settings
+                    (`user_id`, `email_pm`, `email_forum_reply`, `email_forum_mention`, `email_friend`, `email_news`)
+                    VALUES
+                    (:uid, :pm, :forum_reply, :forum_mention, :friend, :news)
+                    ON DUPLICATE KEY UPDATE
+                    `email_pm` = :pm, `email_forum_reply` = :forum_reply, `email_forum_mention` = :forum_mention
+                    , `email_friend` = :friend, `email_news` = :news');
+            return $st->execute(array(':uid' => $this->uid, ':pm' => $pm, ':forum_reply' => $forum_reply, ':forum_mention' => $forum_mention, ':friend' => $friend, ':news' => $news));
+        }
+
         public function sendVerficationEmail($new=false) {
             $token = md5(openssl_random_pseudo_bytes(32));
             $this->setData('verification', $token, $this->uid, true);

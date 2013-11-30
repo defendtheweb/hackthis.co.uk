@@ -120,16 +120,19 @@ input[type="checkbox"] {
             font-family: 'icomoon';
             padding-right: 6px;
             font-size: 13px;   
-        }    
+        }
     }
 }
 
 input[type="radio"] + label:before {
-  content: "\e054"; /* circle-blank */
+    content: "\e054"; /* circle-blank */
+    color: $dark;
+    cursor: pointer;
 }
 
 input[type="radio"]:checked + label:before {
   content: "\e053"; /* circle */
+  color: white;
 }
 
 input[type="checkbox"] + label:before {

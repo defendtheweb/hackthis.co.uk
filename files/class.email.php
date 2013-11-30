@@ -47,6 +47,24 @@
                 // Check type and get extra details
                 $email->data = json_decode($email->data);
 
+                if ($email->user_id) {
+                    // Check if user wants email
+                    $st = $this->app->db->prepare("SELECT * FROM users_settings WHERE user_id = :uid");
+                    $st->execute(array(':uid' => $email->user_id));
+                    $u = $st->fetch();
+
+                    if ($u) {
+                        if (($email->type == "pm" && $u->email_pm != '1') OR
+                            ($email->type == "forum_reply" && $u->email_forum_reply != '1') OR
+                            ($email->type == "forum_mention" && $u->email_forum_mention != '1') OR
+                            ($email->type == "friend" && $u->email_friend != '1')) {
+                                // Mark email as sent and get next available
+                                $this->updateStatus($email->email_id, 2);
+                                return $this->getNext();
+                        }
+                    }
+                }
+
                 return $email;
             } else {
                 return false;

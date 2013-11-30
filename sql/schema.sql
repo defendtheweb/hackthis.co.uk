@@ -172,6 +172,17 @@ CREATE TABLE IF NOT EXISTS `users_donations` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS users_settings (
+    `user_id` int(7) NOT NULL,
+    `email_pm` tinyint(1) NOT NULL DEFAULT 1,
+    `email_forum_reply` tinyint(1) NOT NULL DEFAULT 1,
+    `email_forum_mention` tinyint(1) NOT NULL DEFAULT 1,
+    `email_friend` tinyint(1) NOT NULL DEFAULT 1,
+    `email_news` tinyint(1) NOT NULL DEFAULT 1,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
 
 /*
     MEDALS
