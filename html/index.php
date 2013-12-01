@@ -36,7 +36,7 @@
             $app->utils->message('Your account has been successfully deleted. Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
         }
 ?>
-                <div class='row landing _blurb'>
+                <div class='row landing_blurb'>
                     <h1>Want to learn about hacking and network security? Discover how hacks, dumps and defacements are performed and secure your website against hackers with HackThis!!</h1>
                 </div>
                 <div class='row landing'>
@@ -99,11 +99,11 @@
 <?php
         endif;
 ?>
-                        <div class='row <?=$visible?'default-hidden hidden':'';?>'>
+                        <div class='row'>
                             <h2>Login</h2>
                             <?php include('elements/widgets/login.php'); ?>
                         </div>
-                        <div class='row <?=!$visible?'default-hidden hidden':'';?>'>
+                        <div class='row'>
                             <h2>Register</h2>
                             <?php include('elements/widgets/register.php'); ?>
                         </div>
