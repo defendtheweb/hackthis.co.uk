@@ -528,6 +528,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM users_notifications WHERE OLD.user_id = user_id OR OLD.user_id = from_id;
         DELETE FROM users_medals WHERE OLD.user_id = user_id;
         DELETE FROM users_levels WHERE OLD.user_id = user_id;
+        DELETE FROM users_levels_data WHERE OLD.user_id = user_id;
         DELETE FROM mod_reports WHERE OLD.user_id = user_id;
         DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
         DELETE FROM articles_draft WHERE OLD.user_id = user_id;
