@@ -744,7 +744,7 @@
                 return "Passwords don't match";
 
             $hash = crypt($pass, $this->salt());
-            $st = $this->app->db->prepare('UPDATE users SET password = :hash WHERE user_id = :uid LIMIT 1');
+            $st = $this->app->db->prepare('UPDATE users SET password = :hash, old_password = 0 WHERE user_id = :uid LIMIT 1');
             $status = $st->execute(array(':uid' => $uid, ':hash' => $hash));
 
             if ($status) {
