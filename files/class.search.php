@@ -155,7 +155,7 @@
                     ON users.user_id = profile.user_id
                     LEFT JOIN users_friends
                     ON (users_friends.user_id = users.user_id AND users_friends.friend_id = :uid) OR (users_friends.user_id = :uid AND users_friends.friend_id = users.user_id)
-                    WHERE username LIKE :like OR email = :term
+                    WHERE username LIKE :like OR (email = :term AND profile.show_email = 1)
                     ORDER BY username ASC
                     LIMIT 8';
 
