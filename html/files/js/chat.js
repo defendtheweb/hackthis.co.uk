@@ -1,5 +1,5 @@
 $(function() {
-    if (socket) {
+    if (socket && false) {
         var username = $('body').attr('data-username');
         var key = $('body').attr('data-key');
 
