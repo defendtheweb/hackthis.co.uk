@@ -66,9 +66,10 @@
                     WHERE users.user_id = :uid;';
             $st2 = $app->db->prepare($sql);
             $st2->execute(array(':uid' => $result->user_id));
+            $res2 = $st2->fetch();
 
-            if ($st2 && $st2->total != $result->score) {
-                echo "<br/>".$result->user_id . " - " . $result->score . ":" . $st2->total;
+            if ($res2 && $res2->total != $result->score) {
+                echo "<br/>".$result->user_id . " - " . $result->score . ":" . $res2->total;
             }
 
             $l++;
