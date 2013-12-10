@@ -462,7 +462,7 @@ POST;
             }
 
             // Get total rows
-            $sql = 'SELECT COUNT(threads.`thread_id`) AS `count` FROM forum_threads threads LEFT JOIN (SELECT thread_id, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts ON posts.thread_id = threads.thread_id WHERE ';
+            $sql = 'SELECT COUNT(threads.`thread_id`) AS `count` FROM forum_threads threads LEFT JOIN (SELECT thread_id, count(*) AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY thread_id) posts ON posts.thread_id = threads.thread_id LEFT JOIN forum_users ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid WHERE ';
             if ($section)
                 $sql .= "threads.slug LIKE CONCAT(:section_slug, '/%') AND ";
 
@@ -478,9 +478,9 @@ POST;
 
             // $st = $this->app->db->prepare('SELECT FOUND_ROWS() AS `count`');
             if ($section)
-                $st->execute(array(':section_slug'=>$section_slug));
+                $st->execute(array(':uid' => $this->app->user->uid, ':section_slug'=>$section_slug));
             else
-                $st->execute();
+                $st->execute(array(':uid' => $this->app->user->uid));
             $result = $st->fetch();
 
             if (!$result)
