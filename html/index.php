@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                         </section>
-                        <div class="center">
+                        <div class="center" style="border-top: 1px solid #141414; padding-top: 25px; margin-top: 25px;">
                             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                             <!-- landing page -->
                             <ins class="adsbygoogle"
