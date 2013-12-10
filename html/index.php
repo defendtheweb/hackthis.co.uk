@@ -36,6 +36,18 @@
             $app->utils->message('Your account has been successfully deleted. Painful though parting be, I bow to you as I see you off to distant clouds. ', 'info');
         }
 ?>
+                <div class='center row'>
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- landing_header -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:728px;height:90px"
+                         data-ad-client="ca-pub-1120564121036240"
+                         data-ad-slot="9555223615"></ins>
+                    <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
                 <div class='row landing_blurb'>
                     <h1>Want to learn about hacking and network security? Discover how hacks, dumps and defacements are performed and secure your website against hackers with HackThis!!</h1>
                 </div>
@@ -78,6 +90,17 @@
                                 </div>
                             </div>
                         </section>
+                        <div class="center">
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                            <!-- landing page -->
+                            <ins class="adsbygoogle"
+                                 style="display:inline-block;width:336px;height:280px"
+                                 data-ad-client="ca-pub-1120564121036240"
+                                 data-ad-slot="7541400418"></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
                     </div>
 
 <?php
@@ -107,19 +130,6 @@
                             <h2>Register</h2>
                             <?php include('elements/widgets/register.php'); ?>
                         </div>
-                        <article class="widget adverts">
-                            <div class="center">
-                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                                <!-- landing page -->
-                                <ins class="adsbygoogle"
-                                     style="display:inline-block;width:336px;height:280px"
-                                     data-ad-client="ca-pub-1120564121036240"
-                                     data-ad-slot="7541400418"></ins>
-                                <script>
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                                </script>
-                            </div>
-                        </article>
                     </div>
                 </div>
 <?php
