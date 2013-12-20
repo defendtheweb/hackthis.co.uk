@@ -98,6 +98,13 @@
                 border: none;
             }
 
+            .section_info a {
+                display: block;
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             .thread-sections, .thread-blurb {
                 margin-top: 2px;
                 o-text-overflow: ellipsis;
@@ -226,6 +233,7 @@
 
     h1 {
         text-transform: none;
+        word-wrap: break-word;
     }
 
     .forum-pagination {
