@@ -15,7 +15,7 @@
         $share->right = true;
         $share->comments = $latestNews->comments;
         $share->title = $latestNews->title;
-        $share->link = "/news/{$latestNews->slug}";
+        $share->link = "/articles/{$latestNews->slug}";
         $share->favourites = $latestNews->favourites;
         $share->favourited = $latestNews->favourited;
         include("elements/share.php");
