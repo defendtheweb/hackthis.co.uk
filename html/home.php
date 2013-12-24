@@ -18,6 +18,7 @@
 ?>
                     <section class='home'>
 <?php
+    include('elements/home_latest_articles.php');
     if (isset($_GET['new'])) {
         include('elements/home_intro.php');
     } else {
