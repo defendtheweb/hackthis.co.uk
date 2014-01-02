@@ -1,12 +1,18 @@
 <?php
     class articles {
         private $app;
+        private $categories = null;
 
         public function __construct($app) {
             $this->app = $app;
         }
 
         public function getCategories($parent=null, $news=true) {
+            if ($parent == null && $this->categories != null) {
+                return $this->categorie;
+            }
+
+
             if ($parent == null) {
                 $sql =  "SELECT category_id AS id, title, slug
                          FROM articles_categories
@@ -30,6 +36,10 @@
                 $children = $this->getCategories($res->id, $news);
                 if ($children)
                     $res->children = $children;
+            }
+
+            if ($parent == null) {
+                $this->categorie = $result;
             }
 
             return $result;
