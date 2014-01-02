@@ -212,8 +212,8 @@
             }, $result->body);
 
             //increment read count
-            $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
-            $st->execute(array(':aid' => $result->id));
+ //           $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
+ //           $st->execute(array(':aid' => $result->id));
 
             return $result;
         }
@@ -258,6 +258,11 @@
         }
 
         public function getHotArticles($limit=5) {
+            $articles = json_decode($this->app->cache->get('articles_hot_'.$limit, 30));
+
+            if ($articles)
+                return $articles;
+
             $st = $this->app->db->prepare('SELECT a.title,SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-(DATEDIFF(NOW(), a.`submitted`))/7) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
                                 a.body, a.thumbnail, cat.title AS `category`
@@ -283,6 +288,8 @@
                     $res->video = $match[1];
                 }, $res->body);
             }
+
+            $this->app->cache->set('articles_hot_'.$limit, json_encode($result));
 
             return $result;
         }
