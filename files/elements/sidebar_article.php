@@ -32,7 +32,8 @@
 ?>
         </ul>
 <?php
-    if ((isset($category) && $category) || isset($article)):
+    // if ((isset($category) && $category) || isset($article)):
+    if (false):
 ?>
         <h2>Top Articles</h2>
         <ul class='hot'>
