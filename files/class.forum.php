@@ -9,7 +9,7 @@
         }
 
         public function getLatest($limit = 3) {
-            if ($limit == 3) {
+            if ($limit == 5) {
                 $latest = json_decode($this->app->cache->get('forum_latest', 5));
 
                 if ($latest)
