@@ -74,7 +74,7 @@ class loader {
             $this->scss = new scssc();
 
             // Load scss variables
-            $this->scss_variables = file_get_contents($this->php_base . $this->css_base . "_variables.scss");
+//            $this->scss_variables = file_get_contents($this->php_base . $this->css_base . "_variables.scss");
 
             //Build default CSS file
             $path = "{$this->css_base}min/main.css";
@@ -135,6 +135,8 @@ class loader {
     }
     
     private function generate($filename, $file_array, $type) {
+        return true;
+
         if ($type == 'js') {
             $base = $this->js_base;
         } else if ($type == 'css') {
