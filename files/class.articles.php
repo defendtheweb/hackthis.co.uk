@@ -8,10 +8,16 @@
         }
 
         public function getCategories($parent=null, $news=true) {
-            if ($parent == null && $this->categories != null) {
-                return $this->categorie;
+            if ($parent == null && $news == false) {
+                $categories = $this->cache->get('articles_categories', 60);
+
+                if ($categories)
+                    return $categories;
             }
 
+            if ($parent == null && $news == false && $this->categories != null) {
+                return $this->categories;
+            }
 
             if ($parent == null) {
                 $sql =  "SELECT category_id AS id, title, slug
@@ -38,8 +44,9 @@
                     $res->children = $children;
             }
 
-            if ($parent == null) {
-                $this->categorie = $result;
+            if ($parent == null && $news == false) {
+                $this->categories = $result;
+                $this->cache->set('articles_categories', $result);
             }
 
             return $result;
