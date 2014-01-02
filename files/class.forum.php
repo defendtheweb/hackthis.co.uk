@@ -9,6 +9,14 @@
         }
 
         public function getLatest($limit = 3) {
+            if ($limit == 3) {
+                $latest = json_decode($this->app->cache->get('forum_latest', 5));
+
+                if ($latest)
+                    return $latest;
+            }
+
+
             // Get the last three posts
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`
                     FROM forum_posts posts
@@ -41,6 +49,10 @@
                 $res->title = $this->app->parse($res->title, false);
             }
 
+            if ($limit == 3) {
+                $this->app->cache->set('forum_latest', json_encode($result));
+            }
+
             return $result;
         }
 
@@ -54,6 +66,12 @@
 
         public function getSections($parent=null) {
             if ($parent == null) {
+                $sections = json_decode($this->app->cache->get('forum_sections', 60));
+
+                if ($sections)
+                    return $sections;
+
+
                 $sql =  "SELECT section_id AS id, title, slug
                          FROM forum_sections
                          WHERE ISNULL(parent_id)";
@@ -74,6 +92,10 @@
                 $children = $this->getSections($res->id);
                 if ($children)
                     $res->children = $children;
+            }
+
+            if ($parent == null) {
+                $this->app->cache->set('forum_sections', json_encode($result));
             }
 
             return $result;
