@@ -9,7 +9,7 @@
 
         public function getCategories($parent=null, $news=true) {
             if ($parent == null && $news == false) {
-                $categories = $this->cache->get('articles_categories', 60);
+                $categories = $this->app->cache->get('articles_categories', 60);
 
                 if ($categories)
                     return $categories;
@@ -46,7 +46,7 @@
 
             if ($parent == null && $news == false) {
                 $this->categories = $result;
-                $this->cache->set('articles_categories', $result);
+                $this->app->cache->set('articles_categories', $result);
             }
 
             return $result;
