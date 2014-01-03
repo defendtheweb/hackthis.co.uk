@@ -212,8 +212,8 @@
             }, $result->body);
 
             //increment read count
- //           $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
- //           $st->execute(array(':aid' => $result->id));
+            $st = $this->app->db->prepare('UPDATE articles SET views = views + 1 WHERE article_id = :aid');
+            $st->execute(array(':aid' => $result->id));
 
             return $result;
         }
