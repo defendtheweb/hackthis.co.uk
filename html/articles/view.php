@@ -148,9 +148,7 @@
 <?php
     if ($article->cat_id == 6):
 ?>
-        <a href='http://www.walkerlocksmiths.co.uk'>
-            <img src='/files/images/lock_picking_sponsor.png'/>
-        </a>
+        <a href='http://www.walkerlocksmiths.co.uk'><img src='/files/images/lock_picking_sponsor.png'/></a><br/>
 <?php
     endif;
 ?>
