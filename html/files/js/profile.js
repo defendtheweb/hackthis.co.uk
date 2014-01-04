@@ -246,6 +246,13 @@ $(function() {
         });
     });
 
+    // Helper function for adding a GET param to a url.
+    function addParamToUrl(url, key, value) {
+        url = url.split('#');
+        url[0] += ((url[0].indexOf('?') > -1) ? '&' : '?') + key + '=' + encodeURIComponent(value);
+        return url.join('#');
+    }
+
 
     function writeList(data, page) {
         $ul = $('<ul>');
@@ -258,7 +265,12 @@ $(function() {
             return false;
 
         for (var i = n; i < o; i++) {
-            $a = $('<a>', {href: data[i].slug, html: data[i].title, class: 'strong'});
+            var uri = data[i].slug;
+
+            // Forum posts have an id to link directly to the post
+            if('post_id' in data[i]) uri = addParamToUrl(uri, 'post', data[i].post_id);
+
+            $a = $('<a>', {href: uri, html: data[i].title, class: 'strong'});
             $time = $('<time>', {datetime: data[i].time, class: 'dark'});
 
             if (data[i].body)
