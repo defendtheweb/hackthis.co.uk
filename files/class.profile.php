@@ -289,7 +289,7 @@
                 $st->execute(array(':uid' => $uid));
                 $result['graph'] = $st->fetchAll();
 
-                $st = $app->db->prepare('SELECT posts.body, posts.posted AS `time`, threads.title, CONCAT("/forum/", threads.slug) AS slug
+                $st = $app->db->prepare('SELECT posts.post_id, posts.body, posts.posted AS `time`, threads.title, CONCAT("/forum/", threads.slug) AS slug
                     FROM forum_posts posts
                     INNER JOIN forum_threads threads
                     ON threads.thread_id = posts.thread_id
