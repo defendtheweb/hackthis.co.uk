@@ -19,7 +19,7 @@
     </p>
     <h2 id="karma">What is karma?</h2>
     <p>
-        Karma is a way of rating users posts within the forum. The karma rating is displayed as a number in the top of right of each forum post. Users with the bronze <a class='medal medal-bronze' href="/medals.php#karma">Karma</a> medal are allowed to upvote posts and only users with the silver <a class='medal medal-silver' href="/medals.php#karma">Karma</a> medal can down vote. You earn the medals by completing levels and being active within the forum. Posts with karma of -3 or less are automatically hidden although this isn't the main role of the karma system, see reporting posts below.
+        Karma is a way of rating users posts within the forum. The karma rating is displayed as a number in the top of left of each forum post. Users with the bronze <a class='medal medal-bronze' href="/medals.php#karma">Karma</a> medal are allowed to upvote posts and only users with the silver <a class='medal medal-silver' href="/medals.php#karma">Karma</a> medal can down vote. You earn the medals by completing levels and being active within the forum. Posts with karma of -3 or less are automatically hidden although this isn't the main role of the karma system, see reporting posts below.
     </p>
     <h2 id="watch">How do I control which threads I get notifications for?</h2>
     <p>
@@ -27,7 +27,7 @@
     </p>
     <h2 id="report-post">How do I report bad content within the forum?</h2>
     <p>
-        To the right of every forum post is the authors details, underneath these there should be a "Flag Post" button. If you feel a post contains bad content e.g. level answers, spam, abuse, sole purpose being to sell a product then click the button and it will flag it to a moderator. If a moderator agrees that the content should be removed it will be and the user responsible warned or banned from posting on the site.
+        To the left of every forum post is the authors details, underneath these there should be a "Flag Post" button. If you feel a post contains bad content e.g. level answers, spam, abuse, sole purpose being to sell a product then click the button and it will flag it to a moderator. If a moderator agrees that the content should be removed it will be and the user responsible warned or banned from posting on the site.
     </p>
 
 
