@@ -171,6 +171,10 @@ ul {
     &.plain {
         list-style: none;
     }
+
+    &.indent {
+        margin-left: 20px;
+    }
 }
 
 i {
