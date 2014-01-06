@@ -506,7 +506,7 @@ var $default_tag_rules = Array(
                                               'class' => 'link',
                                               'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
                                               'content' => BBCODE_REQUIRED,
-                                              'plain_start' => "<a href=\"{\$link}\">",
+                                              'plain_start' => "<a rel='nofollow' href=\"{\$link}\">",
                                               'plain_end' => "</a>",
                                               'plain_content' => Array('_content', '_default'),
                                               'plain_link' => Array('_default', '_content'),
@@ -517,7 +517,7 @@ var $default_tag_rules = Array(
                                               'class' => 'link',
                                               'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
                                               'content' => BBCODE_REQUIRED,
-                                              'plain_start' => "<a class='source' href=\"{\$link}\">",
+                                              'plain_start' => "<a rel='nofollow' class='source' href=\"{\$link}\">",
                                               'plain_end' => "</a>",
                                               'plain_content' => Array('_content', '_default'),
                                               'plain_link' => Array('_default', '_content'),
@@ -760,7 +760,7 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
         if ($bbcode->url_target !== false)
             if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
                 $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
-            return '<a href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a>';
+            return '<a href="' . htmlspecialchars($url) . '" rel="nofollow" class="bbcode_url"' . $target . '>' . $content . '</a>';
         }
         else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
     }
@@ -776,7 +776,7 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
         if ($bbcode->url_target !== false)
             if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
                 $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
-            return '<div class="source">Source: <a href="' . htmlspecialchars($url) . '" class="bbcode_url"' . $target . '>' . $content . '</a></div>';
+            return '<div class="source">Source: <a href="' . htmlspecialchars($url) . '" rel="nofollow" class="bbcode_url"' . $target . '>' . $content . '</a></div>';
         }
         else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
     }
@@ -908,7 +908,7 @@ function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
             if (isset($params['url'])) {
                 $url = trim($params['url']);
                 if ($bbcode->IsValidURL($url))
-                    $title = "<a href=\"" . htmlspecialchars($params['url']) . "\">" . $title . "</a>";
+                    $title = "<a href=\"" . htmlspecialchars($params['url']) . " rel='nofollow'\">" . $title . "</a>";
             }
         }
         else if (!is_string($default))
@@ -1122,7 +1122,7 @@ class BBCode {
         $this->limit_tail = "...";
         $this->limit_precision = 0.15;
         $this->detect_urls = false;
-        $this->url_pattern = '<a href="{$url/h}">{$text/h}</a>';
+        $this->url_pattern = '<a href="{$url/h}"  rel="nofollow">{$text/h}</a>';
         $this->url_targetable = false;
         $this->url_target = false;
     }
@@ -1709,7 +1709,7 @@ function Internal_DoLimit() {
     $this->was_limited = true;
 }		function auto_link($text) {
     $pattern = "/(((http[s]?:\/\/)|(www\.))(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9.,_\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
-    $text = preg_replace($pattern, " <a href='$1'>$1</a>", $text);
+    $text = preg_replace($pattern, " <a href='$1' rel='nofollow'>$1</a>", $text);
 			// fix URLs without protocols
     $text = preg_replace("/href='www/", "href='http://www", $text);
     return $text;
