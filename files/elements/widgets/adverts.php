@@ -2,7 +2,7 @@
     if (!$app->user->loggedIn || !$app->user->donator):
 ?>
                     <article class="widget adverts">
-                        <h2>Adverts</h2>
+                        <h1>Adverts</h1>
                         <div class="center">
                             <script type="text/javascript"><!--
                                 google_ad_client = "ca-pub-1120564121036240";
