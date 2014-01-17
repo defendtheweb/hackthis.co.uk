@@ -5,7 +5,7 @@
                     <ul>
                         <li><a href='/'>home</a></li>
 <?php
-    if ($app->user->loggedIn):
+    // if ($app->user->loggedIn):
 ?>
                         <li><a href='/news'>news</a></li>
                         <li><a href='/levels'>levels</a>
@@ -19,12 +19,12 @@
 ?>
                             </ul></li>
 <?php
-            endif;
+                endif;
             $lastGroup = $level->group;
 ?>
                             <li class='parent'><a href='/levels/<?=strtolower($level->group);?>'><?=$level->group;?></a><ul>
 <?php
-        endif;
+            endif;
 ?>
                                 <li>
                                     <a class="progress_<?=$level->completed;?>" href="<?=$level->uri;?>">
@@ -32,12 +32,12 @@
                                     </a>
                                 </li>
 <?php
-    endforeach;
+        endforeach;
 ?>
                             </ul></li>
                         </ul></li>
 <?php
-    endif;
+    // endif;
 
     $categories = $app->articles->getCategories(null, false);
 ?>

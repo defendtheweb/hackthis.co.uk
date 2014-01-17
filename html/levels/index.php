@@ -1,4 +1,5 @@
 <?php
+    define('PAGE_PUBLIC', true);
     $custom_css = array('levels.scss');
     $page_title = 'Levels';
     require_once('header.php');
