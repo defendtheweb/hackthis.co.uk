@@ -8,7 +8,14 @@
             include('widgets/feed.php');
             include('widgets/scoreboard.php');
         } else {
-            include('widgets/welcome.php');
+            if (isset($_GET['request'])):
+                include('elements/widgets/request.php');
+            else:
+                include('widgets/welcome.php');
+            endif;
+
+            include('widgets/login.php');
+            include('widgets/register.php');
         }
         include('widgets/adverts.php');
 ?>
