@@ -13,8 +13,8 @@
 
     if (!$reset):
 ?>
-                    <h2>Request details</h2>
                     <article class="widget widget-request">
+                        <h1>Request details</h1>
 <?php
         if (isset($status) && $status) {
             $app->utils->message($status === true?"An email has been sent to the registered address for this account":$status, $status === true?"good":'error');
@@ -30,8 +30,8 @@
 <?php
     else:
 ?>
-                    <h2>Change password</h2>
                     <article class="widget widget-request">
+                        <h1>Change password</h1>
 <?php
         if (isset($changed) && $changed):
             $app->utils->message($changed === true?"Password changed":$changed, $changed === true?"good":'error');
