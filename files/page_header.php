@@ -61,7 +61,7 @@
 <?php
         endif;    
 
-        if ($app->user->loggedIn || !(defined('LANDING_PAGE') && LANDING_PAGE)):
+        if ($app->user->loggedIn):
 ?>
     <div class="page-wrap">
 <?php
@@ -103,7 +103,9 @@
     endif;
 
     //Calculate document width
-    if (!defined('_SIDEBAR') || _SIDEBAR)
+    if (!$app->user->loggedIn && defined('LANDING_PAGE') && LANDING_PAGE)
+        $span = '16';
+    else if (!defined('_SIDEBAR') || _SIDEBAR)
         $span = '18';
     else
         $span = '24';

@@ -1,6 +1,6 @@
 <?php
     define("PAGE_PUBLIC", true);
-//    define("LANDING_PAGE", true);
+    define("LANDING_PAGE", true);
 
     require_once('init.php');
 
