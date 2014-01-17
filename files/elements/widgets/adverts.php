@@ -19,7 +19,7 @@
         else:
 ?>
                     <article class="widget adverts">
-                        <h1>Adverts</h1>
+                        <h2>Adverts</h2>
                         <div class="center">
                             <script type="text/javascript"><!--
                                 google_ad_client = "ca-pub-1120564121036240";
