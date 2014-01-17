@@ -7,6 +7,7 @@
             include('widgets/dashboard.php');
             include('widgets/feed.php');
             include('widgets/scoreboard.php');
+            include('widgets/adverts.php');
         } else {
             if (isset($_GET['request'])):
                 include('elements/widgets/request.php');
@@ -18,7 +19,6 @@
             // include('widgets/login.php');
             // include('widgets/register.php');
         }
-        include('widgets/adverts.php');
 ?>
                 </sidebar>
 <?php
