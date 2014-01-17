@@ -87,15 +87,13 @@
                     </script>
                     <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
                 </div>
+<?php
+        endif;
+?>
             </header>
         </div>
 <?php
             include('elements/navigation.php');
-        else:
-?>
-        <div class="page-wrap">
-<?php
-        endif;
     endif;
 
     //Calculate document width
