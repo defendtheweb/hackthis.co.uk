@@ -19,7 +19,7 @@
                     <section class='home'>
 <?php
     include('elements/home_latest_articles.php');
-    if (isset($_GET['new'])) {
+    if (!$app->user->loggedIn) {
         include('elements/home_intro.php');
     } else {
         include('elements/home_news.php');

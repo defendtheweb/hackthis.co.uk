@@ -1,6 +1,6 @@
 <?php
     define("PAGE_PUBLIC", true);
-    define("LANDING_PAGE", true);
+//    define("LANDING_PAGE", true);
 
     require_once('init.php');
 
@@ -21,7 +21,7 @@
         die();
     }
 
-    if ($app->user->loggedIn) {
+    if ($app->user->loggedIn || !$app->user->loggedIn) {
         require_once("home.php");
     } else {
         define("_SIDEBAR", false);
