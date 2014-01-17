@@ -49,13 +49,13 @@
         array_push($minifier->custom_js, 'jquery.transit.min.js');
         array_push($minifier->custom_css, 'guest.scss');
 
-        if (defined('LANDING_PAGE') && LANDING_PAGE) {
-            array_push($minifier->custom_css, 'guest_landing.scss');
-        }
-
-        // if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
-        //     require_once('error.php');
+        // if (defined('LANDING_PAGE') && LANDING_PAGE) {
+        //     array_push($minifier->custom_css, 'guest_landing.scss');
         // }
+
+        if (!defined('PAGE_PUBLIC') || !PAGE_PUBLIC) {
+            require_once('error.php');
+        }
     }
 
     if (isset($_GET['view']) && $_GET['view'] == 'app') {
