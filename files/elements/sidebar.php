@@ -14,8 +14,8 @@
                 include('widgets/welcome.php');
             endif;
 
-            include('widgets/login.php');
-            include('widgets/register.php');
+            // include('widgets/login.php');
+            // include('widgets/register.php');
         }
         include('widgets/adverts.php');
 ?>
