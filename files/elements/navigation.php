@@ -96,6 +96,7 @@
     if ($app->user->loggedIn):
 ?>
                                 <li><a href='/donator.php'>Donate</a></li>
+                                <li><a href='/git.php'>Contribute</a></li>
 <?php
     endif;
 ?>
