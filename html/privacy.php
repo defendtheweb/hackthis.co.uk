@@ -58,8 +58,8 @@
     As part of the California Online Privacy Protection Act, all users of our site may make any changes to their information at anytime by logging into their control panel and going to the 'Edit Profile' page.
 </p>
 <p>
-    <h2>Childrens Online Privacy Protection Act Compliance</h2>
-    We are in compliance with the requirements of COPPA (Childrens Online Privacy Protection Act), we do not collect any information from anyone under 13 years of age. Our website, products and services are all directed to people who are at least 13 years old or older.
+    <h2>Children's Online Privacy Protection Act Compliance</h2>
+    We are in compliance with the requirements of COPPA (Children's Online Privacy Protection Act), we do not collect any information from anyone under 13 years of age. Our website, products and services are all directed to people who are at least 13 years old or older.
 </p>
 <p>
     <h2>Online Privacy Policy Only</h2>
