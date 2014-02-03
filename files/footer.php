@@ -40,7 +40,7 @@
                 </div>
                 <div class="container row">
                     <div class='center version'>
-                        Current Version: <a href='https://github.com/HackThis/hackthis.co.uk/tree/<?=trim($app->version);?>'><?=trim($app->version);?></a><br/>
+                        Current Version: <a href='/git.php#<?=trim($app->version);?>'><?=trim($app->version);?></a><br/>
                         Copyright © 2008 - <?=date('Y');?> <a href='//www.hackthis.co.uk'>hackthis.co.uk</a>
                     </div>
                 </div>
