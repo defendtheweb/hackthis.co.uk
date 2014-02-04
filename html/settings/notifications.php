@@ -19,7 +19,7 @@
 ?>
 
     <h1>Email Notifications</h1>
-    <p>Currently emails can be configured to notify you instantly or never about each notification type. Soon there will be the option to recieve a daily summary.</p>
+    <p>Currently emails can be configured to notify you instantly or never about each notification type. Soon there will be the option to receive a daily summary.</p>
     <form method='POST' action='?save'>
 <?php
     if (isset($saved)) {
