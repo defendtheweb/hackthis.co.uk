@@ -380,6 +380,10 @@ ul.tabs {
         &.img:before {
             background: $green;
         }
+
+        &.img .caption {
+            background: #000000;
+        }
     }
 
     &.img:before {
@@ -393,7 +397,7 @@ ul.tabs {
     }
 
     &.img {
-        height: 178px;
+        height: 178px !important;
     }
 
     &.img .caption {
@@ -404,6 +408,8 @@ ul.tabs {
         bottom: 0;
         height: auto;
         width: 100%;
+
+        background: background: rgba(0, 0, 0, 0.7);
     }
 
     .caption {
