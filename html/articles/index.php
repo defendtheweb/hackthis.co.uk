@@ -71,9 +71,9 @@
 <?php               endif; ?>
                                     <div class="caption">
                                         <h3><?=$article->title;?></h3>
-<?php               //if (!isset($article->thumbnail)): ?>
+<?php               if (!(isset($article->thumbnail) && $article->thumbnail) && !isset($article->video)): ?>
                                     <p><?=$app->parse($article->body, false);?></p>
-<?php              // endif; ?>
+<?php               endif; ?>
                                     </div>
                                 </a>
 <?php           if ($n == 3): ?>
