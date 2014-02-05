@@ -76,7 +76,7 @@
             else:
                 // Check for submission
                 if (isset($_POST['body'])) {
-                    $changes = array('title'=>$_POST['title'], 'body'=>$_POST['body'], 'category_id'=>$_POST['category']);
+                    $changes = array('title'=>$_POST['title'], 'thumbnail'=>$_POST['thumbnail'], 'body'=>$_POST['body'], 'category_id'=>$_POST['category']);
 
                     $updated = $app->articles->updateArticle($article->id, $changes, isset($_POST['update']));
                     if ($updated) {
@@ -118,6 +118,9 @@
 ?>
                 </ul>
             </div>
+            <label>Thumbnail:</label><br/>
+            <input type="text" value="<?=htmlentities($article->thumbnail);?>" id='thumbnail' name='thumbnail' class='medium'/>
+            &nbsp; <a target='_blank' href='upload.php'>[upload]</a>
 <?php
                 $wysiwyg_text = $article->body;
                 include('elements/wysiwyg.php');

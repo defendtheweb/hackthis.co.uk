@@ -246,6 +246,7 @@
             $query .= " WHERE article_id=?";
             $values[] = $id;
 
+ini_set('display_errors',1);
             if ($draft || !$this->app->user->admin_pub_priv) {
                 $query .= " AND user_id = ?";
                 $values[] = $this->app->user->uid;
