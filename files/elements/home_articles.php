@@ -20,7 +20,9 @@
 <?php   endif; ?>
                     <div class="caption">
                         <h3><?=$article->title;?></h3>
-                    <p><?=$app->parse($article->body, false);?></p>
+<?php       if (!(isset($article->thumbnail) && $article->thumbnail) && !isset($article->video)): ?>
+                        <p><?=$app->parse($article->body, false);?></p>
+<?php       endif; ?>
                     </div>
                 </a>
 <?php

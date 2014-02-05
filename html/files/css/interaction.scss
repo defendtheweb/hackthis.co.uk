@@ -392,10 +392,18 @@ ul.tabs {
         padding: 5px 10px;
     }
 
+    &.img {
+        height: 178px;
+    }
+
     &.img .caption {
-        height: 70px;
+        /* height: 70px; */
         overflow: hidden;
         padding: 3px 12px;
+        position: absolute;
+        bottom: 0;
+        height: auto;
+        width: 100%;
     }
 
     .caption {
