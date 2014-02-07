@@ -215,6 +215,10 @@
                 margin-bottom: 0px;
             }
 
+            &.last-request {
+                border-bottom: 1px solid $light_bg;
+            }
+
             img {
                 margin: 2px 8px 0 0;
             }

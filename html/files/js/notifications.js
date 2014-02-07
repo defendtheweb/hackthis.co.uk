@@ -226,16 +226,26 @@ $(function() {
         }
 
         $.getJSON(uri, function(data) {
-            var data = data.items;
-            if (data.length || (data.items && data.items.length)) {
+            var items = data.items;
+            if (items.length || (items.items && items.items.length)) {
                 if (parent.hasClass('active-events')) {
-                    var items = $(notificationsTmpl).tmpl(data.items);
+                    var html = $('<ul>');
+
+                    var count = data.friends.length - 1;
+                    $.each(data.friends, function (index) {
+                        tmpli = $(notificationsTmpl).tmpl(this);
+                        if (count == index) {
+                            tmpli.addClass('last-request');
+                        }
+                        html.append(tmpli);
+                    });
+                    var items = $(notificationsTmpl).tmpl(items.items);
 
                     var more = $("<li>", {class: "more"});
                     $('<a>', {text: "View More", href: "/alerts.php"}).appendTo(more); 
-                    var html = $('<ul>').append(items).append(more);
+                    html.append(items).append(more);
                 } else {
-                    var items = $(inboxTmpl).tmpl(data);
+                    var items = $(inboxTmpl).tmpl(items);
 
                     var messagesHTML = $('<div>', {class: "messages"});
                     $('<a>', {text: "New Message", class: "toggle-compose more", href: "/inbox/compose"}).appendTo(messagesHTML);

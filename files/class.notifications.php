@@ -30,7 +30,7 @@
             return array("events"=>$eventCount, "pm"=>$pmCount);
         }
 
-        public function getEvents($limit=5, $offset=0) {
+        public function getEvents($limit=5, $offset=0, $friends = true) {
             // Get count
             $st = $this->app->db->prepare("SELECT count(*) AS `count`
                                FROM users_notifications
@@ -40,7 +40,7 @@
             $result = $st->fetch();
            
             // Get items
-            $st = $this->app->db->prepare("SELECT notification_id AS id, users.user_id AS uid, item_id, type,
+            $sql = "SELECT notification_id AS id, users.user_id AS uid, item_id, type,
                                users_notifications.time AS timestamp, seen, username,
                                profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
                                FROM users_notifications
@@ -48,9 +48,14 @@
                                ON users_notifications.from_id = users.user_id
                                LEFT JOIN users_profile profile
                                ON profile.user_id = users.user_id
-                               WHERE users_notifications.user_id = :uid
-                               ORDER BY users_notifications.time DESC
-                               LIMIT :offset, :limit");
+                               WHERE users_notifications.user_id = :uid";
+            if (!$friends) {
+                $sql .=        " AND `type` != 'friend'";
+            }
+            $sql .= "          ORDER BY users_notifications.time DESC
+                               LIMIT :offset, :limit";
+
+            $st = $this->app->db->prepare($sql);
             $st->bindParam(":uid", $this->app->user->uid);
             $st->bindParam(":offset", $offset, PDO::PARAM_INT);
             $st->bindParam(":limit", $limit, PDO::PARAM_INT);
@@ -162,6 +167,69 @@
                 SET seen = '1'
                 WHERE user_id = :uid");
             $st->execute(array(':uid' => $this->app->user->uid));
+
+            return $result;
+        }
+
+        public function getFriends() {
+            // Get items
+            $sql = "SELECT notification_id AS id, users.user_id AS uid, item_id, type,
+                               users_notifications.time AS timestamp, seen, username,
+                               profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`
+                               FROM users_notifications
+                               LEFT JOIN users
+                               ON users_notifications.from_id = users.user_id
+                               LEFT JOIN users_profile profile
+                               ON profile.user_id = users.user_id
+                               WHERE users_notifications.user_id = :uid
+                               AND `type` = 'friend'
+                               ORDER BY users_notifications.time DESC";
+
+            $st = $this->app->db->prepare($sql);
+            $st->bindParam(":uid", $this->app->user->uid);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            // Loop items, get details and create images
+            foreach ($result as $key=>&$res) {
+                if ($res->type == 'friend') {
+                    // status
+                    $st = $this->app->db->prepare("SELECT status
+                        FROM users_friends
+                        WHERE user_id = :friend_id AND friend_id = :uid
+                        LIMIT 1");
+                    $st->execute(array(':uid' => $this->app->user->uid, ':friend_id' => $res->uid));
+                    $st->setFetchMode(PDO::FETCH_INTO, $res);
+                    $st->fetch();
+
+                    if ($res->status == true) {
+                        unset($result[$key]);
+                        continue;
+                    }
+                }
+
+                // Parse title
+                if (isset($res->title)) {
+                    $res->title = $this->app->parse($res->title, false);
+                }
+
+                // Profile images
+                if (isset($res->image)) {
+                    $gravatar = isset($res->gravatar) && $res->gravatar == 1;
+                    $res->img = profile::getImg($res->image, 28, $gravatar);
+                } else
+                    $res->img = profile::getImg(null, 28);
+
+                unset($res->image);
+                unset($res->gravatar);
+
+                unset($res->id);
+                unset($res->item_id);
+
+                $res->timestamp = $this->app->utils->fdate($res->timestamp);
+            }
+
+            $result = array_values($result);
 
             return $result;
         }

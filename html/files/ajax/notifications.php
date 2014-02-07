@@ -6,7 +6,8 @@
     $result = array('status'=>true);
 
     if (isset($_GET['events'])) {
-        $result['items'] = $app->notifications->getEvents();
+        $result['items'] = $app->notifications->getEvents(5, 0, false);
+        $result['friends'] = $app->notifications->getFriends();
     } else {
         $last = isset($_POST['last'])?$_POST['last']:0;
         // $result['feed'] = $app->feed->get($last); -- feed is now sent via sockets
