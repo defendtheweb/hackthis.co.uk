@@ -1,6 +1,6 @@
 <?php
     $custom_css = array('admin.scss');
-    $custom_js = array('admin.js');
+    $custom_js = array('admin.js', 'admin_forum.js');
     $page_title = 'Admin - Forum';
     define("PAGE_PRIV", "admin_forum");
 
