@@ -380,7 +380,7 @@
                         $this->app->ssga->send();
 
                         // Add to log
-                        $app->log->add('users', 'Register [FB] [' . $token_details->username . ']');
+                        $this->app->log->add('users', 'Register [FB] [' . $token_details->username . ']');
 
                         $this->createSession();
 
@@ -465,7 +465,7 @@
             $this->app->ssga->send();
 
             // Add to log
-            $app->log->add('users', 'Register [' . $username . ']');
+            $this->app->log->add('users', 'Register [' . $username . ']');
 
             $this->createSession();
         }
@@ -513,7 +513,7 @@
                         $this->app->ssga->send();
 
                         // Add to log
-                        $app->log->add('users', 'Deleted [' . $this->username . ']');
+                        $this->app->log->add('users', 'Deleted [' . $this->username . ']');
 
                         $this->app->db->commit();
                         return true;
