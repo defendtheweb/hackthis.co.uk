@@ -156,6 +156,7 @@
                 <option>Sorry we can't help you hack websites. This site does not encourage or condone illegal activity.</option>
                 <option>Please do not advert on the forum. If you wish to advertise please contact us.</option>
                 <option>A little off-topic, please use the PM system.</option>
+                <option>Spam is not accepted on this forum, any further spamming will result in a permanent ban.</option>
             </select>
             <input type='submit' class='button' value='Submit'/>
         </form>
@@ -260,7 +261,15 @@
 
         <form id="submit" class='forum-thread-reply' method="POST">
             <label for="reason">Reason for deletion:</label><br/>
-            <input type="text" name="reason"/>
+            <select name="reason" id="reason">
+                <option>This site does not encourage or condone illegal activity.</option>
+                <option>Please do not give out answers to the levels.</option>
+                <option>Please only use English, as this is an english speaking forum.</option>
+                <option>Sorry we can't help you hack websites. This site does not encourage or condone illegal activity.</option>
+                <option>Please do not advert on the forum. If you wish to advertise please contact us.</option>
+                <option>A little off-topic, please use the PM system.</option>
+                <option>Spam is not accepted on this forum, any further spamming will result in a permanent ban.</option>
+            </select>
             <input type='submit' class='button' value='Submit'/>
         </form>
 
