@@ -17,14 +17,17 @@
             $res = $st->fetch();
 
             $newday = false;
-            if ($res->diff <= -1) {
-                $newday = true;
-            }
+            $consecutive = 0;
+            if ($res) {
+                if ($res->diff <= -1) {
+                    $newday = true;
+                }
 
-            if ($res->diff == -1)
-                $consecutive = 1;
-            else if ($res->diff == 0)
-                $consecutive = 0;
+                if ($res->diff == -1)
+                    $consecutive = 1;
+                else if ($res->diff == 0)
+                    $consecutive = 0;
+            }
 
             $sql = 'UPDATE users_activity
                     SET last_active = NOW()';
