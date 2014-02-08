@@ -379,6 +379,9 @@
                         $this->app->ssga->set_event('user', 'register', 'OAuth', $uid);
                         $this->app->ssga->send();
 
+                        // Add to log
+                        $app->log->add('users', 'Register [FB] [' . $token_details->username . ']');
+
                         $this->createSession();
 
                         return false;
@@ -461,6 +464,9 @@
             $this->app->ssga->set_event('user', 'register', 'default', $uid);
             $this->app->ssga->send();
 
+            // Add to log
+            $app->log->add('users', 'Register [' . $username . ']');
+
             $this->createSession();
         }
 
@@ -505,6 +511,9 @@
                         // Setup GA event
                         $this->app->ssga->set_event('user', 'delete', 'default', $this->uid);
                         $this->app->ssga->send();
+
+                        // Add to log
+                        $app->log->add('users', 'Deleted [' . $this->username . ']');
 
                         $this->app->db->commit();
                         return true;
