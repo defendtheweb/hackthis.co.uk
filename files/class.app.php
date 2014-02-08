@@ -13,12 +13,14 @@
 
             $this->config = $config;
             $this->config['cache'] = $this->config['path'] . "/files/cache/";
+            $this->config['log'] = $this->config['path'] . "/files/log/";
 
             // Connect to database
             $this->connectDB($this->config['db']);
 
             //get version number
             $this->cache = new cache($this);
+            $this->log = new log($this);
             $this->version = substr($this->cache->get('version'), 1);
 
             //get max score
