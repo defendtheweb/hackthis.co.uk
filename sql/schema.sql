@@ -430,6 +430,27 @@ CREATE TABLE IF NOT EXISTS articles_favourites (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS home_ticker (
+    `id` int(6) NOT NULL AUTO_INCREMENT,
+    `source` varchar(32) NOT NULL,
+    `text` varchar(256) NOT NULL,
+    `url` text NOT NULL,
+    `user_id` int(7) NOT NULL,
+    `status` tinyint(1) DEFAULT 0,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS home_ticker_votes (
+    `ticker_id` int(6) NOT NULL,
+    `user_id` int(7) NOT NULL,
+    PRIMARY KEY (`ticker_id`, `user_id`),
+    FOREIGN KEY (`ticker_id`) REFERENCES home_ticker (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
+
 /*
     MODERATOR TABLES
 */

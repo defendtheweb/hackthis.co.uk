@@ -36,6 +36,60 @@
     }
 }
 
+.home-ticker {
+    position: relative;
+
+    ul {
+        list-style: none;    
+        position: relative;
+        overflow: hidden;
+        height: 17px;
+
+        li {
+            position: absolute;
+
+            top: 30px;
+
+            &:first-child {
+                top: 0;
+            }
+
+            -webkit-transition: top 0.9s ease-in-out;
+            -moz-transition: top 0.9s ease-in-out;
+            -o-transition: top 0.9s ease-in-out;
+            transition: top 0.9s ease-in-out;
+
+            .source {
+                font-weight: bold;
+                color: $green;
+                padding-right: 6px;
+            }
+
+            a {
+                color: $white;
+            }
+        }
+    }
+
+    .more {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 41px;
+        width: 41px;
+        background: $bg;
+        text-align: center;
+        line-height: 41px;
+        font-size: 2em;
+
+        &:hover {
+            text-decoration: none;
+            color: $bright_green;
+        }
+    }
+}
+
+
 .home-articles {
     .thumbnail {
         background: $bg;

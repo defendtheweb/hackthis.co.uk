@@ -42,6 +42,7 @@
 
             $this->stats = new stats($this);
             $this->feed = new feed($this);
+            $this->ticker = new ticker($this);
             $this->email = new email($this);
 
             // Create user object

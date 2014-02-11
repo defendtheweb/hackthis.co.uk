@@ -1,0 +1,112 @@
+ul.ticker {
+	li {
+		padding: 4px 0px;
+		position: relative;
+
+		.icon-ok,
+		.icon-remove {
+			margin-left: 8px;
+			float: right;
+		}
+
+		.icon-ok:hover {
+			color: $bright_green;
+			cursor: pointer;
+		}
+
+		.icon-remove:hover {
+			color: red;
+			cursor: pointer;
+		}
+
+		&.admin {
+			padding: 4px 6px;
+
+			&:nth-child(2n) {
+				background: $bg;
+			}
+		}
+
+		div {
+			margin-left: 45px;
+		}
+
+		a.ticker-up,
+		.ticker-up-voted {
+			width: 34px;
+			height: 34px;
+			background: $bg;
+
+			line-height: 34px;
+			text-align: center;
+
+			position: absolute;
+			top: 4px;
+			left: 0;
+
+			margin-left: 0;
+
+			&:hover {
+				color: red;
+				text-decoration: none;
+			}
+		}
+
+		.ticker-up-voted {
+			display: none;
+
+			i {
+				color: red;
+			}
+		}
+
+		&.voted {
+			.ticker-up {
+				display: none;
+			}
+
+			.ticker-up-voted {
+				display: block;
+			}
+		}
+
+		span.status-0 {
+			color: $msg_warning;
+		}
+		span.status-1 {
+			color: $green;
+		}
+		span.status-2 {
+			color: red;
+		}
+	}
+}
+
+.ticker-add {
+	position: relative;
+}
+
+.ticker-add form {
+	background: $bg;
+	padding: 12px;
+	position: absolute;
+	right: 0;
+	top: -12px;
+
+	display: none;
+	z-index: 100;
+
+	.success i, .error i {
+		margin-right: 2px
+	}
+
+	.success {
+		color: $green;
+		display: none;
+	}
+
+	.error {
+		color: $msg_error;
+		display: none;
+	}
+}

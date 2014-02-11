@@ -6,6 +6,7 @@
     
     $minifier->add_file('highlight.js', 'js');
     $minifier->add_file('articles.js', 'js');
+    $minifier->add_file('home.js', 'js');
 
     $minifier->add_file('home.scss', 'css');
     $minifier->add_file('highlight.css', 'css');
@@ -22,6 +23,7 @@
     if (!$app->user->loggedIn) {
         include('elements/home_intro.php');
     } else {
+        include('elements/home_ticker.php');
         include('elements/home_news.php');
     }
     include('elements/home_forum.php');

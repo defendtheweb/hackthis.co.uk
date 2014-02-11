@@ -1,0 +1,249 @@
+<?php
+	class ticker {
+		function __construct($app) {
+			$this->app = $app;
+		}
+
+		function get($limit = 10, $popularity = true) {
+            $cache = 'home_ticker_';
+            $cache .= $popularity ? 'popular_' : 'latest_';
+            $cache .= $limit;
+
+			// get from cache if home
+            $latest = json_decode($this->app->cache->get($cache, 1));
+
+            if ($latest)
+                return $this->voted($latest);
+
+            // (COALESCE(LOG(`count`+1, 10), 1) + (UNIX_TIMESTAMP(home_ticker.time) - 1134028003) / 450000) AS `score`,
+
+            $sql = "SELECT home_ticker.*, users.username, COALESCE(votes.count, 0) AS `count`,
+                    (COALESCE(votes.count, 0) - TIMESTAMPDIFF(HOUR, home_ticker.time, NOW())) AS `score`
+                    FROM home_ticker
+                    INNER JOIN users
+                    ON users.user_id = home_ticker.user_id
+                    LEFT JOIN (SELECT ticker_id, count(user_id) AS `count` FROM home_ticker_votes GROUP BY ticker_id) votes
+                    ON votes.ticker_id = home_ticker.id
+                    WHERE home_ticker.status = 1";
+
+            if ($popularity) {
+                $sql .= " ORDER BY `score` DESC, `time` DESC";
+            } else {
+                $sql .= " ORDER BY `time` DESC";
+            }
+
+            if ($limit > 0) {
+            	$sql .= " LIMIT :limit";
+            }
+
+            $st = $this->app->db->prepare($sql);
+
+            if ($limit > 0) {
+                $st->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+            }
+
+            $st->execute();
+            $result = $st->fetchAll();
+
+            foreach($result AS &$item) {
+                $parse = parse_url($item->url);
+                $item->source = $parse['host'];
+
+                if (strpos($item->source, 'www.') === 0) {
+                    $item->source = substr($item->source, 4);
+                }
+
+                $item->text = htmlspecialchars($item->text);
+                $item->source = htmlspecialchars($item->source);
+                $item->url = filter_var($item->url, FILTER_SANITIZE_URL);
+            }
+
+            // Store cache
+            $this->app->cache->set($cache, json_encode($result));
+
+            return $this->voted($result);
+		}
+
+        function getFavourites() {
+            if (!$this->app->user->loggedIn) {
+                return false;
+            }
+
+           $sql =  "SELECT home_ticker.*, users.username, COALESCE(votes.count, 0) AS `count`, 'true' AS `voted`
+                    FROM home_ticker
+                    INNER JOIN users
+                    ON users.user_id = home_ticker.user_id
+                    LEFT JOIN (SELECT ticker_id, count(user_id) AS `count` FROM home_ticker_votes GROUP BY ticker_id) votes
+                    ON votes.ticker_id = home_ticker.id
+                    INNER JOIN home_ticker_votes
+                    ON home_ticker_votes.`ticker_id` = home_ticker.id AND home_ticker_votes.`user_id` = :uid
+                    WHERE home_ticker.status = 1
+                    ORDER BY `time` DESC";
+
+            $st = $this->app->db->prepare($sql);
+            $st->bindValue(':uid', $this->app->user->uid);
+
+            $st->execute();
+            $result = $st->fetchAll();
+
+            foreach($result AS &$item) {
+                $parse = parse_url($item->url);
+                $item->source = $parse['host'];
+
+                if (strpos($item->source, 'www.') === 0) {
+                    $item->source = substr($item->source, 4);
+                }
+
+                $item->text = htmlspecialchars($item->text);
+                $item->source = htmlspecialchars($item->source);
+                $item->url = filter_var($item->url, FILTER_SANITIZE_URL);
+            }
+
+            return $result;
+        }
+
+        function getSubmissions() {
+            if (!$this->app->user->loggedIn) {
+                return false;
+            }
+
+           $sql =  "SELECT home_ticker.*, users.username, COALESCE(votes.count, 0) AS `count`
+                    FROM home_ticker
+                    INNER JOIN users
+                    ON users.user_id = home_ticker.user_id
+                    LEFT JOIN (SELECT ticker_id, count(user_id) AS `count` FROM home_ticker_votes GROUP BY ticker_id) votes
+                    ON votes.ticker_id = home_ticker.id
+                    WHERE home_ticker.user_id = :uid
+                    ORDER BY `status` ASC, `time` DESC";
+
+            $st = $this->app->db->prepare($sql);
+            $st->bindValue(':uid', $this->app->user->uid);
+
+            $st->execute();
+            $result = $st->fetchAll();
+
+            foreach($result AS &$item) {
+                $parse = parse_url($item->url);
+                $item->source = $parse['host'];
+
+                if (strpos($item->source, 'www.') === 0) {
+                    $item->source = substr($item->source, 4);
+                }
+
+                $item->text = htmlspecialchars($item->text);
+                $item->source = htmlspecialchars($item->source);
+                $item->url = filter_var($item->url, FILTER_SANITIZE_URL);
+            }
+
+            return $this->voted($result);
+        }
+
+        function getAdmin() {
+            if (!$this->app->user->loggedIn || !$this->app->user->admin_pub_priv) {
+                return false;
+            }
+
+           $sql =  "SELECT home_ticker.*, users.username
+                    FROM home_ticker
+                    INNER JOIN users
+                    ON users.user_id = home_ticker.user_id
+                    WHERE `status` = 0;
+                    ORDER BY `status` ASC, `time` DESC";
+
+            $st = $this->app->db->prepare($sql);
+
+            $st->execute();
+            $result = $st->fetchAll();
+
+            foreach($result AS &$item) {
+                $parse = parse_url($item->url);
+                $item->source = $parse['host'];
+
+                if (strpos($item->source, 'www.') === 0) {
+                    $item->source = substr($item->source, 4);
+                }
+
+                $item->text = htmlspecialchars($item->text);
+                $item->source = htmlspecialchars($item->source);
+                $item->url = filter_var($item->url, FILTER_SANITIZE_URL);
+            }
+
+            return $result;
+        }
+
+        function changeStatus($id, $status) {
+            if (!$this->app->user->loggedIn || !$this->app->user->admin_pub_priv) {
+                return false;
+            }
+
+            if ($status == 'accept')
+                $status = 1;
+            elseif ($status == 'decline')
+                $status = 2;
+            else
+                return false;
+
+            $sql = "UPDATE home_ticker SET `status` = :status WHERE `id` = :tid";
+            $st = $this->app->db->prepare($sql);
+            $result = $st->execute(array(':status' => $status, ':tid' => $id));
+
+            return (boolean) $result;
+        }
+
+        function vote($id) {
+            if (!$this->app->user->loggedIn) {
+                return false;
+            }
+
+            $sql = "insert into home_ticker_votes(`ticker_id`,`user_id`) VALUES (:tid, :uid)";
+            $st = $this->app->db->prepare($sql);
+            $result = $st->execute(array(':uid' => $this->app->user->uid, ':tid' => $id));
+
+            return (boolean) $result;
+        }
+
+        function voted($items) {
+            foreach($items AS &$item) {
+                $sql = "SELECT COALESCE(voted.user_id, 0) AS `voted` FROM home_ticker_votes voted
+                        WHERE voted.ticker_id = :tid AND voted.user_id = :uid";
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':uid' => $this->app->user->uid, ':tid' => $item->id));
+                $result = $st->fetch();
+
+                if ($result)
+                    $item->voted = (boolean) $result->voted;
+                else
+                    $item->voted = false;
+            }
+
+            return $items;
+        }
+
+		function add($title, $url) {
+            if (!$this->app->user->loggedIn) {
+                return false;
+            }
+
+            if (strlen($title) < 3 && strlen($url) < 3) {
+                return false;
+            }
+
+            if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+                return false;
+            }
+
+            $status = $this->app->user->admin_pub_priv ? 1 : 0;
+
+			$sql = "insert into home_ticker(`text`,`url`,`user_id`, `status`) VALUES (:title, :url, :uid, :status)";
+			$st = $this->app->db->prepare($sql);
+			$result = $st->execute(array(':uid' => $this->app->user->uid, ':title' => $title, ':url' => $url, ':status' => $status));
+
+            if ($result) {
+                $this->vote($this->app->db->lastInsertId());
+            }
+
+            return (boolean) $result;
+		}
+	}
+?>
