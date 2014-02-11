@@ -749,7 +749,7 @@ CREATE TRIGGER update_forum_thread AFTER UPDATE ON forum_threads FOR EACH ROW
     BEGIN
         IF NEW.deleted = 1 THEN
             UPDATE forum_posts SET deleted = 1 WHERE thread_id = OLD.thread_id;
-        END;
+        END IF;
     END;
 
 
