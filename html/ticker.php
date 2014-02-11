@@ -106,7 +106,7 @@
                 &middot;
                 <?php echo $app->utils->userLink($item->username); ?>
                 &middot;
-                <span class='points'><?=$item->count;?></span> points
+                <span class='points'><?=$item->count;?></span> point<?=$item->count==1?'':'s';?>
             </span>
         </div>
 <?php
