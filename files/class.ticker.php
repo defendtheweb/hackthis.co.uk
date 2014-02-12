@@ -18,7 +18,7 @@
             // (COALESCE(LOG(`count`+1, 10), 1) + (UNIX_TIMESTAMP(home_ticker.time) - 1134028003) / 450000) AS `score`,
 
             $sql = "SELECT home_ticker.*, users.username, COALESCE(votes.count, 0) AS `count`,
-                    (COALESCE(votes.count, 0) - TIMESTAMPDIFF(HOUR, home_ticker.time, NOW())) AS `score`
+                    (COALESCE(votes.count, 0) - TIMESTAMPDIFF(DAY, home_ticker.time, NOW())) AS `score`
                     FROM home_ticker
                     INNER JOIN users
                     ON users.user_id = home_ticker.user_id
