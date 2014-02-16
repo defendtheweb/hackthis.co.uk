@@ -154,8 +154,8 @@
 <?php
     else: // right, if not logged in
 ?>
-                        <li class='right nav-extra-login-item <?=isset($app->user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/' <?=(isset($app->user->login_error))?"data-error='{$app->user->login_error}'":'';?>>Login</a></li>
-                        <li class='right nav-extra-register-item <?=isset($app->user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/' <?=(isset($app->user->reg_error))?"data-error='{$app->user->reg_error}'":'';?>>Register</a></li>
+                        <li class='right nav-extra-login-item <?=isset($app->user->login_error)?'active':'';?>'><a class='nav-extra nav-extra-login' href='/auth.php' <?=(isset($app->user->login_error))?"data-error='{$app->user->login_error}'":'';?>>Login</a></li>
+                        <li class='right nav-extra-register-item <?=isset($app->user->reg_error)?'active':'';?>'><a class='nav-extra nav-extra-register' href='/auth.php' <?=(isset($app->user->reg_error))?"data-error='{$app->user->reg_error}'":'';?>>Register</a></li>
 <?php
     endif;
 ?>
