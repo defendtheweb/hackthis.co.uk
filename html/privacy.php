@@ -9,7 +9,7 @@
 ?>
 <p>
     <h2>What information do we collect?</h2>
-    We collect information from you when you register on our site, place an order, subscribe to our newsletter, respond to a survey or fill out a form. When ordering or registering on our site, as appropriate, you may be asked to enter your: name or e-mail address.
+    We collect information from you when you register on our site, place an order, subscribe to our newsletter, respond to a survey or fill out a form. When ordering or registering on our site, as appropriate, you may be asked to enter your name or e-mail address.
     <br/><br/>
     Google, as a third party vendor, uses cookies to serve ads on your site. Google's use of the DART cookie enables it to serve ads to your users based on their visit to your sites and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy..
 </p>
@@ -33,7 +33,7 @@
     <h2>How do we protect your information?</h2>
     We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
     <br/><br/>
-    We offer the use of a secure server. All supplied sensitive/credit information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our Payment gateway providers database only to be accessible by those authorized with special access rights to such systems, and are required to?keep the information confidential.
+    We offer the use of a secure server. All supplied sensitive/credit information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our Payment gateway providers database only to be accessible by those authorized with special access rights to such systems, and are required to keep the information confidential.
     <br/><br/>
     After a transaction, your private information (credit cards, social security numbers, financials, etc.) will be kept on file for more than 60 days in order to.
 </p>
@@ -55,7 +55,7 @@
     <h2>California Online Privacy Protection Act Compliance</h2>
     Because we value your privacy we have taken the necessary precautions to be in compliance with the California Online Privacy Protection Act. We therefore will not distribute your personal information to outside parties without your consent.
     <br/><br/>
-    As part of the California Online Privacy Protection Act, all users of our site may make any changes to their information at anytime by logging into their control panel and going to the 'Edit Profile' page.
+    As part of the California Online Privacy Protection Act, all users of our site may make any changes to their information at any time by logging into their control panel and going to the 'Edit Profile' page.
 </p>
 <p>
     <h2>Children's Online Privacy Protection Act Compliance</h2>
