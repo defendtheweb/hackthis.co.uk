@@ -1,3 +1,10 @@
+## 16-02-2014
+* Privacy spelling and grammar fix - Zoino
+* Static login page for users that are having problems with the dropdown login
+
+## 12-02-2014
+* Introduction of collaborative ticker feature
+
 ## 07-02-2014
 * Tweak to notifications window; all pending friend requests now bubble to the top of the notification list
 
