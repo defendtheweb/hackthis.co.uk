@@ -11,7 +11,7 @@
             if ($parent == null && $news == false) {
                 $categories = json_decode($this->app->cache->get('articles_categories', 60));
 
-                if ($categories)
+                if ($categories)/
                     return $categories;
             }
 
@@ -264,7 +264,7 @@ ini_set('display_errors',1);
             if ($articles)
                 return $articles;
 
-            $st = $this->app->db->prepare('SELECT a.title,SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-(DATEDIFF(NOW(), a.`submitted`))/7) as total,
+            $st = $this->app->db->prepare('SELECT a.title,SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-(DATEDIFF(NOW(), a.`submitted`)/7)) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
                                 a.body, a.thumbnail, cat.title AS `category`
                                 FROM articles a
