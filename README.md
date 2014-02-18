@@ -61,3 +61,6 @@ Navigate to website
 ````
 http://localhost/
 ````
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HackThis/hackthis.co.uk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
