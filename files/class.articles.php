@@ -11,7 +11,7 @@
             if ($parent == null && $news == false) {
                 $categories = json_decode($this->app->cache->get('articles_categories', 60));
 
-                if ($categories)/
+                if ($categories)
                     return $categories;
             }
 
