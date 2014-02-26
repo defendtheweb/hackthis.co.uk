@@ -22,7 +22,7 @@
     endif;
     if ($n <= 3):
 ?> 
-                                    <img src='<?=$position->image;?>' class='right'/>
+                                    <img src='<?=$position->image;?>' class='right' alt="<?=$position->username;?>"/>
 <?php endif; ?>
                                 </span>
                                 <span class='score text-right col span_7'><?=number_format($position->score);?> pts</span>
