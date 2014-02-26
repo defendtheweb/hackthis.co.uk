@@ -30,7 +30,7 @@
 ?>
         <meta property="fb:app_id" content="163820353667417" />
         <meta name='twitter:site' content='@hackthisuk'>
-        <meta name='og:site_name' content='HackThis!!'>
+        <meta property='og:site_name' content='HackThis!!'>
 
         <link href='https://fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 
