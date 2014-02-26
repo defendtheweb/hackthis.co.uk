@@ -26,7 +26,7 @@
                                 <li>
                                     <div class='header'>
                                         <?=$contributor->username;?>
-                                        <span class='right article-count'><i class="icon-books"></i> <?=$contributor->count;?> articles</span>
+                                        <span class='right article-count'><i class="icon-books"></i> <?=$contributor->count;?> article<?=$contributor->count>1?'s':''?></span>
                                     </div>
                                     <ul class='articles plain'>
 <?php
