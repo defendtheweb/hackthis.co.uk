@@ -9,7 +9,7 @@
                     <div class='col span_15'>
                         <h3>Disclaimer</h3>
                         The owner of this site does not accept responsibility for the actions of any users of this site.
-                        Users are solely responsible for any content that they place on this site This site does not encourage or condone any illegal activity,
+                        Users are solely responsible for any content that they place on this site. This site does not encourage or condone any illegal activity,
                         or attempts to hack into any network where they do not have authority to do so.
                     </div>
                     <div class='col span_3'>
