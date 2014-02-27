@@ -1,3 +1,7 @@
+## 23-02-2104
+* Code added to handle plural articles on article contributors - DJDavid98
+* Footer grammar fix - kamzhik
+
 ## 16-02-2014
 * Privacy spelling and grammar fix - Zoino
 * Static login page for users that are having problems with the dropdown login
