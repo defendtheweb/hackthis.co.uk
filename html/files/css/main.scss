@@ -186,6 +186,11 @@ a i {
     cursor: inherit;
 }
 
+select option {
+	background-color: $black;
+	color: #fff;
+}
+
 /* HEADER */
 header .banner a {
     display: block;
@@ -426,7 +431,7 @@ div.image {
 
 
 /* SIDEBAR */
-sidebar h1 {
+.sidebar h1 {
     @extend .title;
 }
 
