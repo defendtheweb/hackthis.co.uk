@@ -42,15 +42,15 @@ $(function() {
         socket.on('feed', function (data) {
             var item = $(feedTmpl).tmpl(data);
 
-            if ($('sidebar .feed ul').length) {
-                item.hide().prependTo($('sidebar .feed ul')).slideDown();
+            if ($('.sidebar .feed ul').length) {
+                item.hide().prependTo($('.sidebar .feed ul')).slideDown();
             } else {
                 var html = $('<ul>').append(item);
-                $('sidebar .feed .feed_loading').replaceWith(html);
+                $('.sidebar .feed .feed_loading').replaceWith(html);
             }
         });
     } else {
-        $('sidebar .feed .feed_loading').html('<strong>Feed offline</strong>');
+        $('.sidebar .feed .feed_loading').html('<strong>Feed offline</strong>');
     }
 
 
@@ -89,11 +89,11 @@ $(function() {
             //     });
 
             //     var items = $(feedTmpl).tmpl(data.feed);
-            //     if ($('sidebar .feed ul').length) {
-            //         items.hide().prependTo($('sidebar .feed ul')).slideDown();
+            //     if ($('.sidebar .feed ul').length) {
+            //         items.hide().prependTo($('.sidebar .feed ul')).slideDown();
             //     } else {
             //         var html = $('<ul>').append(items);
-            //         $('sidebar .feed .feed_loading').replaceWith(html);
+            //         $('.sidebar .feed .feed_loading').replaceWith(html);
             //     }
             // }
         }, 'json');
