@@ -2,7 +2,10 @@
     define("PAGE_PUBLIC", true);
     $page_title = 'Authenticate';
     require('init.php');
-
+	
+	if ($app->user->loggedIn)
+		die(header('Location: '.$config['domain']));
+	
     $minifier->add_file('home.scss', 'css');
 
     require('header.php');
