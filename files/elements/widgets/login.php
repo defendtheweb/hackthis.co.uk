@@ -19,7 +19,7 @@
                             <input type="submit" value="Login" class="button">
                         </form>
 
-                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo $fb['public'];?>&redirect_uri=<?=$app->config('domain');?>/?facebook&scope=email'>
+                        <a class='stop-external facebook-login' href='https://www.facebook.com/dialog/oauth?client_id=<?php $fb = $app->config('facebook'); echo urlencode($fb['public']);?>&amp;redirect_uri=<?=urlencode($app->config('domain'));?>/?facebook&amp;scope=email'>
                             Login with Facebook
                         </a>
                     </article>

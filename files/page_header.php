@@ -5,7 +5,9 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
     <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
         <meta charset="utf-8">
+<?php if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)): ?>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<?php endif; ?>
         <title>HackThis!!<?=isset($app->page->title) && $app->page->title?' - '.$app->page->title:' - The Hackers Playground';?></title>
         <meta name="description" content="<?=isset($app->page->desc) && $app->page->desc?$app->page->desc:'Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.';?>">
         <meta name="keywords" content="hack this, hackers playground, hacking challenges, hacking forums, hackers, website security, how to secure a website, how to hack, articles, network security">
@@ -28,7 +30,7 @@
 ?>
         <meta property="fb:app_id" content="163820353667417" />
         <meta name='twitter:site' content='@hackthisuk'>
-        <meta name='og:site_name' content='HackThis!!'>
+        <meta property='og:site_name' content='HackThis!!'>
 
         <link href='https://fonts.googleapis.com/css?family=Orbitron|Lato:400,700' rel='stylesheet' type='text/css'>
 

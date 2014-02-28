@@ -1,7 +1,7 @@
 <?php
     if (!defined('_SIDEBAR') || _SIDEBAR):
 ?>
-                <sidebar class="col span_<?=(!$app->user->loggedIn && defined('LANDING_PAGE') && LANDING_PAGE)?'8':'6';?> clr">
+                <div class="sidebar col span_<?=(!$app->user->loggedIn && defined('LANDING_PAGE') && LANDING_PAGE)?'8':'6';?> clr">
 <?php
         if ($app->user->loggedIn) {
             include('widgets/dashboard.php');
@@ -20,7 +20,7 @@
             // include('widgets/register.php');
         }
 ?>
-                </sidebar>
+                </div>
 <?php
     endif;
 ?>
