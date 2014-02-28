@@ -4,7 +4,7 @@
     require('init.php');
 	
 	if ($app->user->loggedIn)
-		die(header('Location: '.$config['domain']));
+		die(header('Location: /'));
 	
     $minifier->add_file('home.scss', 'css');
 
