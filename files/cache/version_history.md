@@ -1,3 +1,8 @@
+## 28-02-2014
+* Fix to stop authorised users from viewing auth.php - DJDavid98
+* W3C validation fixes - DJDavid98
+* Styling fix for invisible select elements - DJDavid98
+
 ## 23-02-2104
 * Code added to handle plural articles on article contributors - DJDavid98
 * Footer grammar fix - kamzhik
