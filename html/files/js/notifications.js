@@ -57,6 +57,8 @@ $(function() {
     /* NOTIFICATIONS */
     // Update notifications
     var lastUpdate = 0;
+    var UPDATE_INTERVAL_ACTIVE = 10000;
+    var UPDATE_INTERVAL_INACTIVE = 30000;
     (function updateTimes() {
         uri = '/files/ajax/notifications.php';
         $.post(uri, {last: lastUpdate}, function(data) {
@@ -97,8 +99,13 @@ $(function() {
             //     }
             // }
         }, 'json');
-
-        setTimeout(updateTimes, 10000);
+        
+        if ($(window).data('isInactive') === true) {
+            // Throttle updates if tab is not focused
+            setTimeout(updateTimes, UPDATE_INTERVAL_INACTIVE);
+        } else {
+            setTimeout(updateTimes, UPDATE_INTERVAL_ACTIVE);
+        }
     })();
 
     var notificationsTmpl = '<tmpl>'+

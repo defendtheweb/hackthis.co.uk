@@ -125,7 +125,14 @@ $(function() {
         timer = setTimeout(function(){slide_carousel(target)}, 5000);
     }
 
-
+    // Listen for when tab is focused, so we can throttle requests
+    $(window).on("blur focus", function(e) {
+        if (e.type === "blur") {
+            $(this).data('isInactive', true);
+        } else {
+            $(this).data('isInactive', false);
+        }
+    });
 });
 
 var thecode = 'getinthere';
