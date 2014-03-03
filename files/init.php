@@ -33,7 +33,7 @@
         die($e->getMessage());
     }
 
-    $minifier = new loader($custom_css, $custom_js);
+    $minifier = new loader($app, $custom_css, $custom_js);
 
     if ($app->user->loggedIn) {
         if (defined('PAGE_PRIV') && !$app->user->{PAGE_PRIV.'_priv'}) {
