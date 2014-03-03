@@ -50,14 +50,14 @@ class loader {
      * files that are specific to portions of the application
      */
     var $default_js = Array( 'utils.js', 'happy.js', 'jquery.tmpl.js', 'iso8601.js', 'jquery.mCustomScrollbar.js',
-                             'jquery.sticky.js', 'jquery.placeholder.min.js', 'jquery.autosize.js', 'jquery.selectmenu.js', 'favcounter.js', 'signet.js', 'jquery.fancybox.js',
-                             'main.js');
+                             'jquery.sticky.js', 'jquery.placeholder.min.js', 'jquery.autosize.js', 'jquery.selectmenu.js',
+                             'favcounter.js',  'jquery.fancybox.js', 'main.js');
     var $default_css = Array('normalize.css', 'icomoon.css', 'responsive-gs-24col.scss', 'h5dp.css', 'hint.css',
                              'fancybox.css', 'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss',
                              'comments.scss');
 
-    function __construct($custom_css=Array(), $custom_js=Array()) {
-        global $app;
+    function __construct($app, $custom_css=Array(), $custom_js=Array()) {
+        $this->app = $app;
         $this->php_base = $app->config('path') . "/html";
 
         $this->custom_css = $custom_css;
@@ -79,7 +79,8 @@ class loader {
             //Build default CSS file
             $path = "{$this->css_base}min/main.css";
             if ($this->generate($path, $this->default_css, 'css')) {
-                $css_includes = "<link rel='stylesheet' href='{$path}' type='text/css'/>\n";
+                $buster = filemtime($this->php_base.$path);
+                $css_includes = "<link rel='stylesheet' href='{$path}?{$buster}' type='text/css'/>\n";
             }
             
             //Build custom CSS file, if required
@@ -90,7 +91,8 @@ class loader {
                 $path = "{$this->css_base}min/extra_{$id}.css";
 
                 if ($this->generate($path, $this->custom_css, 'css')) {
-                    $css_includes .= "        <link rel='stylesheet' href='{$path}' type='text/css'/>\n";
+                    $buster = filemtime($this->php_base.$path);
+                    $css_includes .= "        <link rel='stylesheet' href='{$path}?{$buster}' type='text/css'/>\n";
                 }
             }
 
@@ -99,7 +101,8 @@ class loader {
             //Build default JS file
             $path = "{$this->js_base}min/main.js";
             if ($this->generate($path, $this->default_js, 'js')) {
-                $js_includes = "<script type='text/javascript' src='{$path}'></script>\n";
+                $buster = filemtime($this->php_base.$path);
+                $js_includes = "<script type='text/javascript' src='{$path}?{$buster}'></script>\n";
             }
 
             //Build custom JS, if required
@@ -110,7 +113,8 @@ class loader {
                 $path = "{$this->js_base}min/extra_{$id}.js";
                 
                 if ($this->generate($path, $this->custom_js, 'js')) {
-                    $js_includes .= "        <script type='text/javascript' src='{$path}'></script>\n";
+                    $buster = filemtime($this->php_base.$path);
+                    $js_includes .= "        <script type='text/javascript' src='{$path}?{$buster}'></script>\n";
                 }
             }
 
@@ -135,8 +139,14 @@ class loader {
     }
     
     private function generate($filename, $file_array, $type) {
-        if (!isset($_GET['generate']))
+        $cache_file = preg_replace("/[^A-Za-z0-9_-]/", '', basename($filename));
+        // check how long it has been since the last check
+        if ($this->app->cache->get('loader_'.$cache_file, 30) && !isset($_GET['generate'])) {
             return true;
+        }
+
+        //create cache file so no one else gets this far
+        $this->app->cache->set('loader_'.$cache_file, 'checked');
 
         if ($type == 'js') {
             $base = $this->js_base;
