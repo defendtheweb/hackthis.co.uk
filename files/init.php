@@ -40,6 +40,7 @@
             require_once('error.php');
         }   
 
+        array_push($minifier->custom_js, 'ajax_csrf_token.js');
         array_push($minifier->custom_js, 'notifications.js');
         array_push($minifier->custom_js, 'chat.js');
         array_push($minifier->custom_js, 'autosuggest.js');

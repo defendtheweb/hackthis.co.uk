@@ -5,6 +5,11 @@
     $forum = new forum($app);
     $result = array("status"=>false);
 
+    // Check csrf token
+    if(!isset($_GET['ajax_csrf_token']) || $_GET['ajax_csrf_token'] != $app->user->csrf_basic) {
+        die();
+    }
+
     if (isset($_GET['action'])) {
         if ($_GET['action'] == "watch" && isset($_GET['watch'])) {
             $result['status'] = $forum->watchThread($_GET['thread_id'], $_GET['watch'] === 'true');
