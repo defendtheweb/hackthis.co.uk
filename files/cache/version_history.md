@@ -1,3 +1,8 @@
+## 03-03-2014
+* Added simple cachebuster to all JS and CSS resources
+* Added CSRF protection to forum AJAX requests - verath
+* AJAX throttling added to inactive tabs
+
 ## 28-02-2014
 * Fix to stop authorised users from viewing auth.php - DJDavid98
 * W3C validation fixes - DJDavid98
