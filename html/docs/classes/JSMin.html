@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">2173</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">22</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-709420237"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-709420237" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/SLIRCropper.html">SLIRCropper</a></li>
+                                                    <li class="interface"><a href="../classes/SLIRImageLibrary.html">SLIRImageLibrary</a></li>
+                                                                                                    <li class="class"><a href="../classes/JPEG_ICC.html">JPEG_ICC</a></li>
+                                                    <li class="class"><a href="../classes/SLIRConfigDefaults.html">SLIRConfigDefaults</a></li>
+                                                    <li class="class"><a href="../classes/SLIRInstaller.html">SLIRInstaller</a></li>
+                                                    <li class="class"><a href="../classes/SLIRInstallerResponse.html">SLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/PositiveSLIRInstallerResponse.html">PositiveSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/NegativeSLIRInstallerResponse.html">NegativeSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/FatalSLIRInstallerResponse.html">FatalSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/SLIRImage.html">SLIRImage</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCoordinates.html">SLIRCoordinates</a></li>
+                                                    <li class="class"><a href="../classes/SLIRGDImage.html">SLIRGDImage</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperCentered.html">SLIRCropperCentered</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperTopcentered.html">SLIRCropperTopcentered</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperSmart.html">SLIRCropperSmart</a></li>
+                                                    <li class="class"><a href="../classes/SLIRGarbageCollector.html">SLIRGarbageCollector</a></li>
+                                                    <li class="class"><a href="../classes/SLIRRequest.html">SLIRRequest</a></li>
+                                                    <li class="class"><a href="../classes/SLIRExceptionHandler.html">SLIRExceptionHandler</a></li>
+                                                    <li class="class"><a href="../classes/SLIR.html">SLIR</a></li>
+                                                    <li class="class"><a href="../classes/SLIRConfig.html">SLIRConfig</a></li>
+                                                    <li class="class"><a href="../classes/PHPMailer.html">PHPMailer</a></li>
+                                                    <li class="class"><a href="../classes/phpmailerException.html">phpmailerException</a></li>
+                                                    <li class="class"><a href="../classes/utils.html">utils</a></li>
+                                                    <li class="class"><a href="../classes/profile.html">profile</a></li>
+                                                    <li class="class"><a href="../classes/api.html">api</a></li>
+                                                    <li class="class"><a href="../classes/SMTP.html">SMTP</a></li>
+                                                    <li class="class"><a href="../classes/messages.html">messages</a></li>
+                                                    <li class="class"><a href="../classes/app.html">app</a></li>
+                                                    <li class="class"><a href="../classes/donations.html">donations</a></li>
+                                                    <li class="class"><a href="../classes/loader.html">loader</a></li>
+                                                    <li class="class"><a href="../classes/stats.html">stats</a></li>
+                                                    <li class="class"><a href="../classes/user.html">user</a></li>
+                                                    <li class="class"><a href="../classes/cache.html">cache</a></li>
+                                                    <li class="class"><a href="../classes/notifications.html">notifications</a></li>
+                                                    <li class="class"><a href="../classes/page.html">page</a></li>
+                                                    <li class="class"><a href="../classes/search.html">search</a></li>
+                                                    <li class="class"><a href="../classes/articles.html">articles</a></li>
+                                                    <li class="class"><a href="../classes/forum.html">forum</a></li>
+                                                    <li class="class"><a href="../classes/levels.html">levels</a></li>
+                                                    <li class="class"><a href="../classes/email.html">email</a></li>
+                                                    <li class="class"><a href="../classes/ticker.html">ticker</a></li>
+                                                    <li class="class"><a href="../classes/Slimdown.html">Slimdown</a></li>
+                                                    <li class="class"><a href="../classes/OAuthException.html">OAuthException</a></li>
+                                                    <li class="class"><a href="../classes/OAuthConsumer.html">OAuthConsumer</a></li>
+                                                    <li class="class"><a href="../classes/OAuthToken.html">OAuthToken</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod.html">OAuthSignatureMethod</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_HMAC_SHA1.html">OAuthSignatureMethod_HMAC_SHA1</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_PLAINTEXT.html">OAuthSignatureMethod_PLAINTEXT</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_RSA_SHA1.html">OAuthSignatureMethod_RSA_SHA1</a></li>
+                                                    <li class="class"><a href="../classes/OAuthRequest.html">OAuthRequest</a></li>
+                                                    <li class="class"><a href="../classes/OAuthServer.html">OAuthServer</a></li>
+                                                    <li class="class"><a href="../classes/OAuthDataStore.html">OAuthDataStore</a></li>
+                                                    <li class="class"><a href="../classes/OAuthUtil.html">OAuthUtil</a></li>
+                                                    <li class="class"><a href="../classes/TwitterOAuth.html">TwitterOAuth</a></li>
+                                                    <li class="class"><a href="../classes/Paypal.html">Paypal</a></li>
+                                                    <li class="class"><a href="../classes/ssga.html">ssga</a></li>
+                                                    <li class="class"><a href="../classes/scssc.html">scssc</a></li>
+                                                    <li class="class"><a href="../classes/scss_parser.html">scss_parser</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter.html">scss_formatter</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter_nested.html">scss_formatter_nested</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter_compressed.html">scss_formatter_compressed</a></li>
+                                                    <li class="class"><a href="../classes/scss_server.html">scss_server</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeLexer.html">BBCodeLexer</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeLibrary.html">BBCodeLibrary</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeEmailAddressValidator.html">BBCodeEmailAddressValidator</a></li>
+                                                    <li class="class"><a href="../classes/BBCode.html">BBCode</a></li>
+                                                    <li class="class"><a href="../classes/JSMin.html">JSMin</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedStringException.html">JSMin_UnterminatedStringException</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedCommentException.html">JSMin_UnterminatedCommentException</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedRegExpException.html">JSMin_UnterminatedRegExpException</a></li>
+                                                    <li class="class"><a href="../classes/feed.html">feed</a></li>
+                                                    <li class="class"><a href="../classes/log.html">log</a></li>
+                                                    <li class="class"><a href="../classes/files.html">files</a></li>
+                                                    <li class="class"><a href="../classes/DBTest.html">DBTest</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>JSMin</h1>
+                    <p><em>jsmin.php - PHP implementation of Douglas Crockford&#039;s JSMin.</em></p>
+                    <p>This is a direct port of jsmin.c to PHP with a few PHP performance tweaks and
+modifications to preserve some comments (see below). Also, rather than using
+stdin/stdout, JSMin::minify() accepts a string as input and returns another
+string as output.</p>
+<p>Comments containing IE conditional compilation are preserved, as are multi-line
+comments that begin with "/*!" (for documentation purposes). In the latter case
+newlines are inserted around the comment to enhance readability.</p>
+<p>PHP 5 or higher is required.</p>
+<p>Permission is hereby granted to use this version of the library under the
+same terms as jsmin.c, which has the following license:</p>
+<p>--
+Copyright (c) 2002 Douglas Crockford  (www.crockford.com)</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>The Software shall be used for Good, not Evil.</p>
+<h2>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</h2>
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/JSMin.html#method_minify" class="">minify()</a><br />
+                                                                    <a href="../classes/JSMin.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_min" class="">min()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/JSMin.html#constant_ORD_LF" class="">ORD_LF</a><br />
+                                                                    <a href="../classes/JSMin.html#constant_ORD_SPACE" class="">ORD_SPACE</a><br />
+                                                                    <a href="../classes/JSMin.html#constant_ACTION_KEEP_A" class="">ACTION_KEEP_A</a><br />
+                                                                    <a href="../classes/JSMin.html#constant_ACTION_DELETE_A" class="">ACTION_DELETE_A</a><br />
+                                                                    <a href="../classes/JSMin.html#constant_ACTION_DELETE_A_B" class="">ACTION_DELETE_A_B</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <a href="../classes/JSMin.html#method_action" class="">action()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_isRegexpLiteral" class="">isRegexpLiteral()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_get" class="">get()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_peek" class="">peek()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_isAlphaNum" class="">isAlphaNum()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_singleLineComment" class="">singleLineComment()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_multipleLineComment" class="">multipleLineComment()</a><br />
+                                                                    <a href="../classes/JSMin.html#method_next" class="">next()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/JSMin.html#property_a" class="">$a</a><br />
+                                                                    <a href="../classes/JSMin.html#property_b" class="">$b</a><br />
+                                                                    <a href="../classes/JSMin.html#property_input" class="">$input</a><br />
+                                                                    <a href="../classes/JSMin.html#property_inputIndex" class="">$inputIndex</a><br />
+                                                                    <a href="../classes/JSMin.html#property_inputLength" class="">$inputLength</a><br />
+                                                                    <a href="../classes/JSMin.html#property_lookAhead" class="">$lookAhead</a><br />
+                                                                    <a href="../classes/JSMin.html#property_output" class="">$output</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/files.vendor.class.minijs.php.html"><div class="path-wrapper">files/vendor/class.minijs.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\JSMin</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\JSMin</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                                            <dt>See also</dt>
+                                                                                    <dd><a href="http://code.google.com/p/jsmin-php/"><div class="namespace-wrapper">http://code.google.com/p/jsmin-php/</div></a></dd>
+                                                    
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Ryan Grove <a href="mailto:ryan@wonko.com">ryan@wonko.com</a> (PHP port)</p>
+                                                                    <p>Steve Clay <a href="mailto:steve@mrclay.org">steve@mrclay.org</a> (modifications + cleanup)</p>
+                                                                    <p>Andrea Giammarchi <a href="http://www.3site.eu">http://www.3site.eu</a> (spaceBeforeRegExp)</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                copyright
+                            </th>
+                            <td>
+                                                                    <p>2002 Douglas Crockford <a href="mailto:douglas@crockford.com">douglas@crockford.com</a> (jsmin.c)</p>
+                                                                    <p>2008 Ryan Grove <a href="mailto:ryan@wonko.com">ryan@wonko.com</a> (PHP port)</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                license
+                            </th>
+                            <td>
+                                                                    <p><a href="http://opensource.org/licenses/mit-license.php">http://opensource.org/licenses/mit-license.php</a> MIT License</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ORD_LF" name="constant_ORD_LF" class="anchor"></a>
+            <article id="constant_ORD_LF" class="constant">
+                <h3 class="">ORD_LF</h3>
+                <pre class="signature">ORD_LF</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ORD_SPACE" name="constant_ORD_SPACE" class="anchor"></a>
+            <article id="constant_ORD_SPACE" class="constant">
+                <h3 class="">ORD_SPACE</h3>
+                <pre class="signature">ORD_SPACE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ACTION_KEEP_A" name="constant_ACTION_KEEP_A" class="anchor"></a>
+            <article id="constant_ACTION_KEEP_A" class="constant">
+                <h3 class="">ACTION_KEEP_A</h3>
+                <pre class="signature">ACTION_KEEP_A</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ACTION_DELETE_A" name="constant_ACTION_DELETE_A" class="anchor"></a>
+            <article id="constant_ACTION_DELETE_A" class="constant">
+                <h3 class="">ACTION_DELETE_A</h3>
+                <pre class="signature">ACTION_DELETE_A</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ACTION_DELETE_A_B" name="constant_ACTION_DELETE_A_B" class="anchor"></a>
+            <article id="constant_ACTION_DELETE_A_B" class="constant">
+                <h3 class="">ACTION_DELETE_A_B</h3>
+                <pre class="signature">ACTION_DELETE_A_B</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_a" name="property_a" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$a</h3>
+                <pre class="signature">$a</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_b" name="property_b" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$b</h3>
+                <pre class="signature">$b</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_input" name="property_input" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$input</h3>
+                <pre class="signature">$input</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_inputIndex" name="property_inputIndex" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$inputIndex</h3>
+                <pre class="signature">$inputIndex</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_inputLength" name="property_inputLength" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$inputLength</h3>
+                <pre class="signature">$inputLength</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_lookAhead" name="property_lookAhead" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$lookAhead</h3>
+                <pre class="signature">$lookAhead</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_output" name="property_output" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$output</h3>
+                <pre class="signature">$output</pre>
+                <p><em></em></p>
+                
+
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_minify" name="method_minify" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">minify()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">minify(string <span class="argument">$js</span>) : string</pre>
+                <p><em>Minify Javascript</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$js</td>
+                                <td><p>Javascript to be minified</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct( <span class="argument">$input</span>)</pre>
+                <p><em>Setup process</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$input</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_min" name="method_min" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">min()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">min()</pre>
+                <p><em>Perform minification, return result</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_action" name="method_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">action( <span class="argument">$command</span>)</pre>
+                <p><em>ACTION_KEEP_A = Output A. Copy B to A. Get the next B.</em></p>
+                <p>ACTION_DELETE_A = Copy B to A. Get the next B.
+ACTION_DELETE_A_B = Get the next B.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$command</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isRegexpLiteral" name="method_isRegexpLiteral" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">isRegexpLiteral()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isRegexpLiteral()</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get" name="method_get" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">get()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get()</pre>
+                <p><em>Get next char. Convert ctrl char to space.</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_peek" name="method_peek" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">peek()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">peek()</pre>
+                <p><em>Get next char. If is ctrl character, translate to a space or newline.</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isAlphaNum" name="method_isAlphaNum" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">isAlphaNum()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isAlphaNum( <span class="argument">$c</span>)</pre>
+                <p><em>Is $c a letter, digit, underscore, dollar sign, escape, or non-ASCII?</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$c</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_singleLineComment" name="method_singleLineComment" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">singleLineComment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">singleLineComment()</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_multipleLineComment" name="method_multipleLineComment" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">multipleLineComment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">multipleLineComment()</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_next" name="method_next" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">next()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">next()</pre>
+                <p><em>Get the next character, skipping over comments.</em></p>
+                <p>Some comments may be preserved.</p>
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class.minijs.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/files/vendor/class.minijs.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 14th, 2014 at 21:31.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

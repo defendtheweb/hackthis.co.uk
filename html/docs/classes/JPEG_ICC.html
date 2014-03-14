@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">2173</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">22</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1218904627"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1218904627" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/SLIRCropper.html">SLIRCropper</a></li>
+                                                    <li class="interface"><a href="../classes/SLIRImageLibrary.html">SLIRImageLibrary</a></li>
+                                                                                                    <li class="class"><a href="../classes/JPEG_ICC.html">JPEG_ICC</a></li>
+                                                    <li class="class"><a href="../classes/SLIRConfigDefaults.html">SLIRConfigDefaults</a></li>
+                                                    <li class="class"><a href="../classes/SLIRInstaller.html">SLIRInstaller</a></li>
+                                                    <li class="class"><a href="../classes/SLIRInstallerResponse.html">SLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/PositiveSLIRInstallerResponse.html">PositiveSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/NegativeSLIRInstallerResponse.html">NegativeSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/FatalSLIRInstallerResponse.html">FatalSLIRInstallerResponse</a></li>
+                                                    <li class="class"><a href="../classes/SLIRImage.html">SLIRImage</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCoordinates.html">SLIRCoordinates</a></li>
+                                                    <li class="class"><a href="../classes/SLIRGDImage.html">SLIRGDImage</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperCentered.html">SLIRCropperCentered</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperTopcentered.html">SLIRCropperTopcentered</a></li>
+                                                    <li class="class"><a href="../classes/SLIRCropperSmart.html">SLIRCropperSmart</a></li>
+                                                    <li class="class"><a href="../classes/SLIRGarbageCollector.html">SLIRGarbageCollector</a></li>
+                                                    <li class="class"><a href="../classes/SLIRRequest.html">SLIRRequest</a></li>
+                                                    <li class="class"><a href="../classes/SLIRExceptionHandler.html">SLIRExceptionHandler</a></li>
+                                                    <li class="class"><a href="../classes/SLIR.html">SLIR</a></li>
+                                                    <li class="class"><a href="../classes/SLIRConfig.html">SLIRConfig</a></li>
+                                                    <li class="class"><a href="../classes/PHPMailer.html">PHPMailer</a></li>
+                                                    <li class="class"><a href="../classes/phpmailerException.html">phpmailerException</a></li>
+                                                    <li class="class"><a href="../classes/utils.html">utils</a></li>
+                                                    <li class="class"><a href="../classes/profile.html">profile</a></li>
+                                                    <li class="class"><a href="../classes/api.html">api</a></li>
+                                                    <li class="class"><a href="../classes/SMTP.html">SMTP</a></li>
+                                                    <li class="class"><a href="../classes/messages.html">messages</a></li>
+                                                    <li class="class"><a href="../classes/app.html">app</a></li>
+                                                    <li class="class"><a href="../classes/donations.html">donations</a></li>
+                                                    <li class="class"><a href="../classes/loader.html">loader</a></li>
+                                                    <li class="class"><a href="../classes/stats.html">stats</a></li>
+                                                    <li class="class"><a href="../classes/user.html">user</a></li>
+                                                    <li class="class"><a href="../classes/cache.html">cache</a></li>
+                                                    <li class="class"><a href="../classes/notifications.html">notifications</a></li>
+                                                    <li class="class"><a href="../classes/page.html">page</a></li>
+                                                    <li class="class"><a href="../classes/search.html">search</a></li>
+                                                    <li class="class"><a href="../classes/articles.html">articles</a></li>
+                                                    <li class="class"><a href="../classes/forum.html">forum</a></li>
+                                                    <li class="class"><a href="../classes/levels.html">levels</a></li>
+                                                    <li class="class"><a href="../classes/email.html">email</a></li>
+                                                    <li class="class"><a href="../classes/ticker.html">ticker</a></li>
+                                                    <li class="class"><a href="../classes/Slimdown.html">Slimdown</a></li>
+                                                    <li class="class"><a href="../classes/OAuthException.html">OAuthException</a></li>
+                                                    <li class="class"><a href="../classes/OAuthConsumer.html">OAuthConsumer</a></li>
+                                                    <li class="class"><a href="../classes/OAuthToken.html">OAuthToken</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod.html">OAuthSignatureMethod</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_HMAC_SHA1.html">OAuthSignatureMethod_HMAC_SHA1</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_PLAINTEXT.html">OAuthSignatureMethod_PLAINTEXT</a></li>
+                                                    <li class="class"><a href="../classes/OAuthSignatureMethod_RSA_SHA1.html">OAuthSignatureMethod_RSA_SHA1</a></li>
+                                                    <li class="class"><a href="../classes/OAuthRequest.html">OAuthRequest</a></li>
+                                                    <li class="class"><a href="../classes/OAuthServer.html">OAuthServer</a></li>
+                                                    <li class="class"><a href="../classes/OAuthDataStore.html">OAuthDataStore</a></li>
+                                                    <li class="class"><a href="../classes/OAuthUtil.html">OAuthUtil</a></li>
+                                                    <li class="class"><a href="../classes/TwitterOAuth.html">TwitterOAuth</a></li>
+                                                    <li class="class"><a href="../classes/Paypal.html">Paypal</a></li>
+                                                    <li class="class"><a href="../classes/ssga.html">ssga</a></li>
+                                                    <li class="class"><a href="../classes/scssc.html">scssc</a></li>
+                                                    <li class="class"><a href="../classes/scss_parser.html">scss_parser</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter.html">scss_formatter</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter_nested.html">scss_formatter_nested</a></li>
+                                                    <li class="class"><a href="../classes/scss_formatter_compressed.html">scss_formatter_compressed</a></li>
+                                                    <li class="class"><a href="../classes/scss_server.html">scss_server</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeLexer.html">BBCodeLexer</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeLibrary.html">BBCodeLibrary</a></li>
+                                                    <li class="class"><a href="../classes/BBCodeEmailAddressValidator.html">BBCodeEmailAddressValidator</a></li>
+                                                    <li class="class"><a href="../classes/BBCode.html">BBCode</a></li>
+                                                    <li class="class"><a href="../classes/JSMin.html">JSMin</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedStringException.html">JSMin_UnterminatedStringException</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedCommentException.html">JSMin_UnterminatedCommentException</a></li>
+                                                    <li class="class"><a href="../classes/JSMin_UnterminatedRegExpException.html">JSMin_UnterminatedRegExpException</a></li>
+                                                    <li class="class"><a href="../classes/feed.html">feed</a></li>
+                                                    <li class="class"><a href="../classes/log.html">log</a></li>
+                                                    <li class="class"><a href="../classes/files.html">files</a></li>
+                                                    <li class="class"><a href="../classes/DBTest.html">DBTest</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>JPEG_ICC</h1>
+                    <p><em>PHP JPEG ICC profile manipulator class</em></p>
+                    
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/JPEG_ICC.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_LoadFromJPEG" class="">LoadFromJPEG()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_SaveToJPEG" class="">SaveToJPEG()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_LoadFromICC" class="">LoadFromICC()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_SaveToICC" class="">SaveToICC()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_RemoveFromJPEG" class="">RemoveFromJPEG()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_SetProfile" class="">SetProfile()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_GetProfile" class="">GetProfile()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_HEADER_LEN" class="">ICC_HEADER_LEN</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_MAX_BYTES_IN_MARKER" class="">MAX_BYTES_IN_MARKER</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_MARKER" class="">ICC_MARKER</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_RI_PERCEPTUAL" class="">ICC_RI_PERCEPTUAL</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_RI_RELATIVE_COLORIMETRIC" class="">ICC_RI_RELATIVE_COLORIMETRIC</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_RI_SATURATION" class="">ICC_RI_SATURATION</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#constant_ICC_RI_ABSOLUTE_COLORIMETRIC" class="">ICC_RI_ABSOLUTE_COLORIMETRIC</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/JPEG_ICC.html#method_countChunks" class="">countChunks()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_setRenderingIntent" class="">setRenderingIntent()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getRenderingIntent" class="">getRenderingIntent()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getJPEGSegmentSize" class="">getJPEGSegmentSize()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getJPEGSegmentType" class="">getJPEGSegmentType()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getJPEGSegmentContainsICC" class="">getJPEGSegmentContainsICC()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getJPEGSegmentICCChunkInfo" class="">getJPEGSegmentICCChunkInfo()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getJPEGSegmentICCChunk" class="">getJPEGSegmentICCChunk()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_getChunk" class="">getChunk()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_prepareJPEGProfileData" class="">prepareJPEGProfileData()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_removeProfile" class="">removeProfile()</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#method_insertProfile" class="">insertProfile()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/JPEG_ICC.html#property_icc_profile" class="">$icc_profile</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#property_icc_size" class="">$icc_size</a><br />
+                                                                    <a href="../classes/JPEG_ICC.html#property_icc_chunks" class="">$icc_chunks</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/html.files.vendor.slir.icc.class.jpeg_icc.php.html"><div class="path-wrapper">html/files/vendor/slir/icc/class.jpeg_icc.php</div></a></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\JPEG_ICC</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Richard Toth aka risko (risko@risko.org)</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                version
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                todo
+                            </th>
+                            <td>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_HEADER_LEN" name="constant_ICC_HEADER_LEN" class="anchor"></a>
+            <article id="constant_ICC_HEADER_LEN" class="constant">
+                <h3 class="">ICC_HEADER_LEN</h3>
+                <pre class="signature">ICC_HEADER_LEN</pre>
+                <p><em>ICC header size in APP2 segment</em></p>
+                <p>'ICC_PROFILE' 0x00 chunk_no chunk_cnt</p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MAX_BYTES_IN_MARKER" name="constant_MAX_BYTES_IN_MARKER" class="anchor"></a>
+            <article id="constant_MAX_BYTES_IN_MARKER" class="constant">
+                <h3 class="">MAX_BYTES_IN_MARKER</h3>
+                <pre class="signature">MAX_BYTES_IN_MARKER</pre>
+                <p><em>maximum data len of a JPEG marker</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_MARKER" name="constant_ICC_MARKER" class="anchor"></a>
+            <article id="constant_ICC_MARKER" class="constant">
+                <h3 class="">ICC_MARKER</h3>
+                <pre class="signature">ICC_MARKER</pre>
+                <p><em>ICC header marker</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_RI_PERCEPTUAL" name="constant_ICC_RI_PERCEPTUAL" class="anchor"></a>
+            <article id="constant_ICC_RI_PERCEPTUAL" class="constant">
+                <h3 class="">ICC_RI_PERCEPTUAL</h3>
+                <pre class="signature">ICC_RI_PERCEPTUAL</pre>
+                <p><em>Rendering intent field (Bytes 64 to 67 in ICC profile data)</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_RI_RELATIVE_COLORIMETRIC" name="constant_ICC_RI_RELATIVE_COLORIMETRIC" class="anchor"></a>
+            <article id="constant_ICC_RI_RELATIVE_COLORIMETRIC" class="constant">
+                <h3 class="">ICC_RI_RELATIVE_COLORIMETRIC</h3>
+                <pre class="signature">ICC_RI_RELATIVE_COLORIMETRIC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_RI_SATURATION" name="constant_ICC_RI_SATURATION" class="anchor"></a>
+            <article id="constant_ICC_RI_SATURATION" class="constant">
+                <h3 class="">ICC_RI_SATURATION</h3>
+                <pre class="signature">ICC_RI_SATURATION</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICC_RI_ABSOLUTE_COLORIMETRIC" name="constant_ICC_RI_ABSOLUTE_COLORIMETRIC" class="anchor"></a>
+            <article id="constant_ICC_RI_ABSOLUTE_COLORIMETRIC" class="constant">
+                <h3 class="">ICC_RI_ABSOLUTE_COLORIMETRIC</h3>
+                <pre class="signature">ICC_RI_ABSOLUTE_COLORIMETRIC</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_icc_profile" name="property_icc_profile" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$icc_profile</h3>
+                <pre class="signature">$icc_profile : string</pre>
+                <p><em>ICC profile data</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_icc_size" name="property_icc_size" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$icc_size</h3>
+                <pre class="signature">$icc_size : int</pre>
+                <p><em>ICC profile data size</em></p>
+                
+
+                                <h4>Type</h4>
+                int
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_icc_chunks" name="property_icc_chunks" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$icc_chunks</h3>
+                <pre class="signature">$icc_chunks : int</pre>
+                <p><em>ICC profile data chunks count</em></p>
+                
+
+                                <h4>Type</h4>
+                int
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct()</pre>
+                <p><em>Class contructor</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_LoadFromJPEG" name="method_LoadFromJPEG" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">LoadFromJPEG()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">LoadFromJPEG( <span class="argument">$fname</span>) : bool</pre>
+                <p><em>Load ICC profile from JPEG file.</em></p>
+                <p>Returns true if profile successfully loaded, false otherwise.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$fname</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_SaveToJPEG" name="method_SaveToJPEG" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">SaveToJPEG()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">SaveToJPEG( <span class="argument">$fname</span>)</pre>
+                <p><em></em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$fname</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_LoadFromICC" name="method_LoadFromICC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">LoadFromICC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">LoadFromICC( <span class="argument">$fname</span>)</pre>
+                <p><em>Load profile from ICC file.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$fname</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_SaveToICC" name="method_SaveToICC" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">SaveToICC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">SaveToICC( <span class="argument">$fname</span>,  <span class="argument">$force_overwrite</span>)</pre>
+                <p><em>Save profile to ICC file.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$fname</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$force_overwrite</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_RemoveFromJPEG" name="method_RemoveFromJPEG" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">RemoveFromJPEG()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">RemoveFromJPEG( <span class="argument">$input</span>,  <span class="argument">$output</span>,  <span class="argument">$force_overwrite</span>) : bool</pre>
+                <p><em>Remove profile from JPEG file and save it as a new file.</em></p>
+                <p>Overwriting destination file can be forced</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$input</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$output</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$force_overwrite</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_SetProfile" name="method_SetProfile" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">SetProfile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">SetProfile( <span class="argument">$data</span>)</pre>
+                <p><em>Set profile directly</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$data</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_GetProfile" name="method_GetProfile" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">GetProfile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">GetProfile() : string</pre>
+                <p><em>Get profile directly</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_countChunks" name="method_countChunks" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">countChunks()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">countChunks()</pre>
+                <p><em>Count in how many chunks we need to divide the profile to store it in JPEG APP2 segments</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setRenderingIntent" name="method_setRenderingIntent" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">setRenderingIntent()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setRenderingIntent( <span class="argument">$newRI</span>)</pre>
+                <p><em>Set Rendering Intent of the profile.</em></p>
+                <p>Possilbe values are ICC_RI_PERCEPTUAL, ICC_RI_RELATIVE_COLORIMETRIC, ICC_RI_SATURATION or ICC_RI_ABSOLUTE_COLORIMETRIC.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$newRI</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getRenderingIntent" name="method_getRenderingIntent" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getRenderingIntent()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getRenderingIntent() : int</pre>
+                <p><em>Get value of Rendering Intent field in ICC profile</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    int
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getJPEGSegmentSize" name="method_getJPEGSegmentSize" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getJPEGSegmentSize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getJPEGSegmentSize( <span class="argument">$f</span>,  <span class="argument">$pos</span>) : int</pre>
+                <p><em>Size of JPEG segment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$f</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$pos</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    int
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getJPEGSegmentType" name="method_getJPEGSegmentType" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getJPEGSegmentType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getJPEGSegmentType( <span class="argument">$f</span>,  <span class="argument">$pos</span>) : int</pre>
+                <p><em>Type of JPEG segment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$f</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$pos</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    int
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getJPEGSegmentContainsICC" name="method_getJPEGSegmentContainsICC" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getJPEGSegmentContainsICC()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getJPEGSegmentContainsICC( <span class="argument">$f</span>,  <span class="argument">$pos</span>,  <span class="argument">$size</span>) : bool</pre>
+                <p><em>Check if segment contains ICC profile marker</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$f</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$pos</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$size</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getJPEGSegmentICCChunkInfo" name="method_getJPEGSegmentICCChunkInfo" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getJPEGSegmentICCChunkInfo()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getJPEGSegmentICCChunkInfo( <span class="argument">$f</span>,  <span class="argument">$pos</span>) : array</pre>
+                <p><em>Get ICC segment chunk info</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$f</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$pos</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>{chunk_no, chunk_cnt}</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getJPEGSegmentICCChunk" name="method_getJPEGSegmentICCChunk" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getJPEGSegmentICCChunk()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getJPEGSegmentICCChunk( <span class="argument">$f</span>,  <span class="argument">$pos</span>) : string</pre>
+                <p><em>Returns chunk of ICC profile data from segment.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$f</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$pos</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getChunk" name="method_getChunk" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getChunk()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getChunk( <span class="argument">$chunk_no</span>) : string</pre>
+                <p><em>Get data of given chunk</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$chunk_no</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_prepareJPEGProfileData" name="method_prepareJPEGProfileData" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">prepareJPEGProfileData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">prepareJPEGProfileData()</pre>
+                <p><em></em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_removeProfile" name="method_removeProfile" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">removeProfile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">removeProfile( <span class="argument">$jpeg_data</span>) : bool</pre>
+                <p><em>Removes profile from JPEG data</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$jpeg_data</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_insertProfile" name="method_insertProfile" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">insertProfile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">insertProfile( <span class="argument">$jpeg_data</span>) : bool</pre>
+                <p><em>Inserts profile to JPEG data.</em></p>
+                <p>Inserts profile immediately after SOI section</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$jpeg_data</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    bool
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class.jpeg_icc.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/html/files/vendor/slir/icc/class.jpeg_icc.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 14th, 2014 at 21:31.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

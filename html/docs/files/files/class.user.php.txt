@@ -1,33 +1,9 @@
 <?php
-    /**
-     * Member based functions
-     * @author HackThis!!
-     * @todo Check if all functions need to be public
-     */
-
     class user {
-        /**
-         * Reference to global application object
-         */
         private $app;
-        /**
-         * Tracks if current user is logged in
-         */
         public $loggedIn = false;
-        /**
-         * Tracks if current user has any admin privileges
-         */
         public $admin = false;
 
-        /**
-         * Constructor
-         *
-         * Builds object and performs certain tasks based on GET/POST parameters; including but not limited to registering, logging in and logging out users.
-         *
-         * @param app $app Global application object
-         * 
-         * @return void
-         */
         public function __construct($app) {
             $this->app = $app;
             $app->user = $this;
@@ -72,13 +48,6 @@
             }
         }
 
-        /**
-         * Loads all user data into object
-         *
-         * Also handles checking medals scores/consecutive logins/karma
-         *
-         * @todo Split functionality into separate functions e.g. medal checks
-         */
         private function get_details() {
             $this->app->stats->users_activity($this);
 
@@ -202,9 +171,6 @@
             $this->csrf_basic = $_SESSION['csrf_basic'];
         }
 
-        /**
-         * Generate random salt for use in hashes
-         */
         private function salt() {
             $rand = array();
             for ($i = 0; $i < 8; $i += 1) {
@@ -710,7 +676,8 @@
          * @param string $type Data type which much match a set data type in the database schema
          * @param string $value The value to be checked
          * @param boolean $interval Should the given token be checked against its life span
-         * @param int $uid The corresponding user to check against. If 0 then the current logged in users id is used, if greater than 0 it is taken as the users id. If NULL is used then the token is checked against all users
+         * @param int $uid The corresponding user to check against. If 0 then the current logged in users id is used,
+         *                 if greater than 0 it is taken as the users id. If NULL is used then the token is checked against all users
          *
          * @return int If correct the users id is returned else false
          */

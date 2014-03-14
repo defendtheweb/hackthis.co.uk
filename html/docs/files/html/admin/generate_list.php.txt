@@ -1,0 +1,50 @@
+<?php
+    $custom_css = array('articles.scss');
+    $page_title = 'Admin - Articles';
+    define("PAGE_PRIV", "admin_pub");
+
+    require_once('header.php');
+
+    $sql = "select users.user_id, users.username, users.email, score from users_activity inner join users on users.user_id = users_activity.user_id where last_active > (NOW() - INTERVAL 6 month) AND last_active < (NOW() - INTERVAL 1 month);";
+    $st = $app->db->prepare($sql);
+    $st->execute();
+    $result = $st->fetchAll();
+
+    foreach($result AS &$user) {
+        // get unread PM
+        $st = $app->db->prepare("SELECT count(pm_users.pm_id) as count
+            FROM pm_users
+            INNER JOIN pm_messages
+            ON message_id = (SELECT message_id FROM pm_messages WHERE pm_id = pm_users.pm_id AND (seen IS NULL || time > seen) ORDER BY time DESC LIMIT 1)
+            WHERE pm_users.user_id = :user_id");
+        $st->execute(array(':user_id' => $user->user_id));
+        $user->unread = $st->fetch()->count;
+
+        // get notifications
+        $st = $app->db->prepare("SELECT count(notification_id) AS count
+            FROM users_notifications
+            WHERE users_notifications.user_id = :user_id AND seen = 0 AND `type` != 'friend'");
+        $st->execute(array(':user_id' => $user->user_id));
+        $user->notifications = $st->fetch()->count;
+
+        // get notifications
+        $st = $app->db->prepare("SELECT count(notification_id) AS count
+            FROM users_notifications
+            WHERE users_notifications.user_id = :user_id AND seen = 0 AND `type` = 'friend'");
+        $st->execute(array(':user_id' => $user->user_id));
+        $user->friends = $st->fetch()->count;
+
+        // get percent
+        if ($user->score >= $app->max_score)
+            $user->score_perc = 100;
+        else
+            $user->score_perc = ceil($user->score/$app->max_score * 100);
+    }
+
+    $result = json_encode($result);
+    $app->log->add('email_list', $result);
+
+    echo "Done";
+
+	require_once('footer.php');
+?>

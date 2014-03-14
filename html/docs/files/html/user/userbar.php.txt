@@ -1,0 +1,31 @@
+<?php
+// Create objects
+$image = new Imagick('../files/images/userbar_old.png');
+ 
+// Watermark text
+ 
+// Create a new drawing palette
+$draw = new ImagickDraw();
+ 
+// Set font properties
+$draw->setFont('../files/fonts/visitor.ttf');
+$draw->setFontSize(10);
+$draw->setFillColor('white');
+
+$text = "";
+if (isset($_GET['user'])) {
+    $text = $_GET['user'];
+}
+
+// Position text at the bottom-right of the image
+$draw->setGravity(Imagick::GRAVITY_EAST);
+$image->annotateImage($draw, 8, 0, 0, $text);
+ 
+// Set output image format
+$image->setImageFormat('png');
+ 
+// Output the new image
+header('Content-type: image/png');
+echo $image;
+
+?>

@@ -1,0 +1,40 @@
+<?php
+    define("PAGE_PUBLIC", true);
+    $page_title = 'Unsubscribe';
+    require('init.php');
+	
+	if ($app->user->loggedIn)
+		die(header('Location: /'));
+	
+    $minifier->add_file('home.scss', 'css');
+
+    require('header.php');
+
+    /*
+     * Status
+     * 0: invalid hash
+     * 1: correct hash
+     * 2: unsubscribed
+     * 3: error
+     */
+    $status = 0;
+
+    if (isset($_GET['hash']) && isset($_GET['email'])) {
+    	// get user id from hash
+    	$tmpid = $app->user->checkRequest($_GET['hash'], false);
+
+    	// check if user id matches 
+    	echo $tmpid;
+    }
+?>
+    <section class='row clr home'>
+        <div class='col span_20 home-module center'>
+        	<h4>Are you sure you want to unsubscribe from <strong>all</strong> future email notifications?</h4><Br/>
+        	<a href='#' class='button'>Unsubscribe</a>
+        	<br/><br/>
+        </div>
+    </section>
+<?php
+    require('footer.php');
+?>
+

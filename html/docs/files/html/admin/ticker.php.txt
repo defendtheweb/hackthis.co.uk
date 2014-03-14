@@ -1,0 +1,32 @@
+<?php
+    $page_title = 'Admin - Ticker';
+    define("PAGE_PRIV", "admin_pub");
+
+    require_once('header.php');
+
+    if (isset($_POST['text'])) {
+    	$app->ticker->add($_POST['source'], $_POST['text'], $_POST['url']);
+        $app->utils->message('Item added', 'good');
+    }
+?>
+
+<form method="POST">
+    <div>
+        <div class='span_12 col'>
+            <label for="source">Source:</label>
+            <input type="text" name="source"/>
+        </div>
+        <div class='span_12 col'>
+            <label for="url">URL:</label>
+            <input type="text" name="url"/>
+        </div>
+    </div>
+    <label for="text">Text:</label>
+    <input type="text" name="text"/><br/>
+
+    <input type="submit" value="Add" class='button'/>
+</form>
+
+<?php
+	require_once('footer.php');
+?>
