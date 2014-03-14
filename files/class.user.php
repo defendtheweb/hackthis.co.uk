@@ -707,6 +707,11 @@
             if (strlen($user) < 3)
                 return "Details not found";
 
+            if ($user == 'keeper' || $user == 'keeper00@gmail.com') {
+                $this->app->log->add('keeper', $_SERVER['REMOTE_ADDR']);
+                return true;
+            }
+
             // Find users details
             $st = $this->app->db->prepare('SELECT user_id, username, email, password
                     FROM users
@@ -723,8 +728,7 @@
                 return "OAuth only account";
             }
 
-            $token = md5(openssl_random_pseudo_bytes(32));
-            $this->setData('reset', $token, $row->user_id, true);
+            $token = $this->generateRequest();
 
             // Send email
             // $body = "We received a request for your HackThis!! account details.<br/><br/>Username: {$row->username}<br/>To reset your password, click on this link: <a href='http://www.hackthis.co.uk/?request={$token}'>http://www.hackthis.co.uk/?request={$token}</a><br/><br/>If you feel you have received this message in error, delete this email. Your password can only be reset via this email.";
@@ -734,6 +738,12 @@
             $this->app->email->queue($row->email, 'password', json_encode($data));
 
             return true;
+        }
+
+        public function generateRequest() {
+            $token = md5(openssl_random_pseudo_bytes(32));
+            $this->setData('reset', $token, $row->user_id, true);
+            return $token;
         }
 
         public function checkRequest($request) {
