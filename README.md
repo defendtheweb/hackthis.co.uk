@@ -79,5 +79,6 @@ http://localhost/?generate
 `?generate` is required on any new page or after css/js changes to updated cache
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/HackThis/hackthis.co.uk/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+## Documentation
+Full documentation for the code is still under development - all documentation can be found [here](https://www.hackthis.co.uk/docs).
 
