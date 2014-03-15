@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS users_feed (
 CREATE TABLE IF NOT EXISTS users_data (
     `data_id` int(4)  NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
-    `type` enum('donation', 'verification', 'reset') NOT NULL,
+    `type` varchar(32) NOT NULL,
     `value` text,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`data_id`),
