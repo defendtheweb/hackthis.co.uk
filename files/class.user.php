@@ -1,7 +1,8 @@
 <?php
     /**
      * Member based functions
-     * @author HackThis!!
+     *
+     * @author HackThis!! <admin@hackthis.co.uk>
      * @todo Check if all functions need to be public
      */
 
@@ -690,6 +691,14 @@
             $this->awardMedal('Cheese');
         }
 
+        /**
+         * Store key=>value pair of data for a given user
+         * @param string  $type    Key
+         * @param string  $value   Value
+         * @param int     $uid     User id, if null the current users id will be used
+         * @param boolean $replace If an existing value for the given key is found for this user should it be replaced
+         * @return boolean Successes of insert
+         */
         public function setData($type, $value, $uid = null, $replace = false) {
             if (!$uid)
                 $uid = $this->uid;
@@ -719,8 +728,10 @@
                 $uid = $this->uid;
 
             if (!$uid) {
-                $sql = 'SELECT user_id
+                $sql = 'SELECT users.user_id, users.username, users.email
                         FROM users_data
+                        INNER JOIN users
+                        ON users.user_id = users_data.user_id
                         WHERE `type` = :type AND `value` = :value';
                 if ($interval)
                     $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
@@ -730,9 +741,11 @@
                 $st->execute(array(':type' => $type, ':value' => $value));
                 $row = $st->fetch();
             } else {
-                $sql = 'SELECT user_id
+                $sql = 'SELECT users.user_id, users.username, users.email
                         FROM users_data
-                        WHERE `type` = :type AND `value` = :value AND user_id = :uid';
+                        INNER JOIN users
+                        ON users.user_id = users_data.user_id
+                        WHERE `type` = :type AND `value` = :value AND users.user_id = :uid';
                 if ($interval)
                     $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
                 $sql .= ' LIMIT 1';
@@ -742,8 +755,28 @@
                 $row = $st->fetch();
             }
 
-            return $row;
+            if ($row) {
+                return $row;
+            } else {
+                return false;
+            }
         }
+
+        /**
+         * Delete all data for a given key and user
+         * @param  int $type Key
+         * @param  int $uid  User id, if null the current users id will be used
+         * 
+         * @return boolean Successes of delete
+         */
+        public function removeData($type, $uid = null) {
+            if (!$uid)
+                $uid = $this->uid;
+
+            $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND `type` = :type');
+            return $st->execute(array(':uid' => $uid, ':type' => $type));
+        }
+
 
         public function request($user) {
             if (!$this->app->checkCSRFKey("requestDetails", $_POST['token']))
@@ -812,34 +845,51 @@
             $status = $st->execute(array(':uid' => $uid, ':hash' => $hash));
 
             if ($status) {
-                $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND `type` = "reset"');
-                $st->execute(array(':uid' => $uid));      
+                $this->removeData('reset', $uid);
                 return true;
             } else {
                 return "Something went wrong";
             }
         }
 
-        public function changeNotificationSettings() {
-            if (isset($_POST['pm'])) {
-                $pm = ($_POST['pm'] == '1')?1:0;
-            } else return false;
+        /**
+         * Update a users email notification settings
+         * @param  integer $uid         User id, if 0 then the current users id will be used
+         * @param  boolean $unsubscribe Unsubscribe from all emails or use POST variables
+         * @return boolean              Successes of update
+         */
+        public function changeNotificationSettings($uid = 0, $unsubscribe = false) {
+            if ($uid === 0) {
+                $uid = $this->uid;
+            }
 
-            if (isset($_POST['friend'])) {
-                $friend = ($_POST['friend'] == '1')?1:0;
-            } else return false;
+            if ($unsubscribe) {
+                $pm = 0;
+                $friend = 0;
+                $forum_reply = 0;
+                $forum_mention = 0;
+                $news = 0;
+            } else {
+                if (isset($_POST['pm'])) {
+                    $pm = ($_POST['pm'] == '1')?1:0;
+                } else return false;
 
-            if (isset($_POST['forum_reply'])) {
-                $forum_reply = ($_POST['forum_reply'] == '1')?1:0;
-            } else return false;
+                if (isset($_POST['friend'])) {
+                    $friend = ($_POST['friend'] == '1')?1:0;
+                } else return false;
 
-            if (isset($_POST['forum_mention'])) {
-                $forum_mention = ($_POST['forum_mention'] == '1')?1:0;
-            } else return false;
+                if (isset($_POST['forum_reply'])) {
+                    $forum_reply = ($_POST['forum_reply'] == '1')?1:0;
+                } else return false;
 
-            if (isset($_POST['news'])) {
-                $news = ($_POST['news'] == '1')?1:0;
-            } else return false;
+                if (isset($_POST['forum_mention'])) {
+                    $forum_mention = ($_POST['forum_mention'] == '1')?1:0;
+                } else return false;
+
+                if (isset($_POST['news'])) {
+                    $news = ($_POST['news'] == '1')?1:0;
+                } else return false;
+            }
 
             $st = $this->app->db->prepare('INSERT INTO users_settings
                     (`user_id`, `email_pm`, `email_forum_reply`, `email_forum_mention`, `email_friend`, `email_news`)
@@ -848,7 +898,8 @@
                     ON DUPLICATE KEY UPDATE
                     `email_pm` = :pm, `email_forum_reply` = :forum_reply, `email_forum_mention` = :forum_mention
                     , `email_friend` = :friend, `email_news` = :news');
-            return $st->execute(array(':uid' => $this->uid, ':pm' => $pm, ':forum_reply' => $forum_reply, ':forum_mention' => $forum_mention, ':friend' => $friend, ':news' => $news));
+
+            return $st->execute(array(':uid' => $uid, ':pm' => $pm, ':forum_reply' => $forum_reply, ':forum_mention' => $forum_mention, ':friend' => $friend, ':news' => $news));
         }
 
         public function sendVerficationEmail($new=false) {
