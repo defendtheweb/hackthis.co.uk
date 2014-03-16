@@ -73,14 +73,28 @@
             return $this->config[$key];
         }
 
-        private function connectDB($config) {
+        /**
+         * Create database connection
+         *
+         * @param object $config Databse connection config
+         * @param boolean $debug Should the connection ignore errors or throw exceptions
+         *
+         * @return void
+         *
+         * @todo Create site config option that is passed in to the debug param
+         */
+        private function connectDB($config, $debug=false) {
             // Connect to database
             try {
                 $dsn = "{$config['driver']}:host={$config['host']}";
                 $dsn .= (!empty($config['port'])) ? ';port=' . $config['port'] : '';
                 $dsn .= ";dbname={$config['database']}";
                 $this->db = new PDO($dsn, $config['username'], $config['password']);
-                // $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
+                if ($debug) {
+                    $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                }
+
                 $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
                 $this->db->setAttribute(PDO::MYSQL_ATTR_FOUND_ROWS, true);
             } catch(PDOException $e) {
@@ -88,6 +102,11 @@
             }
         }
 
+        /**
+         * Get the maximum score any user can obtain. This value is cached and recalculated every 1 hour
+         *
+         * @return int Maximum score
+         */
         private function getMaxScore() {
             $score = $this->cache->get('maxscore', 60);
 
