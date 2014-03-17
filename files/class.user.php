@@ -712,13 +712,47 @@
             return $st->execute(array(':uid' => $uid, ':type' => $type, ':value' => $value));
         }
 
+        /**
+         * Get key=>value pair of data for a given user
+         *
+         * @param string $type Data type which much match a set data type in the database schema
+         * @param int $uid The corresponding user to check against. If 0 then the current logged in users id is used, if greater than 0 it is taken as the users id
+         * @param boolean $interval Should the given token be checked against its life span (10 minutes)
+         *
+         * @return string Value of entry, if exists
+         */
+        public function getData($type, $uid=0,  $interval=false) {
+            if ($uid === 0) {
+                $uid = $this->uid;
+            }
+
+            if ($uid) {
+                $sql = 'SELECT `value`
+                        FROM users_data
+                        WHERE `type` = :type AND users.user_id = :uid';
+                if ($interval)
+                    $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
+                $sql .= ' LIMIT 1';
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':type' => $type, ':uid' => $uid));
+                $row = $st->fetch();
+            }
+
+            if ($row) {
+                return $row->value;
+            } else {
+               return false;
+            }
+        }
+
 
         /**
          * Validates if the supplied user data token is valid
          *
          * @param string $type Data type which much match a set data type in the database schema
          * @param string $value The value to be checked
-         * @param boolean $interval Should the given token be checked against its life span
+         * @param boolean $interval Should the given token be checked against its life span (10 minutes)
          * @param int $uid The corresponding user to check against. If 0 then the current logged in users id is used, if greater than 0 it is taken as the users id. If NULL is used then the token is checked against all users
          *
          * @return int If correct the users id is returned else false
@@ -751,7 +785,7 @@
                 $sql .= ' LIMIT 1';
 
                 $st = $this->app->db->prepare($sql);
-                $st->execute(array(':type' => $type, ':uid' => $this->uid, ':value' => $value));
+                $st->execute(array(':type' => $type, ':uid' => $uid, ':value' => $value));
                 $row = $st->fetch();
             }
 
