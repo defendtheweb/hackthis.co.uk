@@ -1,4 +1,9 @@
 <?php
+    /**
+     * Handles adding, queueing and sending emails.
+     *
+     * However it does not send emails by itself, a seperate cron based PHP file 'send_emails.php' does this.
+     */
     class email {
         private $app;
         private $types = array('password', 'ticket_reply', 'forum_mention', 'forum_reply', 'friend', 'pm', 'email_confirmation', 'digest');
@@ -7,6 +12,14 @@
             $this->app = $app;
         }
 
+        /**
+         * Add an email to the queue
+         * @param  string  $recipient Email address of recipient
+         * @param  string  $type      Type of email as defined by the DB schema. Each type relates to a different template/content
+         * @param  JSON    $data      Object containing information to be used to fill in email template
+         * @param  boolean $uid       User id of recipient, if applicable. Used for notification settings
+         * @return boolean            Success of queue
+         */
         public function queue($recipient, $type, $data, $uid=false) {
             // Check type and data
             if (!in_array($type, $this->types)) {
@@ -29,6 +42,10 @@
             }
         }
 
+        /**
+         * Fetch the next email from the queue
+         * @return object Email data
+         */
         public function getNext() {
             $st = $this->app->db->prepare("SELECT email_queue.*, users.username
                      FROM email_queue
@@ -62,6 +79,15 @@
                                 $this->updateStatus($email->email_id, 2);
                                 return $this->getNext();
                         }
+                    }
+
+                    // Load the users unsubscribe token
+                    $email->unsubscribe = $this->app->user->getData('unsubscribe', $email->user_id);
+
+                    if (!$email->unsubscribe) {
+                        // Create new token
+                        $email->unsubscribe = md5(openssl_random_pseudo_bytes(32));
+                        $this->app->user->setData('unsubscribe', $email->unsubscribe, $email->user_id, true);
                     }
                 }
 

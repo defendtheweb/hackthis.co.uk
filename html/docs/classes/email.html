@@ -113,7 +113,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">571</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">564</span>
                                 </a>
                             </li>
                             <li>
@@ -138,10 +138,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1913880604"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-802910639"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1913880604" class="accordion-body collapse in">
+            <div id="namespace-802910639" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -185,8 +185,8 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\</small>email</h1>
-                    <p><em></em></p>
-                    
+                    <p><em>Handles adding, queueing and sending emails.</em></p>
+                    <p>However it does not send emails by itself, a seperate cron based PHP file 'send_emails.php' does this.</p>
 
                     <section id="summary">
                         <h2>Summary</h2>
@@ -387,36 +387,39 @@
             <article class="method">
                 <h3 class="public ">queue()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">queue( <span class="argument">$recipient</span>,  <span class="argument">$type</span>,  <span class="argument">$data</span>,  <span class="argument">$uid</span>)</pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">queue(string <span class="argument">$recipient</span>, string <span class="argument">$type</span>, \JSON <span class="argument">$data</span>, boolean <span class="argument">$uid</span>) : boolean</pre>
+                <p><em>Add an email to the queue</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$recipient</td>
-                                <td></td>
+                                <td><p>Email address of recipient</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>string</td>
                                 <td>$type</td>
-                                <td></td>
+                                <td><p>Type of email as defined by the DB schema. Each type relates to a different template/content</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>\JSON</td>
                                 <td>$data</td>
-                                <td></td>
+                                <td><p>Object containing information to be used to fill in email template</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>boolean</td>
                                 <td>$uid</td>
-                                <td></td>
+                                <td><p>User id of recipient, if applicable. Used for notification settings</p></td>
                             </tr>
                                             </table>
                 
                 
-                            </article>
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Success of queue</p>
+                                                </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -441,13 +444,16 @@
             <article class="method">
                 <h3 class="public ">getNext()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">getNext()</pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">getNext() : object</pre>
+                <p><em>Fetch the next email from the queue</em></p>
                 
 
                 
                 
-                            </article>
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>Email data</p>
+                                                </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -598,7 +604,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 16th, 2014 at 12:16.
+                    on March 17th, 2014 at 21:53.
                 </section>
             </section>
         </section>

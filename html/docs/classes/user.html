@@ -113,7 +113,7 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">571</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">564</span>
                                 </a>
                             </li>
                             <li>
@@ -138,10 +138,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1916419177"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1075533037"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1916419177" class="accordion-body collapse in">
+            <div id="namespace-1075533037" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -215,6 +215,7 @@
                                                                     <a href="../classes/user.html#method_update" class="">update()</a><br />
                                                                     <a href="../classes/user.html#method_setImagePath" class="">setImagePath()</a><br />
                                                                     <a href="../classes/user.html#method_setData" class="">setData()</a><br />
+                                                                    <a href="../classes/user.html#method_getData" class="">getData()</a><br />
                                                                     <a href="../classes/user.html#method_checkData" class="">checkData()</a><br />
                                                                     <a href="../classes/user.html#method_removeData" class="">removeData()</a><br />
                                                                     <a href="../classes/user.html#method_request" class="">request()</a><br />
@@ -883,6 +884,58 @@
 
                                     <div class="row-fluid">
         <div class="span8 content class">
+            <a id="method_getData" name="method_getData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getData(string <span class="argument">$type</span>, int <span class="argument">$uid</span>, boolean <span class="argument">$interval</span>) : string</pre>
+                <p><em>Get key=&gt;value pair of data for a given user</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$type</td>
+                                <td><p>Data type which much match a set data type in the database schema</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>int</td>
+                                <td>$uid</td>
+                                <td><p>The corresponding user to check against. If 0 then the current logged in users id is used, if greater than 0 it is taken as the users id</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$interval</td>
+                                <td><p>Should the given token be checked against its life span (10 minutes)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Value of entry, if exists</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
             <a id="method_checkData" name="method_checkData" class="anchor"></a>
             <article class="method">
                 <h3 class="public ">checkData()</h3>
@@ -906,7 +959,7 @@
                                                     <tr>
                                 <td>boolean</td>
                                 <td>$interval</td>
-                                <td><p>Should the given token be checked against its life span</p></td>
+                                <td><p>Should the given token be checked against its life span (10 minutes)</p></td>
                             </tr>
                                                     <tr>
                                 <td>int</td>
@@ -1514,7 +1567,7 @@
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 16th, 2014 at 12:16.
+                    on March 17th, 2014 at 21:53.
                 </section>
             </section>
         </section>
