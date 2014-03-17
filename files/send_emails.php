@@ -94,15 +94,18 @@
             } else {
                 return false;
             }
-
-            if (isset($email->unsubscribe)) {
-                $vars['{email}'] = $email->recipient;
-                $vars['{unsubscribe}'] = $email->unsubscribe;
-            }
             
             $content = str_replace(array_keys($vars), $vars, $content);
 
             $email->body = str_replace('{content}', $content, $template);
+
+            // Update unsubscribe link
+            if (isset($email->unsubscribe)) {
+                $var = array();
+                $vars['{email}'] = $email->recipient;
+                $vars['{unsubscribe}'] = $email->unsubscribe;
+                $email->body = str_replace(array_keys($vars), $vars, $content);
+            }
 
             $app->email->send($email);
         }
