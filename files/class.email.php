@@ -82,12 +82,12 @@
                     }
 
                     // Load the users unsubscribe token
-                    $email->unsubscribe = $this->app->getData('unsubscribe', $email->user_id);
+                    $email->unsubscribe = $this->app->user->getData('unsubscribe', $email->user_id);
 
                     if (!$email->unsubscribe) {
                         // Create new token
                         $email->unsubscribe = md5(openssl_random_pseudo_bytes(32));
-                        $this->setData('unsubscribe', $email->unsubscribe, $email->user_id, true);
+                        $this->app->user->setData('unsubscribe', $email->unsubscribe, $email->user_id, true);
                     }
                 }
 
