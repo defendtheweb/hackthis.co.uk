@@ -104,7 +104,7 @@
                 $var = array();
                 $vars['{email}'] = $email->recipient;
                 $vars['{unsubscribe}'] = $email->unsubscribe;
-                $email->body = str_replace(array_keys($vars), $vars, $content);
+                $email->body = str_replace(array_keys($vars), $vars, $email->body);
             }
 
             $app->email->send($email);
