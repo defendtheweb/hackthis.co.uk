@@ -3,6 +3,7 @@
     define("LANDING_PAGE", true);
 
     require_once('init.php');
+    $minifier->add_file('home.scss', 'css');
 
     // Set canonical link
     $app->page->canonical = "https://www.hackthis.co.uk";
@@ -21,7 +22,7 @@
         die();
     }
 
-    if ($app->user->loggedIn || !$app->user->loggedIn) {
+    if ($app->user->loggedIn) {
         require_once("home.php");
     } else {
         define("_SIDEBAR", false);
@@ -54,7 +55,7 @@
                 <div class='row landing'>
                     <div class='col span_15'>
                         <section class='row fluid features'>
-                            <div class='clr'>
+                            <a href='/levels' class='clr'>
                                 <div class='col span_5'>
                                     <div class='circle'><i class='icon-flag'></i></div>
                                 </div>
@@ -64,8 +65,8 @@
                                         <strong class='white'>Test your skills with 40+ hacking levels, covering all aspects of security.</strong><br/>Each level is hand coded with help available at every stage.
                                     </span>
                                 </div>
-                            </div>
-                            <div class='clr'>
+                            </a>
+                            <a href='/forum' class='clr'>
                                 <div class='col span_5'>
                                     <div class='circle'><i class='icon-domain2'></i></div>
                                 </div>
@@ -76,8 +77,8 @@
                                         Need a hint? Want to talk about the latest cracking software tool?
                                     </span>
                                 </div>
-                            </div>
-                            <div class='clr'>
+                            </a>
+                            <a href='/articles' class='clr'>
                                 <div class='col span_5'>
                                     <div class='circle'><i class='icon-insertpictureleft'></i></div>
                                 </div>
@@ -88,19 +89,10 @@
                                         Learn from our collection of articles covering all aspects of security and technology.
                                     </span>
                                 </div>
-                            </div>
+                            </a>
                         </section>
-                        <div class="center" style="border-top: 1px solid #141414; padding-top: 25px; margin-top: 25px;">
-                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                            <!-- landing page -->
-                            <ins class="adsbygoogle"
-                                 style="display:inline-block;width:336px;height:280px"
-                                 data-ad-client="ca-pub-1120564121036240"
-                                 data-ad-slot="7541400418"></ins>
-                            <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                            </script>
-                        </div>
+
+                        <?php include('elements/home_articles.php'); ?>
                     </div>
 
 <?php

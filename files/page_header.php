@@ -63,12 +63,13 @@
 <?php
         endif;    
 
+        if ($app->user->loggedIn || !(defined('LANDING_PAGE') && LANDING_PAGE)):
 ?>
     <div class="page-wrap">
 <?php
-        if (isset($currentLevel) && isset($currentLevel->data['code']->pos2)) {
-            echo '        '.$currentLevel->data['code']->pos2 . "\n";
-        }
+            if (isset($currentLevel) && isset($currentLevel->data['code']->pos2)) {
+                echo '        '.$currentLevel->data['code']->pos2 . "\n";
+            }
 ?>
         <div id="header-wrap" class="container clr">
             <header>
@@ -76,7 +77,7 @@
                     <a href='/'>&nbsp;</a>
                 </div>
 <?php
-        if (!$app->user->loggedIn || !$app->user->donator):
+            if (!$app->user->loggedIn || !$app->user->donator):
 ?>
                 <div class="col span_13 advert">
                     <a href='http://www.nullsecurity.net' taget='_blank' class='hide-external'>
@@ -84,18 +85,23 @@
                     </a>
                 </div>
 <?php
-        endif;
+            endif;
 ?>
             </header>
         </div>
 <?php
             include('elements/navigation.php');
+        else:
+?>
+    <div class="page-wrap">
+<?php
+        endif;
     endif;
 
     //Calculate document width
-    if (!$app->user->loggedIn && defined('LANDING_PAGE') && LANDING_PAGE)
+/*    if (!$app->user->loggedIn && defined('LANDING_PAGE') && LANDING_PAGE)
         $span = '16';
-    else if (!defined('_SIDEBAR') || _SIDEBAR)
+    else */ if (!defined('_SIDEBAR') || _SIDEBAR)
         $span = '18';
     else
         $span = '24';

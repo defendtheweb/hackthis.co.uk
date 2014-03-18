@@ -47,8 +47,7 @@ section.features {
         background: darken($green, 10%);
         @include border-radius(50%);       
         padding: 15px;
-        cursor: default;
-        @include transition(background-color, 200ms, ease-in-out);
+        @include transition(background-color, 400ms, ease-in-out);
         margin: 5px 0 13px;
         transform: scale(0);
     }
@@ -60,7 +59,11 @@ section.features {
         color: $white;
     }
 
-    > div:hover .circle {
+    > a {
+        color: $text;
+    }
+
+    > a:hover .circle {
         background: $green;
     }
 }

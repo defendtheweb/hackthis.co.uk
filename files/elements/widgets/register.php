@@ -1,5 +1,5 @@
                     <article class="widget widget-register">
-                        <h1>Registration</h1>
+                        <!-- <h1>Registration</h1> -->
 <?php
     if (isset($app->user->reg_error)):
 ?>
