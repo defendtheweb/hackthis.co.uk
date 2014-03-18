@@ -81,6 +81,10 @@ section.features {
     }
 }
 
+.home-articles .thumbnail.img {
+    height: 148px !important;
+}
+
 @media (max-width: 550px) {
     .header img {
         max-width: 90%;
