@@ -79,15 +79,9 @@
         if (!$app->user->loggedIn || !$app->user->donator):
 ?>
                 <div class="col span_13 advert">
-                    <script type="text/javascript"><!--
-                        google_ad_client = "ca-pub-1120564121036240";
-                        /* Header */
-                        google_ad_slot = "5947620469";
-                        google_ad_width = 468;
-                        google_ad_height = 60;
-                        //-->
-                    </script>
-                    <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+                    <a href='http://www.nullsecurity.net' taget='_blank' class='hide-external'>
+                        <img src='/files/images/nullsec.png'/>
+                    </a>
                 </div>
 <?php
         endif;

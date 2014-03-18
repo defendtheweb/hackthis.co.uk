@@ -7,12 +7,12 @@
             include('widgets/dashboard.php');
             include('widgets/feed.php');
             include('widgets/scoreboard.php');
-            include('widgets/adverts.php');
+            // include('widgets/adverts.php');
         } else {
             if (isset($_GET['request'])):
                 include('elements/widgets/request.php');
             else:
-                include('widgets/adverts.php');
+                // include('widgets/adverts.php');
             endif;
 
             include('widgets/scoreboard.php');
