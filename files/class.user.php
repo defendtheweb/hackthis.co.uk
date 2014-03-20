@@ -840,7 +840,7 @@
                 return "OAuth only account";
             }
 
-            $token = $this->generateRequest();
+            $token = $this->generateRequest($row->user_id);
 
             // Send email
             // $body = "We received a request for your HackThis!! account details.<br/><br/>Username: {$row->username}<br/>To reset your password, click on this link: <a href='http://www.hackthis.co.uk/?request={$token}'>http://www.hackthis.co.uk/?request={$token}</a><br/><br/>If you feel you have received this message in error, delete this email. Your password can only be reset via this email.";
@@ -852,9 +852,9 @@
             return true;
         }
 
-        public function generateRequest() {
+        public function generateRequest($uid=0) {
             $token = md5(openssl_random_pseudo_bytes(32));
-            $this->setData('reset', $token, $row->user_id, true);
+            $this->setData('reset', $token, $uid, true);
             return $token;
         }
 
