@@ -11,6 +11,7 @@ This repository contains all code for http://www.hackthis.co.uk.
 * Create a min folder in both `html/css` and `html/js` and set their access to 777
 * Create a users folder in `files/uploads` and set it's access to 777
 * Check persmissions are set to 777 on both `files/cache` and `files/log`
+* `?generate` is required after css/js changes to updated cache. Cache should autogenerate the first time each page is accessed and will autogenerate after a period of time.
 
 ## Longer instructions (Ubuntu)
 Install Apache, PHP, MySQL and required libraries
@@ -76,7 +77,7 @@ Navigate to website
 ````
 http://localhost/?generate
 ````
-`?generate` is required on any new page or after css/js changes to updated cache
+`?generate` is required after css/js changes to updated cache. Cache should autogenerate the first time each page is accessed and will autogenerate after a period of time.
 
 
 ## Documentation
