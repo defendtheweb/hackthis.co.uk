@@ -195,7 +195,7 @@
         } else if (isset($_GET['submitted'])) {
             $app->utils->message('Post submitted', 'good');
         } else if ($lang && $lang != 'en') {
-            $app->utils->message('This is an English only forum, please refrain from posting in other languages', 'info');
+            $app->utils->message('This is an English only forum, please refrain from posting in other languages. We are working on adapting the site for your language.', 'info');
         }
         include('elements/wysiwyg.php');
 ?>
