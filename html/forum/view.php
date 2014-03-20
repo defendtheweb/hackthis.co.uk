@@ -188,11 +188,14 @@
 
                             <form id="submit" class='forum-thread-reply' method="POST" action="?page=<?=$thread_page_count;?>&submit#submit">
 <?php
+        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         if (isset($_GET['submit']) && isset($_POST['body'])) {
             $app->utils->message($forum->getError(), 'error');
             $wysiwyg_text = $_POST['body'];
         } else if (isset($_GET['submitted'])) {
             $app->utils->message('Post submitted', 'good');
+        } else if ($lang && $lang != 'en') {
+            $app->utils->message('This is an English only forum, please refrain from posting in other languages. We are working on adapting the site for your language.', 'info');
         }
         include('elements/wysiwyg.php');
 ?>
