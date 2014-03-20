@@ -47,9 +47,5 @@
     endif;
 ?>
         </ul>
-
-<?php
-    include('widgets/adverts.php');
-?>
 	</div>
 </div>

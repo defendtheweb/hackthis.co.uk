@@ -26,9 +26,5 @@
             <li <?=isset($_GET['popular'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?popular'>Most popular threads</a></li>
             <li <?=isset($_GET['no-replies'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?no-replies'>Threads with no replies</a></li>
         </ul>
-
-<?php
-    include('widgets/adverts.php');
-?>
     </div>
 </div>
