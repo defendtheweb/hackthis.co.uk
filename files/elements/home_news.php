@@ -1,5 +1,8 @@
 <?php
     $latestNews = $app->articles->getArticles(0, 1);
+
+    if (isset($latestNews['articles'][0])):
+
     $latestNews = $latestNews['articles'][0];
     $latestNews->title = $app->parse($latestNews->title, false);
     $latestNews->body = $app->parse($latestNews->body);
@@ -27,3 +30,7 @@
     <p><?=$latestNews->body;?></p>
     <div class='right'><a href='<?=$latestNews->uri;?>'>Read post</a> &middot; <a href='/news'>More news</a></div>
 </div>
+
+<?php
+    endif;
+?>
