@@ -22,9 +22,10 @@
     date_default_timezone_set("Europe/London");
     putenv("TZ=Europe/London");
 
-    function __autoload($class) {
+
+    spl_autoload_register(function ($class) {
         @include_once 'class.'.$class.'.php';
-    }
+    });
 
     // Setup app
     try {
