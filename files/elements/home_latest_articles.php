@@ -1,5 +1,8 @@
 <?php
     $latestNews = $app->articles->getArticles(null, 1);
+
+    if (isset($latestNews['articles'][0])):
+
     $latestNews = $latestNews['articles'][0];
 
     if (strtotime('-5 days') < strtotime($latestNews->submitted)):
@@ -29,5 +32,7 @@
 </div>
 
 <?php
+    endif;
+
     endif;
 ?>
