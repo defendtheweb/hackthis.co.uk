@@ -4,6 +4,8 @@
     if (!defined("_SIDEBAR")) define("_SIDEBAR", false);
     if (!defined("PAGE_PUBLIC")) define('PAGE_PUBLIC', true);
 
+    define('TWIG', true);
+
     require_once('init.php');
 
     if (isset($_GET['page']) && is_numeric($_GET['page']))
