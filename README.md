@@ -64,12 +64,18 @@ nano files/config.php
 Create and set new folder privilages
 ````
 mkdir html/files/css/min
+mkdir html/files/css/min/light
+mkdir html/files/css/min/dark
 chmod 777 html/files/css/min
+chmod 777 html/files/css/min/light
+chmod 777 html/files/css/min/dark
 mkdir html/files/js/min
 chmod 777 html/files/js/min
 mkdir files/uploads/users
 chmod 777 files/uploads/users
+mkdir files/cache/twig
 chmod 777 files/cache
+chmod 777 files/cache/twig
 chmod 777 files/logs
 ````
 
