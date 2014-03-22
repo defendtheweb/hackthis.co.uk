@@ -371,53 +371,57 @@
 
         /**
          * Get a list of the users who have been active in the last n minutes
-         * @param  int $since Number of minutes to include
          * @return object List of online users and a count
          */
-        public function getOnlineList($since = 5) {
-            // check cache
-            $online = $this->app->cache->get('online', 1);
-
-            if (!$online) {
-                $st = $this->app->db->prepare("SELECT u.user_id, u.username, u.score,
-                        if (priv.site_priv = 2, true, false) AS `admin`, IF (priv.forum_priv = 2, true, false) AS `moderator`,
-                        activity.last_active, IF (users_medals.user_id, true, false) AS `donator`
-                        FROM users u
-                        LEFT JOIN users_priv priv
-                        ON u.user_id = priv.user_id
-                        LEFT JOIN users_activity activity
-                        ON u.user_id = activity.user_id
-                        LEFT JOIN medals
-                        ON medals.label = 'donator'
-                        LEFT JOIN users_medals
-                        ON users_medals.medal_id = medals.medal_id AND users_medals.user_id = u.user_id
-                        WHERE activity.last_active > (NOW() - INTERVAL :since MINUTE)
-                        ORDER BY activity.last_active DESC");
-                $st->bindValue(':since', (int) $since, PDO::PARAM_INT);
-                $st->execute();
-
-                $online = $st->fetchAll();
-
-                $this->app->cache->set('online', json_encode($online));
-
-                // check if it beats the highscore
-                $most = $this->app->cache->get('online_record');
-                if ($most) {
-                    $most = json_decode($most);
-                }
-
-                if (!$most || $most->count < count($online)) {
-                    $most = new stdClass();
-                    $most->count = count($online);
-                    $most->date = date('c');
-
-                    $this->app->cache->set('online_record', json_encode($most));
-                }
+        public function getOnlineList($cron = false) {
+            if (!$cron) {
+                $online = $this->app->cache->get('online');
+                return json_decode($online);
             } else {
-                $online = json_decode($online);
-            }
+                // time to regenerate?
+                $online = $this->app->cache->get('online', 1);
 
-            return $online;
+                echo "Checking...";
+                if (!$online) {
+                    echo "Building...";
+
+                    $st = $this->app->db->prepare("SELECT u.user_id, u.username, u.score,
+                            if (priv.site_priv = 2, true, false) AS `admin`, IF (priv.forum_priv = 2, true, false) AS `moderator`,
+                            activity.last_active, IF (users_medals.user_id, true, false) AS `donator`
+                            FROM users u
+                            LEFT JOIN users_priv priv
+                            ON u.user_id = priv.user_id
+                            LEFT JOIN users_activity activity
+                            ON u.user_id = activity.user_id
+                            LEFT JOIN medals
+                            ON medals.label = 'donator'
+                            LEFT JOIN users_medals
+                            ON users_medals.medal_id = medals.medal_id AND users_medals.user_id = u.user_id
+                            WHERE activity.last_active > (NOW() - INTERVAL 5 MINUTE)
+                            ORDER BY activity.last_active DESC");
+                    $st->execute();
+
+                    $online = $st->fetchAll();
+
+                    $this->app->cache->set('online', json_encode($online));
+
+                    echo "Saved";
+
+                    // check if it beats the highscore
+                    $most = $this->app->cache->get('online_record');
+                    if ($most) {
+                        $most = json_decode($most);
+                    }
+
+                    if (!$most || $most->count < count($online)) {
+                        $most = new stdClass();
+                        $most->count = count($online);
+                        $most->date = date('c');
+
+                        $this->app->cache->set('online_record', json_encode($most));
+                    }
+                }
+            }
         }
     }
 ?>

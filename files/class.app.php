@@ -3,7 +3,7 @@
         public $bbcode;
         public $max_score = 4000;
 
-        function __construct() {
+        function __construct($minimal = false) {
             global $custom_css, $custom_js;
 
             //load configuration file
@@ -13,6 +13,7 @@
 
             $this->config = $config;
             $this->config['cache'] = $this->config['path'] . "/files/cache/";
+            echo $this->config['cache'];
             $this->config['log'] = $this->config['path'] . "/files/log/";
 
             // Connect to database
@@ -26,31 +27,34 @@
             //get max score
             $this->max_score = $this->getMaxScore();
 
-            //set theme
-            $this->getTheme();
 
-            // Setup google events class
-            require('vendor/class.ss-ga.php');
-            if (isset($this->config['ssga-ua'])) {
-                $this->ssga = new ssga($this->config['ssga-ua'], $this->config['domain']);
-            } else {
-                $this->ssga = new ssga();
+            if (!$minimal) {
+                //set theme
+                $this->getTheme();
+
+                // Setup google events class
+                require('vendor/class.ss-ga.php');
+                if (isset($this->config['ssga-ua'])) {
+                    $this->ssga = new ssga($this->config['ssga-ua'], $this->config['domain']);
+                } else {
+                    $this->ssga = new ssga();
+                }
+
+                // Load Twig
+                require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
+                Twig_Autoloader::register();
+
+                $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
+                $this->twig = new Twig_Environment($loader, array(
+                    // 'cache' => $this->config['path'] . "/files/cache/twig/",
+                    'cache' => false,
+                    'autoescape' => false
+                ));
+
+
+                // Create page object
+                $this->page = new page();
             }
-
-            // Load Twig
-            require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
-            Twig_Autoloader::register();
-
-            $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
-            $this->twig = new Twig_Environment($loader, array(
-                // 'cache' => $this->config['path'] . "/files/cache/twig/",
-                'cache' => false,
-                'autoescape' => false
-            ));
-
-
-            // Create page object
-            $this->page = new page();
 
             $this->utils = new utils($this);
 
