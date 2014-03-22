@@ -284,31 +284,6 @@ a.twitter-login {
             }
         }
     }
-
-    &.online {
-        li {
-            display: inline-block;
-            list-style: none;
-
-            a {
-                color: $text;
-            }
-
-            &.moderator a {
-                color: $white;
-            }
-
-            &.admin a {
-                color: $green;
-            }
-
-            i.icon-heart {
-                margin-left: 4px;
-                margin-right: 2px;
-                color: #A00;
-            }
-        }
-    }
 }
 
 .no-js .widget.feed,

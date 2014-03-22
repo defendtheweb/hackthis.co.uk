@@ -29,10 +29,11 @@ body.theme-light {
     background-image: none;
 }
 
+
+/*
 @media ( min-width : 1000px ) {
     .page-wrap {
         min-height: 100%;
-        /* equal to footer height */
         margin-bottom: -194px;
     }
     .page-wrap:after {
@@ -40,10 +41,10 @@ body.theme-light {
         display: block;
     }
     #page-footer, .page-wrap:after {
-        /* .push must be the same height as footer */
         height: 194px;
     }
 }
+*/
 
 
 
@@ -494,6 +495,31 @@ div.image {
 
             a {
                 color: $white;
+            }
+        }
+
+        .online {
+            li {
+                display: inline-block;
+                list-style: none;
+
+                a {
+                    color: $text;
+                }
+
+                &.moderator a {
+                    color: $white;
+                }
+
+                &.admin a {
+                    color: $green;
+                }
+
+                i.icon-heart {
+                    margin-left: 4px;
+                    margin-right: 2px;
+                    color: #A00;
+                }
             }
         }
     }
