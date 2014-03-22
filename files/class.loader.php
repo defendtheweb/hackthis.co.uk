@@ -143,12 +143,12 @@ class loader {
     private function generate($filename, $file_array, $type) {
         $cache_file = preg_replace("/[^A-Za-z0-9_-]/", '', basename($filename));
         // check how long it has been since the last check
-        if ($this->app->cache->get('loader_'.$cache_file, 30) && !isset($_GET['generate'])) {
+        if ($this->app->cache->get('loader_' . $this->theme . '_'.$cache_file, 30) && !isset($_GET['generate'])) {
             return true;
         }
 
         //create cache file so no one else gets this far
-        $this->app->cache->set('loader_'.$cache_file, 'checked');
+        $this->app->cache->set('loader_' . $this->theme . '_'.$cache_file, 'checked');
 
         if ($type == 'js') {
             $base = $this->js_base;
