@@ -520,24 +520,24 @@ CREATE TABLE IF NOT EXISTS `irc_logs` (
 /*
     TRIGGERS
 */
-delimiter |
+delimiter $$
 -- USERS
-DROP TRIGGER IF EXISTS insert_user;
+DROP TRIGGER IF EXISTS insert_user$$
 CREATE TRIGGER insert_user AFTER INSERT ON users FOR EACH ROW
     BEGIN
         INSERT INTO users_activity (`user_id`) VALUES (NEW.user_id);
         CALL user_feed(NEW.user_id, 'join', NULL);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS update_user;
+DROP TRIGGER IF EXISTS update_user$$
 CREATE TRIGGER update_user BEFORE UPDATE ON users FOR EACH ROW
     BEGIN
         IF OLD.email <> NEW.email THEN
             SET NEW.verified = 0;
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_user;
+DROP TRIGGER IF EXISTS delete_user$$
 CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
     BEGIN
         DELETE FROM users_oauth WHERE OLD.oauth_id = id;
@@ -567,16 +567,16 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         UPDATE forum_posts SET author = NULL WHERE author = OLD.user_id;
         UPDATE forum_threads SET owner = NULL WHERE owner = OLD.user_id;
         UPDATE pm_messages SET user_id = NULL WHERE user_id = OLD.user_id;
-    END;
+    END$$
 
 -- NOTIFICATIONS
-DROP PROCEDURE IF EXISTS user_notify;
+DROP PROCEDURE IF EXISTS user_notify$$
 CREATE PROCEDURE user_notify(user_id INT, type TEXT, from_id INT, item_id INT)
   BEGIN
     INSERT INTO users_notifications (`user_id`, `type`, `from_id`, `item_id`) VALUES (user_id, type, from_id, item_id);
-  END;
+  END$$
 
-DROP PROCEDURE IF EXISTS user_notify_remove;
+DROP PROCEDURE IF EXISTS user_notify_remove$$
 CREATE PROCEDURE user_notify_remove(_user_id INT, _type TEXT, _from_id INT, _item_id INT)
   BEGIN
     IF _item_id IS NULL THEN
@@ -584,23 +584,23 @@ CREATE PROCEDURE user_notify_remove(_user_id INT, _type TEXT, _from_id INT, _ite
     ELSE
         DELETE FROM users_notifications WHERE `user_id` = _user_id AND `type` = _type AND `from_id` = _from_id AND `item_id` = _item_id LIMIT 1;
     END IF;
-  END;
+  END$$
 
-DROP PROCEDURE IF EXISTS user_feed;
+DROP PROCEDURE IF EXISTS user_feed$$
 CREATE PROCEDURE user_feed(user_id INT, type TEXT, item_id INT)
   BEGIN
     INSERT INTO users_feed (`user_id`, `type`, `item_id`) VALUES (user_id, type, item_id);
-  END;
+  END$$
 
-DROP PROCEDURE IF EXISTS user_feed_remove;
+DROP PROCEDURE IF EXISTS user_feed_remove$$
 CREATE PROCEDURE user_feed_remove(_user_id INT, _type TEXT, _item_id INT)
   BEGIN
     DELETE FROM users_feed WHERE `user_id` = _user_id AND `type` = _type AND `item_id` = _item_id LIMIT 1;
-  END;
+  END$$
 
 -- When a user completes a level and an item is added to users_levels
 -- Give user the relevant score and add to users feed
-DROP TRIGGER IF EXISTS insert_user_level;
+DROP TRIGGER IF EXISTS insert_user_level$$
 CREATE TRIGGER insert_user_level AFTER INSERT ON users_levels FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
@@ -610,9 +610,9 @@ CREATE TRIGGER insert_user_level AFTER INSERT ON users_levels FOR EACH ROW
             SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = NEW.level_id AND `key` = 'reward' LIMIT 1);
             UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS update_user_level;
+DROP TRIGGER IF EXISTS update_user_level$$
 CREATE TRIGGER update_user_level AFTER UPDATE ON users_levels FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
@@ -622,9 +622,9 @@ CREATE TRIGGER update_user_level AFTER UPDATE ON users_levels FOR EACH ROW
             SET REWARD = (SELECT `value` FROM `levels_data` WHERE level_id = NEW.level_id AND `key` = 'reward' LIMIT 1);
             UPDATE users SET score = score + REWARD WHERE user_id = NEW.user_id LIMIT 1;
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_user_level;
+DROP TRIGGER IF EXISTS delete_user_level$$
 CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
@@ -634,20 +634,20 @@ CREATE TRIGGER delete_user_level AFTER DELETE ON users_levels FOR EACH ROW
         UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
 
         CALL user_feed_remove(OLD.user_id, 'level', OLD.level_id);
-    END;
+    END$$
 
 
 -- Update users scores when the reward given for a level is altered
-DROP TRIGGER IF EXISTS update_levels_data;
+DROP TRIGGER IF EXISTS update_levels_data$$
 CREATE TRIGGER update_levels_data AFTER UPDATE ON levels_data FOR EACH ROW
     BEGIN
         IF NEW.key = 'reward' THEN
             UPDATE users JOIN users_levels ON users.user_id = users_levels.user_id SET users.score = users.score - OLD.value + NEW.value WHERE users_levels.level_id = NEW.level_id AND users_levels.completed > 0;
         END IF;
-    END;
+    END$$
 
 
-DROP TRIGGER IF EXISTS insert_friend_before;
+DROP TRIGGER IF EXISTS insert_friend_before$$
 CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
     BEGIN
         declare alreadyexists integer;
@@ -657,15 +657,15 @@ CREATE TRIGGER insert_friend_before BEFORE INSERT ON users_friends FOR EACH ROW
         IF alreadyexists = 1 THEN
             SELECT `erroorororororor` INTO alreadyexists FROM users_friends;
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS insert_friend;
+DROP TRIGGER IF EXISTS insert_friend$$
 CREATE TRIGGER insert_friend AFTER INSERT ON users_friends FOR EACH ROW
     BEGIN
         CALL user_notify(NEW.friend_id, 'friend', NEW.user_id, null);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS update_friend;
+DROP TRIGGER IF EXISTS update_friend$$
 CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
     BEGIN
         IF NEW.status = 1 THEN
@@ -676,19 +676,19 @@ CREATE TRIGGER update_friend AFTER UPDATE ON users_friends FOR EACH ROW
             CALL user_feed(NEW.user_id, 'friend', NEW.friend_id);
             CALL user_feed(NEW.friend_id, 'friend', NEW.user_id);
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_friend;
+DROP TRIGGER IF EXISTS delete_friend$$
 CREATE TRIGGER delete_friend AFTER DELETE ON users_friends FOR EACH ROW
     BEGIN
         CALL user_notify_remove(OLD.friend_id, 'friend', OLD.user_id, null);
         CALL user_notify_remove(OLD.user_id, 'friend_accepted', OLD.friend_id, null);
         CALL user_feed_remove(OLD.user_id, 'friend', OLD.friend_id);
         CALL user_feed_remove(OLD.friend_id, 'friend', OLD.user_id);
-    END;
+    END$$
 
 -- MEDALS
-DROP TRIGGER IF EXISTS insert_medal;
+DROP TRIGGER IF EXISTS insert_medal$$
 CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
@@ -698,9 +698,9 @@ CREATE TRIGGER insert_medal AFTER INSERT ON users_medals FOR EACH ROW
 
         CALL user_notify(NEW.user_id, 'medal', null, NEW.medal_id);
         CALL user_feed(NEW.user_id, 'medal', NEW.medal_id);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_medal;
+DROP TRIGGER IF EXISTS delete_medal$$
 CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
     BEGIN
         DECLARE REWARD INT;
@@ -712,57 +712,57 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
         UPDATE users SET score = score - REWARD WHERE user_id = OLD.user_id LIMIT 1;
 
         CALL user_feed_remove(OLD.user_id, 'medal', OLD.medal_id);
-    END;
+    END$$
 
 
 -- FORUM
-DROP TRIGGER IF EXISTS insert_forum_post;
+DROP TRIGGER IF EXISTS insert_forum_post$$
 CREATE TRIGGER insert_forum_post AFTER INSERT ON forum_posts FOR EACH ROW
     BEGIN
         CALL user_feed(NEW.author, 'forum_post', NEW.post_id);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_forum_post;
+DROP TRIGGER IF EXISTS delete_forum_post$$
 CREATE TRIGGER delete_forum_post BEFORE DELETE ON forum_posts FOR EACH ROW
     BEGIN
         DELETE FROM users_forum WHERE post_id = OLD.post_id;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS forum_posts_update_audit;
+DROP TRIGGER IF EXISTS forum_posts_update_audit$$
 CREATE TRIGGER forum_posts_update_audit BEFORE UPDATE ON forum_posts FOR EACH ROW
     BEGIN
         IF OLD.body <> NEW.body THEN
             INSERT INTO forum_posts_audit (post_id, field, old_value, new_value) 
                 VALUES(NEW.post_id, 'body', OLD.body, NEW.body);
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_forum_thread;
+DROP TRIGGER IF EXISTS delete_forum_thread$$
 CREATE TRIGGER delete_forum_thread BEFORE DELETE ON forum_threads FOR EACH ROW
     BEGIN
         DELETE FROM forum_posts WHERE thread_id = OLD.thread_id;
         DELETE FROM forum_users WHERE thread_id = OLD.thread_id;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS update_forum_thread;
+DROP TRIGGER IF EXISTS update_forum_thread$$
 CREATE TRIGGER update_forum_thread AFTER UPDATE ON forum_threads FOR EACH ROW
     BEGIN
         IF NEW.deleted = 1 THEN
             UPDATE forum_posts SET deleted = 1 WHERE thread_id = OLD.thread_id;
         END IF;
-    END;
+    END$$
 
 
 -- ARTICLES
-DROP TRIGGER IF EXISTS insert_article;
+DROP TRIGGER IF EXISTS insert_article$$
 CREATE TRIGGER insert_article AFTER INSERT ON articles FOR EACH ROW
     BEGIN
         CALL user_notify(NEW.user_id, 'article', null, NEW.article_id);
         CALL user_feed(NEW.user_id, 'article', NEW.article_id);
-    END;
+    END$$
 
 -- TODO: Pull the user id and a comment made to the new version.
-DROP TRIGGER IF EXISTS articles_draft_update_audit;
+DROP TRIGGER IF EXISTS articles_draft_update_audit$$
 CREATE TRIGGER articles_draft_update_audit BEFORE UPDATE ON articles_draft FOR EACH ROW
     BEGIN
         IF OLD.body <> NEW.body THEN
@@ -783,9 +783,9 @@ CREATE TRIGGER articles_draft_update_audit BEFORE UPDATE ON articles_draft FOR E
             INSERT INTO articles_audit (article_id, draft, field, old_value, new_value) 
                 VALUES(NEW.article_id, 1, 'title', OLD.title, NEW.title);
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS articles_update_audit;
+DROP TRIGGER IF EXISTS articles_update_audit$$
 CREATE TRIGGER articles_update_audit BEFORE UPDATE ON articles FOR EACH ROW
     BEGIN
         IF OLD.title <> NEW.title THEN
@@ -817,41 +817,41 @@ CREATE TRIGGER articles_update_audit BEFORE UPDATE ON articles FOR EACH ROW
                 VALUES(NEW.article_id, 0, 'thumbnail', OLD.thumbnail, NEW.thumbnail);
         END IF;
 
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS insert_article_categories;
+DROP TRIGGER IF EXISTS insert_article_categories$$
 CREATE TRIGGER insert_article_categories BEFORE INSERT ON articles_categories FOR EACH ROW
     BEGIN
         IF NEW.parent_id IS NOT NULL THEN
             SET NEW.slug = CONCAT_WS('/', (SELECT `slug` FROM articles_categories WHERE category_id = NEW.parent_id), NEW.slug);
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS insert_article_comment;
+DROP TRIGGER IF EXISTS insert_article_comment$$
 CREATE TRIGGER insert_article_comment AFTER INSERT ON articles_comments FOR EACH ROW
     BEGIN
         CALL user_feed(NEW.user_id, 'comment', NEW.comment_id);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_article_comment;
+DROP TRIGGER IF EXISTS delete_article_comment$$
 CREATE TRIGGER delete_article_comment AFTER UPDATE ON articles_comments FOR EACH ROW
     BEGIN
         IF NEW.deleted IS NOT NULL THEN
             CALL user_feed_remove(OLD.user_id, 'comment', OLD.comment_id);
         END IF;
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS insert_article_favourites;
+DROP TRIGGER IF EXISTS insert_article_favourites$$
 CREATE TRIGGER insert_article_favourites AFTER INSERT ON articles_favourites FOR EACH ROW
     BEGIN
         CALL user_feed(NEW.user_id, 'favourite', NEW.article_id);
-    END;
+    END$$
 
-DROP TRIGGER IF EXISTS delete_article_favourites;
+DROP TRIGGER IF EXISTS delete_article_favourites$$
 CREATE TRIGGER delete_article_favourites AFTER DELETE ON articles_favourites FOR EACH ROW
     BEGIN
         CALL user_feed_remove(OLD.user_id, 'favourite', OLD.article_id);
-    END;
+    END$$
 
-|
+$$
 delimiter ;
