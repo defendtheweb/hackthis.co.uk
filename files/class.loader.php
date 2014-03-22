@@ -56,9 +56,11 @@ class loader {
                              'fancybox.css', 'main.scss', 'navigation.scss', 'interaction.scss', 'sidebar.scss',
                              'comments.scss');
 
-    function __construct($app, $custom_css=Array(), $custom_js=Array()) {
+    function __construct($app, $custom_css=Array(), $custom_js=Array(), $theme = 'dark') {
         $this->app = $app;
         $this->php_base = $app->config('path') . "/html";
+
+        $this->theme = $theme;
 
         $this->custom_css = $custom_css;
         $this->custom_js = $custom_js;
@@ -74,10 +76,10 @@ class loader {
             $this->scss = new scssc();
 
             // Load scss variables
-            $this->scss_variables = file_get_contents($this->php_base . $this->css_base . "_variables.scss");
+            $this->scss_variables = file_get_contents($this->php_base . $this->css_base . "_{$this->theme}_variables.scss");
 
             //Build default CSS file
-            $path = "{$this->css_base}min/main.css";
+            $path = "{$this->css_base}min/{$this->theme}/main.css";
             if ($this->generate($path, $this->default_css, 'css')) {
                 $buster = filemtime($this->php_base.$path);
                 $css_includes = "<link rel='stylesheet' href='{$path}?{$buster}' type='text/css'/>\n";
@@ -88,7 +90,7 @@ class loader {
                 $this->custom_css = array_unique($this->custom_css);
                 //generate filename to reflect contents
                 $id = substr(md5(implode($this->custom_css)),0,10);
-                $path = "{$this->css_base}min/extra_{$id}.css";
+                $path = "{$this->css_base}min/{$this->theme}/extra_{$id}.css";
 
                 if ($this->generate($path, $this->custom_css, 'css')) {
                     $buster = filemtime($this->php_base.$path);

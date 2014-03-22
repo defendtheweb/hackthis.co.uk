@@ -34,7 +34,12 @@
         die($e->getMessage());
     }
 
-    $minifier = new loader($app, $custom_css, $custom_js);
+    // check if theme has changed
+    if (isset($_GET['theme'])) {
+        $app->setTheme($_GET['theme']);
+    }
+
+    $minifier = new loader($app, $custom_css, $custom_js, $app->theme);
 
     if ($app->user->loggedIn) {
         if (defined('PAGE_PRIV') && !$app->user->{PAGE_PRIV.'_priv'}) {

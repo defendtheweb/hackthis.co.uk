@@ -5,6 +5,8 @@ a.facebook-connect {
     background: darken(#3B5999, 5%);
     padding: 4px 10px;
 
+    color: white;
+
     &:before {
         @include icon("\e082");
         padding-right: 7px;
@@ -135,7 +137,7 @@ a.twitter-login {
 
                     &.right span {
                         background: lighten($bg, 12%);
-                        color: white;
+                        color: $white;
                         padding: 1px 6px;
                         margin-left: 4px;
                     }

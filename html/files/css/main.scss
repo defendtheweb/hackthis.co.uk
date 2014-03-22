@@ -25,6 +25,10 @@ body {
     letter-spacing: 0.01em;
 }
 
+body.theme-light {
+    background-image: none;
+}
+
 @media ( min-width : 1000px ) {
     .page-wrap {
         min-height: 100%;

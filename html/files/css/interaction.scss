@@ -214,6 +214,12 @@ a.button {
     }
 }
 
+.theme-light {
+    .button {
+        color: $white;
+    }
+}
+
 #confirmBox a.button.cancel {
     background: none;
     color: $dark;
@@ -534,6 +540,19 @@ ul.tabs {
 
 .no-js .wysiwyg .controls {
     display: none;
+}
+
+.theme-light {
+    .wysiwyg ul.controls li {
+        a {
+            color: $white;
+        }
+
+        &.active a,
+        a:hover {
+            color: $black;
+        }
+    }
 }
 
 

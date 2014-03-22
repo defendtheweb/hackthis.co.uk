@@ -26,6 +26,8 @@
             //get max score
             $this->max_score = $this->getMaxScore();
 
+            //set theme
+            $this->getTheme();
 
             // Setup google events class
             require('vendor/class.ss-ga.php');
@@ -42,7 +44,8 @@
 
                 $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
                 $this->twig = new Twig_Environment($loader, array(
-                    'cache' => $this->config['path'] . "/files/cache/twig/",
+                    // 'cache' => $this->config['path'] . "/files/cache/twig/",
+                    'cache' => false,
                     'autoescape' => false
                 ));
             }
@@ -148,6 +151,23 @@
             }
 
             return $score;
+        }
+
+        public function getTheme() {
+            if (isset($_COOKIE["theme"]) && ($_COOKIE["theme"] == 'light' || $_COOKIE["theme"] == 'dark')) {
+                $this->theme = $_COOKIE["theme"];
+            } else {
+                $this->theme = 'dark';
+            }
+        }
+
+        public function setTheme($theme) {
+            if ($theme != 'light' && $theme != 'dark') {
+                return;
+            }
+
+            $this->theme = $theme;
+            setcookie("theme", $theme);
         }
 
         public function generateCSRFKey($key, $reuseKey=false) {

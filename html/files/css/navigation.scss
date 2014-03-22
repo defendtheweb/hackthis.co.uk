@@ -18,6 +18,7 @@
     }
 }
 
+
 #global-nav-sticky {
     width: 100%;
     position: relative;
@@ -467,6 +468,14 @@
             }
         }
     }
+}
+
+.theme-light #global-nav {
+    background: $black;
+}
+
+.theme-light .is-sticky #global-nav {
+    background: rgba(255, 255, 255, 0.5) !important;
 }
 
 

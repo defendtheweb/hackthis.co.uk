@@ -49,7 +49,7 @@
             <script src="/files/js/html5shiv.js"></script>
         <![endif]-->
     </head>
-    <body <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
+    <body class='theme-<?php echo $app->theme; ?>' <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php
     if (!isset($_GET['view']) || $_GET['view'] != 'app'):
         if (!isset($_COOKIE["member"]) || !$_COOKIE["member"]):

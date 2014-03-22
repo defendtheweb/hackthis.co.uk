@@ -191,3 +191,49 @@
         background: #004d00;
     }
 }
+
+.theme-light {
+    .forum-latest {
+        thead {
+            background: $lighter_bg;
+            border-left: 2px solid $lighter_bg;
+        }
+
+        tbody tr {
+            border-left: 1px solid $lighter_bg;
+
+            &.highlight {
+                border-left: 2px solid $green;
+
+                &:hover {
+                    border-left: 2px solid lighten($green, 25%);
+                }
+            }
+
+            &.new {
+                border-left: 2px solid $light_bg;
+
+                &:hover {
+                    border-left: 2px solid lighten($light_bg, 20%);
+                }
+            }
+
+            &.closed {
+                border-left: 2px solid $red;
+
+                &:hover {
+                    border-left: 2px solid lighten($red, 25%);
+                }
+            }
+        }
+    }
+
+    .home-ticker .more {
+        background: $lighter_bg;
+    }
+
+    .home-module.home-module-light {
+        background: $black;
+        border: 1px solid $lighter_bg;
+    }
+}

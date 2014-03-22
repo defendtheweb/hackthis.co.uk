@@ -1,0 +1,83 @@
+$black: #FFFFFF;
+$white: #000;
+$link: #444;
+
+$bg: #DDD;
+$light_bg: #666;
+$lighter_bg: #AAA;
+
+$text: #444;
+$text_dark: #222;
+$dark: #000;
+
+$green: lighten(green, 5%);
+$green_hover: lighten($green, 5%);
+$bright_green: #0A0;
+
+$red: #800000;
+$blue: #3DBDD7;
+
+$msg_error: $red;
+$msg_info: $blue;
+$msg_warning: #C2C200;
+
+
+
+
+@mixin font($font) {
+    font-family: $font,Helvetica Neue,Arial,Helvetica,Verdana,sans-serif;
+}
+
+@mixin default_font {
+    @include font('Lato');
+    color: $text;
+}
+
+@mixin title_font {
+    @include font('Orbitron');
+    letter-spacing: 0.1em;
+    color: $white;
+    font-weight: bold;
+}
+
+
+@mixin icon($code) {
+    content: $code;
+
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;   
+}
+
+
+@mixin transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
+}
+
+@mixin box-shadow($color, $size: 5px) {
+    -moz-box-shadow: 0 0 $size $color;
+    -webkit-box-shadow: 0 0 $size $color;
+    box-shadow: 0 0 $size $color;
+}
+
+@mixin border-radius($amount: 2px) {
+    border-radius: $amount;
+    -moz-border-radius: $amount;
+    -webkit-border-radius: $amount;
+}
+
+@mixin clearfix() {
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}

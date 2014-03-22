@@ -125,3 +125,9 @@
         vertical-align: top;
     }
 }
+
+.theme-light {
+    .level-area .info {
+        background: $bg;
+    }
+}
