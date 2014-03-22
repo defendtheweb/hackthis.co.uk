@@ -48,11 +48,11 @@
                 </div>
             {% else %}
                 <div class="karma small mobile-hide">
-                    {% if post.karma_priv >= 2 %}
+                    {% if (post.karma_priv >= 2 and post.author == false) %}
                         <a class="karma karma-down {% if post.user_karma < 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-down"></i></a>
                     {% endif %}
                     <span>{{ post.karma }}</span>
-                    {% if post.karma_priv >= 1 %}
+                    {% if (post.karma_priv >= 1 and post.author == false) %}
                         <a class="karma karma-up {% if post.user_karma > 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-up"></i></a> 
                     {% endif %}
                     {% if post.first %} <a href="/faq#karma" class="dark"><i class="icon-help"></i></a> {% endif %}
