@@ -37,18 +37,16 @@
                 $this->ssga = new ssga();
             }
 
-            // Load Twig if required
-            if (defined('TWIG') && TWIG) {
-                require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
-                Twig_Autoloader::register();
+            // Load Twig
+            require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
+            Twig_Autoloader::register();
 
-                $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
-                $this->twig = new Twig_Environment($loader, array(
-                    // 'cache' => $this->config['path'] . "/files/cache/twig/",
-                    'cache' => false,
-                    'autoescape' => false
-                ));
-            }
+            $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
+            $this->twig = new Twig_Environment($loader, array(
+                // 'cache' => $this->config['path'] . "/files/cache/twig/",
+                'cache' => false,
+                'autoescape' => false
+            ));
 
 
             // Create page object
