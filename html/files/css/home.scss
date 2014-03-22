@@ -5,6 +5,10 @@
 
     &.home-module-light {
         background: $light_bg;
+
+        h2 {
+            font-size: 1.1em;
+        }
     }
 
     &.home-module-black {
