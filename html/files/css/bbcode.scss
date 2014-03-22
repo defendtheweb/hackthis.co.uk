@@ -5,6 +5,9 @@
 	width: 100%;
 	display: inline-block;
 	background: $bg;
+
+	max-height: 450px;
+	overflow-y: scroll;
 }
 .bbcode_code_head {
 	display: none;
