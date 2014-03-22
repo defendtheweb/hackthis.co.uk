@@ -378,7 +378,7 @@
             // Check for spam - pretty much always new threads
             $regex = "/(". implode('|', $this->banned) .")/i";
             $matched = preg_match_all($regex, $title, $matches) + preg_match_all($regex, $body, $matches);
-            if ($matched > 3) {
+            if ($matched > 2) {
                 // Could implement http://www.stopforumspam.com and ban user
                 return "Banned words found in content";
             }
