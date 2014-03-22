@@ -14,6 +14,9 @@
             if ($bbcode) {
                 $this->app->bbcode->SetPlainMode(false);
             } else {
+                // remove spoiler tags
+                $text = preg_replace("/\[spoiler\].*\[\/spoiler\]/", "", $text);
+
                 $this->app->bbcode->SetPlainMode(true);
             }
 
