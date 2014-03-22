@@ -502,9 +502,14 @@ div.image {
             li {
                 display: inline-block;
                 list-style: none;
+                padding-bottom: 2px;
 
                 a {
                     color: $text;
+                }
+
+                a:hover {
+                    text-decoration: underline;
                 }
 
                 &.moderator a {
