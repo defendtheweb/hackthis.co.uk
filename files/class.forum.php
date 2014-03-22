@@ -102,170 +102,28 @@
         }
 
         public function printThreadPost($post, $first=false, $last=false) {
+            $post->first = $first;
+            $post->last = $last;
+
+            $post->hidden = ($post->karma <= -3);
+
+            $post->loggedIn = $this->app->user->loggedIn;
+            $post->author = ($post->user_id === $this->app->user->uid);
+            $post->moderator = ($this->app->user->forum_priv > 1);
+
+            $post->karma_priv = $this->app->user->karma_priv;
 
             $post->body = $this->app->parse($post->body);
             if (isset($post->signature)) {
                 $post->signature = $this->app->parse($post->signature);
             }
 
-            $return = "        <li class='row clr".($post->karma <= -3?' removed-karma':'')."' data-id='{$post->post_id}'";
-            if ($last) {
-                $return .= ' id="latest">';
-            } else {
-                $return .= '>';
-            }
+            // set date string
+            $post->posted = date('c', strtotime($post->posted));
+            $post->timeSince = $this->app->utils->timeSince($post->posted, true);
 
-
-            $return .= "            <div id='post-{$post->post_id}' class='col span_5 post_header'>";
-
-            if ($post->username && $post->karma > -3):
-                if ($post->donator):
-
-                    $return .= <<< POST
-                <div class="label corner">
-                    <i class="icon-heart"></i>
-                </div>
-
-POST;
-
-                endif;
-
-                $posted = date('c', strtotime($post->posted));
-                $tmp1 = $first?'rel="author" itemprop="author"':'';
-                $tmp2 = $first?'itemprop="datePublished"':'';
-                $return .= <<< POST
-                <a href="/user/{$post->username}" class="user" {$tmp1}>
-                    {$post->username}<br/>
-                    <img class='mobile-hide' src="{$post->image}" width="60" height="60" alt="{$post->username}'s profile picture">
-                </a>
-                <br/>
-                <ul class='plain'>
-                    <li class='highlight'><i class='icon-clock'></i> <time class='short' {$tmp2} pubdate datetime="{$posted}">{$this->app->utils->timeSince($post->posted, true)}</time></li>
-                    <li class='mobile-hide'><i class='icon-trophy'></i> {$post->score}</li>
-                    <li class='mobile-hide'><i class='icon-chat'></i> {$post->posts}</li>
-                </ul>
-                <br/>
-
-POST;
-            elseif ($post->username): // Removed post
-                $return .= "        <a href='/user/{$post->username}' class='strong dark'>{$post->username}</a>\n";
-            else: // Deleted user
-
-                $return .= <<< POST
-                <div class='strong dark'>[deleted user]</div>
-                <br/>
-
-POST;
-
-            endif;
-
-            if ($post->karma > -3):
-                if ($post->user_id === $this->app->user->uid):
-                    if (!$first):
-
-                        $return .= <<< POST
-                <a href='?edit={$post->post_id}' class='button icon'><i class='icon-edit'></i></a>
-                <a href='#' class='button icon remove'><i class='icon-trash'></i></a>
-
-POST;
-
-                    else:
-
-                        $return .= <<< POST
-                <a href='?edit={$post->post_id}' class='button'><i class='icon-edit'></i> Edit post</a>
-
-POST;
-
-                    endif;
-                elseif ($this->app->user->forum_priv > 1):
-                    if (!$first):
-
-                        $return .= <<< POST
-                <a href='/admin/forum.php?post={$post->post_id}&edit' class='button icon'><i class='icon-edit'></i></a>
-                <a href='/admin/forum.php?post={$post->post_id}&remove' class='button icon'><i class='icon-trash'></i></a>
-
-POST;
-
-                    else:
-
-                        $return .= <<< POST
-                <a href='/admin/forum.php?post={$post->post_id}&edit' class='button'><i class='icon-edit'></i> Edit post</a>
-
-POST;
-
-                    endif;
-                else:
-
-                    if ($post->flag <= 0) {
-                        $return .= "                <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>";
-                    } else {
-                        $return .= "                <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>";
-                    }
-
-                endif;
-            endif;
-            $return .= "            </div>";
-
-            if ($post->karma <= -3):
-                $return .= "<article class='col span_19 post_content'>
-                                <div class='strong dark'>Post hidden due to negative karma</div>
-                            </article>";
-
-            else:
-                $return .= <<< POST
-            <article class="col span_19 post_content">
-                <div class="karma small mobile-hide">
-POST;
-
-                if (!$this->app->user->loggedIn || $post->user_id === $this->app->user->uid):
-
-                    $return .= "                <span>{$post->karma}</span>";
-
-                    if ($first):
-                        $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
-                    endif;
-
-                else:
-
-                    $cancel_down = $post->user_karma < 0?'karma-cancel':'';
-                    $cancel_up = $post->user_karma > 0?'karma-cancel':'';
-
-                    if ($this->app->user->karma_priv >= 2)
-                        $return .= "<a href='#' class='karma karma-down {$cancel_down}'><i class='icon-caret-down'></i></a>";
-                    $return .= "<span>{$post->karma}</span>";
-                    if ($this->app->user->karma_priv >= 1)
-                        $return .= "<a href='#' class='karma karma-up {$cancel_up}'><i class='icon-caret-up'></i></a>";
-
-                    if ($first) {
-                        $return .= ' <a class="dark" href="/faq#karma"><i class="icon-help"></i></a>';
-                    }
-
-                endif;
-
-                $tmp1 = $first?'itemprop="articleBody"':'';
-                $return .= <<< POST
-                    </div>
-                    <div class="post_body" {$tmp1}>
-                        {$post->body}
-
-POST;
-
-                if (isset($post->signature)) {
-                    $return .= "                    <div class='post_signature'>
-                            {$post->signature}
-                        </div>\n";
-                }
-
-                $return .= <<< POST
-                    </div>
-                </article>
-POST;
-            endif;
-            $return .= "        </li>";
-
-            print $return;
-
-
+            // Use template
+            echo $this->app->twig->render('forum_post.html', array('post' => $post));
         }
 
         public function printSectionsList($cat, $menu = false, $current = null, $level = 1) {

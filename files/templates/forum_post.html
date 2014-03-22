@@ -1,0 +1,70 @@
+    <li data-id="{{ post. post_id }}" class="row clr {% if post.last %} latest {% endif %} {% if post.hidden %} removed-karma {% endif %}">
+        <div class="col span_5 post_header" id="post-{{ post. post_id }}">
+            {% if post.username %}
+                {% if post.donator %}
+                    <div class="label corner">
+                        <i class="icon-heart"></i>
+                    </div>
+                {% endif %}
+
+                <a class="user {% if post.hidden %} strong dark {% endif %}" href="/user/{{ post.username }}" {% if post.first %} itemprop="author" rel="author" {% endif %}>
+                    {{ post.username }}<br>
+                    <img height="60" width="60" alt="{{ post.username }}'s profile picture" src="{{ post.image }}" class="mobile-hide">
+                </a>
+                <br>
+                <ul class="plain">
+                    <li class="highlight"><i class="icon-clock"></i> <time datetime="{{ post.posted }}" class="short" pubdate {% if post.first %} itemprop="datePublished" {% endif %}>{{ post.timeSince }}</time></li>
+                    <li class="mobile-hide"><i class="icon-trophy"></i> {{ post.score }} </li>
+                    <li class="mobile-hide"><i class="icon-chat"></i> {{ post.posts }}</li>
+                </ul>
+                <br>
+            {% else %}
+                <div class='strong dark'>[deleted user]</div>
+                <br/>
+            {% endif %}
+
+            {% if post.loggedIn %}
+                {% if (post.moderator or post.author) %}
+                    {% if post.first %}
+                        <a class="button" href="{% if post.author %} ?edit={{ post. post_id }} {% else %} /admin/forum.php?post={{ post. post_id }}&edit {% endif %}"><i class="icon-edit"></i> Edit post</a>
+                    {% else %}
+                        <a href='{% if post.author %}?edit={{ post. post_id }}{% else %}/admin/forum.php?post={{ post. post_id }}&edit{% endif %}' class='button icon'><i class='icon-edit'></i></a>
+                        <a href='{% if post.author %}#{% else %}/admin/forum.php?post={{ post. post_id }}&remove{% endif %}' class='button icon {% if post.author %}remove{% endif %}'><i class='icon-trash'></i></a>
+                    {% endif %}
+                {% else %}
+                    {% if post.flag <= 0 %}
+                        <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>
+                    {% else %}
+                        <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>        
+        <article class="col span_19 post_content">
+            {% if post.hidden %}
+                <div class='removed-karma-message strong dark'>
+                    Post hidden due to negative karma
+                    <a href='#' class='right show-post dark'>[show post]</a>
+                </div>
+            {% else %}
+                <div class="karma small mobile-hide">
+                    {% if post.karma_priv >= 2 %}
+                        <a class="karma karma-down {% if post.user_karma < 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-down"></i></a>
+                    {% endif %}
+                    <span>{{ post.karma }}</span>
+                    {% if post.karma_priv >= 1 %}
+                        <a class="karma karma-up {% if post.user_karma > 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-up"></i></a> 
+                    {% endif %}
+                    {% if post.first %} <a href="/faq#karma" class="dark"><i class="icon-help"></i></a> {% endif %}
+                </div>
+            {% endif %}
+            <div itemprop="articleBody" class="post_body">
+                {{ post.body }}
+                {% if post.signature %}
+                <div class="post_signature">
+                    {{ post.signature }}
+                </div>
+                {% endif %}
+            </div>
+        </article>
+    </li>
