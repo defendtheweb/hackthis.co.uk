@@ -154,6 +154,38 @@ $(function() {
             resizePostInfo(self)();
     });
 
+
+    $('.show-post').on('click', function(e) {
+        e.preventDefault();
+
+        var $this = $(this).parent(),
+            $container = $this.closest('.removed-karma');
+
+        $container.slideUp(function() {
+            $this.hide();
+
+            $this.siblings('.post_body').show();
+            $container.find('.post_header > *').show();
+            $container.find('.post_header a img').show();
+            $container.css({backgroundColor: '#1E1E1E'});
+            $container.find('.post_header a').removeClass('strong').removeClass('dark');
+
+            resizePostInfo();
+            $container.slideDown();
+        });
+
+        // $this.fadeOut(function() {
+        //     $this.siblings('.post_body').slideDown();
+        //     $container.find('.post_header > *').slideDown(function() {
+        //         resizePostInfo();
+        //     });
+        //     $container.find('.post_header a').removeClass('strong').removeClass('dark');
+        //     $container.find('.post_header a img').slideDown();
+        //     $container.css({backgroundColor: '#1E1E1E'});
+        // });
+    })
+
+
     function resizePostInfo(self) {
         return function() {
             var h = $(self).find('.post_content').height();

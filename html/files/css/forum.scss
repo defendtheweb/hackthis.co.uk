@@ -285,6 +285,18 @@
                 margin-top: 6px;
                 margin-bottom :6px;
             }
+
+
+            /* hide other stuff */
+            .post_header > *,
+            .post_header a img,
+            .post_body {
+                display: none;
+            }
+
+            .removed-karma-message {
+                padding-right: 8px;
+            }
         }
 
         .post_info, .post_body {
