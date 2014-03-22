@@ -7,6 +7,13 @@ article.index {
     }
 }
 
+.width-center {
+    margin: 0 auto;
+    min-width: 600px;
+    width: 65%;
+    max-width: 100%;
+}
+
 article.body {
     header {
         background: $bg;
@@ -31,6 +38,11 @@ article.body {
         }
 
         margin-bottom: 16px;
+    }
+
+    div.articleBody {
+        font-size: 1.1em;
+        line-height: 1.3em;
     }
 
     div.contents {

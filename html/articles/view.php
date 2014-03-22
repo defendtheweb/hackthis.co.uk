@@ -60,10 +60,10 @@
 ?>
                     <section class="row">
 <?php
-    if (!isset($_GET['view']) || $_GET['view'] != 'app')
-        include('elements/sidebar_article.php');
+    // if (!isset($_GET['view']) || $_GET['view'] != 'app')
+    //     include('elements/sidebar_article.php');
 ?>    
-                        <div class="col span_<?=(!isset($_GET['view']) || $_GET['view'] != 'app')?'18':'24';?> article-main">
+                        <div class="col span_24<!--<?=(!isset($_GET['view']) || $_GET['view'] != 'app')?'18':'24';?>--> article-main">
 <?php
     if (!isset($article) || !$article):
 ?>
@@ -100,6 +100,7 @@
     if (!isset($_GET['view']) || $_GET['view'] != 'app'):
 ?>
                                 <header class='clearfix'>
+                                    <div class='width-center'>
 <?php if ($myArticle): ?>
                                         <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php elseif ($app->user->admin_pub_priv): ?>
@@ -136,6 +137,7 @@
                                             echo '<meta itemprop="interactionCount" content="UserComments:'.$share->comments.'"/>';
                                         }
                                     ?>
+                                    </div>
                                 </header>
 
 <?php
@@ -177,7 +179,7 @@
     $article->body = $app->articles->setupTOC($article->body);
 ?>
                                 <meta itemprop="wordCount" content="<?=str_word_count($article->body);?>"/>
-                                <div itemprop='articleBody'>
+                                <div itemprop='articleBody' class='articleBody width-center'>
 <?php
     echo $article->body;
 ?>
