@@ -2,7 +2,7 @@
     $config['domain'] = 'http://example.org';
 
     // Site variables
-    $config['path'] = realpath($_SERVER["DOCUMENT_ROOT"] . '/../') | realpath(getcwd() . '/../');
+    $config['path'] = realpath($_SERVER["DOCUMENT_ROOT"] . '/../');
 
     // Database configuration
     $config['db']['driver'] = 'mysql';

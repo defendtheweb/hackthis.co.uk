@@ -13,7 +13,6 @@
 
             $this->config = $config;
             $this->config['cache'] = $this->config['path'] . "/files/cache/";
-            echo $this->config['cache'];
             $this->config['log'] = $this->config['path'] . "/files/log/";
 
             // Connect to database
