@@ -8,9 +8,11 @@
                 <div class="container row">
                     <div class='col span_24 online'>
 <?php
-    $list = $app->utils->getOnlineList();
-    $list_count = count($list);
-    echo $app->twig->render('footer_online.html', array('count' => $list_count, 'users' => $list));
+    if ($app->user->loggedIn) {
+        $list = $app->utils->getOnlineList();
+        $list_count = count($list);
+        echo $app->twig->render('footer_online.html', array('count' => $list_count, 'users' => $list));
+    }
 ?>
                     </div>
                 </div>
