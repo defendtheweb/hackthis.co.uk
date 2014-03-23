@@ -133,28 +133,27 @@
             $this->app->page->title = ucwords($level->title);
 
             // Get stats
-            $sql = "SELECT COUNT(user_id) AS `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69";
-            $st = $this->app->db->prepare($sql);
-            $st->execute(array(':lid'=>$level->level_id));
-            $result = $st->fetch();
-            $level->count = $result->completed;
+            // $sql = "SELECT COUNT(user_id) AS `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69";
+            // $st = $this->app->db->prepare($sql);
+            // $st->execute(array(':lid'=>$level->level_id));
+            // $result = $st->fetch();
+            // $level->count = $result->completed;
 
-            // Get latest
-            $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed DESC LIMIT 1";
-            $st = $this->app->db->prepare($sql);
-            $st->execute(array(':lid'=>$level->level_id));
-            $result = $st->fetch();
-            $level->last_completed = $result->completed;
-            $level->last_user = $result->username;
+            // // Get latest
+            // $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed DESC LIMIT 1";
+            // $st = $this->app->db->prepare($sql);
+            // $st->execute(array(':lid'=>$level->level_id));
+            // $result = $st->fetch();
+            // $level->last_completed = $result->completed;
+            // $level->last_user = $result->username;
 
-            // Get first
-            $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed ASC LIMIT 1";
-            $st = $this->app->db->prepare($sql);
-            $st->execute(array(':lid'=>$level->level_id));
-            $result = $st->fetch();
-            $level->first_completed = $result->completed;
-            $level->first_user = $result->username;
-
+            // // Get first
+            // $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed ASC LIMIT 1";
+            // $st = $this->app->db->prepare($sql);
+            // $st->execute(array(':lid'=>$level->level_id));
+            // $result = $st->fetch();
+            // $level->first_completed = $result->completed;
+            // $level->first_user = $result->username;
 
             return $level;
         }
