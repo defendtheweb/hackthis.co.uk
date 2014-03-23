@@ -268,7 +268,9 @@
                 <option>Sorry we can't help you hack websites. This site does not encourage or condone illegal activity.</option>
                 <option>Please do not advert on the forum. If you wish to advertise please contact us.</option>
                 <option>A little off-topic, please use the PM system.</option>
+                <option>A little off-topic, please start a new thread.</option>
                 <option>Spam is not accepted on this forum, any further spamming will result in a permanent ban.</option>
+                <option>Don't mind me, just cleaning up the thread.</option>
             </select>
             <input type='submit' class='button' value='Submit'/>
         </form>
