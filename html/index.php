@@ -61,7 +61,7 @@
                                 <div class='col span_19'>
                                     <h2>Community</h2>
                                     <span class='blurb'>
-                                        <strong class='white'>Join in the discussion with 150,000+ like-minded members.</strong><br/>
+                                        <strong class='white'>Join in the discussion with 200,000+ like-minded members.</strong><br/>
                                         Need a hint? Want to talk about the latest cracking software tool?
                                     </span>
                                 </div>
