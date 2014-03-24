@@ -4,6 +4,23 @@ HackThis
 
 This repository contains all code for http://www.hackthis.co.uk. 
 
+## Shortest instructions (Ubuntu)
+Run the the installation script by using the following command
+````
+sudo ./install_hackthis.sh
+````
+and follow the instructions. The script will:
+* Install missing components (Apache, MySql and relevant libraries)
+* Set up a virtual host name on your local machine and set up the site there
+* Configure .htaccess and config.php with the right definitions
+* Create hackthis database and tables
+
+Then navigate to your local copy of the website
+````
+http://your.virtual.hostname/?generate
+````
+`?generate` is required after css/js changes to updated cache. Cache should autogenerate the first time each page is accessed and will autogenerate after a period of time.
+
 ## Short instructions
 * Import schema.sql into MySQL database, optionally import data files
 * Edit include_path in `html/.htaccess`
@@ -52,6 +69,7 @@ mysql -u <username> -p<password> < testdata.sql
 
 Configure paths in .htaccess. Change include_path to the path of your hackthis.co.uk/files/ directory, with trailing slash
 ````
+cp html/example.htaccess html/.htaccess
 nano html/.htaccess
 ````
 
@@ -76,8 +94,8 @@ chmod 777 files/uploads/users
 mkdir files/cache/twig
 chmod 777 files/cache
 chmod 777 files/cache/twig
+mkdir files/logs
 chmod 777 files/logs
-````
 
 Navigate to website
 ````
