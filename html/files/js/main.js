@@ -32,7 +32,13 @@ $(function() {
 
     // Open external links in new tab
     $('body').on('click', 'a[href^="http://"]:not(.stop-external):not(.fancybox), a[href^="https://"]:not(.stop-external):not(.fancybox)', function(e) {
-        window.open($(this).attr('href'));
+        ga('send', 'event', 'outbound', 'click', $(this).attr('href'), {'hitCallback':
+            function () {
+                window.open($(this).attr('href'));
+            }
+        });
+
+        
         return false;
     });
 
