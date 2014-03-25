@@ -96,6 +96,7 @@ chmod 777 files/cache
 chmod 777 files/cache/twig
 mkdir files/logs
 chmod 777 files/logs
+````
 
 Navigate to website
 ````
