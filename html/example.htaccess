@@ -2,6 +2,7 @@ ErrorDocument 403 /error.php
 ErrorDocument 404 /error.php
 
 php_value include_path ".:/path/to/hackthis.co.uk/files/"
+php_value short_open_tag "1"
 
 
 # ------------------------------------------------------------------------------
