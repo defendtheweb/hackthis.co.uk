@@ -42,9 +42,11 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 2. Download and install Git for windows (including Git Bash) from http://msysgit.github.io/
 3. Start your WAMP server manager and make sure all services are running. The W icon in the system tray should be green.
 4. Run Git Bash and issue the following command to clone this repository:
+
     ```
     git clone http://github.com/HackThis/hackthis.co.uk
     ```
+
 5. Change the directory to the repository and run the installation script with the commands
 
     ```
@@ -66,7 +68,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 1. Install a LAMP stack (apache2, php5, libapache2-mod-php5, mysql-server, php5-mysql)
 2. Set up a virtual host name in /etc/apache2/sites-available/default. Make sure to include 'AllowOverride All'.
 
-    Example configuration
+    Example configuration (for virtual host named ht.com)
     ```
     <virtualhost *:80>
 
@@ -93,25 +95,32 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     ```
 
 3. Restart Apache to enable the new virtual host
-4. Import schema and testdata into MySQL
+4. Add a line to /etc/hosts mapping the virtual host to the local machine 127.0.0.1.
+    For example for the virtual host va.com use
+    ```
+    sudo echo 127.0.0.1 va.com >> /etc/hosts
+    ```
+
+5. Import schema and testdata into MySQL
     ```
     cd hackthis.co.uk
     mysql -u <username> -p<password> < schema.sql
     mysql -u <username> -p<password> < testdata.sql
     ```
-5. Configure paths in .htaccess. Change include_path to the path of your hackthis.co.uk/files/ directory, with trailing slash
+
+6. Configure paths in .htaccess. Change include_path to the path of your hackthis.co.uk/files/ directory, with trailing slash
     ```
     cp html/example.htaccess html/.htaccess
     nano html/.htaccess
     ```
 
-6. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, twitter and lastfm API keys are not required but some features will not work correctly.
+7. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, twitter and lastfm API keys are not required but some features will not work correctly.
     ```
     cp files/example.config.php files/config.php
     nano files/config.php
     ```
 
-7. Create and set new folder privilages
+8. Create and set new folder privilages
     ```
     mkdir html/files/css/min
     mkdir html/files/css/min/light
@@ -130,7 +139,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     chmod 777 files/logs
     ```
 
-8. Navigate to website
+9. Navigate to website
     ```
     http://<localhost or virtual host name>/?generate
     ```
