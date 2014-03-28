@@ -14,21 +14,20 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 
 1. Clone this git repository to your current directory with
 ```
-git clone http://github.com/HackThis/hackthis.co.uk
+    git clone http://github.com/HackThis/hackthis.co.uk
 ```
 2. Run the the installation script by using the following command
 ```
-sudo ./install_hackthis_ubuntu.sh
+        sudo ./install_hackthis_ubuntu.sh
 ```
-and follow the instructions. The script will:
-* Install Apache, MySql, PHP and relevant libraries if not installed yet
-* Set up a virtual host name of your choosing on your local machine and set up the site there
-* Configure .htaccess and config.php with the appropriate definitions
-* Create hackthis database and tables
-
+    and follow the instructions. The script will:
+    * Install Apache, MySql, PHP and relevant libraries if not installed yet
+    * Set up a virtual host name of your choosing on your local machine and set up the site there
+    * Configure .htaccess and config.php with the appropriate definitions
+    * Create hackthis database and tables
 3. Then navigate to your local copy of the website. Replace 'your.virtual.hostname' below with the name chosen during the installation.
 ```
-http://<your.virtual.hostname>/?generate
+    http://<your.virtual.hostname>/?generate
 ```
 `?generate` is required after css/js changes to updated cache. Cache should autogenerate the first time each page is accessed and will autogenerate after a period of time.
 
