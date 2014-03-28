@@ -23,13 +23,13 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     ```
     and follow the instructions. The script will:
 
-    - Install Apache, MySql, PHP and relevant libraries if not installed yet
-    - Set up a virtual host name of your choosing on your local machine and set up the site there
-    - Configure .htaccess and config.php with the appropriate definitions
-    - Create hackthis database and tables
+    -    Install Apache, MySql, PHP and relevant libraries if not installed yet
+    -    Set up a virtual host name of your choosing on your local machine and set up the site there
+    -    Configure .htaccess and config.php with the appropriate definitions
+    -    Create hackthis database and tables
 
 3. Navigate to your local copy of the website.
-    Replace 'your.virtual.hostname' below with the name chosen during the installation.
+    Replace <your.virtual.hostname> below with the name chosen during the installation.
 
     ```
     http://<your.virtual.hostname>/?generate
@@ -65,8 +65,9 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 
 ### Any other OS installation instructions
 
-1. Install a LAMP stack (apache2, php5, libapache2-mod-php5, mysql-server, php5-mysql)
-2. Set up a virtual host name in /etc/apache2/sites-available/default. Make sure to include 'AllowOverride All'.
+1. Install git and clone this repository (http://github.com/HackThis/hackthis.co.uk).
+2. Install a LAMP stack (apache2, php5, libapache2-mod-php5, mysql-server, php5-mysql)
+3. Set up a virtual host name in /etc/apache2/sites-available/default. Make sure to include 'AllowOverride All'.
 
     Example configuration (for virtual host named ht.com)
     ```
@@ -94,33 +95,33 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     </virtualhost>
     ```
 
-3. Restart Apache to enable the new virtual host
-4. Add a line to /etc/hosts mapping the virtual host to the local machine 127.0.0.1.
+4. Restart Apache to enable the new virtual host
+5. Add a line to /etc/hosts mapping the virtual host to the local machine 127.0.0.1.
     For example for the virtual host va.com use
     ```
     sudo echo 127.0.0.1 va.com >> /etc/hosts
     ```
 
-5. Import schema and testdata into MySQL
+6. Import schema and testdata into MySQL
     ```
     cd hackthis.co.uk
     mysql -u <username> -p<password> < schema.sql
     mysql -u <username> -p<password> < testdata.sql
     ```
 
-6. Configure paths in .htaccess. Change include_path to the path of your hackthis.co.uk/files/ directory, with trailing slash
+7. Configure paths in .htaccess. Change include_path to the path of your hackthis.co.uk/files/ directory, with trailing slash
     ```
     cp html/example.htaccess html/.htaccess
     nano html/.htaccess
     ```
 
-7. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, twitter and lastfm API keys are not required but some features will not work correctly.
+8. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, twitter and lastfm API keys are not required but some features will not work correctly.
     ```
     cp files/example.config.php files/config.php
     nano files/config.php
     ```
 
-8. Create and set new folder privilages
+9. Create and set new folder privilages
     ```
     mkdir html/files/css/min
     mkdir html/files/css/min/light
@@ -139,7 +140,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     chmod 777 files/logs
     ```
 
-9. Navigate to website
+10. Navigate to your local copy of the website
     ```
     http://<localhost or virtual host name>/?generate
     ```
