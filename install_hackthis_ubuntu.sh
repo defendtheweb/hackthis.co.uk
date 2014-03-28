@@ -92,20 +92,11 @@ ls README.md > /dev/null 2>&1 || {
 git_root_dir=`pwd`
 
 # Package installation
-required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql ruby"
+required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql"
 echo Checking installed packages
 for package in $required_packages; do
 	installMissingPackages $package
 done
-
-# Sass gem installation
-gem list --local 2>/dev/null | grep sass > /dev/null || {
-	gem install sass || {
-		echo
-		echo -e "\t \e[0;31mFailed to install sass gem. Aborting.\e[m"
-		exit 1
-	}
-}
 
 # Start web server if not started yet
 service apache2 status

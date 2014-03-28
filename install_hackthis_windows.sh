@@ -140,44 +140,6 @@ if [ -z "$mysql_client" ]; then
 	waitForEnterAndExit;
 fi;
 
-# Make sure ruby is installed (needed for sass compilation)
-ruby_exe=`ls /c/Ruby*/bin/ruby.exe 2>/dev/null | head -1`;
-if [ -z "$ruby_exe" ]; then
-	echo
-	echo -e "\t Couldn't find Ruby installation.";
-	echo -e "\t Should have been in c:\\\\Ruby...\\\\bin\\\\ruby.exe"
-	echo -e "\t You can download it from http://www.rubyinstaller.org/"
-	echo -e "\t \e[0;31mMake sure to check \"Add Ruby Executable to your PATH\" during installation!\e[m"
-	echo -e "\t \e[0;31mIf you didn't, just run the installation again, no need to uninstall first.\e[m"
-	echo
-	echo -e "\e[0;31mAborting...\e[m"
-	waitForEnterAndExit;
-fi;
-
-# Make sure ruby executables are in the path
-gem list --local > /dev/null 2>&1 || {
-	echo
-	echo -e "\t Ruby executables aren't in your PATH.";
-	echo -e "\t Please run the Ruby installation again (no need to uninstall first) and make sure to"
-   	echo -e "\t check \"Add Ruby Executable to your PATH\" during installation."
-	echo -e "\t You can download the installation from http://www.rubyinstaller.org/"
-	echo
-	echo -e "\e[0;31mAborting...\e[m"
-	waitForEnterAndExit;
-}
-
-# Install scss gem if not already installed
-gem list --local 2>/dev/null | grep sass > /dev/null || {
-	echo -e "\t Installing Sass gem...";
-	gem install sass || {
-		echo
-		echo -e "\e[0;31mCouldn't install Sass gem!\e[m"
-		echo
-		echo -e "\e[0;31mAborting...\e[m"
-		waitForEnterAndExit;
-	}
-}
-
 # Apache setup (name based virtual host)
 echo Configuring Apache alias to be localhost/hackthis
 
