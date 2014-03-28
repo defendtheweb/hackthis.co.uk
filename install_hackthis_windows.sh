@@ -149,6 +149,12 @@ net start wampapache 2>&1 | grep "started" > /dev/null || {
 	waitForEnterAndExit
 }
 
+# Make sure MySql deamon is up
+net start wampmysqld 2>&1 | grep "started" > /dev/null || {
+	echo -e "\t \e[0;31mMySql server couldn't be started. Aborting.\e[m"
+	waitForEnterAndExit
+}
+
 # Setting alias for hackthis (localhost/hackthis)
 msdirname=${git_root_dir:1}/html/
 msdirname=${msdirname/\//:\/}		# replace only the first / 
