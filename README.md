@@ -23,11 +23,14 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     ```
     and follow the instructions. The script will:
 
-    * Install Apache, MySql, PHP and relevant libraries if not installed yet
-    * Set up a virtual host name of your choosing on your local machine and set up the site there
-    * Configure .htaccess and config.php with the appropriate definitions
-    * Create hackthis database and tables
-3. Then navigate to your local copy of the website. Replace 'your.virtual.hostname' below with the name chosen during the installation.
+    - Install Apache, MySql, PHP and relevant libraries if not installed yet
+    - Set up a virtual host name of your choosing on your local machine and set up the site there
+    - Configure .htaccess and config.php with the appropriate definitions
+    - Create hackthis database and tables
+
+3. Navigate to your local copy of the website.
+    Replace 'your.virtual.hostname' below with the name chosen during the installation.
+
     ```
     http://<your.virtual.hostname>/?generate
     ```
@@ -43,6 +46,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     git clone http://github.com/HackThis/hackthis.co.uk
     ```
 5. Change the directory to the repository and run the installation script with the commands
+
     ```
     cd hackthis.co.uk
     ./install_hackthis_windows.sh
@@ -51,6 +55,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     If an error occurs, the script will let you know what to do.
     Fix what's wrong and re-run the script until it ends successfully.
 6. Open your broswer and navigate to
+
     ```
     http://localhost/hackthis/?generate
     ```
@@ -63,15 +68,28 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 
     Example configuration
     ```
-NameVirtualHost *
+    <virtualhost *:80>
 
-ServerAdmin admin@site.com
+        # Admin email, Server Name (domain name) and any aliases
+        ServerAdmin webmaster@ht.com
+        ServerName  ht.com
+        ServerAlias ht.com
 
-DocumentRoot /home/username/hackthis.co.uk/html
+        # Index file and Document Root (where the public files are located)
+        DirectoryIndex index.php
+        DocumentRoot /var/www/vhosts/ht.com/htdocs
+        <Directory /var/www/vhosts/ht.com/htdocs>
+            Options Indexes FollowSymLinks MultiViews
+            AllowOverride All
+            Order allow,deny
+        </Directory>
 
-Options Indexes FollowSymLinks MultiViews
-AllowOverride All
-Order allow,deny
+        # Custom log file locations
+        LogLevel warn  
+        ErrorLog  /var/www/vhosts/ht.com/log/error.log
+        CustomLog /var/www/vhosts/ht.com/log/access.log combined
+
+    </virtualhost>
     ```
 
 3. Restart Apache to enable the new virtual host
