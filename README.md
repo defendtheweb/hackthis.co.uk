@@ -22,11 +22,10 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     sudo ./install_hackthis_ubuntu.sh
     ```
     and follow the instructions. The script will:
-
-    -    Install Apache, MySql, PHP and relevant libraries if not installed yet
-    -    Set up a virtual host name of your choosing on your local machine and set up the site there
-    -    Configure .htaccess and config.php with the appropriate definitions
-    -    Create hackthis database and tables
+    - Install Apache, MySql, PHP and relevant libraries if not installed yet
+    - Set up a virtual host name of your choosing on your local machine and set up the site there
+    - Configure .htaccess and config.php with the appropriate definitions
+    - Create hackthis database and tables
 
 3. Navigate to your local copy of the website.
     Replace <your.virtual.hostname> below with the name chosen during the installation.
@@ -66,7 +65,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
 ### Any other OS installation instructions
 
 1. Install git and clone this repository (http://github.com/HackThis/hackthis.co.uk).
-2. Install a LAMP stack (apache2, php5, libapache2-mod-php5, mysql-server, php5-mysql)
+2. Install a LAMP stack (apache2, php5, libapache2-mod-php5, mysql-server, and php5-mysql).
 3. Set up a virtual host name in /etc/apache2/sites-available/default. Make sure to include 'AllowOverride All'.
 
     Example configuration (for virtual host named ht.com)
@@ -85,6 +84,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
             Options Indexes FollowSymLinks MultiViews
             AllowOverride All
             Order allow,deny
+			allow from all
         </Directory>
 
         # Custom log file locations
@@ -95,7 +95,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     </virtualhost>
     ```
 
-4. Restart Apache to enable the new virtual host
+4. Enable the new virtual host with a2ensite and restart Apache
 5. Add a line to /etc/hosts mapping the virtual host to the local machine 127.0.0.1.
     For example for the virtual host va.com use
     ```
