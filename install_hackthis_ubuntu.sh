@@ -1,5 +1,20 @@
 #!/bin/bash
 
+cat <<Caption
+
+
+-------------------------------------------------------------
+                   H a c k   T h i s ! !
+                  The Hacker's Playground
+ 
+                 https://www.hackthis.co.uk/
+-------------------------------------------------------------
+         Development Environment Installation Script
+-------------------------------------------------------------
+
+
+Caption
+
 function isPackageInstalled {
 	packagePolicyOutput=`apt-cache policy $1`
 	echo $packagePolicyOutput | grep Installed > /dev/null
@@ -13,7 +28,11 @@ function installMissingPackages {
 		echo -e "\t $1 already installed."
 	else
 		echo -e "\t Installing package $1:"
-		sudo apt-get install $1
+		sudo apt-get install $1 || {
+			echo
+			echo -e "\t \e[0;31mFailed to install $1 package. Aborting.\e[m"
+			exit 1
+		}
 	fi
 }
 
@@ -50,7 +69,11 @@ function getMySqlCredentials {
 
 # Install script should only work on Ubuntu
 uname -a | grep Ubuntu > /dev/null || { 
-	echo This script currently only supports Ubuntu. 
+	echo This script is intended to run on Ubuntu machines. 
+	echo For a Windows installation run install_hackthis_windows.sh.
+	echo
+	echo Please press Enter to exit.
+	read
 	exit 1 
 }
 
