@@ -71,6 +71,22 @@ ul.bbcode_list {
 	margin: 5px 0px 5px 10px;
 }
 
+.bbcode_block {
+	background: $bg;
+	float: right;
+	margin-left: 16px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	width: 45%;
+	min-width: 100px;
+	padding: 8px 10px 10px;
+
+	b {
+		padding-bottom: 8px;
+		display: inline-block;
+	}
+}
+
 
 
 .pln {
