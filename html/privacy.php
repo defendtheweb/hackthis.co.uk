@@ -11,7 +11,7 @@
     <h2>What information do we collect?</h2>
     We collect information from you when you register on our site, place an order, subscribe to our newsletter, respond to a survey or fill out a form. When ordering or registering on our site, as appropriate, you may be asked to enter your name or e-mail address.
     <br/><br/>
-    Google, as a third party vendor, uses cookies to serve ads on your site. Google's use of the DART cookie enables it to serve ads to your users based on their visit to your sites and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy..
+    Google, as a third party vendor, uses cookies to serve ads on your site. Google's use of the DART cookie enables it to serve ads to your users based on their visit to your sites and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy.
 </p>
 <p>
     <h2>What do we use your information for?</h2>
@@ -39,7 +39,7 @@
 </p>
 <p>
     <h2>Do we use cookies?</h2>
-    Yes (Cookies are small files that a site or its service provider transfers to your computers hard drive through your Web browser (if you allow) that enables the sites or service providers systems to recognize your browser and capture and remember certain information
+    Yes (Cookies are small files that a site or its service provider transfers to your computers hard drive through your Web browser (if you allow) that enables the sites or service providers systems to recognize your browser and capture and remember certain information.
     <br/><br/>
     We use cookies to help us remember and process the items in your shopping cart and understand and save your preferences for future visits.
 </p>
