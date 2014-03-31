@@ -1,4 +1,4 @@
-    <li data-id="{{ post. post_id }}" class="row clr {% if post.last %} latest {% endif %} {% if post.hidden %} removed-karma {% endif %}">
+    <li data-id="{{ post. post_id }}" class="row clr {% if post.last %} latest {% endif %} {% if post.hidden %} removed-karma {% endif %}" {% if post.last %} id="latest" {% endif %}>
         <div class="col span_5 post_header" id="post-{{ post. post_id }}">
             {% if post.username %}
                 {% if post.donator %}
