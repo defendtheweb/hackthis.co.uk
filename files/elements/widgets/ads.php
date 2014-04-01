@@ -1,8 +1,8 @@
 <?php
 	$ads = array(
-			array('donate', 'https://www.hackthis.co.uk/donator.php'),
-			array('facebook', 'https://www.facebook.com/hackthisuk'),
-			array('twitter', 'https://twitter.com/hackthisuk')
+			array('ad_donate', 'https://www.hackthis.co.uk/donator.php'),
+			array('ad_facebook', 'https://www.facebook.com/hackthisuk'),
+			array('ad_twitter', 'https://twitter.com/hackthisuk')
 		  );
 
 
