@@ -1,6 +1,6 @@
 var socket = null;
 if (typeof io !== 'undefined') {
-    socket = io.connect('https://hackthis.co.uk:8080/', { secure: true });
+    socket = io.connect('https://feed.hackthis.co.uk:8080/', { secure: true });
 }
 var favcounter = new FavCounter();
 var counter_chat = 0;
