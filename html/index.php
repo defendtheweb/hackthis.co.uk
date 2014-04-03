@@ -104,7 +104,13 @@
 ?>
                         <div class='row'>
                             <h2>Login</h2>
-                            <?php include('elements/widgets/login.php'); ?>
+                            <?php 
+							if(isset($_SESSION['g_auth'])) {
+								include('elements/widgets/googleAuth.php');
+							} else {
+								include('elements/widgets/login.php');
+							}
+							?>
                         </div>
                         <div class='row'>
                             <h2>Register</h2>
