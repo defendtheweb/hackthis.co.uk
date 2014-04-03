@@ -10,7 +10,7 @@
 
     // Content Security Policy
     $csp_rules = "
-        default-src 'self' http://feed.hackthis.co.uk:8080 wss://feed.hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com;
+        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com;
         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org;
         style-src 'self' 'unsafe-inline' https://*.googleapis.com;
         img-src *;
