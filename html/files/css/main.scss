@@ -231,6 +231,10 @@ table {
 
     thead {
         color: white;
+
+        &.fill {
+            background: $light_bg;
+        }
     }
 
     td, th {
@@ -433,6 +437,43 @@ div.image {
 
 }
 
+
+/* GRAPH */
+.graph,
+.graph2 {
+    width: 100%;
+
+    .axis path {
+        display: none;
+    }
+
+    .axis line {
+        shape-rendering: crispEdges;
+        stroke: $lighter_bg;
+    }
+
+    .axis .minor line {
+        stroke: $bg;
+        stroke-dasharray: 2,2;
+    }
+
+    path {
+        stroke: $green;
+    }
+
+    rect {
+        fill: $green;
+    }
+
+    text {
+        fill: $dark;
+    }
+
+    text.title {
+        fill: $text;
+        font-size: 16px;
+    }
+}
 
 
 /* SIDEBAR */

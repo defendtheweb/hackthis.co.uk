@@ -1,0 +1,72 @@
+<script type="text/javascript" src="/files/js/d3.js"></script>
+
+<section class='center'>
+    <h1>Statistics for irc.macak.co.uk</h1>
+    <h3>Statistics generated {{ data.generated }}</h3>
+    Logging since November 14th, 2013
+</section>
+
+
+<section class='irc-recent'>
+    <h3 class='title'>This week</h3>
+
+    <script type="text/javascript">
+        graphTitle = "IRC activity over the last 7 days";
+        graphData = [
+        {% for latest in data.latest %}
+            { "date" : "{{ latest.date }}", "count" : {{ latest.lines }} }, 
+        {% endfor %}
+        ];
+    </script>
+
+    <div class='center'>
+        <div class='graph'></div>
+    </div>
+</section>
+
+<section class='irc-all-time'>
+    <h3 class='title'>All time</h3>
+
+    <script type="text/javascript">
+        graph2Title = "Most active hours (GMT)";
+        graph2Data = [
+        {% for hour, count in data.hours %}
+            { "hour" : {{ hour }}, "count" : {{ count.lines }}, "class": '{% if hour <= 6 %}night{% elseif hour <= 12 %}morning{% elseif hour <= 18 %}daytime{% else %}evening{% endif %} ' },
+        {% endfor %}
+        ];
+    </script>
+
+    <div class='center'>
+        <div class='graph2'></div>
+    </div>
+
+
+    <table class='irc-users striped'>
+        <thead class='fill'>
+            <tr>
+                <td>Nick</td>
+                <td>Lines</td>
+                <td>Words</td>
+                <td>When?</td>
+                <td>Last</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in data.users %}
+            <tr>
+                <td><a href='/user/{{ user.nick }}'>{{ user.nick }}</a></td>
+                <td>{{ user.lines }}</td>
+                <td>{{ user.words }}</td>
+                <td>
+                    <div class='night' style="width: {{ user.night }}%"></div>
+                    <div class='morning' style="width: {{ user.morning }}%"></div>
+                    <div class='daytime' style="width: {{ user.daytime }}%"></div>
+                    <div class='evening' style="width: {{ user.evening }}%"></div>
+                </td>
+                <td width="150">{{ user.last }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</section>

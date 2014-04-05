@@ -1,0 +1,63 @@
+section {
+    margin-top: 15px;
+
+    h3.title {
+        background: $bg;
+        border: none;
+        padding: 8px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+
+    .graph2 {
+        margin-bottom: 30px;
+    }
+
+    .graph2 rect {
+        &.morning {
+            fill: #FE7518;
+        }
+
+        &.daytime {
+            fill: $green;
+        }
+
+        &.evening {
+            fill: #FF2400;
+        }
+
+        &.night {
+            fill: $light_bg;
+        }
+    }
+
+    .irc-users {
+        .morning {
+            padding-top: 2px;
+            height: 12px;
+            float: left;
+            background: #FE7518;
+        }
+
+        .daytime {
+            padding-top: 2px;
+            height: 12px;
+            float: left;
+            background: $green;
+        }
+
+        .evening {
+            padding-top: 2px;
+            height: 12px;
+            float: left;
+            background: #FF2400;
+        }
+
+        .night {
+            padding-top: 2px;
+            height: 12px;
+            float: left;
+            background: $light_bg;
+        }
+    }
+}

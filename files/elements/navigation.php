@@ -83,7 +83,12 @@
 
                         <li><a href='#'>more</a>
                             <ul>
-                                <li><a href='/irc.php'>IRC</a></li>
+                                <li class='parent'><a href='/irc'>IRC</a>
+                                    <ul>
+                                        <li><a href='/irc/stats.php'>Stats</a></li>
+                                        <li><a href='/irc/quotes.php'>Quotes</a></li>
+                                    </ul>
+                                </li>
 <?php
     if ($app->user->loggedIn):
 ?>

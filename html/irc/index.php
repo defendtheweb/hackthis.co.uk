@@ -1,7 +1,6 @@
 <?php
     define("PAGE_PUBLIC", true);
 
-    $custom_css = array('faq.scss');
     require_once('init.php');
     $app->page->title = 'IRC';
     require_once('header.php');
