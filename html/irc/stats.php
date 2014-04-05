@@ -68,11 +68,8 @@
     } else {
         $data = json_decode($data);
     }
-?>
 
-    <h1><a href='/irc'>IRC</a> - Stats</h1>
 
-<?php
     echo $app->twig->render('irc_stats.html', array('data' => $data));
 
     require_once('footer.php');
