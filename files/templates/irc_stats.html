@@ -31,7 +31,7 @@
         graph2Title = "Most active hours (GMT)";
         graph2Data = [
         {% for hour, count in data.hours %}
-            { "hour" : {{ hour }}, "count" : {{ count.lines }}, "class": '{% if hour <= 6 %}night{% elseif hour <= 12 %}morning{% elseif hour <= 18 %}daytime{% else %}evening{% endif %} ' },
+            { "hour" : {{ hour }}, "count" : {{ count.lines }}, "class": '{% if hour <= 5 %}night{% elseif hour <= 11 %}morning{% elseif hour <= 17 %}daytime{% else %}evening{% endif %} ' },
         {% endfor %}
         ];
     </script>
