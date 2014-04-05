@@ -81,7 +81,7 @@
                             </ul>
                         </li>
 
-                        <li><a href='#'>more</a>
+                        <li><a href='/more.php'>more</a>
                             <ul>
                                 <li class='parent'><a href='/irc'>IRC</a>
                                     <ul>
