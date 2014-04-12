@@ -900,16 +900,28 @@
 
             if (!$edit)  {
                 //check when last post was made
-                $st = $this->app->db->prepare('SELECT author, posted
+
+                // The time left calculation was previously done using
+                // $left = 15 - (strtotime('now') - strtotime($res->posted));
+                // The problem was that posted was on the DB timezone, and strtotime('now') used the local machine's time zone
+                // causing the result to be much larger than 15 in the error message.
+                // Moving the calculation to the database solves this problem.
+                $st = $this->app->db->prepare('SELECT author, 15 - TIMESTAMPDIFF(SECOND, posted, NOW()) AS seconds_left
                                                FROM forum_posts
                                                WHERE author = :uid AND posted > NOW() - INTERVAL 15 SECOND
                                                ORDER BY posted DESC
                                                LIMIT 1');
+
+                // A possibly better approach (with possible usage of author as key and no need to make calculations on the where caluse)
+                // would be to use the following and then display the error only if $res->seconds_left is strictly positive)
+                // $st = $this->app->db->prepare('SELECT author, 15 - (TIMESTAMPDIFF(SECOND, MAX(posted), NOW())) AS seconds_left
+                //                                FROM forum_posts
+                //                                WHERE author = :uid
+                //                                GROUP BY author');
+
                 $st->execute(array(':uid'=>$this->app->user->uid));
                 if ($res = $st->fetch()) {
-
-                    $left = 15 - (strtotime('now') - strtotime($res->posted));
-                    $this->error = "You can only post a message once every 15 seconds. Please wait {$left} seconds and try again.";
+                    $this->error = "You can only post a message once every 15 seconds. Please wait {$res->seconds_left} seconds and try again.";
                     return false;
                 }
             }
