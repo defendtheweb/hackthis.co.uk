@@ -12,7 +12,7 @@
 ?>
                         <form id="login_form" action="?login" method="POST">
                             <label for="username">Username:</label>
-                            <input type="text" name="username" id="username">
+                            <input type="text" name="username" id="username" autofocus>
                             <label for="password">Password:</label>
                             <input type="password" name="password" id="password">
                             <a class="white" href="/?request">Forgot details?</a>
