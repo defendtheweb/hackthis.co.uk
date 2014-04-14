@@ -284,10 +284,12 @@ ini_set('display_errors',1);
             $result = $st->fetchAll();
 
             foreach ($result AS $res) {
+                $res->title = $this->app->parse($res->title, false);
                 //is this a video piece?
                 $res->body = preg_replace_callback("/\[youtube\]([a-zA-Z0-9_-]*)\[\/youtube\]/", function($match) use ($res) {
                     $res->video = $match[1];
                 }, $res->body);
+                $res->body = $this->app->parse($res->body, false);
             }
 
             $this->app->cache->set('articles_hot_'.$limit, json_encode($result));
