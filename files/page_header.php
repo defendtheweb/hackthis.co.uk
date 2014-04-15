@@ -48,19 +48,6 @@
             <script src="/files/js/respond.min.js"></script>
             <script src="/files/js/html5shiv.js"></script>
         <![endif]-->
-
-<?php
-    // Mark a user as a returning user only when logged in
-    if ($app->user->loggedIn):
-?>
-        <script>
-            if (Modernizr.localstorage) {
-                window.localStorage.setItem('ht_returning_user', 'true');
-            }
-        </script>
-<?php
-    endif;
-?>
     </head>
     <body class='theme-<?php echo $app->theme; ?>' <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php

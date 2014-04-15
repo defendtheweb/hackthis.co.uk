@@ -15,10 +15,9 @@
                             // returning user, meaning that he already logged in in the past.
                             // If he's not, on smaller screens the screen will scroll down and new
                             // users won't see the intro text.
-                            // Returning users are marked by the key ht_returning_user in local
-                            // stroage upon login.
+                            // Returning users are marked with member=1 in the cookie.
 
-                            if (Modernizr.localstorage && window.localStorage['ht_returning_user'] === 'true') {
+                            if (document.cookie && document.cookie.indexOf('member=1') !== -1) {
                                 $( document).ready(function() {
                                     $("#username").focus();
                                 });
