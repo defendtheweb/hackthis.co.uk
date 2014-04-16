@@ -474,6 +474,16 @@
             if ($st->fetch(PDO::FETCH_ASSOC))
                 return "Email already in use";
 
+            // Check if IP has created more than 10 accounts
+            $st = $this->app->db->prepare('SELECT count(*) AS `count` FROM users_registration WHERE ip=?');
+            $st->bindParam(1, ip2long($_SERVER['REMOTE_ADDR']));
+            $st->execute();
+            $res = $st->fetch();
+            if ($res && $res->count >= 10) {
+                $this->app->log->add('users', 'Limit reached');
+                return "You have reached your account limit";
+            }
+
             // Add to DB
             $st = $this->app->db->prepare('INSERT INTO users (`username`, `password`, `email`)
                     VALUES (:u, :p, :e)');
@@ -501,6 +511,9 @@
 
             // Add to log
             $this->app->log->add('users', 'Register [' . $username . ']');
+            $st = $this->app->db->prepare('INSERT INTO users_registration (`user_id`, `ip`)
+                    VALUES (:u, :i)');
+            $result = $st->execute(array(':u' => $uid, ':i' => ip2long($_SERVER['REMOTE_ADDR'])));
 
             $this->createSession();
         }

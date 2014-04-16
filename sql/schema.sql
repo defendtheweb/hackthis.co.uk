@@ -183,6 +183,14 @@ CREATE TABLE IF NOT EXISTS users_settings (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS users_registration (
+    `user_id` int(7) NOT NULL,
+    `ip` bigint(12) NOT NULL,
+    `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+) ENGINE=InnoDB;
+
 
 /*
     MEDALS
