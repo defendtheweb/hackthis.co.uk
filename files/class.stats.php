@@ -17,7 +17,7 @@
             $res = $st->fetch();
 
             $newday = false;
-            $consecutive = 0;
+            $consecutive = false;
             if ($res) {
                 if ($res->diff <= -1) {
                     $newday = true;
