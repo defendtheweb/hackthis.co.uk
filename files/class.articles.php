@@ -479,7 +479,7 @@ ini_set('display_errors',1);
                     if ($bbcode)
                         $comment->comment = $this->app->parse($comment->comment);
 
-                    if ($comment->username === $this->app->user->username)
+                    if ($comment->username === $this->app->user->username || $this->app->user->admin_pub_priv)
                         $comment->owner = true;
                 } else {
                     unset($comment->username);
@@ -611,9 +611,13 @@ ini_set('display_errors',1);
             if (!$this->app->user->loggedIn)
                 return false;
 
-            $st = $this->app->db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id AND user_id = :uid LIMIT 1');
-            $st->execute(array(':id' => $comment_id, ':uid' => $this->app->user->uid));
+            if ($this->app->user->admin_pub_priv) {
+                $st = $this->app->db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id LIMIT 1');   
+            } else {
+                $st = $this->app->db->prepare('UPDATE articles_comments SET deleted = :uid WHERE comment_id = :id AND user_id = :uid LIMIT 1');
+            }
 
+            $st->execute(array(':id' => $comment_id, ':uid' => $this->app->user->uid));
             return ($st->rowCount() > 0);
         }
 
