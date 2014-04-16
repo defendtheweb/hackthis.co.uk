@@ -246,7 +246,6 @@
             $query .= " WHERE article_id=?";
             $values[] = $id;
 
-ini_set('display_errors',1);
             if ($draft || !$this->app->user->admin_pub_priv) {
                 $query .= " AND user_id = ?";
                 $values[] = $this->app->user->uid;
@@ -264,7 +263,7 @@ ini_set('display_errors',1);
             if ($articles)
                 return $articles;
 
-            $st = $this->app->db->prepare('SELECT a.title,SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-(DATEDIFF(NOW(), a.`submitted`)/7)) as total,
+            $st = $this->app->db->prepare('SELECT a.title, SUM(IFNULL(favourites.count*10,0)+IFNULL(comments.count,0)-DATEDIFF(NOW(), a.`submitted`)) as total,
                                 CONCAT(IF(a.category_id = 0, "/news/", "/articles/"), a.slug) AS slug,
                                 a.body, a.thumbnail, cat.title AS `category`
                                 FROM articles a
