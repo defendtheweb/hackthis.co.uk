@@ -1,5 +1,7 @@
 <?php
-    session_set_cookie_params(0, '/', '.hackthis.co.uk', true, true); 
+    ini_set('session.cookie_httponly', true);
+    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
+
     session_start();
     error_reporting(E_ALL);
     ini_set('display_errors', '0');
