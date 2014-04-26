@@ -437,7 +437,7 @@
                 $this->app->stats->users_activity($this, true);
 
                 // Set cookie to say they are already a registered user
-                setcookie("member", true, time()+60*60*24*30);
+                setcookie("member", true, time()+60*60*24*30, '/', 'hackthis.co.uk', true, true);
 
                 // Redirect user back to where they came from
                 header("location: " . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));

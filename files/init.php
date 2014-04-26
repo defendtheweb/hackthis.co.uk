@@ -1,4 +1,5 @@
 <?php
+    session_set_cookie_params(0, '/', '.hackthis.co.uk', true, true); 
     session_start();
     error_reporting(E_ALL);
     ini_set('display_errors', '0');
