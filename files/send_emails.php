@@ -82,7 +82,7 @@
                     '{image}' => $email->data->image
                 );
             } else if ($email->type == "forum_reply" || $email->type == "forum_mention") {
-                $email->subject = "Forum reply";
+                $email->subject = "Reply added to \"" . $app->parse($email->data->title, false) . "\"";
                 $content = file_get_contents('elements/emails/forum.html', true); 
 
                 $vars = array(
