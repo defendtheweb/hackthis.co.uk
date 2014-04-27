@@ -18,7 +18,7 @@
 
     // Setup app
     try {
-        $app = new app();
+        $app = new app(true);
     } catch (Exception $e) {
         die($e->getMessage());
     }
