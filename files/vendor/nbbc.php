@@ -421,6 +421,14 @@ var $default_tag_rules = Array(
                                              'plain_start' => "<h2>",
                                              'plain_end' => "</h2>",
                                              ),
+                               'h3' => Array(
+                                             'simple_start' => "<h3>",
+                                             'simple_end' => "</h3>",
+                                             'class' => 'inline',
+                                             'allow_in' => Array('listitem', 'block', 'columns', 'inline', 'link'),
+                                             'plain_start' => "<h3>",
+                                             'plain_end' => "</h3>",
+                                             ),
                                'b' => Array(
                                             'simple_start' => "<b>",
                                             'simple_end' => "</b>",
