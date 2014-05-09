@@ -665,7 +665,7 @@
         }
 
         public function getTOC($body) {
-            $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
+            $pattern = '/\<h(1|2|3)\>(.+?)\<\/h(1|2|3)\>/';
             preg_match_all($pattern, $body, $matches);
             return $matches;
         }
