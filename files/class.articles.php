@@ -652,7 +652,7 @@
 
         public function setupTOC($body){
             //Add href tags
-            $pattern = '/\<h(1|2)\>(.+?)\<\/h(1|2)\>/';
+            $pattern = '/\<h(1|2|3)\>(.+?)\<\/h(1|2|3)\>/';
             return preg_replace_callback($pattern, array($this, 'setupTOCProcess'), $body);
         }
 
