@@ -162,7 +162,7 @@
         $c = '>';
         if ($matches[1][$i] == '2')
             $c = " class='sub'>- ";
-        if ($matches[1][$i] == '2')
+        if ($matches[1][$i] == '3')
             $c = " class='sub2'>&nbsp;&nbsp;&nbsp;- ";
 
         $slug = $app->utils->generateSlug($match);
