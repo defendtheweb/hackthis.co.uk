@@ -23,10 +23,6 @@ article.body {
             margin-bottom: 4px;
             margin-top: 0;
         }
-        
-        h3 {
-            display: inline-block;
-        }
 
         .meta {
             display: inline-block;
@@ -48,6 +44,10 @@ article.body {
     div.articleBody {
         font-size: 1.1em;
         line-height: 1.3em;
+        
+        h3 {
+            display: inline-block;
+        }
     }
 
     div.contents {
