@@ -35,7 +35,7 @@
     <br/><br/>
     We offer the use of a secure server. All supplied sensitive/credit information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our Payment gateway providers database only to be accessible by those authorized with special access rights to such systems, and are required to keep the information confidential.
     <br/><br/>
-    After a transaction, your private information (credit cards, social security numbers, financials, etc.) will be kept on file for more than 60 days in order to.
+    After a transaction, your private information (credit cards, social security numbers, financials, etc.) will be kept on file for more than 60 days in order to proccess transactions.
 </p>
 <p>
     <h2>Do we use cookies?</h2>
