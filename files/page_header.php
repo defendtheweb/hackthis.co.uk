@@ -88,7 +88,7 @@
                 $link = $ads[$id][1];
 ?>
                 <div class="col span_13 advert">
-                    <a href='<?=$link;?>' taget='_blank' class='hide-external'>
+                    <a href='<?=$link;?>' target='_blank' class='hide-external'>
                         <img src='/files/images/ad_banner_<?=$image;?>.png'/>
                     </a>
                 </div>
