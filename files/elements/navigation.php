@@ -80,7 +80,7 @@
 ?>
                             </ul>
                         </li>
-                        <li class='parent'><a href='/irc'>Chat</a>
+                        <li><a href='/irc'>Chat</a>
                             <ul>
                                 <li><a href='/irc/stats.php'>Stats</a></li>
                             </ul>
