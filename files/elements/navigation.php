@@ -80,14 +80,13 @@
 ?>
                             </ul>
                         </li>
-
+                        <li class='parent'><a href='/irc'>Chat</a>
+                            <ul>
+                                <li><a href='/irc/stats.php'>Stats</a></li>
+                            </ul>
+                        </li>
                         <li><a href='/more.php'>more</a>
                             <ul>
-                                <li class='parent'><a href='/irc'>IRC</a>
-                                    <ul>
-                                        <li><a href='/irc/stats.php'>Stats</a></li>
-                                    </ul>
-                                </li>
 <?php
     if ($app->user->loggedIn):
 ?>
