@@ -224,6 +224,9 @@
 
                     // Send feed thingy
                     $this->app->feed->call($this->app->user->username, 'level', ucwords($level->group.' '.$level->name), '/levels/'.strtolower($level->group).'/'.strtolower($level->name));
+                    
+                    // Update WeChall
+                    file_get_contents("http://wechall.net/remoteupdate.php?sitename=ht&username=".$this->app->user->username);
                 } else {
                     // Record attempt
                     $st = $this->app->db->prepare('UPDATE users_levels SET attempts=attempts+1 WHERE level_id = :lid AND user_id = :uid');
