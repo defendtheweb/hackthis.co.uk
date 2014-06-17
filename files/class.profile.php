@@ -240,7 +240,7 @@
                 $error = true;
             }
 
-            // check if row created, else it already exists - therefore except pending request
+            // check if row created, else it already exists - therefore accept pending request
             if ($error || !$st->rowCount()) {
                 $st = $this->app->db->prepare('UPDATE users_friends SET `status` = 1
                                     WHERE `user_id` = :uid2 AND friend_id = :uid AND `status` = 0');
