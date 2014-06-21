@@ -14,8 +14,9 @@
                     return $this->list;
             }
 
-            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, IF(levels.name, CONCAT(levels_groups.title, " Level ", levels.name),
-                    CONCAT(levels_groups.title, " ", levels.name)) as `title`, levels.name, levels_groups.title as `group`,
+            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`,
+                    IF(levels.name, CONCAT(levels_groups.title, " Level ", levels.name), CONCAT(levels_groups.title, " ", levels.name)) as `title`,
+                    levels.name, levels_groups.title as `group`,
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
                     IF(users_levels.completed > 0, 1, 0) as `completed`, IF(levels.name, cast(levels.name as unsigned), levels.name) AS `order`
                     FROM levels
@@ -60,7 +61,8 @@
                 WHERE `group` = :group
                 ORDER BY level_id';
 
-            $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
+           $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`,
+                IF(levels.name, CONCAT(levels_groups.title, ' Level ', levels.name), CONCAT(levels_groups.title, ' ', levels.name)) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
                 IFNULL(users_levels.attempts, 0) as `attempts`,
                 levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
