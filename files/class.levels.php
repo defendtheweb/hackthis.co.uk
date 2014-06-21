@@ -14,17 +14,17 @@
                     return $this->list;
             }
 
-            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
+            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, IF(levels.name, CONCAT(levels_groups.title, " Level ", levels.name),
+                    CONCAT(levels_groups.title, " ", levels.name)) as `title`, levels.name, levels_groups.title as `group`,
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
-                    IF(users_levels.completed > 0, 1, 0) as `completed`
+                    IF(users_levels.completed > 0, 1, 0) as `completed`, IF(levels.name, cast(levels.name as unsigned), levels.name) AS `order`
                     FROM levels
                     INNER JOIN levels_groups
                     ON levels_groups.title = levels.group
                     LEFT JOIN users_levels
                     ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
-                    ORDER BY levels_groups.order ASC, levels.level_id ASC');
+                    ORDER BY levels_groups.order ASC, `order` ASC, levels.level_id ASC');
             $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
-            $st->execute();
             $list = $st->fetchAll();
 
             if (!$uid) {
