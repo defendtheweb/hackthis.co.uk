@@ -34,7 +34,7 @@ $(function() {
         });
     });
 
-    $('.profile').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
+    $('.profile, .users-list').on('click', '.addfriend, .acceptfriend, .removefriend', function(e) {
         e.preventDefault();
         var $this = $(this);
 
