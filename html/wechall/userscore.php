@@ -13,7 +13,7 @@
         die('0'); 
     }
 
-    $maxscore = $app->max_score;
+    $maxscore = $app->getMaxLevelsScore();
 
     $username = $_GET['username'];
 
@@ -34,14 +34,14 @@
 
     $profile->user_id = $row->user_id;
     $profile->username = $row->username;
-    $profile->score = $row->score;
+    $hackthis_score = $row->score;
 
-    // Rank data
+    // Rank data based on HackThis!! score
     $st = $app->db->prepare('SELECT COUNT(*) AS `count`
                              FROM users
                              WHERE score > :score
                              LIMIT 1');
-    $st->bindValue(':score', $profile->score);
+    $st->bindValue(':score', $hackthis_score);
     $st->execute();
     $row = $st->fetch();
 
@@ -49,15 +49,18 @@
 
 
     // Level data
-    $st = $app->db->prepare('SELECT COUNT(*) AS `count`
-                             FROM users_levels
-                             WHERE user_id = :uid AND completed > 0
+    $st = $app->db->prepare('SELECT COUNT(*) AS `count`, SUM(ld.value) AS `score`
+                             FROM users_levels ul
+                             LEFT JOIN levels_data ld
+                             ON ul.level_id = ld.level_id
+                             WHERE user_id = :uid AND completed > 0 AND ld.key = "reward"
                              LIMIT 1');
     $st->bindValue(':uid', $profile->user_id);
     $st->execute();
     $row = $st->fetch();
 
     $profile->challssolved = $row->count;
+    $profile->score = $row->score;
 
     // Level count
     $st = $app->db->prepare('SELECT COUNT(*) AS `count` FROM levels');

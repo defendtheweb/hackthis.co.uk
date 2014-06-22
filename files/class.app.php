@@ -1,7 +1,5 @@
 <?php
     class app {
-        public $bbcode;
-        public $max_score = 4000;
 
         function __construct($minimal = false) {
             global $custom_css, $custom_js;
@@ -120,6 +118,23 @@
         }
 
         /**
+         * Get the maximum score any user can obtain from solving levels.
+         *
+         * @return int Maximum score
+         */
+        public function getMaxLevelsScore() {
+            $sql = 'SELECT SUM(`value`) AS `score`
+                    FROM levels
+                    INNER JOIN levels_data
+                    ON levels_data.level_id = levels.level_id AND levels_data.key = "reward"';
+            $st = $this->db->prepare($sql);
+            $st->execute();
+            $row = $st->fetch();
+
+            return $row->score;
+        }
+
+        /**
          * Get the maximum score any user can obtain. This value is cached and recalculated every 1 hour
          *
          * @return int Maximum score
@@ -129,13 +144,7 @@
 
             if (!$score) {
                 // Level total
-                $sql = 'SELECT SUM(`value`) AS `score`
-                        FROM levels
-                        INNER JOIN levels_data
-                        ON levels_data.level_id = levels.level_id AND levels_data.key = "reward"';
-                $st = $this->db->prepare($sql);
-                $st->execute();
-                $levels = $st->fetch();
+                $levels_score = $this->getMaxLevelsScore();
 
                 // Medal total
                 $sql = 'SELECT SUM(`reward`) AS `score`
@@ -146,7 +155,7 @@
                 $st->execute();
                 $medals = $st->fetch();
 
-                $score = $levels->score + $medals->score;
+                $score = $levels_score + $medals->score;
 
                 $this->cache->set('maxscore', $score);
             }
