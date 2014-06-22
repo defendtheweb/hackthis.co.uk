@@ -26,6 +26,7 @@
                     ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
                     ORDER BY levels_groups.order ASC, `order` ASC, levels.level_id ASC');
             $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
+            $st->execute();
             $list = $st->fetchAll();
 
             if (!$uid) {

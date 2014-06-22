@@ -33,8 +33,12 @@
                                 </li>
 <?php
         endforeach;
+        if ($lastGroup !== ''):
 ?>
                             </ul></li>
+<?php
+        endif;
+?>
                         </ul></li>
 <?php
     // endif;
