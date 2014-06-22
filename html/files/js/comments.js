@@ -154,7 +154,7 @@ $(function() {
                 $article.slideUp(function() { $(this).remove(); });
                 //update counter
                 var $responses = $('#comments > h2');
-                var tmp = $responses.text().replace(/(\d+)+/g, function(match, number) {
+                var tmp = $responses.text().replace(/(\d+)+/, function(match, number) {
                     return parseInt(number)-1;
                 });
                 $responses.text(tmp);
@@ -202,7 +202,7 @@ $(function() {
 
                     //update counter
                     var $responses = $('#comments > h2');
-                    var tmp = $responses.text().replace(/(\d+)+/g, function(match, number) {
+                    var tmp = $responses.text().replace(/(\d+)+/, function(match, number) {
                         return parseInt(number)+1;
                     });
                     $responses.text(tmp);
