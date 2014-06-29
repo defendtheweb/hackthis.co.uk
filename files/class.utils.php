@@ -151,8 +151,35 @@
             return true;
         }
 
-        public function search_users($username, $limit=0) {
-            $username .= '%';
+        /**
+         * Takes a string and an optional escape char and
+         * escapes the special SQL LIKE chars "_" and "%".
+         * Note that the escape_char must be provided to MYSQL
+         * using the ESCAPE command:
+         * "WHERE a LIKE b ESCAPE $escape_char"
+         *
+         * @param  string $str         The string to escape
+         * @param  string $escape_char The escape char to use. The char
+         *                             should be the same as the one
+         *                             provided to mysql with the ESCAPE
+         *                             command.
+         * @return string              The escaped string.
+         */
+        public function escape_like($str, $escape_char = '|') {
+            $esc = $escape_char;
+            return str_replace(
+                array($esc, '_', '%'),
+                array($esc.$esc, $esc.'_', $esc.'%'),
+                $str);
+        }
+
+        public function search_users($username, $limit=3) {
+            if(strlen($username) < 3) {
+                return false;
+            }
+
+            $username = $this->escape_like($username, '|');
+            $username .= '%'
 
             $sql = 'SELECT u.username, IFNULL(friends.status, 0) AS friends
                     FROM users u
@@ -160,7 +187,7 @@
                     ON users_blocks.user_id = u.user_id AND users_blocks.blocked_id = :user
                     LEFT JOIN users_friends friends
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
-                    WHERE u.username LIKE :username AND u.user_id != :user AND users_blocks.user_id IS NULL
+                    WHERE u.username LIKE :username ESCAPE \'|\' AND u.user_id != :user AND users_blocks.user_id IS NULL
                     ORDER BY friends DESC, u.username
                     LIMIT :limit';
             $st = $this->app->db->prepare($sql);
