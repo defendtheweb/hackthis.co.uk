@@ -179,7 +179,7 @@
             }
 
             $username = $this->escape_like($username, '|');
-            $username .= '%'
+            $username .= '%';
 
             $sql = 'SELECT u.username, IFNULL(friends.status, 0) AS friends
                     FROM users u
