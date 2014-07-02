@@ -47,7 +47,7 @@
                     <a href='#' class='right show-post dark'>[show post]</a>
                 </div>
             {% endif %}
-            <div class="karma small mobile-hide">
+            <div class="karma small mobile-hide post_body">
                 {% if (post.karma_priv >= 2 and post.author == false) %}
                     <a class="karma karma-down {% if post.user_karma < 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-down"></i></a>
                 {% endif %}
