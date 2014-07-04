@@ -147,7 +147,8 @@
             if (strlen($term) <= 3)
                 return false;
 
-            $like = "{$term}%";
+            $like = $this->app->utils->escape_like($term, '|');
+            $like .= '%';
 
             $sql = 'SELECT username, users.score, profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`, users_friends.status
                     FROM users
@@ -155,7 +156,7 @@
                     ON users.user_id = profile.user_id
                     LEFT JOIN users_friends
                     ON (users_friends.user_id = users.user_id AND users_friends.friend_id = :uid) OR (users_friends.user_id = :uid AND users_friends.friend_id = users.user_id)
-                    WHERE username LIKE :like OR (email = :term AND profile.show_email = 1)
+                    WHERE username LIKE :like ESCAPE \'|\' OR (email = :term AND profile.show_email = 1)
                     ORDER BY username ASC
                     LIMIT 8';
 
