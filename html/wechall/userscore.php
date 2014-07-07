@@ -9,11 +9,9 @@
 
     if (!isset($_GET['username']) ||
         is_array($_GET['username']) ||
-        $key != $_GET['authkey']) { 
+        $key !== $_GET['authkey']) { 
         die('0'); 
     }
-
-    $maxscore = $app->getMaxLevelsScore();
 
     $username = $_GET['username'];
 
@@ -34,19 +32,18 @@
 
     $profile->user_id = $row->user_id;
     $profile->username = $row->username;
-    $hackthis_score = $row->score;
+    $profile->total_score = $row->score;
 
     // Rank data based on HackThis!! score
     $st = $app->db->prepare('SELECT COUNT(*) AS `count`
                              FROM users
                              WHERE score > :score
                              LIMIT 1');
-    $st->bindValue(':score', $hackthis_score);
+    $st->bindValue(':score', $profile->total_score);
     $st->execute();
     $row = $st->fetch();
 
     $profile->rank = $row->count + 1;
-
 
     // Level data
     $st = $app->db->prepare('SELECT COUNT(*) AS `count`, SUM(ld.value) AS `score`
@@ -59,23 +56,39 @@
     $st->execute();
     $row = $st->fetch();
 
-    $profile->challssolved = $row->count;
-    $profile->score = $row->score;
+    $profile->challs_solved = $row->count;
+    $profile->levels_score = $row->score;
 
     // Level count
     $st = $app->db->prepare('SELECT COUNT(*) AS `count` FROM levels');
     $st->execute();
     $row = $st->fetch();
 
-    $profile->challcount = $row->count;
+    $profile->chall_count = $row->count;
 
     // User count
     $st = $app->db->prepare('SELECT COUNT(*) AS `count` FROM users');
     $st->execute();
     $row = $st->fetch();
 
-    $profile->usercount = $row->count;
+    $profile->user_count = $row->count;
 
+    // Maximum scores
+    $profile->max_levels_score = $app->getMaxLevelsScore();
+    $profile->max_total_score = $app->max_score;
 
-    echo sprintf('%s:%d:%d:%d:%d:%d:%d', $profile->username, $profile->rank, $profile->score, $maxscore, $profile->challssolved, $profile->challcount, $profile->usercount);
+    
+    if ( $_GET['format'] === 'json' )
+    {
+        echo json_encode($profile);
+    } else { // default: wechall format
+        echo sprintf('%s:%d:%d:%d:%d:%d:%d',
+                     $profile->username,
+                     $profile->rank,
+                     $profile->levels_score,
+                     $profile->max_levels_score,
+                     $profile->challs_solved,
+                     $profile->chall_count,
+                     $profile->user_count);
+    }
 ?>
