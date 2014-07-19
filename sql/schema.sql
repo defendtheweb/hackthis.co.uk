@@ -557,6 +557,7 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM users_medals WHERE OLD.user_id = user_id;
         DELETE FROM users_levels WHERE OLD.user_id = user_id;
         DELETE FROM users_levels_data WHERE OLD.user_id = user_id;
+        DELETE FROM users_data WHERE OLD.user_id = user_id;
         DELETE FROM mod_reports WHERE OLD.user_id = user_id;
         DELETE FROM articles_favourites WHERE OLD.user_id = user_id;
         DELETE FROM articles_draft WHERE OLD.user_id = user_id;
@@ -565,6 +566,8 @@ CREATE TRIGGER delete_user BEFORE DELETE ON users FOR EACH ROW
         DELETE FROM pm_users WHERE OLD.user_id = user_id;
         DELETE FROM users_feed WHERE OLD.user_id = user_id;
         DELETE FROM users_settings WHERE OLD.user_id = user_id;
+        DELETE FROM home_ticker WHERE OLD.user_id = user_id;
+        DELETE FROM email_queue WHERE OLD.user_id = user_id;
         -- Add other tables to be removed.
 
         -- Update other contributions to NULL so they aren't lost
@@ -858,6 +861,13 @@ DROP TRIGGER IF EXISTS delete_article_favourites$$
 CREATE TRIGGER delete_article_favourites AFTER DELETE ON articles_favourites FOR EACH ROW
     BEGIN
         CALL user_feed_remove(OLD.user_id, 'favourite', OLD.article_id);
+    END$$
+
+-- Ticker
+DROP TRIGGER IF EXISTS delete_home_ticker$$
+CREATE TRIGGER delete_home_ticker BEFORE DELETE ON home_ticker FOR EACH ROW
+    BEGIN
+        DELETE FROM home_ticker_votes WHERE ticker_id = OLD.id;
     END$$
 
 $$
