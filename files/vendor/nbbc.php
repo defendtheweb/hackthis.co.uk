@@ -698,7 +698,7 @@ var $default_tag_rules = Array(
 				'method' => function fixnewlines($bbcode, $action, $name, $default, $params, $content){
 					if ($action !== BBCODE_OUTPUT) return true;
 					
-					return preg_replace('/<br(?: \/)?>'."\n".'/',"\n",$default);
+					return preg_replace('/<br(?: \/)?>'."\n".'/',"\n",$content);
 				},
                 'template' => "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
                 'class' => 'code',
