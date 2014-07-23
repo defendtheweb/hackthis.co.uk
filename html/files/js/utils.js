@@ -26,9 +26,10 @@ function timeSince(oldD, short, forceSince) {
     if (!diff)
         return "secs" + (!short ? " ago" : '');
 
+	var sameYear = oldD.getFullYear() == newD.getFullYear();
     isSameDay = (oldD.getDate() == newD.getDate() 
                  && oldD.getMonth() == newD.getMonth()
-                 && oldD.getFullYear() == newD.getFullYear());
+                 && sameYear);
 
     if (isSameDay || forceSince) {
         if (diff < 60) {
@@ -55,7 +56,8 @@ function timeSince(oldD, short, forceSince) {
     } else if (short) {
         var day = oldD.getDate();
         var month = oldD.getMonth()+1;
-        return ((day < 10) ? '0':'') + day + "/" + ((month < 10) ? '0':'') + month;
+		var year = (oldD.getFullYear()+'').substring(2,4);
+        return ((day < 10) ? '0':'') + day + "/" + ((month < 10) ? '0':'') + month + (!sameYear ? " '"+year : '');
     } else {
         newD.setDate(newD.getDate() - 1);
 
