@@ -76,11 +76,27 @@
                 $custom_css = Array();
             if (!is_array($custom_js))
                 $custom_js = Array();
-
-            require('vendor/nbbc.php');
-            $this->bbcode = new BBCode;
+			
             array_push($custom_css, 'bbcode.scss');
             array_push($custom_js, 'bbcode.js');
+			
+			$this->initBBC();
+        }
+
+        public function config($key) {
+            return $this->config[$key];
+        }
+		
+		/**
+		 * Initaite BBCode parser
+		 *
+		 * @param none
+		 *
+		 * @return void
+		 */
+		private function initBBC(){
+            require('vendor/nbbc.php');
+            $this->bbcode = new BBCode;
             $this->bbcode->SetDetectURLs(true);
 			function fixnewlines($bbcode, $action, $name, $default, $params, $content){
 				if ($action !== BBCODE_OUTPUT) return true;
