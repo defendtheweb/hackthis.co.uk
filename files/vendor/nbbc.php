@@ -709,7 +709,6 @@ var $default_tag_rules = Array(
                 'after_endtag' => "sns",
                 'plain_start' => "\n<b>Code:</b>\n",
                 'plain_end' => "\n",
-				
                 ),
 'block' => Array(
                 'mode' => BBCODE_MODE_ENHANCED,
