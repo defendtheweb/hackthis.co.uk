@@ -694,7 +694,7 @@ var $default_tag_rules = Array(
                    'plain_end' => "",
                    ),
 'code' => Array(
-                'mode' => BBCODE_MODE_ENHANCED,
+				'mode' => BBCODE_MODE_ENHANCED,
                 'template' => "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
                 'class' => 'code',
                 'allow_in' => Array('listitem', 'block', 'columns'),

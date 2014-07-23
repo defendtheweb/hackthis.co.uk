@@ -76,12 +76,42 @@
                 $custom_css = Array();
             if (!is_array($custom_js))
                 $custom_js = Array();
-
-            require('vendor/nbbc.php');
-            $this->bbcode = new BBCode;
+			
             array_push($custom_css, 'bbcode.scss');
             array_push($custom_js, 'bbcode.js');
+			
+			$this->initBBC();
+        }
+
+		/**
+		 * Initaite BBCode parser
+		 *
+		 * @param none
+		 *
+		 * @return void
+		 */
+		private function initBBC(){
+            require('vendor/nbbc.php');
+            $this->bbcode = new BBCode;
             $this->bbcode->SetDetectURLs(true);
+			function fixnewlines($bbcode, $action, $name, $default, $params, $content){
+				if ($action !== BBCODE_OUTPUT) return true;
+				return preg_replace('/<br(?: \/)?>'."\n".'/',"\n",$content);
+			}
+			$this->bbcode->AddRule('code',  Array(
+				'mode' => BBCODE_MODE_CALLBACK,
+				'method' => 'fixnewlines',
+                'template' => "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
+                'class' => 'code',
+                'allow_in' => Array('listitem', 'block', 'columns'),
+                'before_tag' => "sns",
+                'after_tag' => "sn",
+                'before_endtag' => "sn",
+                'after_endtag' => "sns",
+                'plain_start' => "\n<b>Code:</b>\n",
+                'plain_end' => "\n",
+
+			));
         }
 
         public function config($key) {
