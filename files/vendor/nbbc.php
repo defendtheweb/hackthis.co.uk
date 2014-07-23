@@ -694,7 +694,12 @@ var $default_tag_rules = Array(
                    'plain_end' => "",
                    ),
 'code' => Array(
-                'mode' => BBCODE_MODE_ENHANCED,
+				'mode' => BBCODE_MODE_CALLBACK,
+				'method' => function fixnewlines($bbcode, $action, $name, $default, $params, $content){
+					if ($action !== BBCODE_OUTPUT) return true;
+					
+					return preg_replace('/<br(?: \/)?>'."\n".'/',"\n",$default);
+				},
                 'template' => "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{\$_content/v}</pre>\n</div>\n",
                 'class' => 'code',
                 'allow_in' => Array('listitem', 'block', 'columns'),
@@ -704,6 +709,7 @@ var $default_tag_rules = Array(
                 'after_endtag' => "sns",
                 'plain_start' => "\n<b>Code:</b>\n",
                 'plain_end' => "\n",
+				
                 ),
 'block' => Array(
                 'mode' => BBCODE_MODE_ENHANCED,
