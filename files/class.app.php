@@ -83,10 +83,6 @@
 			$this->initBBC();
         }
 
-        public function config($key) {
-            return $this->config[$key];
-        }
-		
 		/**
 		 * Initaite BBCode parser
 		 *
