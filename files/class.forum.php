@@ -10,27 +10,32 @@
 
         public function getLatest($limit = 3) {
             if ($limit == 5) {
-                $latest = json_decode($this->app->cache->get('forum_latest', 5));
+                $latest = json_decode($this->app->cache->get('forum_latest', 1));
 
-                if ($latest)
+                if ($latest) {
                     return $latest;
+                }
             }
 
-
             // Get the last three posts
-            $sql = "SELECT posts.thread_id, threads.title, threads.slug, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`
+            $sql = "SELECT posts.thread_id, threads.title, threads.slug, sections.title AS `section`, sections.slug AS `section_slug`,
+                           users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `started`,
+                           count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`
                     FROM forum_posts posts
 
                     LEFT JOIN forum_threads threads
                     ON threads.thread_id = posts.thread_id
 
+                    LEFT JOIN forum_sections sections
+                    ON sections.section_id = threads.section_id
+
                     LEFT JOIN users
                     ON users.user_id = threads.owner
 
                     LEFT JOIN forum_users
-                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
+                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid                 
 
-                    WHERE posts.deleted = 0 AND (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233)) GROUP BY posts.thread_id ORDER BY `latest` DESC
+                    WHERE posts.deleted = 0 GROUP BY posts.thread_id ORDER BY `latest` DESC
                     LIMIT :limit";
 
             $st = $this->app->db->prepare($sql);
@@ -49,7 +54,7 @@
                 $res->title = $this->app->parse($res->title, false);
             }
 
-            if ($limit == 3) {
+            if ($limit == 5) {
                 $this->app->cache->set('forum_latest', json_encode($result));
             }
 
@@ -114,6 +119,7 @@
             $post->karma_priv = $this->app->user->karma_priv;
 
             $post->body = $this->app->parse($post->body);
+
             if (isset($post->signature)) {
                 $post->signature = $this->app->parse($post->signature);
             }
