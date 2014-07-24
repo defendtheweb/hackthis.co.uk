@@ -98,20 +98,31 @@
                 border: none;
             }
 
-            .section_info a {
-                display: block;
-                width: 100%;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            .section_info {
+                a {
+                    display: block;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .lite-pagination {
+                    margin: 2px 0 2px -2px;
+                }
             }
 
-            .thread-sections, .thread-blurb {
+            .thread-sections,
+            .thread-blurb {
                 margin-top: 2px;
                 o-text-overflow: ellipsis;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 height: 15px;
                 overflow: hidden;
+
+                a {
+                    display: inline;
+                }
             }
         }
     }
