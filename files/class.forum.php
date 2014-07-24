@@ -9,14 +9,6 @@
         }
 
         public function getLatest($limit = 3) {
-            if ($limit == 5) {
-                $latest = json_decode($this->app->cache->get('forum_latest', 1));
-
-                if ($latest) {
-                    return $latest;
-                }
-            }
-
             // Get the last three posts
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, sections.title AS `section`, sections.slug AS `section_slug`,
                            users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `started`,
@@ -52,10 +44,6 @@
                 $res->latest_author = $u->username;
 
                 $res->title = $this->app->parse($res->title, false);
-            }
-
-            if ($limit == 5) {
-                $this->app->cache->set('forum_latest', json_encode($result));
             }
 
             return $result;
