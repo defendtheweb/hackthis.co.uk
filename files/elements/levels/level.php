@@ -5,8 +5,14 @@
         <div class='info solution'>
             <?=$app->utils->parse($level->data['solution']);?>
         </div>
+        <br/>
 <?php
         endif;
+?>
+        <div class='info solution'>
+            Want to share your solution? <a href='/forum/level-discussion/<?=strtolower($currentLevel->group);?>-levels/<?=strtolower($currentLevel->group);?>-level-<?=$currentLevel->name;?>/solutions'>Visit the solutions section</a> in the forum.
+        </div>
+<?php
     elseif (isset($level->data['form'])):
 ?>
 

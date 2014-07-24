@@ -33,7 +33,7 @@
             die();
         }
 
-        if (!$section->child && isset($_GET['submit'])) {
+        if (!$section->child && !$section->incomplete && isset($_GET['submit'])) {
             if (isset($_POST['title']) && isset($_POST['body'])) {
                 $newThreadResult = $forum->newThread($section, $_POST['title'], $_POST['body']);
 
@@ -85,7 +85,7 @@
                         <div class="col span_18 article-main">
 
 <?php
-    if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child):
+    if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child && !$section->incomplete):
         if (isset($newThreadResult)):
 ?>
     <a class="new-thread button right" href="#"><i class="icon-caret-left"></i> Thread list</a>
@@ -95,6 +95,10 @@
     <a href='#' class='new-thread button right'><i class='icon-chat'></i> New thread</a>
 <?php
         endif;
+    elseif ($section->incomplete):
+?>
+    <a class='button button-disabled right'><i class='icon-chat'></i> New thread</a>
+<?php
     else:
 ?>
     <a class='button button-disabled right hint--left' data-hint="New threads can only be started in sub-sections"><i class='icon-chat'></i> New thread</a>
@@ -112,7 +116,7 @@
                             <div class='forum-container clearfix <?=isset($newThreadResult)?'new-thread':'';?>'>
                                 <div class='forum-topics'>
 <?php
-    if (count($threads)):
+    if (count($threads) && !$section->incomplete):
 ?>
                                     <ul class='fluid'>
                                         <li class='forum-topic-header row'>
@@ -166,25 +170,26 @@
                                         </li>
                                     </ul>
 <?php
-        else:
-            $app->utils->message('No threads found, consider starting your own', 'info');
+    elseif ($section->incomplete):
+        $app->utils->message('You must complete the relevant level before accessing this section', 'warning');
+    else:
+        $app->utils->message('No threads found, consider starting your own', 'info');
+    endif;
 
-        endif;
+    if ($threads_count > 10) {
+        $pagination = new stdClass();
+        $pagination->current = $page;
+        $pagination->count = ceil($threads_count/10);
 
-        if ($threads_count > 10) {
-            $pagination = new stdClass();
-            $pagination->current = $page;
-            $pagination->count = ceil($threads_count/10);
+        // Build root
+        $root = '';
+        if (isset($_GET['watching'])) $root = 'watching&';
+        if (isset($_GET['popular'])) $root = 'popular&';
+        if (isset($_GET['no-replies'])) $root = 'no-replies&';
 
-            // Build root
-            $root = '';
-            if (isset($_GET['watching'])) $root = 'watching&';
-            if (isset($_GET['popular'])) $root = 'popular&';
-            if (isset($_GET['no-replies'])) $root = 'no-replies&';
-
-            $pagination->root = '?'.$root.'page=';
-            include('elements/pagination.php');
-        }
+        $pagination->root = '?'.$root.'page=';
+        include('elements/pagination.php');
+    }
 ?>
                                     <ul class='key plain clr'>
                                         <li class='new'>New post</li>

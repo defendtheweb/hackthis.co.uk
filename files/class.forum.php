@@ -12,7 +12,8 @@
             // Get the last three posts
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, sections.title AS `section`, sections.slug AS `section_slug`,
                            users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `started`,
-                           count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`
+                           count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`,
+                           IF(sections.priv_level, IF(users_levels.level_id, 1, 0),1) AS `access`
                     FROM forum_posts posts
 
                     LEFT JOIN forum_threads threads
@@ -25,9 +26,15 @@
                     ON users.user_id = threads.owner
 
                     LEFT JOIN forum_users
-                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid                 
+                    ON posts.thread_id = forum_users.thread_id AND forum_users.user_id = :uid
 
-                    WHERE posts.deleted = 0 GROUP BY posts.thread_id ORDER BY `latest` DESC
+                    LEFT JOIN users_levels
+                    ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = sections.priv_level
+
+                    WHERE posts.deleted = 0
+                    GROUP BY posts.thread_id
+                    HAVING `access` > 0
+                    ORDER BY `latest` DESC
                     LIMIT :limit";
 
             $st = $this->app->db->prepare($sql);
@@ -156,7 +163,8 @@
             $st = $this->app->db->prepare("SELECT t1.title as title1, t1.slug as slug1, t2.title as title2,
                 t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
                 current.section_id AS id, current.title AS title, current.slug AS slug, current.parent_id AS parent,
-                child.section_id AS `child`
+                child.section_id AS `child`, t1.priv_level AS `priv1`, t2.priv_level AS `priv2`, t3.priv_level AS `priv3`,
+                t4.priv_level AS `priv4`
                 FROM forum_sections AS t1
                 LEFT JOIN forum_sections AS t2 ON t2.parent_id = t1.section_id
                 LEFT JOIN forum_sections AS t3 ON t3.parent_id = t2.section_id
@@ -168,14 +176,35 @@
             $result = $st->fetch();
 
             if ($result->slug1 == $result->slug) {
-                unset($result->title2); unset($result->slug2);
-                unset($result->title3); unset($result->slug3);
-                unset($result->title4); unset($result->slug4);
+                unset($result->title2); unset($result->slug2); unset($result->priv2);
+                unset($result->title3); unset($result->slug3); unset($result->priv2);
+                unset($result->title4); unset($result->slug4); unset($result->priv3);
+                $priv_level = $result->priv1;
             } else if ($result->slug2 == $result->slug) {
-                unset($result->title3); unset($result->slug3);
-                unset($result->title4); unset($result->slug4);
+                unset($result->title3); unset($result->slug3); unset($result->priv3);
+                unset($result->title4); unset($result->slug4); unset($result->priv4);
+                $priv_level = $result->priv2;
             } else if ($result->slug3 == $result->slug) {
-                unset($result->title4); unset($result->slug4);
+                unset($result->title4); unset($result->slug4); unset($result->priv4);
+                $priv_level = $result->priv3;
+            } else {
+                $priv_level = $result->priv4;
+            }
+
+            // has user completed level
+            $result->incomplete = false;
+            if ($priv_level) {
+                $levels = $this->app->levels->getList();
+
+                // loop and find level
+                foreach($levels AS $level) {
+                    if ($level->id == $priv_level) {
+                        if (!$level->completed) {
+                            $result->incomplete = true;
+                        }
+                        break;
+                    }
+                }
             }
 
             return $result;
@@ -224,7 +253,8 @@
 
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, threads.closed, threads.sticky, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `first`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
                     IF (forum_users.viewed >= max(posts.`posted`),1, 0) AS `viewed`, t1.title as title1, t1.slug as slug1,
-                    t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4
+                    t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
+                    IF(t1.priv_level, IF(users_levels.level_id, 1, 0),1) AS `access`
                     FROM forum_posts posts
 
                     LEFT JOIN forum_threads threads
@@ -240,6 +270,9 @@
                     LEFT JOIN forum_sections AS t2 ON t1.parent_id = t2.section_id
                     LEFT JOIN forum_sections AS t3 ON t2.parent_id = t3.section_id
                     LEFT JOIN forum_sections AS t4 ON t3.parent_id = t4.section_id
+
+                    LEFT JOIN users_levels
+                    ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = t1.priv_level
 
                     WHERE (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233)) AND ";
 
@@ -283,6 +316,8 @@
                 $sql .= ' HAVING `count` = 0';
             else
                 $sql .= ' HAVING `count` >= 0';
+
+            $sql .= ' AND `access` > 0';
 
             if ($most_popular)
                 $sql .= " ORDER BY `count` DESC, `voices` DESC, latest DESC";
@@ -494,7 +529,8 @@
 
 
         public function getThread($thread_id, $page = 1, $limit = 10) {
-            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky, section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`
+            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
+                section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id, 1, 0),1) AS `access`
                 FROM forum_threads thread
                 LEFT JOIN forum_users
                 ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
@@ -502,6 +538,8 @@
                 ON section.section_id = thread.section_id
                 LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
                 ON replies.thread_id = thread.thread_id
+                LEFT JOIN users_levels
+                ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
                 WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
                 LIMIT 1");
             $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
@@ -509,6 +547,12 @@
 
             if (!$thread)
                 return false;
+
+            // does the user have access
+            if (!$thread->access) {
+                return false;
+            }
+
 
             $thread->title = $this->app->parse($thread->title, false);
             if ($thread->closed)
