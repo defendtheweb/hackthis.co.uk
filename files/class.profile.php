@@ -229,16 +229,19 @@
             if ($st->fetch())
                 return false;
 
-
-            // try and make request, if fails there is already a pending request
-            $error = false;
-            try {
-                $st = $this->app->db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
-                        VALUES (:uid, :uid2, :status)');
-                $st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid, ':status' => $status));
-            } catch (Exception $e) {
-                $error = true;
-            }
+			// prevent user from adding themselves as a frined
+            $error = $status;
+			if (!$status){
+				$error = false;
+				// try and make request, if fails there is already a pending request
+				try {
+					$st = $this->app->db->prepare('INSERT INTO users_friends (`user_id`, `friend_id`, `status`)
+							VALUES (:uid, :uid2, :status)');
+					$st->execute(array(':uid' => $this->app->user->uid, ':uid2' => $this->uid, ':status' => $status));
+				} catch (Exception $e) {
+					$error = true;
+				}
+			}
 
             // check if row created, else it already exists - therefore accept pending request
             if ($error || !$st->rowCount()) {
