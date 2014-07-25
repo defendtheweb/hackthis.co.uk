@@ -289,14 +289,24 @@
                 $st->execute(array(':uid' => $uid));
                 $result['graph'] = $st->fetchAll();
 
-                $st = $app->db->prepare('SELECT posts.post_id, posts.body, posts.posted AS `time`, threads.title, CONCAT("/forum/", threads.slug) AS slug
+                $st = $app->db->prepare('SELECT posts.post_id, posts.body, posts.posted AS `time`, threads.title, CONCAT("/forum/", threads.slug) AS slug,
+                    IF(section.priv_level, IF(users_levels.level_id, 1, 0),1) AS `access`
                     FROM forum_posts posts
+
                     INNER JOIN forum_threads threads
                     ON threads.thread_id = posts.thread_id
+
+                    LEFT JOIN forum_sections AS section
+                    ON section.section_id = threads.section_id
+
+                    LEFT JOIN users_levels
+                    ON users_levels.user_id = :uid2 AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
+
                     WHERE posts.deleted = 0 AND posts.author = :uid
                     AND (threads.section_id != 95 && (threads.section_id < 100 || threads.section_id > 233))
+                    HAVING `access` > 0
                     ORDER BY posts.`posted` DESC');
-                $st->execute(array(':uid' => $uid));
+                $st->execute(array(':uid' => $uid, ':uid2' => $app->user->uid));
                 $result['data'] = $st->fetchAll();
 
                 if ($result['data']) {
