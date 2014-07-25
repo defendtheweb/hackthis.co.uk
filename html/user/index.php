@@ -69,7 +69,7 @@
         <a href='#' class='button right button-disabled button-friend pendingfriend'>Pending</a>
 <?php   elseif ($profile->friends !== NULL && $profile->friend == $profile->uid): ?>
         <a href='#' class='button right button-friend acceptfriend'><i class='icon-addfriend'></i> Accept</a>
-<?php   else: ?>
+<?php   else if (!$profile->owner): ?>
         <a href='#' class='button right button-friend addfriend'><i class='icon-addfriend'></i> Add friend</a>
 <?php
         endif;
