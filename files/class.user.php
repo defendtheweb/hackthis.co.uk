@@ -59,6 +59,9 @@
                     $user = $_POST['username'];
                     $pass = $_POST['password'];
                     $this->login($user, $pass);
+                } else {
+                    // Check there autologin cookie
+                    $this->checkRememberToken();
                 }
             }
 
@@ -434,6 +437,8 @@
                 $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['user_agent_id'] = md5($_SERVER['HTTP_USER_AGENT']);
                 
+                $this->regenerateRememberToken();
+
                 $this->app->stats->users_activity($this, true);
 
                 // Set cookie to say they are already a registered user
@@ -442,6 +447,47 @@
                 // Redirect user back to where they came from
                 header("location: " . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
             }     
+        }
+
+        private function checkRememberToken() {
+            $existing = $_COOKIE['autologin'];
+            $extra = md5($_SERVER['HTTP_USER_AGENT']);
+
+            $st = $this->app->db->prepare('SELECT user_id, extra FROM users_data WHERE type = "autologin" AND value = :value AND DATEDIFF(`time`, NOW()) >= -7 LIMIT 1');
+            $st->execute(array(':value' => $existing));
+            $row = $st->fetch();
+            if ($row && $row->extra === $extra) {
+                // Login user
+                $this->loggedIn = true;
+                $this->uid = $row->user_id;
+
+                // Setup GA event
+                $this->app->ssga->set_event('user', 'login', 'auto', $this->uid);
+                $this->app->ssga->send();
+
+                $this->createSession();
+            }
+        }
+
+        private function regenerateRememberToken() {
+            // delete existing token based on cookie
+            if (isset($_COOKIE['autologin'])) {
+                $existing = $_COOKIE['autologin'];
+                $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND type = "autologin" AND value = :value LIMIT 1');
+                $result = $st->execute(array(':uid' => $this->uid, ':value' => $existing));
+            }
+
+            $token = openssl_random_pseudo_bytes(64);
+            $extra = md5($_SERVER['HTTP_USER_AGENT']);
+
+            $st = $this->app->db->prepare('INSERT INTO users_data (`user_id`, `type`, `value`, `extra`)
+                    VALUES (:uid, :type, :value, :extra)');
+            $result = $st->execute(array(':uid' => $this->uid, ':type' => 'autologin', ':value' => $token, ':extra' => $extra));
+            if (!$result) {
+                $this->regenerateRememberToken();
+            }
+
+            setcookie('autologin', $token, time()+60*60*24*7);
         }
 
         public function register() {
@@ -519,15 +565,25 @@
         }
 
         public function logout() {
-            if (isset($_SESSION['uid'])) {
+            $uid = $_SESSION['uid'];
+
+            if (isset($uid)) {
                 // Setup GA event
-                $this->app->ssga->set_event('user', 'logout', 'default', $_SESSION['uid']);
+                $this->app->ssga->set_event('user', 'logout', 'default', $uid);
                 $this->app->ssga->send();
             }
 
             $this->loggedIn = false;
             session_destroy();
             session_regenerate_id(true);
+
+            // Remove auto login
+            if (isset($_COOKIE['autologin'])) {
+                $existing = $_COOKIE['autologin'];
+                $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND type = "autologin" AND value = :value LIMIT 1');
+                $result = $st->execute(array(':uid' => $uid, ':value' => $existing));
+                setcookie('autologin', '', time()-1000);
+            }
             
             // Redirect user back to index page
             header("Location: /");

@@ -158,10 +158,12 @@ CREATE TABLE IF NOT EXISTS users_data (
     `data_id` int(4)  NOT NULL AUTO_INCREMENT,
     `user_id` int(7) NOT NULL,
     `type` varchar(32) NOT NULL,
-    `value` text,
+    `value` varchar(64) NOT NULL,
+    `extra` text,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`data_id`),
-    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    UNIQUE (`type`, `value`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `users_donations` (
