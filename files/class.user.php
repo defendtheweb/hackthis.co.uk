@@ -582,7 +582,7 @@
                 $existing = $_COOKIE['autologin'];
                 $st = $this->app->db->prepare('DELETE FROM users_data WHERE user_id = :uid AND type = "autologin" AND value = :value LIMIT 1');
                 $result = $st->execute(array(':uid' => $uid, ':value' => $existing));
-                setcookie('autologin', '', time()-1000);
+                setcookie('autologin', '', time()-1000, '/', 'hackthis.co.uk', true, true);
             }
             
             // Redirect user back to index page
