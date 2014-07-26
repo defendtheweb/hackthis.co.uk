@@ -450,7 +450,7 @@
         }
 
         private function checkRememberToken() {
-            $existing = $_COOKIE['autologin'];
+            $existing = md5($_COOKIE['autologin']);
             $extra = md5($_SERVER['HTTP_USER_AGENT']);
 
             $st = $this->app->db->prepare('SELECT user_id, extra FROM users_data WHERE type = "autologin" AND value = :value AND DATEDIFF(`time`, NOW()) >= -7 LIMIT 1');
@@ -482,12 +482,12 @@
 
             $st = $this->app->db->prepare('INSERT INTO users_data (`user_id`, `type`, `value`, `extra`)
                     VALUES (:uid, :type, :value, :extra)');
-            $result = $st->execute(array(':uid' => $this->uid, ':type' => 'autologin', ':value' => $token, ':extra' => $extra));
+            $result = $st->execute(array(':uid' => $this->uid, ':type' => 'autologin', ':value' => md5($token), ':extra' => $extra));
             if (!$result) {
                 $this->regenerateRememberToken();
             }
 
-            setcookie('autologin', $token, time()+60*60*24*7);
+            setcookie('autologin', $token, time()+60*60*24*7, '/', 'hackthis.co.uk', true, true);
         }
 
         public function register() {
