@@ -291,6 +291,7 @@ CREATE TABLE IF NOT EXISTS forum_sections (
     `title` varchar(32),
     `slug` varchar(255),
     `description` text,
+    `priv_level` tinyint(3) UNSIGNED NULL DEFAULT NULL,
     PRIMARY KEY (`section_id`),
     UNIQUE (`slug`)
 ) ENGINE=InnoDB;
