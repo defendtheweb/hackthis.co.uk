@@ -33,7 +33,7 @@
             die();
         }
 
-        if (!$section->child && !$section->incomplete && isset($_GET['submit'])) {
+        if (!$section->incomplete && isset($_GET['submit'])) {
             if (isset($_POST['title']) && isset($_POST['body'])) {
                 $newThreadResult = $forum->newThread($section, $_POST['title'], $_POST['body']);
 
@@ -85,7 +85,7 @@
                         <div class="col span_18 article-main">
 
 <?php
-    if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->child && !$section->incomplete):
+    if ($app->user->loggedIn && $app->user->forum_priv > 0 && $section && !$section->incomplete):
         if (isset($newThreadResult)):
 ?>
     <a class="new-thread button right" href="#"><i class="icon-caret-left"></i> Thread list</a>
