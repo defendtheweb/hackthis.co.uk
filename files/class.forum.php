@@ -13,7 +13,7 @@
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, sections.title AS `section`, sections.slug AS `section_slug`,
                            users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `started`,
                            count(posts.`thread_id`)-1 AS `count`, forum_users.watching, IF (forum_users.viewed >= max(posts.`posted`), 1, 0) AS `viewed`,
-                           IF(sections.priv_level, IF(users_levels.level_id, 1, 0),1) AS `access`
+                           IF(sections.priv_level, IF(users_levels.level_id > NULL, 1, 0),1) AS `access`
                     FROM forum_posts posts
 
                     LEFT JOIN forum_threads threads
@@ -254,7 +254,7 @@
             $sql = "SELECT posts.thread_id, threads.title, threads.slug, threads.closed, threads.sticky, users.username AS author, threads.closed, max(posts.`posted`) AS `latest`, min(posts.`posted`) AS `first`, count(posts.`thread_id`)-1 AS `count`, Count(Distinct author) AS `voices`, forum_users.watching,
                     IF (forum_users.viewed >= max(posts.`posted`),1, 0) AS `viewed`, t1.title as title1, t1.slug as slug1,
                     t2.title as title2, t2.slug as slug2, t3.title as title3, t3.slug as slug3, t4.title as title4, t4.slug as slug4,
-                    IF(t1.priv_level, IF(users_levels.level_id, 1, 0),1) AS `access`
+                    IF(t1.priv_level, IF(users_levels.level_id > NULL, 1, 0),1) AS `access`
                     FROM forum_posts posts
 
                     LEFT JOIN forum_threads threads
@@ -530,7 +530,7 @@
 
         public function getThread($thread_id, $page = 1, $limit = 10) {
             $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
-                section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id, 1, 0),1) AS `access`
+                section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id > NULL, 1, 0),1) AS `access`
                 FROM forum_threads thread
                 LEFT JOIN forum_users
                 ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
