@@ -16,7 +16,7 @@
 
             $st = $this->app->db->prepare('SELECT levels.level_id AS `id`,
                     IF(levels.name, CONCAT(levels_groups.title, " Level ", levels.name), CONCAT(levels_groups.title, " ", levels.name)) as `title`,
-                    levels.name, levels_groups.title as `group`,
+                    levels.name, levels_groups.title as `group`,$
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
                     IF(users_levels.completed > 0, 1, 0) as `completed`, IF(levels.name, cast(levels.name as unsigned), levels.name) AS `order`
                     FROM levels
@@ -181,6 +181,9 @@
                         if ($answer->type && $answer->type == 'regex') {
                             if (preg_match($answer->value, $_POST[$answer->name])) {
                                 $correct = true;
+                            } else {
+                                $correct = false;
+                                break;
                             }
                         } else if ($_POST[$answer->name] === $answer->value) {
                             $correct = true;
@@ -195,6 +198,9 @@
                         if ($answer->type && $answer->type == 'regex') {
                             if (preg_match($answer->value, $_POST[$answer->name])) {
                                 $correct = true;
+                            } else {
+                                $correct = false;
+                                break;
                             }
                         } else if ($_GET[$answer->name] === $answer->value) {
                             $correct = true;
