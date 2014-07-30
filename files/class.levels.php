@@ -178,22 +178,30 @@
                 if (strtolower($answer->method) == 'post') {
                     if (isset($_POST[$answer->name])) {
                         $attempted = true;
-                            if ($_POST[$answer->name] === $answer->value)
+                        if ($answer->type && $answer->type == 'regex') {
+                            if (preg_match($answer->value, $_POST[$answer->name])) {
                                 $correct = true;
-                            else {
-                                $correct = false;
-                                break;
                             }
+                        } else if ($_POST[$answer->name] === $answer->value) {
+                            $correct = true;
+                        } else {
+                            $correct = false;
+                            break;
+                        }
                     }
                 } else if (strtolower($answer->method) == 'get') {
                     if (isset($_GET[$answer->name])) {
                         $attempted = true;
-                            if ($_GET[$answer->name] === $answer->value)
+                        if ($answer->type && $answer->type == 'regex') {
+                            if (preg_match($answer->value, $_POST[$answer->name])) {
                                 $correct = true;
-                            else {
-                                $correct = false;
-                                break;
                             }
+                        } else if ($_GET[$answer->name] === $answer->value) {
+                            $correct = true;
+                        } else {
+                            $correct = false;
+                            break;
+                        }
                     }
                 }
             }
