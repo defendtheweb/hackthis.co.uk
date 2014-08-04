@@ -90,7 +90,7 @@
 
     if (($app->user->loggedIn && $app->user->admin) && !isset($_GET['view'])):
         // Get all tickets
-        $st = $app->db->prepare("SELECT `username`, mod_contact.`from`, `message_id`, `body`, COALESCE(latest.`sent`, mod_contact.`sent`) AS `last_sent`, COALESCE(`replies`, 0) AS `replies`, IF(mod_contact.`from` = COALESCE(latest.`from`,mod_contact.`from`),0,1) AS `new`
+        $st = $app->db->prepare("SELECT `username`, mod_contact.`from`, `message_id`, `body`, COALESCE(latest.`sent`, mod_contact.`sent`) AS `last_sent`, COALESCE(`replies`, 0) AS `replies`, IF(mod_contact.`from` = COALESCE(latest.`from`,mod_contact.`from`),0,1) AS `new`, `flag`
                                  FROM mod_contact
                                  LEFT JOIN users
                                  ON `from` = users.user_id
@@ -105,20 +105,27 @@
 ?>
     <h1>Tickets</h1>
         <table class='striped'>
-            <thead><th>From</th><th>Message</th><th></th><th>Latest</th></thead>
+            <thead><th>From</th><th>Message</th><th></th><th>Latest</th><th>Status</th></thead>
             <tbody>
 <?php
             foreach($tickets AS $message):
-?> 
+                switch($message->flag) {
+                    case '1': $status = 'In progress'; break;
+                    case '2': $status = 'Resolved'; break;
+                    case '3': $status = 'Closed'; break;
+                    default: $status = 'Open'; break;
+                }
+        ?> 
                     <tr>
 <?php if ($message->username): ?>
                         <td><a href='/user/<?=$message->username;?>'><?=$message->username;?></a></td>
 <?php else: ?>
                         <td><?=$app->utils->parse($message->from, false);?></td>
 <?php endif; ?>
-                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse($message->body, false, false, false, 50);?></a></td>
+                        <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse($message->body, false, false, false, 35);?></a></td>
                         <td class='<?=!$message->new?'new':'old';?>'><?=$message->replies;?></td>
                         <td><time datetime="<?=date('c', strtotime($message->last_sent));?>"><?=$app->utils->timeSince($message->last_sent);?></time></td>
+                        <td><?=$status;?></td>
                     </tr>
 <?php
             endforeach;
@@ -436,15 +443,22 @@
             <br/>
             <h2>Previous tickets</h2>
             <table class='striped'>
-                <thead><th>Message</th><th></th><th>Latest</th></thead>
+                <thead><th>Message</th><th></th><th>Latest</th><th>Status</th></thead>
                 <tbody>
 <?php
             foreach($previous AS $message):
+                switch($message->flag) {
+                    case '1': $status = 'In progress'; break;
+                    case '2': $status = 'Resolved'; break;
+                    case '3': $status = 'Closed'; break;
+                    default: $status = 'Open'; break;
+                }
 ?> 
                     <tr>
                         <td><a href='?view=<?=$message->message_id;?>'><?=$app->utils->parse($message->body, false, false, false, 50);?></a></td>
                         <td class='<?=$message->new?'new':'old';?>'><?=$message->replies;?></td>
                         <td><time datetime="<?=date('c', strtotime($message->last_sent));?>"><?=$app->utils->timeSince($message->last_sent);?></time></td>
+                        <td><?=$status;?></td>
                     </tr>
 <?php
             endforeach;
