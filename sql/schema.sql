@@ -727,6 +727,38 @@ CREATE TRIGGER delete_medal AFTER DELETE ON users_medals FOR EACH ROW
         CALL user_feed_remove(OLD.user_id, 'medal', OLD.medal_id);
     END$$
 
+DROP TRIGGER IF EXISTS update_medal_reward$$
+create trigger update_medal_reward after update on medals_colours
+    for each row 
+    begin
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE colour_count int;
+    DECLARE user_id_fetch int;
+    DECLARE reward INT;
+    DECLARE reward_recal int ;
+    DECLARE cur CURSOR FOR 
+    select 
+    um.user_id, count(*) as total
+    from users_medals um
+    join medals m on m.medal_id = um.medal_id 
+    where m.colour_id = new.colour_id
+    group by um.user_id;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    SET reward = OLD.reward - NEW.reward;
+    OPEN cur;
+        update_loop: LOOP
+            FETCH cur INTO user_id_fetch,colour_count;
+            IF done THEN
+                LEAVE update_loop;
+            END IF;
+        set reward_recal = colour_count*reward ;
+            update users 
+        SET score = score - reward_recal
+        where user_id = user_id_fetch ; 
+        END LOOP;
+    CLOSE cur;
+    end ; $$
 
 -- FORUM
 DROP TRIGGER IF EXISTS insert_forum_post$$
