@@ -55,7 +55,7 @@
 <?php
         endif;
 ?>
-                        <a class='left button' href='/forum/level-discussion/<?=strtolower($currentLevel->group);?>-levels/<?=strtolower($currentLevel->group);?>-level-<?=$currentLevel->name;?>'>Forum</a>
+                        <a class='left button' href='/forum/level-discussion/<?=strtolower($currentLevel->group);?>-levels/<?php if ($currentLevel->name != 'Xmas') echo strtolower($currentLevel->group).'-level-'; echo $currentLevel->name;?>'>Forum</a>
                     </article>
 <?php
     endif;
