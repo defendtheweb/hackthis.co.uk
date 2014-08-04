@@ -127,7 +127,7 @@
         </table>
 <?php
     elseif (isset($_GET['view'])):
-        $id = $_GET['view'];
+        $id = intval($_GET['view']);
         if (!$app->user->loggedIn || !$app->user->admin) {
             if (!$app->user->loggedIn && !isset($_GET['email'])) {
                 $app->utils->message('Ticket not found');
@@ -158,7 +158,7 @@
             }
         }
 
-        $st = $app->db->prepare("SELECT `message_id`, `from`, username, COALESCE(users.email, `from`) AS `email` FROM mod_contact
+        $st = $app->db->prepare("SELECT `message_id`, `from`, username, COALESCE(users.email, `from`) AS `email`, `flag` FROM mod_contact
             LEFT JOIN users ON users.user_id = mod_contact.from
             WHERE message_id = :id");
         $st->execute(array(':id'=>$id));
@@ -202,53 +202,121 @@
                     }
                 }
             }
+        } else if (isset($_GET['status'])) {
+            $status = intval($_GET['status']);
+            if ($status >= 0 && $status <= 3) {
+                $st = $app->db->prepare("INSERT INTO mod_contact (`parent_id`, `from`, `flag`)
+                   VALUES (:pid, :from, :status)");
+                $sent = $st->execute(array(':pid' =>$id, ':from'=>$app->user->uid, ':status'=>$status));
+
+                $st = $app->db->prepare("UPDATE mod_contact SET `flag` = :status WHERE `message_id` = :pid");
+                $sent = $st->execute(array(':pid' =>$id, ':status'=>$status));
+
+                if ($app->user->uid != $first->from) {
+                    if ($first->username) {
+                        $app->notifications->add($first->from, 'mod_contact', $app->user->uid, $id);
+                    }
+                }
+            }
         }
 
         $st = $app->db->prepare("SELECT users.username, mod_contact.* FROM mod_contact
                                  LEFT JOIN users ON users.user_id = mod_contact.from WHERE `message_id` = :id OR parent_id = :id ORDER BY `sent` ASC");
         $st->execute(array(':id'=>$id));
         $messages = $st->fetchAll();
+
+        switch($first->flag) {
+            case '1': $status = 'In progress'; break;
+            case '2': $status = 'Resolved'; break;
+            case '3': $status = 'Closed'; break;
+            default: $status = 'Open'; break;
+        }
 ?>
         <a href='/contact' class='button right'>Back to tickets</a>
         <h1>Ticket #<?=$id;?></h1>
+
+        <div>
+            <strong class='white'>Status:</strong>
+            <div class='select-menu' data-id="category" data-value="open" style="width: 125px; margin-left: 5px;">
+                <label><?=$status;?></label>
+                                
+                <ul>
+                    <li onClick="document.location = '?view=<?=$id;?>&status=0'; return false;">Open</li>
+                    <li onClick="document.location = '?view=<?=$id;?>&status=1'; return false;">In progress</li>
+                    <li onClick="document.location = '?view=<?=$id;?>&status=2'; return false;">Resolved</li>
+                    <li onClick="document.location = '?view=<?=$id;?>&status=3'; return false;">Closed</li>
+                </ul>
+            </div>
+        </div>
         <table class='striped ticket-conversation'>
             <tbody>
 <?php
             $n = 0;
             foreach($messages AS $message):
                 $n++;
-?> 
+                
+                if ($message->parent_id != null && $message->flag != null) {
+?>
+            </tbody>
+        </table>
+        <div style="margin-top: 12px;">
+<?php
+                    if ($message->flag == 0) {
+                        $app->utils->message('Ticket marked as open by ' . $message->username . ' <span class="right" style="font-weight: normal">' . $app->utils->timeSince($message->sent) . '</span>', 'good');
+                    } else if ($message->flag == 1) {
+                        $app->utils->message('Ticket marked as in progress by ' . $message->username . ' <span class="right" style="font-weight: normal">' . $app->utils->timeSince($message->sent) . '</span>', 'info');
+                    } else if ($message->flag == 2) {
+                        $app->utils->message('Ticket marked as resolved by ' . $message->username . ' <span class="right" style="font-weight: normal">' . $app->utils->timeSince($message->sent) . '</span>', 'good');
+                    } else if ($message->flag == 3) {
+                        $app->utils->message('Ticket marked as closed by ' . $message->username . ' <span class="right" style="font-weight: normal">' . $app->utils->timeSince($message->sent) . '</span>');
+                    }
+?>
+        </div>
+        <table class='striped ticket-conversation'>
+            <tbody>
+<?php
+                } else {
+?>
                     <tr>
                         <td>
                             <time class='right' datetime="<?=date('c', strtotime($message->sent));?>"><?=$app->utils->timeSince($message->sent);?></time>
                             <strong class='white' style='display: inline-block; margin-bottom: 4px'>
-<?php if ($message->username): ?>
+<?php  
+                    if ($message->username):
+?>
                             <a href='/user/<?=$message->username;?>'><?=$message->username;?></a>
-<?php else: ?>
+<?php
+                    else:
+?>
                             <?=$app->utils->parse($message->from, false);?>
-<?php endif; ?>
+<?php
+                    endif;
+?>
                             </strong>
 <?php
-    if ($n == 1):
-        if ($message->browser == "Firefox")
-            echo "<i class='icon-firefox-2'></i>";
-        else if ($message->browser == "IE")
-            echo "<i class='icon-IE'></i>";
-        else if ($message->browser == "Chrome")
-            echo "<i class='icon-chrome'></i>";
-        else if ($message->browser == "Opera")
-            echo "<i class='icon-opera'></i>";
-        else if ($message->browser == "Safari")
-            echo "<i class='icon-safari'></i>";
+                    if ($n == 1):
+                        if ($message->browser == "Firefox")
+                            echo "<i class='icon-firefox-2'></i>";
+                        else if ($message->browser == "IE")
+                            echo "<i class='icon-IE'></i>";
+                        else if ($message->browser == "Chrome")
+                            echo "<i class='icon-chrome'></i>";
+                        else if ($message->browser == "Opera")
+                            echo "<i class='icon-opera'></i>";
+                        else if ($message->browser == "Safari")
+                            echo "<i class='icon-safari'></i>";
 
-        if ($message->javascript == 1)
-            echo "<i class='icon-code js-on'></i>";
-        else if ($message->javascript == 0)
-            echo "<i class='icon-code js-off'></i>";
-    endif;
+                        if ($message->javascript == 1)
+                            echo "<i class='icon-code js-on'></i>";
+                        else if ($message->javascript == 0)
+                            echo "<i class='icon-code js-off'></i>";
+                    endif;
 ?>
                             <br/>
                             <?=$app->utils->parse($message->body);?>
+<?php
+                }
+?>
                         </td>
                     </tr>
 <?php
