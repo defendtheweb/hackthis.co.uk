@@ -1,6 +1,7 @@
 <?php
 	define("public_page", true);
     require_once('init.php');
+    require_once('page_header.php'); // re-include incase this page was included by init
 
     if (!$app->user->loggedIn) {
         header('HTTP/1.0 401 Not Authorized');
