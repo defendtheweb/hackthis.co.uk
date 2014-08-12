@@ -94,7 +94,7 @@
                                  FROM mod_contact
                                  LEFT JOIN users
                                  ON `from` = users.user_id
-                                 LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact GROUP BY parent_id) replies
+                                 LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact WHERE `flag` IS NULL GROUP BY parent_id) replies
                                  ON replies.parent_id = mod_contact.message_id
                                  LEFT JOIN (SELECT `from`, `sent`, parent_id FROM mod_contact GROUP BY parent_id) latest
                                  ON latest.parent_id = mod_contact.message_id
@@ -391,7 +391,7 @@
         if ($app->user->loggedIn) {
             $st = $app->db->prepare("SELECT `message_id`, `body`, mod_contact.`sent`, COALESCE(latest.`sent`, mod_contact.`sent`) AS `last_sent`, COALESCE(`replies`, 0) AS `replies`, IF(mod_contact.`from` = COALESCE(latest.`from`,mod_contact.`from`),0,1) AS `new`
                                      FROM mod_contact
-                                     LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact GROUP BY parent_id) replies
+                                     LEFT JOIN (SELECT COUNT(message_id) AS `replies`, parent_id FROM mod_contact WHERE `flag` IS NULL GROUP BY parent_id) replies
                                      ON replies.parent_id = mod_contact.message_id
                                      LEFT JOIN (SELECT `from`, `sent`, parent_id FROM mod_contact ORDER BY `sent` DESC LIMIT 1) latest
                                      ON latest.parent_id = mod_contact.message_id
