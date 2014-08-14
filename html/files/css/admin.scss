@@ -26,3 +26,24 @@ a.accept:hover {
         color: $green;
     }
 }
+
+.admin-module {
+    background: $bg;
+    margin-bottom: 12px;
+    padding: 12px 8px;
+
+    h3 {
+        margin: 0;
+        margin-bottom: 0.5em;
+    }
+
+    table.striped tbody tr:nth-child(odd) {
+        background: $light_bg;
+    }
+
+
+
+    &.admin-module-tickets {
+        overflow: hidden;
+    }
+}
