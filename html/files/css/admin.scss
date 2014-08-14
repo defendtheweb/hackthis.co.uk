@@ -31,6 +31,7 @@ a.accept:hover {
     background: $bg;
     margin-bottom: 12px;
     padding: 12px 8px;
+    overflow: hidden;
 
     h3 {
         margin: 0;
@@ -45,5 +46,26 @@ a.accept:hover {
 
     &.admin-module-tickets {
         overflow: hidden;
+    }
+
+    &.admin-module-user-manager {
+        img {
+            float: left;
+            margin-right: 12px;
+        }
+
+        .privilages {
+            margin-top: 6px;
+        }
+    }
+
+    &.admin-module-moderators {
+        li {
+            margin-bottom: 6px;
+
+            div {
+                padding-top: 2px;
+            }
+        }
     }
 }
