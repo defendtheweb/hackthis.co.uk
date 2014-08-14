@@ -637,11 +637,15 @@
         }
 
 
-
-
         /* MISC */
         public function __get($property) {
             // check for admin privilages
+            if ($property === "admin_priv") {
+                return ($this->site_priv > 1 ||
+                        $this->pm_priv > 1 ||
+                        $this->forum_priv > 1 ||
+                        $this->pub_priv > 1);
+            }
             if (substr($property, 0, 6) === "admin_") {
                 $property = substr($property, 6);
                 return ($this->$property > 1);
