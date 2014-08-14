@@ -63,6 +63,11 @@
             // Create user object
             $this->user = new user($this);
 
+            // Create admin object
+            if ($this->user->admin_priv) {
+                $this->admin = new admin($this);
+            }
+
             $this->notifications = new notifications($this);
 
             // Create level object
@@ -97,7 +102,7 @@
          *
          * @todo Create site config option that is passed in to the debug param
          */
-        private function connectDB($config, $debug=false) {
+        protected function connectDB($config, $debug=true) {
             // Connect to database
             try {
                 $dsn = "{$config['driver']}:host={$config['host']}";

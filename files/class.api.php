@@ -1,12 +1,26 @@
 <?php
     class api {
 
-        public function __construct($app, $key) {
-            if ($app->config('api') != $key)
-                throw new Exception('Invalid API key');
-
+        public function __construct($app) {
             $this->app = $app;
         }
+
+        public function handleRequest($method, $data) {
+            // Check key
+
+            // Check request
+
+            // Load handler
+        }
+
+        private function checkKey($key, $privilege) {
+
+        }
+
+
+
+
+
 
         public function process() {
             if (!isset($_GET['action']))
