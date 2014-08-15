@@ -175,12 +175,25 @@
         }
 
         public function getSocial() {
-                        $return = array();
-            if (isset($this->website)) {
-                $this->website = $this->app->utils->repairUri($this->website);
-                array_push($return, array('icon'=>'globe', 'uri'=>$this->website));
+            $return = array();
+            if (!isset($this->website) || !$this->website) {
+                return false;
             }
 
+            if (!$websites = json_decode($this->website)) {
+                $tmp = new stdClass();
+                $tmp->type = "website";
+                $tmp->url = $this->website;
+                $websites = array($tmp);
+            }
+
+            foreach($websites AS &$website) {
+                $website->url = $this->app->utils->repairUri($website->url);
+                if (!$website->type) {
+                    $website->type = "website";
+                }
+                array_push($return, array('icon'=>'globe', 'type'=>$website->type, 'url'=>$website->url));
+            }
 
             return $return;
         }
