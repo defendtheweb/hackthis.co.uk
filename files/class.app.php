@@ -37,17 +37,7 @@
                     $this->ssga = new ssga();
                 }
 
-                // Load Twig
-                require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
-                Twig_Autoloader::register();
-
-                $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
-                $this->twig = new Twig_Environment($loader, array(
-                    // 'cache' => $this->config['path'] . "/files/cache/twig/",
-                    'cache' => false,
-                    'autoescape' => false
-                ));
-
+                $this->initTwig();
 
                 // Create page object
                 $this->page = new page();
@@ -151,6 +141,39 @@
             ));
         }
 
+
+        /**
+         * Initaite Twig parser
+         *
+         * @param none
+         *
+         * @return void
+         */
+        private function initTwig() {
+            // Load Twig
+            require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
+            Twig_Autoloader::register();
+
+            $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
+            $this->twig = new Twig_Environment($loader, array(
+                // 'cache' => $this->config['path'] . "/files/cache/twig/",
+                'cache' => false,
+                'autoescape' => false
+            ));
+
+            $wysiwyg = new Twig_SimpleFunction('wysiwyg', function ($name="", $placeholder="", $text="") {
+                $wysiwyg_name = $name;
+                $wysiwyg_placeholder = $placeholder;
+                $wysiwyg_text = $text;
+                include('elements/wysiwyg.php');
+            });
+            $this->twig->addFunction($wysiwyg);
+
+            $csrf = new Twig_SimpleFunction('CSRFKey', function ($name) {
+                echo $this->generateCSRFKey($name);
+            });
+            $this->twig->addFunction($csrf);
+        }
 
 
         /**
