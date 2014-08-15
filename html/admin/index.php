@@ -39,8 +39,8 @@
             <div class='admin-module admin-module-tickets'>
                 <h3>Tickets</h3>
                 <div class='open-tickets'>
-                    <?= $app->admin->getUnreadTickets(); ?>
-                    <span>open</span>
+                    <span><?= $app->admin->getUnreadTickets(); ?></span>
+                    open
                 </div>
                 <a href='/contact' class='right'>View all</a>
             </div>

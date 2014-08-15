@@ -31,7 +31,6 @@ a.accept:hover {
     background: $bg;
     margin-bottom: 12px;
     padding: 12px 8px;
-    overflow: hidden;
 
     h3 {
         margin: 0;
@@ -46,6 +45,17 @@ a.accept:hover {
 
     &.admin-module-tickets {
         overflow: hidden;
+
+        .open-tickets {
+            text-align: center;
+            margin: 25px 0;
+            span {
+                @include title_font;
+                font-size: 2.5em;
+                color: $green;
+                display: block;
+            }
+        }
     }
 
     &.admin-module-user-manager {
