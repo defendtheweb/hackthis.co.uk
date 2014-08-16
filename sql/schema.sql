@@ -59,9 +59,8 @@ CREATE TABLE IF NOT EXISTS users_profile (
     `gender` enum('male','female','alien'),
     `show_gender` tinyint(1) DEFAULT 0,
     `show_email` tinyint(1) DEFAULT 0,
-    `website` varchar(256),
+    `website` text,
     `about` text,
-    `lastfm` varchar(16),
     `forum_signature` text,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
