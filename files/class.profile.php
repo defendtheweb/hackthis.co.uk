@@ -1,6 +1,21 @@
 <?php
     class profile {
         private $app;
+        private $linkTypes = array(
+                                "twitter\." => "twitter",
+                                "facebook\." => "facebook",
+                                "github\." => "github-2",
+                                "youtube\." => "youtube",
+                                "reddit\." => "reddit",
+                                "soundcloud\." => "soundcloud",
+                                "dribbble\." => "dribbble",
+                                "deviantart\." => "deviantart",
+                                "flickr\." => "flickr",
+                                "plus\.google\." => "google-plus",
+                                "last\.fm" => "lastfm",
+                                "stackoverflow\." => "stackoverflow",
+                                "pinterest\." => "pinterest"
+                             );
 
         // If $uid just get the basic user info ... for ajax stuff
         public function __construct($username, $uid=false) {
@@ -98,10 +113,8 @@
                 $this->about = $this->app->parse($this->about);
             }
 
-            $this->lastfm = $this->app->parse($this->lastfm,false);
-
             $this->feed = $this->getFeed();
-            $this->social = $this->getSocial();
+            $this->links = $this->getLinks();
 
             $this->owner = ($this->app->user->uid === $this->uid);
 
@@ -174,25 +187,29 @@
             return $return;
         }
 
-        public function getSocial() {
+        public function getLinks() {
             $return = array();
             if (!isset($this->website) || !$this->website) {
                 return false;
             }
 
             if (!$websites = json_decode($this->website)) {
-                $tmp = new stdClass();
-                $tmp->type = "website";
-                $tmp->url = $this->website;
-                $websites = array($tmp);
+                $websites = array($this->website);
             }
 
             foreach($websites AS &$website) {
-                $website->url = $this->app->utils->repairUri($website->url);
-                if (!$website->type) {
-                    $website->type = "website";
+                $website = $this->app->utils->repairUri($website);
+                $icon = "globe";
+
+                foreach($this->linkTypes AS $tmptype => $tmpicon) {
+                    $pattern = "/^https?:\/\/(www.)?{$tmptype}(.*)\/(.+)/";
+                    if (preg_match($pattern, $website)) {
+                        $icon = $tmpicon;
+                        break;
+                    }
                 }
-                array_push($return, array('icon'=>'globe', 'type'=>$website->type, 'url'=>$website->url));
+
+                array_push($return, array('icon'=>$icon, 'url'=>$website));
             }
 
             return $return;

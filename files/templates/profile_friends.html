@@ -1,0 +1,20 @@
+        <div id="friends-search" class="mobile-hide">
+            <input placeholder="Search friends">
+            <i class="icon-search"></i>
+        </div>
+        <a href='/user/{{ profile.username }}'><i class='icon-caret-left'></i> {{ profile.username }}'s profile</a>
+        <br/><br/>
+        <ul class='users-list'>
+            {% for friend in profile.friendsList %}
+                <li>
+                    <a href='/user/{{ friend.username }}'>
+                        <img src='{% if friend.image %}{{ getImg(friend.image, 48, friend.gravatar) }}{% else %}{{ getImg(null) }}{% endif %}' width='100%' alt='{{ friend.username }} profile picture'/>
+                        <div>
+                            <span>{{ friend.username }}</span><br/>
+                            Score: {{ friend.score }}<br/>
+                            {% if friend.status %}Friends{% endif %}
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
