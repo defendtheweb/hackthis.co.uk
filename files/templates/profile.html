@@ -97,13 +97,14 @@
                                     </a>
                                     <figcaption>
                                         <a href='/user/{{ friend.username }}'>{{ friend.username }}</a><br/>
-                                        Score: {{ friend.score }}<br/>
+                                        Score: {{ friend.score|number_format }}<br/>
                                         {% if friend.status %}Friends{% endif %}
                                     </figcaption>
                                 </figure>
                             </li>
                         {% endfor %}
                     </ul>
+                    <a class='right' href='/user/{{ profile.username }}/friends'>View all</a>
                 </section>
             {% endif %}
             &nbsp;

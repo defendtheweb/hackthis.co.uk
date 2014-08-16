@@ -11,7 +11,7 @@
                         <img src='{% if friend.image %}{{ getImg(friend.image, 48, friend.gravatar) }}{% else %}{{ getImg(null) }}{% endif %}' width='100%' alt='{{ friend.username }} profile picture'/>
                         <div>
                             <span>{{ friend.username }}</span><br/>
-                            Score: {{ friend.score }}<br/>
+                            Score: {{ friend.score|number_format }}<br/>
                             {% if friend.status %}Friends{% endif %}
                         </div>
                     </a>
