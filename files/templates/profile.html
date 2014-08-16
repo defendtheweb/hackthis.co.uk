@@ -168,7 +168,7 @@
                 {% if profile.links|length %}
                     <ul class='social clr'>
                         {% for link in profile.links %}
-                            <li><a class='hide-external' href='{{ link.url|e }}'><i class='icon-{{ link.icon }}'></i></a></li>
+                            <li><a class='hide-external' href='{{ link.url|e }}'><i class='icon-{{ link.icon }}'></i> <spam class='small'>{{ link.url|e }}</span></a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}

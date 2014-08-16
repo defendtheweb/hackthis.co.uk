@@ -157,17 +157,23 @@
             &.social {
                 margin-top: 8px;
                 li {
-                    float: left;
+                    float: none;
                     margin-right: 2px;
                     font-size: 1.1em;
                     
                     a {
-                        padding: 0 2px;
+                        padding: 3px 2px;
+                        display: inline-block;
                         color: $text_dark;
 
                         &:hover {
                             text-decoration: none;
                             color: $white;
+                        }
+
+                        i {
+                            width: 18px;
+                            display: inline-block;
                         }
                     }
                 }
