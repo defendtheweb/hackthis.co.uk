@@ -59,8 +59,7 @@
             }
 
             $sql = 'SELECT users.user_id, username, score, (users_medals.user_id IS NOT NULL) AS donator, profile.gravatar,
-                    IF (profile.gravatar = 1, users.email, profile.img) as `image`,
-                    COALESCE(show_leaderboard, 1) AS show_leaderboard
+                    IF (profile.gravatar = 1, users.email, profile.img) as `image`
                     FROM users
                     LEFT JOIN users_profile profile
                     ON users.user_id = profile.user_id
@@ -68,7 +67,7 @@
                     ON users_priv.user_id = users.user_id
                     LEFT JOIN users_medals
                     ON users.user_id = users_medals.user_id AND users_medals.medal_id = (SELECT medal_id FROM medals WHERE label = "Donator")
-                    WHERE show_leaderboard = 1
+                    WHERE COALESCE(show_leaderboard, 1) = 1
                     ORDER BY score DESC, user_id ASC
                     LIMIT '.$limit;
 
@@ -129,8 +128,7 @@
             if (!$online) {
                 $st = $this->app->db->prepare("SELECT u.user_id, u.username, u.score,
                         if (priv.site_priv = 2, true, false) AS `admin`, IF (priv.forum_priv = 2, true, false) AS `moderator`,
-                        activity.last_active, IF (users_medals.user_id, true, false) AS `donator`,
-                        COALESCE(show_online, 1) AS show_online
+                        activity.last_active, IF (users_medals.user_id, true, false) AS `donator`
                         FROM users u
                         LEFT JOIN users_profile profile
                         ON u.user_id = profile.user_id
@@ -142,7 +140,7 @@
                         ON medals.label = 'donator'
                         LEFT JOIN users_medals
                         ON users_medals.medal_id = medals.medal_id AND users_medals.user_id = u.user_id
-                        WHERE activity.last_active > (NOW() - INTERVAL :since MINUTE) AND show_online = 1
+                        WHERE activity.last_active > (NOW() - INTERVAL :since MINUTE) AND COALESCE(show_online, 1) = 1
                         ORDER BY activity.last_active DESC");
                 $st->bindValue(':since', (int) $since, PDO::PARAM_INT);
                 $st->execute();
