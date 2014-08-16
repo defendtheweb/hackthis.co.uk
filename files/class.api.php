@@ -1,22 +1,92 @@
 <?php
     class api {
 
-        public function __construct($app) {
+        public function __construct($app, $key) {
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Expires: Mon, 26 Jul 1997 00:00:00 GMT');
+            header('Content-type: application/json');
+
             $this->app = $app;
+
+            $this->checkKey($key);
+
+            /*
+             * When no API key is present, use users privileges
+             */
+            if (!isset($this->privileges) && $this->app->user->loggedIn) {
+                $this->privileges = "inherit";
+            }
+
+            if (!isset($this->privileges)) {
+                $this->respond(401);
+            }
         }
 
         public function handleRequest($method, $data) {
-            // Check key
+            if (!isset($method)) {
+                $this->respond(400);
+            }
 
-            // Check request
+            switch ($method) {
+                case 'user.profile': $this->user('profile'); break;
+            }
 
-            // Load handler
+            $this->respond(400);
         }
 
-        private function checkKey($key, $privilege) {
+        public function respond($status, $data=null) {
+            if (!$data) {
+                $data = new stdClass();
+            }
 
+            switch($status) {
+                case 200: header('HTTP/1.0 200 OK', true, 200); break;
+                case 201: header('HTTP/1.0 201 Created', true, 201); break;
+                case 400: header('HTTP/1.0 400 Bad Request', true, 400); break;
+                case 401: header('HTTP/1.0 401 Unauthorized', true, 401); break;
+                case 403: header('HTTP/1.0 403 Forbidden', true, 403); break;
+            }
+
+            if ($status < 300 && !isset($data->status)) {
+                $data->status = "ok";
+            } else if ($status > 300 && !isset($data->status)) {
+                $data->status = "error";
+            }
+
+            if (!isset($data->message)) {
+                switch($status) {
+                    case 400: $data->message = "Invalid request"; break;
+                    case 401: $data->message = "Invalid API key"; break;
+                    case 403: $data->message = "You do not have privileges to access this method"; break;
+                }
+            }
+
+            echo json_encode($data);
+            die();
         }
 
+        private function checkKey($key) {
+            $st = $this->app->db->prepare('SELECT privileges FROM api_clients WHERE `key` = :key LIMIT 1');
+            $st->execute(array(':key' => $key));
+            $result = $st->fetch();
+            if (!$result) {
+                return false;
+            }
+
+            $this->privileges = json_decode($result->privileges);
+            return true;
+        }
+
+
+        private function user($request) {
+            $response = new stdClass();
+
+            if ($request == 'profile') {
+                $response->profile = new profile($_GET['user'], true);
+            }
+
+            $this->respond(200, $response);
+        }
 
 
 
