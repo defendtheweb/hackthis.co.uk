@@ -428,7 +428,7 @@
                 return $default;
 
             if ($gravatar) {
-                return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=https://www.hackthis.co.uk/users/images/250/1:1/no_pic.jpg&s=" . $size;
+                return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=identicon&s=" . $size;
             } else {
                 return "/users/images/{$size}/1:1/{$img}";
             }
