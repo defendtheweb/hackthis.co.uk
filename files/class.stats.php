@@ -59,7 +59,8 @@
             }
 
             $sql = 'SELECT users.user_id, username, score, (users_medals.user_id IS NOT NULL) AS donator, profile.gravatar,
-                    IF (profile.gravatar = 1, users.email, profile.img) as `image`
+                    IF (profile.gravatar = 1, users.email, profile.img) as `image`,
+                    COALESCE(show_leaderboard, 1) AS show_leaderboard
                     FROM users
                     LEFT JOIN users_profile profile
                     ON users.user_id = profile.user_id
@@ -128,7 +129,8 @@
             if (!$online) {
                 $st = $this->app->db->prepare("SELECT u.user_id, u.username, u.score,
                         if (priv.site_priv = 2, true, false) AS `admin`, IF (priv.forum_priv = 2, true, false) AS `moderator`,
-                        activity.last_active, IF (users_medals.user_id, true, false) AS `donator`
+                        activity.last_active, IF (users_medals.user_id, true, false) AS `donator`,
+                        COALESCE(show_online, 1) AS show_online
                         FROM users u
                         LEFT JOIN users_profile profile
                         ON u.user_id = profile.user_id
