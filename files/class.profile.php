@@ -198,6 +198,11 @@
             }
 
             foreach($websites AS &$website) {
+                if (!$website) {
+                    unset($website);
+                    continue;
+                }
+
                 $website = $this->app->utils->repairUri($website);
                 $icon = "globe";
 
