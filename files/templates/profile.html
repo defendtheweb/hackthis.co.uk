@@ -89,7 +89,7 @@
                     <h2><a href='/user/{{ profile.username }}/friends'>{{ profile.friendsList|length }} Friend{{ (profile.friendsList|length) ? '' : 's' }}</a></h2>
 
                     <ul class='friends-list'>
-                        {% for friend in profile.friendsList|slice(0, 8) %}
+                        {% for friend in profile.friendsList|slice(0, 20) %}
                             <li>
                                 <figure>
                                     <a href='/user/{{ friend.username }}'>
