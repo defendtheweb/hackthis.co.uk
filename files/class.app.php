@@ -173,6 +173,29 @@
                 echo $this->generateCSRFKey($name);
             });
             $this->twig->addFunction($csrf);
+
+            $msg = new Twig_SimpleFunction('msg', function ($text, $type="error") { 
+                $this->utils->message($text, $type);
+            });
+            $this->twig->addFunction($msg);
+
+            $this->twig->addFilter('floor', new Twig_Filter_Function('floor'));
+            $this->twig->addFilter('ceil', new Twig_Filter_Function('ceil'));
+
+            $since = new Twig_Filter_Function(function ($time) {
+                return $this->utils->timeSince($time);
+            });
+            $this->twig->addFilter('since', $since);
+
+            $sinceShort = new Twig_Filter_Function(function ($time) {
+                return $this->utils->timeSince($time, false, true);
+            });
+            $this->twig->addFilter('sinceShort', $sinceShort);
+
+            $getImg = new Twig_SimpleFunction('getImg', function ($img, $size=48, $gravatar=false) { 
+                echo profile::getImg($img, $size, $gravatar);
+            });
+            $this->twig->addFunction($getImg);
         }
 
 
