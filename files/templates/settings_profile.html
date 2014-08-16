@@ -41,7 +41,12 @@
                 {% for link in profile.links %}
                     <div class="input-icon website-input">
                         <i class="icon-{{ link.icon|e }}"></i>
-                        <input name="websites[]" value="{{ link.url|e }}">
+                        <input name="websites[]" value="{{ link.url|e }}"/>
+                    </div>
+                {% else %}
+                    <div class="input-icon website-input">
+                        <i class="icon-globe"></i>
+                        <input name="websites[]"/>
                     </div>
                 {% endfor %}
             </div>
