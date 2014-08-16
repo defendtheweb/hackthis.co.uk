@@ -1,0 +1,182 @@
+<article class='profile' data-uid='{{ profile.uid }}'>
+
+    <!-- Friends buttons -->
+    {% if profile.blockedMe == false %}
+        {% if profile.friends %}
+            <a href='#' class='button button-blank right button-friend removefriend'><i class='icon-user'></i> Friends</a>
+        {% elseif (profile.friends != null and profile.friend != profile.uid) %}
+            <a href='#' class='button right button-disabled button-friend pendingfriend'>Pending</a>
+        {% elseif (profile.friends != null and profile.friend == profile.uid) %}
+            <a href='#' class='button right button-friend acceptfriend'><i class='icon-addfriend'></i> Accept</a>
+        {% else %}
+            <a href='#' class='button right button-friend addfriend'><i class='icon-addfriend'></i> Add friend</a>
+        {% endif %}
+    {% endif %}
+
+    <!-- PM, Edit and block buttons -->
+    {% if profile.owner %}
+        <a href='/settings/' class='button right'><i class='icon-edit'></i> Edit profile</a>
+    {% else %}
+        {% if profile.blockedMe == false %}
+            <a href='/inbox/compose?to={{ profile.username }}' class='messages-new button right' data-to="{{ profile.username }}"><i class='icon-envelope-alt'></i> PM user</a>
+        {% endif %}
+        {% if profile.friends == false %}
+            <a href='#' class='block {% if profile.blocked %}blocked{% endif %} button button-blank right'><i class='icon-blocked'></i> {% if profile.blocked %}Blocked{% else %}Block{% endif %}</a>
+        {% endif %}
+    {% endif %}
+
+
+    <h1 class='lower'>{{ profile.username }}</h1>
+
+    {% if profile.admin %}
+        <strong>Administrator</strong>
+    {% elseif profile.moderator %}
+        <strong>Moderator</strong>
+    {% endif %}
+
+
+    <section class='clr'>
+        <div class='col span_7 clr'>
+            <div class="image">
+                {% if profile.donator %}
+                    <div class="label corner">
+                        <i class="icon-heart"></i>
+                    </div>
+                {% endif %}
+                <img src='{{ profile.image }}' width='100%' alt='{{ profile.username }} profile picture'/>
+            </div>
+            <div class='progress-container'><div class='progress' style='width: {{ profile.score_perc }}%'><span>{{ profile.score_perc|ceil }}%</span></div></div>            
+        </div>
+
+        <div class='col span_17 clr'>
+            <div class='profile-feed scroll'>
+                <ul class='content'>
+
+                    {% for item in profile.feed %}
+                        <li>
+                            <i class='icon-{{ item.icon }}'></i> {{ item.string }}
+                            <span class='dark'>· <time datetime="{{ item.time|date('c') }}">{{ item.time|since }}</time></span>
+                            {% if profile.owner %}
+                                <a class='right hide remove' data-fid='{{ item.id }}' href='#'><i class='icon-remove'></i></a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- left column -->
+    <section class='profile-extra row'>
+        <div class='col span_7 clr'>
+            <!-- medals -->
+            {% if profile.medals|length %}
+                <section class='row'>
+                    <ul class='medals clr'>
+                        {% for medal in profile.medals %}
+                            <li class="medal medal-{{ medal.colour }}"><a href='/medals.php#{{ medal.label|lower }}'>{{ medal.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            <!-- friends -->
+            {% if profile.friendsList|length %}
+                <section class='row'>
+                    <h2><a href='/user/{{ profile.username }}/friends'>{{ profile.friendsList|length }} Friend{% if profile.friendsList|length != 1 %}s{% endif %}</a></h2>
+
+                    <ul class='friends-list'>
+                        {% for friend in profile.friendsList|slice(0, 20) %}
+                            <li>
+                                <figure>
+                                    <a href='/user/{{ friend.username }}'>
+                                        <img src='{% if friend.image %}{{ getImg(friend.image, 48, friend.gravatar) }}{% else %}{{ getImg(null) }}{% endif %}' width='100%' alt='{{ friend.username }} profile picture'/>
+                                    </a>
+                                    <figcaption>
+                                        <a href='/user/{{ friend.username }}'>{{ friend.username }}</a><br/>
+                                        Score: {{ friend.score }}<br/>
+                                        {% if friend.status %}Friends{% endif %}
+                                    </figcaption>
+                                </figure>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+            &nbsp;
+        </div>
+
+        <!-- main column -->
+        <div class='col span_17 clr'>
+            <section class='profile-details row fluid' data-graph-start="{{ profile.joined|date('d/m/Y') }}" data-graph-end="{{ 'now'|date('d/m/Y') }}">
+                <ul class='clr line1'>
+                    <li>
+                        <a title="Click to view more detail" class="show-levels" href="#">
+                            <span class="strong">{{ profile.score|number_format }}</span>
+                            <span class="small">Score</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="Click to view more detail" class="show-posts" href="#">
+                            <span class="strong">{{ profile.posts|number_format }}</span>
+                            <span class="small">Posts</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="Click to view more detail" class="show-articles" href="#">
+                            <span class="strong">{{ profile.articles|number_format }}</span>
+                            <span class="small">Articles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <span class="strong">{{ profile.karma|number_format }}</span>
+                        <span class="small">Karma</span>
+                    </li>
+                </ul>
+                <ul class='clr'>
+                    {% if (profile.show_name and profile.name) %}
+                        <li>
+                            <span class="strong">{{ profile.name }}</span>
+                            <span class="small">Name</span>
+                        </li>
+                    {% endif %}
+                    {% if (profile.show_gender and profile.gender) %}
+                        <li>
+                            <span class="strong">{{ profile.gender|capitalize }}</span>
+                            <span class="small">Gender</span>
+                        </li>
+                    {% endif %}
+                    {% if profile.getDob %}
+                        <li>
+                            <span class="strong">{{ profile.getDob }}</span>
+                            <span class="small">DOB</span>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <span class="strong">{{ profile.joined|sinceShort }}</span>
+                        <span class="small">Joined</span>
+                    </li>
+                    <li>
+                        <span class="strong">{{ profile.last_active|sinceShort }}</span>
+                        <span class="small">Last seen</span>
+                    </li>
+                </ul>
+
+                {% if profile.links|length %}
+                    <ul class='social clr'>
+                        {% for link in profile.links %}
+                            <li><a class='hide-external' href='{{ link.url|e }}'><i class='icon-{{ link.icon }}'></i> <spam class='small'>{{ link.url|e }}</span></a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
+
+            {% if profile.about %}{{ profile.about }}{% endif %}
+        </div>
+    </section>
+
+    <script type="text/javascript" src="/files/js/d3.js"></script>
+</article>

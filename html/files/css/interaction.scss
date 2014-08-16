@@ -45,7 +45,8 @@ label {
 
 textarea,
 input,
-select {
+select,
+.input-icon {
     border: 1px solid $light_bg;
     background: none;
     color: $white;
@@ -145,6 +146,26 @@ input[type="checkbox"]:checked + label:before {
 
 input[type="file"] {
     width: auto;
+}
+
+.input-icon {
+    padding: 0;
+    width: 50%;
+    overflow: hidden;
+    position: relative;
+
+    i {
+        position: absolute;
+        top: 2px;
+        left: 4px;
+    }
+
+    input {
+        border: none;
+        margin: 0;
+        padding-left: 5px;
+        border-left: 23px solid $light_bg;
+    }
 }
 
 form input.button,

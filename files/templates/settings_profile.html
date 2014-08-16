@@ -1,0 +1,59 @@
+    {% if goodMsg %}
+        {{ msg(goodMsg, "good") }}
+    {% elseif errorMsg %}
+        {{ msg(errorMsg) }}
+    {% endif %}
+
+    <form action="?save" method="POST" class="settings-profile">
+        <fieldset>
+            <label for="name">Name</label>
+            <input name="name" value="{{ profile.name|e }}" class='short'>
+            <input type="checkbox" id="display_name" name="display_name" {% if profile.show_name %}checked{% endif %}/><label class='right' for="display_name">Display name</label><br>
+
+            <label>Email</label>
+            <input name="email" value="{{ profile.email|e }}" class='short'>
+            <input type="checkbox" id="display_email" name="display_email" {% if profile.show_email %}checked{% endif %}/><label class='right' for="display_email">Display email</label><br>
+
+            <label>Gender</label>
+            <select class='tiny' name="gender">
+                <option value="m" {% if profile.gender == 'male' %}selected="true"{% endif %}>Male</option>
+                <option value="f" {% if profile.gender == 'female' %}selected="true"{% endif %}>Female</option>
+                {% if (profile.gender == 'alien' or profile.alien) %}
+                <option value="a" {% if profile.gender == 'alien' %}selected="true"{% endif %}>Alien</option>
+                {% endif %}
+            </select>
+            <input type="checkbox" id="display_gender" name="display_gender" {% if profile.show_gender %}checked{% endif %}/><label class='right' for="display_gender">Display gender</label><br>
+
+            <label for="dob">Date of Birth</label>
+            <input name="dob" class="tiny" size="16" type="text" placeholder="dd/mm/yyyy" {% if profile.dob %}value="{{ profile.dob|date('d/m/Y') }}"{% endif %} id="datepicker" data-date-format="dd/mm/yyyy" data-date-viewmode="years" readonly/>
+            <select name="show_dob" class="tiny right">
+                <option value="2" {% if profile.show_dob == '2' %}selected="true"{% endif %}>Show date of birth</option>
+                <option value="1" {% if profile.show_dob == '1' %}selected="true"{% endif %}>Hide year of birth</option>
+                <option value="0" {% if profile.show_dob == '0' %}selected="true"{% endif %}>Hide date of birth</option>
+            </select><br/>
+
+            <label for="name">About</label>
+            {{ wysiwyg('about', 'Write something about yourself...', profile.about_plain|e) }}
+            <br/>
+
+            <label>Websites</label>
+            <div class="settings-profile-websites">
+                {% for link in profile.links %}
+                    <div class="input-icon website-input">
+                        <i class="icon-{{ link.icon|e }}"></i>
+                        <input name="websites[]" value="{{ link.url|e }}"/>
+                    </div>
+                {% else %}
+                    <div class="input-icon website-input">
+                        <i class="icon-globe"></i>
+                        <input name="websites[]"/>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href='#' class='settings-profile-website-add'>Add another website +</a>
+            <br/>
+
+            <input type="hidden" value="{{ CSRFKey('settings') }}" name="token">
+            <input type="submit" value="Save Changes" class="button">
+        </fieldset>
+    </form>
