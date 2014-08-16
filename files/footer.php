@@ -9,7 +9,7 @@
                     <div class='col span_24 online'>
 <?php
     if ($app->user->loggedIn) {
-        $list = $app->utils->getOnlineList();
+        $list = $app->stats->getOnlineList();
         $list_count = count($list);
         echo $app->twig->render('footer_online.html', array('count' => $list_count, 'users' => $list));
     }
