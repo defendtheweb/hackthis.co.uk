@@ -131,7 +131,7 @@
                         activity.last_active, IF (users_medals.user_id, true, false) AS `donator`
                         FROM users u
                         LEFT JOIN users_profile profile
-                        ON users.user_id = profile.user_id
+                        ON u.user_id = profile.user_id
                         LEFT JOIN users_priv priv
                         ON u.user_id = priv.user_id
                         LEFT JOIN users_activity activity
