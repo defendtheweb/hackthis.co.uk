@@ -59,7 +59,7 @@
                     $user = $_POST['username'];
                     $pass = $_POST['password'];
                     $this->login($user, $pass);
-                } else if (isset($_COOKIE['autologin'])) { {
+                } else if (isset($_COOKIE['autologin'])) {
                     // Check there autologin cookie
                     $this->checkRememberToken();
                 }
