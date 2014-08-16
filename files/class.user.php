@@ -59,7 +59,7 @@
                     $user = $_POST['username'];
                     $pass = $_POST['password'];
                     $this->login($user, $pass);
-                } else {
+                } else if (isset($_COOKIE['autologin'])) { {
                     // Check there autologin cookie
                     $this->checkRememberToken();
                 }
@@ -637,11 +637,15 @@
         }
 
 
-
-
         /* MISC */
         public function __get($property) {
             // check for admin privilages
+            if ($property === "admin_priv") {
+                return ($this->site_priv > 1 ||
+                        $this->pm_priv > 1 ||
+                        $this->forum_priv > 1 ||
+                        $this->pub_priv > 1);
+            }
             if (substr($property, 0, 6) === "admin_") {
                 $property = substr($property, 6);
                 return ($this->$property > 1);
@@ -716,6 +720,11 @@
             if ($changes['show_dob'] === '0' || $changes['show_dob'] === '1' || $changes['show_dob'] === '2')
                 $updates['show_dob'] = $changes['show_dob'];
 
+            // Wesbite
+            if (count($changes['websites'])) {
+                $updates['website'] = json_encode($changes['websites']);
+            }
+
             // INSERT IGNORE to create profile
             $st = $this->app->db->prepare('INSERT IGNORE INTO users_profile (`user_id`) VALUES (:uid)');
             $st->execute(array(':uid' => $this->uid));
@@ -725,6 +734,8 @@
             $values = array();
 
             print_r($updates);
+
+
             foreach ($updates as $field=>$update) {
                 $fields .= "`$field` = ?,";
                 $values[] = $update;

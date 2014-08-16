@@ -37,17 +37,7 @@
                     $this->ssga = new ssga();
                 }
 
-                // Load Twig
-                require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
-                Twig_Autoloader::register();
-
-                $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
-                $this->twig = new Twig_Environment($loader, array(
-                    // 'cache' => $this->config['path'] . "/files/cache/twig/",
-                    'cache' => false,
-                    'autoescape' => false
-                ));
-
+                $this->initTwig();
 
                 // Create page object
                 $this->page = new page();
@@ -151,6 +141,62 @@
             ));
         }
 
+
+        /**
+         * Initaite Twig parser
+         *
+         * @param none
+         *
+         * @return void
+         */
+        private function initTwig() {
+            // Load Twig
+            require_once($this->config['path'] . '/files/vendor/Twig/Autoloader.php');
+            Twig_Autoloader::register();
+
+            $loader = new Twig_Loader_Filesystem($this->config['path'] . "/files/templates/");
+            $this->twig = new Twig_Environment($loader, array(
+                // 'cache' => $this->config['path'] . "/files/cache/twig/",
+                'cache' => false,
+                'autoescape' => false
+            ));
+
+            $wysiwyg = new Twig_SimpleFunction('wysiwyg', function ($name="", $placeholder="", $text="") {
+                $wysiwyg_name = $name;
+                $wysiwyg_placeholder = $placeholder;
+                $wysiwyg_text = $text;
+                include('elements/wysiwyg.php');
+            });
+            $this->twig->addFunction($wysiwyg);
+
+            $csrf = new Twig_SimpleFunction('CSRFKey', function ($name) {
+                echo $this->generateCSRFKey($name);
+            });
+            $this->twig->addFunction($csrf);
+
+            $msg = new Twig_SimpleFunction('msg', function ($text, $type="error") { 
+                $this->utils->message($text, $type);
+            });
+            $this->twig->addFunction($msg);
+
+            $this->twig->addFilter('floor', new Twig_Filter_Function('floor'));
+            $this->twig->addFilter('ceil', new Twig_Filter_Function('ceil'));
+
+            $since = new Twig_Filter_Function(function ($time) {
+                return $this->utils->timeSince($time);
+            });
+            $this->twig->addFilter('since', $since);
+
+            $sinceShort = new Twig_Filter_Function(function ($time) {
+                return $this->utils->timeSince($time, false, true);
+            });
+            $this->twig->addFilter('sinceShort', $sinceShort);
+
+            $getImg = new Twig_SimpleFunction('getImg', function ($img, $size=48, $gravatar=false) { 
+                echo profile::getImg($img, $size, $gravatar);
+            });
+            $this->twig->addFunction($getImg);
+        }
 
 
         /**

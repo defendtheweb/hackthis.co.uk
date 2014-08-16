@@ -1,6 +1,21 @@
 <?php
     class profile {
         private $app;
+        private $linkTypes = array(
+                                "twitter\." => "twitter",
+                                "facebook\." => "facebook",
+                                "github\." => "github-2",
+                                "youtube\." => "youtube",
+                                "reddit\." => "reddit",
+                                "soundcloud\." => "soundcloud",
+                                "dribbble\." => "dribbble",
+                                "deviantart\." => "deviantart",
+                                "flickr\." => "flickr",
+                                "plus\.google\." => "google-plus",
+                                "last\.fm" => "lastfm",
+                                "stackoverflow\." => "stackoverflow",
+                                "pinterest\." => "pinterest"
+                             );
 
         // If $uid just get the basic user info ... for ajax stuff
         public function __construct($username, $uid=false) {
@@ -98,10 +113,8 @@
                 $this->about = $this->app->parse($this->about);
             }
 
-            $this->lastfm = $this->app->parse($this->lastfm,false);
-
             $this->feed = $this->getFeed();
-            $this->social = $this->getSocial();
+            $this->links = $this->getLinks();
 
             $this->owner = ($this->app->user->uid === $this->uid);
 
@@ -174,13 +187,30 @@
             return $return;
         }
 
-        public function getSocial() {
-                        $return = array();
-            if (isset($this->website)) {
-                $this->website = $this->app->utils->repairUri($this->website);
-                array_push($return, array('icon'=>'globe', 'uri'=>$this->website));
+        public function getLinks() {
+            $return = array();
+            if (!isset($this->website) || !$this->website) {
+                return false;
             }
 
+            if (!$websites = json_decode($this->website)) {
+                $websites = array($this->website);
+            }
+
+            foreach($websites AS &$website) {
+                $website = $this->app->utils->repairUri($website);
+                $icon = "globe";
+
+                foreach($this->linkTypes AS $tmptype => $tmpicon) {
+                    $pattern = "/^https?:\/\/(www.)?{$tmptype}(.*)\/(.+)/";
+                    if (preg_match($pattern, $website)) {
+                        $icon = $tmpicon;
+                        break;
+                    }
+                }
+
+                array_push($return, array('icon'=>$icon, 'url'=>$website));
+            }
 
             return $return;
         }
@@ -393,7 +423,7 @@
                 return $default;
 
             if ($gravatar) {
-                return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=https://www.hackthis.co.uk/users/images/250/1:1/no_pic.jpg&s=" . $size;
+                return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=identicon&s=" . $size;
             } else {
                 return "/users/images/{$size}/1:1/{$img}";
             }

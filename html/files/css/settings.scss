@@ -1,3 +1,29 @@
+.settings-profile {
+    > fieldset > label:not(.right):not([for=enter]) {
+        width: 110px;
+        font-weight: bold;
+        color: $white;
+    }
+
+    label.right {
+        cursor: pointer;
+    }
+
+    label[for=enter] {
+        display: none;
+    }
+
+    input,
+    select {
+        margin-bottom: 18px;
+    }
+
+    .input-icon input {
+        margin-bottom: 0;
+    }
+}
+
+
 #upload-drop {
 	border: 1px dashed $lighter_bg;
     color: $lighter_bg;
