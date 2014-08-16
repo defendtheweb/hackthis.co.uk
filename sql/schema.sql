@@ -62,8 +62,12 @@ CREATE TABLE IF NOT EXISTS users_profile (
     `website` text,
     `about` text,
     `forum_signature` text,
+    `show_online` tinyint(1) DEFAULT 1,
+    `show_leaderboard` tinyint(1) DEFAULT 1,
     PRIMARY KEY (`user_id`),
-    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    INDEX (`show_online`),
+    INDEX (`show_leaderboard`)
 ) ENGINE=InnoDB;
 
 /*
