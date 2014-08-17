@@ -30,6 +30,7 @@
 
         /* USERS PROFILE STARTS */
         $profile->getDob = $profile->getDob();
+        shuffle($profile->friendsList);
         echo $app->twig->render('profile.html', array('profile' => $profile));
 
     endif;
