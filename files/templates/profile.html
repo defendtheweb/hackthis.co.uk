@@ -157,11 +157,11 @@
                         </li>
                     {% endif %}
                     <li>
-                        <span class="strong">{{ profile.joined|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.joined|date('c') }}" class="forceSince">{{ profile.joined|sinceShort }}</time></span>
                         <span class="small">Joined</span>
                     </li>
                     <li>
-                        <span class="strong">{{ profile.last_active|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.last_active|date('c') }}" class="forceSince">{{ profile.last_active|sinceShort }}</time></span>
                         <span class="small">Last seen</span>
                     </li>
                 </ul>
