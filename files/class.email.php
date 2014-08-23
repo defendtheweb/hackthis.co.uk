@@ -148,26 +148,33 @@
                 $this->mandrill = new Mandrill($this->app->config('mandrill'));
             }
 
-            // Get user and check settings
-            $st = $this->app->db->prepare("SELECT username, email, users_settings.* FROM users LEFT JOIN users_settings ON users_settings.user_id = users.user_id WHERE users.user_id = :uid");
-            $st->execute(array(':uid' => $to));
-            $u = $st->fetch();
+            if (ctype_digit($to)) {
+                // Get user and check settings
+                $st = $this->app->db->prepare("SELECT username, email, users_settings.* FROM users LEFT JOIN users_settings ON users_settings.user_id = users.user_id WHERE users.user_id = :uid");
+                $st->execute(array(':uid' => $to));
+                $u = $st->fetch();
 
-            if (!$u OR
-                ($template == "pm" && $u->email_pm && $u->email_pm != '1') OR
-                ($template == "forum_reply" && $u->email_forum_reply && $u->email_forum_reply != '1') OR
-                ($template == "forum_mention" && $u->email_forum_mention && $u->email_forum_mention != '1') OR
-                ($template == "friend" && $u->email_friend && $u->email_friend != '1')) {
-                    return;
-            }
+                if (!$u OR
+                    ($template == "pm" && $u->email_pm && $u->email_pm != '1') OR
+                    ($template == "forum_reply" && $u->email_forum_reply && $u->email_forum_reply != '1') OR
+                    ($template == "forum_mention" && $u->email_forum_mention && $u->email_forum_mention != '1') OR
+                    ($template == "friend" && $u->email_friend && $u->email_friend != '1')) {
+                        return;
+                }
 
-            // Load the users unsubscribe token
-            $unsubscribe = $this->app->user->getData('unsubscribe', $to);
+                // Load the users unsubscribe token
+                $unsubscribe = $this->app->user->getData('unsubscribe', $to);
 
-            if (!$unsubscribe) {
-                // Create new token
-                $unsubscribe = md5(openssl_random_pseudo_bytes(32));
-                $this->app->user->setData('unsubscribe', $unsubscribe, $to, true);
+                if (!$unsubscribe) {
+                    // Create new token
+                    $unsubscribe = md5(openssl_random_pseudo_bytes(32));
+                    $this->app->user->setData('unsubscribe', $unsubscribe, $to, true);
+                }
+            } else {
+                $u = new stdClass();
+                $u->email = $to;
+                $u->username = (isset($data['username']))?$data['username']:$to;
+                $unsubscribe = '';
             }
 
             // Build merge vars
@@ -210,11 +217,12 @@
                                 )
                             )
                         )
-                    )
+                    ),
+                    'tags' => array($template),
                 );
 
             try {
-                $result = $this->mandrill->messages->sendTemplate($template, $template_content, $message);
+                $result = $this->mandrill->messages->sendTemplate($template, $template_content, $message, true);
             } catch (Exception $e) {
                 //
             }

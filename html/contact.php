@@ -204,8 +204,9 @@
 
                         // $app->email->queue($first->email, "Ticket reply", $body, $first->username?$first->from:null);
 
-                        $data = array('id' => $id, 'email' => ($first->username)?null:$first->email);
-                        $app->email->queue($first->email, 'ticket_reply', json_encode($data), $first->username?$first->from:null);
+                        $data = array('id' => $id, 'preview' => htmlspecialchars($_POST['body']));
+                        // $app->email->queue($first->email, 'ticket_reply', json_encode($data), $first->username?$first->from:null);
+                        $app->email->mandrillSend($first->from, null, 'ticket-reply', 'Reply added to ticket', $data);
                     }
                 }
             }

@@ -927,7 +927,8 @@
             // $this->app->email->queue($row->email, "Password request", $body);
 
             $data = array('token' => $token, 'username' => $row->username);
-            $this->app->email->queue($row->email, 'password', json_encode($data));
+            // $this->app->email->queue($row->email, 'password', json_encode($data));
+            $this->app->email->mandrillSend($row->email, null, 'password-request', 'Password request', $data);
 
             return true;
         }
@@ -1053,7 +1054,8 @@
             // $this->app->email->queue($this->email, "Confirm your email address", $body);
 
             $data = array('new' => $new, 'token' => $token);
-            $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            // $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            $this->app->email->mandrillSend($this->email, null, 'verify-email', 'Confirm your email address', $data);
 
             return true;
         }
