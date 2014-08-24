@@ -669,6 +669,8 @@
                 $thread = $st->fetch();
                 $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug . '?post=' . $post_id);
 
+                // Build email data
+                $email_data = array('author' => $this->app->user->username, 'preview' => $body, 'thread' => $thread->title, 'threadurl' => $thread->slug . '?post=' . $post_id);
 
                 // Check for mentions
                 preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
@@ -682,8 +684,9 @@
                             array_push($notified, $result->user_id);
                             $this->app->notifications->add($result->user_id, 'forum_mention', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            $this->app->email->mandrillSend($result->user_id, $this->app->user->user_id, 'forum-mention', 'You were mentioned in "' . $thread->title . '"', $email_data);
                         }
                     }
                 }
@@ -702,8 +705,9 @@
                             array_push($notified, $watcher->author);
                             $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            $this->app->email->mandrillSend($watcher->author, $this->app->user->user_id, 'forum-reply', 'Reply added to "' . $thread->title . '"', $email_data);
                         }
                     }
                 }
