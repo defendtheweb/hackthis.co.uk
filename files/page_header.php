@@ -8,7 +8,7 @@
 <?php if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)): ?>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <?php endif; ?>
-        <title>HackThis!!<?=isset($app->page->title) && $app->page->title?' - '.$app->page->title:' - The Hackers Playground';?></title>
+        <title><?=isset($app->page->title) && $app->page->title?$app->page->title. ' - HackThis!!':'HackThis!! - The Hackers Playground';?></title>
         <meta name="description" content="<?=isset($app->page->desc) && $app->page->desc?$app->page->desc:'Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.';?>">
         <meta name="keywords" content="hack this, hackers playground, hacking challenges, hacking forums, hackers, website security, how to secure a website, how to hack, articles, network security">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
@@ -37,7 +37,8 @@
         <?= $minifier->load("css"); ?>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.6/socket.io.min.js"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.6/socket.io.min.js"></script>-->
+	<script src="https://hackthis.co.uk:8080/socket.io/socket.io.js"></script>
 <?php
     if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
         echo '        '.$currentLevel->data['code']->pos1."\n";
@@ -48,6 +49,15 @@
             <script src="/files/js/respond.min.js"></script>
             <script src="/files/js/html5shiv.js"></script>
         <![endif]-->
+
+	<script>
+	  !function(g,s,q,r,d){r=g[r]=g[r]||function(){(r.q=r.q||[]).push(
+	  arguments)};d=s.createElement(q);q=s.getElementsByTagName(q)[0];
+	  d.src='//d1l6p2sc9645hc.cloudfront.net/tracker.js';q.parentNode.
+	  insertBefore(d,q)}(window,document,'script','_gs');
+
+	  _gs('GSN-585161-V');
+	</script>
     </head>
     <body class='theme-<?php echo $app->theme; ?>' <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php
@@ -79,8 +89,9 @@
 <?php
             if (!$app->user->loggedIn || !$app->user->donator):
                 $ads = array(
-                    array('nullsec', 'http://www.nullsecurity.net'),
-                    array('walker', 'http://www.walkerlocksmiths.co.uk/')
+/*                    array('nullsec.png', 'http://www.nullsecurity.net'),
+                    array('walker.png', 'http://www.walkerlocksmiths.co.uk/'),*/
+		    array('cannons.gif', 'http://www.deadcannons.com')
                 );
 
                 $id = array_rand($ads);
@@ -89,7 +100,7 @@
 ?>
                 <div class="col span_13 advert">
                     <a href='<?=$link;?>' target='_blank' class='hide-external'>
-                        <img src='/files/images/ad_banner_<?=$image;?>.png'/>
+                        <img src='/files/images/ad_banner_<?=$image;?>'/>
                     </a>
                 </div>
 <?php
