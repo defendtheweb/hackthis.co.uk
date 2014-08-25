@@ -155,10 +155,10 @@
                 $u = $st->fetch();
 
                 if (!$u OR
-                    ($template == "pm" && $u->email_pm && $u->email_pm != '1') OR
-                    ($template == "forum_reply" && $u->email_forum_reply && $u->email_forum_reply != '1') OR
-                    ($template == "forum_mention" && $u->email_forum_mention && $u->email_forum_mention != '1') OR
-                    ($template == "friend" && $u->email_friend && $u->email_friend != '1')) {
+                    ($template == "new-pm" && $u->email_pm && $u->email_pm != '1') OR
+                    ($template == "forum-reply" && $u->email_forum_reply && $u->email_forum_reply != '1') OR
+                    ($template == "forum-mention" && $u->email_forum_mention && $u->email_forum_mention != '1') OR
+                    ($template == "friend-request" && $u->email_friend && $u->email_friend != '1')) {
                         return;
                 }
 
