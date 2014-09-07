@@ -9,7 +9,7 @@
     <ul class='levels-list plain clr'>
         {% for level in section.levels %}
         <li>
-            <a class="progress-{{ level.completed }}" href="{{ level.uri }}">
+            <a class="progress-{{ level.progress }}" href="{{ level.uri }}">
                 <span class="right">{{ level.reward|number_format }} pts</span>
                 <span class="level-title">{{ level.title }}</span>
                 <span class="dark small">{{ level.total_completed|number_format }} solvers</span>
