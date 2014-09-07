@@ -50,6 +50,13 @@ article.body {
         h3 {
             display: inline-block;
         }
+
+        ul li {
+            list-style-position: outside;
+            margin-left: 15px;
+            padding-left: 2px;
+            padding-bottom: 8px;
+        }
     }
 
     div.contents {
