@@ -35,6 +35,7 @@
                     <div class='col span_3'>
                         <ul class='plain'>
                             <li><h3>Legal</h3></li>
+                            <li><a href='/conduct'>Code of Conduct</a></li>
                             <li><a href='/privacy'>Privacy</a></li>
                             <li><a href='/terms'>Terms of Use</a></li>
                             <li><a href='/contact'>Contact Us</a></li>
