@@ -7,7 +7,12 @@
     require_once('init.php');
 
     //Load level
-    $currentLevel = $app->levels->getLevel($_GET['group'], $_GET['level']);
+    $group = $_GET['group'];
+    if ($group === 'basic ') {
+        $group = 'basic+';
+    }
+    echo $group;
+    $currentLevel = $app->levels->getLevel($group, $_GET['level']);
 
     if (!$currentLevel) {
 		require_once('header.php');
