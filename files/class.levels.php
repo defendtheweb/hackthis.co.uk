@@ -8,26 +8,52 @@
             $this->app = $app;
         }
 
-        public function getList($uid=null) {
-            if (!$uid) {
+        public function getList($uid=null, $category=null) {
+            if (!$uid && !$category) {
                 if (isset($this->list))
                     return $this->list;
             }
 
-            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
+            $sql = 'SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
                     LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
-                    IF(users_levels.completed > 0, 1, 0) as `completed`
+                    IF(users_levels.completed > 0, 1, 0) as `completed`, levels_completed.completed as `total_completed`, levels_data.value AS `reward`
                     FROM levels
                     INNER JOIN levels_groups
                     ON levels_groups.title = levels.group
+                    LEFT JOIN levels_data
+                    ON levels_data.level_id = levels.level_id AND levels_data.key = "reward"
                     LEFT JOIN users_levels
                     ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
-                    ORDER BY levels_groups.order ASC, levels.level_id ASC');
-            $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
-            $st->execute();
-            $list = $st->fetchAll();
+                    LEFT JOIN (SELECT COUNT(user_id) AS `completed`, level_id FROM users_levels WHERE completed > 0 AND user_id != 69 GROUP BY level_id) `levels_completed`
+                    ON levels_completed.level_id = users_levels.level_id ';
 
-            if (!$uid) {
+            if ($category) {
+                $sql .= 'WHERE levels_groups.title = :category ';
+            }
+
+            $sql .= 'ORDER BY levels_groups.order ASC, levels.level_id ASC';
+
+            $st = $this->app->db->prepare($sql);
+            $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
+
+            if ($category) {
+                $st->bindValue(':category', $category);
+            }
+
+            $st->execute();
+            $levels = $st->fetchAll();
+
+            // Create list
+            $list = array();
+            foreach ($levels AS $level) {
+                if (!array_key_exists($level->group, $list)) {
+                    $list[$level->group] = new stdClass();
+                    $list[$level->group]->levels = array();
+                }
+                array_push($list[$level->group]->levels, $level);
+            }
+
+            if (!$uid && !$category) {
                 $this->list = $list;
             }
 
