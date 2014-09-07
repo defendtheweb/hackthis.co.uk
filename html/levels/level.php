@@ -11,7 +11,6 @@
     if ($group === 'basic ') {
         $group = 'basic+';
     }
-    echo $group;
     $currentLevel = $app->levels->getLevel($group, $_GET['level']);
 
     if (!$currentLevel) {
