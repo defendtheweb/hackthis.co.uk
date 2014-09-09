@@ -26,19 +26,17 @@
                     <div class='col span_3'>
                         <ul class='plain'>
                             <li><h3>Links</h3></li>
-                            <li><a href='/'>Home</a></li>
-                            <li><a href='/news'>News</a></li>
                             <li><a href='/articles'>Articles</a></li>
                             <li><a href='/forum'>Forum</a></li>
+                            <li><a href='/contact'>Contact Us</a></li>
                         </ul>
                     </div>
                     <div class='col span_3'>
                         <ul class='plain'>
                             <li><h3>Legal</h3></li>
-                            <li><a href='/conduct'>Code of Conduct</a></li>
                             <li><a href='/privacy'>Privacy</a></li>
                             <li><a href='/terms'>Terms of Use</a></li>
-                            <li><a href='/contact'>Contact Us</a></li>
+                            <li><a href='/conduct'>Code of Conduct</a></li>
                         </ul>
                     </div>
                     <div class='col span_3'>
