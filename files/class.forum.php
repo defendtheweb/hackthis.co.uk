@@ -2,7 +2,7 @@
     class forum {
         private $app;
         private $error;
-        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track');
+        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track', 'dump');
 
         public function __construct($app) {
             $this->app = $app;
@@ -194,15 +194,17 @@
             // has user completed level
             $result->incomplete = false;
             if ($priv_level) {
-                $levels = $this->app->levels->getList();
+                $sections = $this->app->levels->getList();
 
                 // loop and find level
-                foreach($levels AS $level) {
-                    if ($level->id == $priv_level) {
-                        if (!$level->completed) {
-                            $result->incomplete = true;
+                foreach($sections AS $section) {
+                    foreach($section->levels AS $level) {
+                        if ($level->id == $priv_level) {
+                            if ($level->progress < 2) {
+                                $result->incomplete = true;
+                            }
+                            break 2; // Break out of both loops
                         }
-                        break;
                     }
                 }
             }
