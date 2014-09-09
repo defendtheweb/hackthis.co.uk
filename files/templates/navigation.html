@@ -9,7 +9,7 @@
                             <ul>
                                 {% for key, section in levelSections %}
                                     <li class="parent"><a href="/levels/{{ key }}">{{ key }}</a>
-                                        <ul class="levels-list plain clr">
+                                        <ul>
                                             {% for level in section.levels %}
                                                 <li>
                                                     <a class="progress_{{ level.progress }}" href="{{ level.uri }}">
