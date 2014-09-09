@@ -277,10 +277,13 @@
 
                     /* Level colours */
                     &.progress_0 {
-                        color: red;
+                        color: $red;
                     }
                     &.progress_1 {
-                        color: $bright_green;
+                        color: #EE5500;
+                    }
+                    &.progress_2 {
+                        color: $green;
                     }
                 }
 
