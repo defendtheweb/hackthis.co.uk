@@ -85,7 +85,7 @@
                                 </ul>
                             </li>
                             <li class='mobile-only'><a href='/settings/'>Settings</a></li>
-                            <li class='mobile-only'><a href='/?logout=<?=$app->user->csrf_basic;?>'>Logout</a></li>
+                            <li class='mobile-only'><a href='/?logout={{ user.csrf_basic }}'>Logout</a></li>
 
                             {% if user.admin == true %}
                                 <li class='right icon mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
