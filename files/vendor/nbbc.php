@@ -770,7 +770,7 @@ var $default_tag_rules = Array(
 function DoURL($bbcode, $action, $name, $default, $params, $content) {
     if ($action == BBCODE_CHECK) return true;
     // $url = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
-    $url = $content;
+    $url = is_string($default) ? $default : $content;
     if ($bbcode->IsValidURL($url)) {
         if ($bbcode->debug)
             print "ISVALIDURL<br />";
