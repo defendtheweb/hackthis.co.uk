@@ -769,7 +769,8 @@ var $default_tag_rules = Array(
 );
 function DoURL($bbcode, $action, $name, $default, $params, $content) {
     if ($action == BBCODE_CHECK) return true;
-    $url = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
+    // $url = is_string($default) ? $default : $bbcode->UnHTMLEncode(strip_tags($content));
+    $url = $content;
     if ($bbcode->IsValidURL($url)) {
         if ($bbcode->debug)
             print "ISVALIDURL<br />";
@@ -780,8 +781,10 @@ function DoURL($bbcode, $action, $name, $default, $params, $content) {
             if (!($bbcode->url_targetable == 'override' && isset($params['target'])))
                 $target = " target=\"" . htmlspecialchars($bbcode->url_target) . "\"";
             return '<a href="' . htmlspecialchars($url) . '" rel="nofollow" class="bbcode_url"' . $target . '>' . $content . '</a>';
+        } else {
+            //return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+            return $content;
         }
-        else return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
     }
 function DoSourceLink($bbcode, $action, $name, $default, $params, $content) {
     if ($action == BBCODE_CHECK) return true;
@@ -1726,10 +1729,10 @@ function Internal_DoLimit() {
                                );
     }
     $this->was_limited = true;
-}		function auto_link($text) {
+}       function auto_link($text) {
     $pattern = "/(((http[s]?:\/\/)|(www\.))(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9.,_\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
     $text = preg_replace($pattern, " <a href='$1' rel='nofollow'>$1</a>", $text);
-			// fix URLs without protocols
+            // fix URLs without protocols
     $text = preg_replace("/href='www/", "href='http://www", $text);
     return $text;
 }
@@ -2167,4 +2170,3 @@ $result = preg_replace('{(<br(\s*/)?>|&nbsp;)+$}i', '', $result);
 return $result;
 }
 }
-
