@@ -649,7 +649,7 @@
                                                             from users_notifications
                                                             inner join forum_posts
                                                             on users_notifications.item_id = forum_posts.post_id
-                                                            where (type='forum_reply' or type='forum_post') AND user_id = :thread_id AND thread_id = :uid AND seen = 0
+                                                            where (type='forum_reply' or type='forum_post') AND user_id = :uid AND thread_id = :thread_id AND seen = 0
                                                          ) AS `notifications`
                                                     );");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
