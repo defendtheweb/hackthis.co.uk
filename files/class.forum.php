@@ -641,6 +641,18 @@
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`)
                         VALUES (:uid, :thread_id) ON DUPLICATE KEY UPDATE `viewed` = now()");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+
+                // Mark notifications as seen
+                $st = $this->app->db->prepare("update users_notifications SET seen = 1 WHERE notification_id IN (
+                                                    SELECT notifications.id
+                                                    FROM (  select notification_id as `id`
+                                                            from users_notifications
+                                                            inner join forum_posts
+                                                            on users_notifications.item_id = forum_posts.post_id
+                                                            where (type='forum_reply' or type='forum_post') AND user_id = :thread_id AND thread_id = :uid AND seen = 0
+                                                         ) AS `notifications`
+                                                    );");
+                $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             }
 
             return $thread;
