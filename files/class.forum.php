@@ -174,6 +174,10 @@
                 WHERE isnull(t1.parent_id) AND (t1.slug = :slug OR t2.slug = :slug OR t3.slug = :slug OR t4.slug = :slug)");
             $st->execute(array(':slug'=>$slug));
             $result = $st->fetch();
+            
+            if (!$result) {
+                return null;
+            }
 
             if ($result->slug1 == $result->slug) {
                 unset($result->title2); unset($result->slug2); unset($result->priv2);
