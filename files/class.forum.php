@@ -2,7 +2,7 @@
     class forum {
         private $app;
         private $error;
-        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track');
+        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track', 'dump');
 
         public function __construct($app) {
             $this->app = $app;
@@ -174,6 +174,10 @@
                 WHERE isnull(t1.parent_id) AND (t1.slug = :slug OR t2.slug = :slug OR t3.slug = :slug OR t4.slug = :slug)");
             $st->execute(array(':slug'=>$slug));
             $result = $st->fetch();
+            
+            if (!$result) {
+                return null;
+            }
 
             if ($result->slug1 == $result->slug) {
                 unset($result->title2); unset($result->slug2); unset($result->priv2);
@@ -194,15 +198,17 @@
             // has user completed level
             $result->incomplete = false;
             if ($priv_level) {
-                $levels = $this->app->levels->getList();
+                $sections = $this->app->levels->getList();
 
                 // loop and find level
-                foreach($levels AS $level) {
-                    if ($level->id == $priv_level) {
-                        if (!$level->completed) {
-                            $result->incomplete = true;
+                foreach($sections AS $section) {
+                    foreach($section->levels AS $level) {
+                        if ($level->id == $priv_level) {
+                            if ($level->progress < 2) {
+                                $result->incomplete = true;
+                            }
+                            break 2; // Break out of both loops
                         }
-                        break;
                     }
                 }
             }
@@ -639,6 +645,18 @@
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`)
                         VALUES (:uid, :thread_id) ON DUPLICATE KEY UPDATE `viewed` = now()");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+
+                // Mark notifications as seen
+                $st = $this->app->db->prepare("update users_notifications SET seen = 1 WHERE notification_id IN (
+                                                    SELECT notifications.id
+                                                    FROM (  select notification_id as `id`
+                                                            from users_notifications
+                                                            inner join forum_posts
+                                                            on users_notifications.item_id = forum_posts.post_id
+                                                            where (type='forum_reply' or type='forum_post') AND user_id = :uid AND thread_id = :thread_id AND seen = 0
+                                                         ) AS `notifications`
+                                                    );");
+                $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             }
 
             return $thread;
@@ -669,6 +687,8 @@
                 $thread = $st->fetch();
                 $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug . '?post=' . $post_id);
 
+                // Build email data
+                $email_data = array('author' => $this->app->user->username, 'preview' => $body, 'thread' => $thread->title, 'threadurl' => $thread->slug . '?post=' . $post_id);
 
                 // Check for mentions
                 preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
@@ -682,8 +702,9 @@
                             array_push($notified, $result->user_id);
                             $this->app->notifications->add($result->user_id, 'forum_mention', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            $this->app->email->mandrillSend($result->user_id, $this->app->user->user_id, 'forum-mention', 'You were mentioned in "' . $thread->title . '"', $email_data);
                         }
                     }
                 }
@@ -702,8 +723,9 @@
                             array_push($notified, $watcher->author);
                             $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            $this->app->email->mandrillSend($watcher->author, $this->app->user->user_id, 'forum-reply', 'Reply added to "' . $thread->title . '"', $email_data);
                         }
                     }
                 }

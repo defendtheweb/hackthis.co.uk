@@ -8,29 +8,59 @@
             $this->app = $app;
         }
 
-        public function getList($uid=null) {
-            if (!$uid) {
-                if (isset($this->list))
-                    return $this->list;
+        public function getList($uid=null, $category=null) {
+            // Check cache
+            $levels = json_decode($this->app->cache->get('level_list', 10));
+
+            if (!$levels) {
+                $sql = 'SELECT levels.level_id AS `id`, CONCAT(levels_groups.title, " Level ", levels.name) as `title`, levels.name, levels_groups.title as `group`,
+                        LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`, levels_completed.completed as `total_completed`,
+                        levels_data.value AS `reward`
+                        FROM levels
+                        INNER JOIN levels_groups
+                        ON levels_groups.title = levels.group
+                        LEFT JOIN levels_data
+                        ON levels_data.level_id = levels.level_id AND levels_data.key = "reward"
+                        LEFT JOIN (SELECT COUNT(user_id) AS `completed`, level_id FROM users_levels WHERE completed > 0 AND user_id != 69 GROUP BY level_id) `levels_completed`
+                        ON levels_completed.level_id = levels.level_id 
+                        ORDER BY levels_groups.order ASC, levels.level_id ASC';
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute();
+                $levels = $st->fetchAll();
+
+                $this->app->cache->set('level_list', json_encode($levels));
             }
 
-            $st = $this->app->db->prepare('SELECT levels.level_id AS `id`,
-                    IF(levels.name, CONCAT(levels_groups.title, " Level ", levels.name), CONCAT(levels_groups.title, " ", levels.name)) as `title`,
-                    levels.name, levels_groups.title as `group`,
-                    LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`,
-                    IF(users_levels.completed > 0, 1, 0) as `completed`, IF(levels.name, cast(levels.name as unsigned), levels.name) AS `order`
-                    FROM levels
-                    INNER JOIN levels_groups
-                    ON levels_groups.title = levels.group
-                    LEFT JOIN users_levels
-                    ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
-                    ORDER BY levels_groups.order ASC, `order` ASC, levels.level_id ASC');
+            // Get list of completed levels
+            $sql = 'SELECT level_id, IF(users_levels.completed > 0, 2, 1) as `completed` FROM users_levels WHERE user_id = :uid';
+            $st = $this->app->db->prepare($sql);
             $st->bindValue(':uid', $uid?$uid:$this->app->user->uid);
             $st->execute();
-            $list = $st->fetchAll();
+            $user_levels = $st->fetchAll();
 
-            if (!$uid) {
-                $this->list = $list;
+            // Create list
+            $list = array();
+            foreach ($levels AS &$level) {
+                // Check filter
+                if ($category && trim(strtolower(str_replace('+', '', $level->group))) != trim($category)) {
+                    continue;
+                }
+
+                // Assign progress based on $users_levels
+                $level->progress = 0;
+                foreach ($user_levels AS $l) {
+                    if ($l->level_id == $level->id) {
+                        $level->progress = $l->completed;
+                        break;
+                    }
+                }
+
+                if (!array_key_exists($level->group, $list)) {
+                    $list[$level->group] = new stdClass();
+                    $list[$level->group]->levels = array();
+                }
+                array_push($list[$level->group]->levels, $level);
             }
 
             return $list;
@@ -62,8 +92,7 @@
                 WHERE `group` = :group
                 ORDER BY level_id';
 
-           $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`,
-                IF(levels.name, CONCAT(levels_groups.title, ' Level ', levels.name), CONCAT(levels_groups.title, ' ', levels.name)) as `title`,
+            $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
                 IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
                 IFNULL(users_levels.attempts, 0) as `attempts`,
                 levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
@@ -136,27 +165,29 @@
             $this->app->page->title = ucwords($level->title);
 
             // Get stats
-            // $sql = "SELECT COUNT(user_id) AS `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69";
-            // $st = $this->app->db->prepare($sql);
-            // $st->execute(array(':lid'=>$level->level_id));
-            // $result = $st->fetch();
-            // $level->count = $result->completed;
+            $sql = "SELECT COUNT(user_id) AS `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69";
+            $st = $this->app->db->prepare($sql);
+            $st->execute(array(':lid'=>$level->level_id));
+            $result = $st->fetch();
+            $level->count = $result->completed;
 
-            // // Get latest
+            // // // Get latest
             // $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed DESC LIMIT 1";
-            // $st = $this->app->db->prepare($sql);
-            // $st->execute(array(':lid'=>$level->level_id));
-            // $result = $st->fetch();
-            // $level->last_completed = $result->completed;
-            // $level->last_user = $result->username;
+            $sql = "SELECT username, completed FROM users INNER JOIN (SELECT `user_id`, `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69 ORDER BY `completed` DESC LIMIT 1) `a` ON `a`.user_id = users.user_id;";
+	    $st = $this->app->db->prepare($sql);
+            $st->execute(array(':lid'=>$level->level_id));
+            $result = $st->fetch();
+            $level->last_completed = $result->completed;
+            $level->last_user = $result->username;
 
-            // // Get first
+            // // // Get first
             // $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed ASC LIMIT 1";
-            // $st = $this->app->db->prepare($sql);
-            // $st->execute(array(':lid'=>$level->level_id));
-            // $result = $st->fetch();
-            // $level->first_completed = $result->completed;
-            // $level->first_user = $result->username;
+            $sql = "SELECT username, completed FROM users INNER JOIN (SELECT `user_id`, `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69 ORDER BY `completed` ASC LIMIT 1) `a` ON `a`.user_id = users.user_id;";
+	    $st = $this->app->db->prepare($sql);
+            $st->execute(array(':lid'=>$level->level_id));
+            $result = $st->fetch();
+            $level->first_completed = $result->completed;
+            $level->first_user = $result->username;
 
             return $level;
         }
@@ -178,36 +209,36 @@
                 if (strtolower($answer->method) == 'post') {
                     if (isset($_POST[$answer->name])) {
                         $attempted = true;
-                        if ($answer->type && $answer->type == 'regex') {
+                           if ($answer->type && $answer->type == 'regex') {
                             if (preg_match($answer->value, $_POST[$answer->name])) {
                                 $correct = true;
                             } else {
                                 $correct = false;
                                 break;
                             }
-                        } else if ($_POST[$answer->name] === $answer->value) {
-                            $correct = true;
-                        } else {
-                            $correct = false;
-                            break;
-                        }
+                           } else if ($_POST[$answer->name] === $answer->value)
+                                $correct = true;
+                            else {
+                                $correct = false;
+                                break;
+                            }
                     }
                 } else if (strtolower($answer->method) == 'get') {
                     if (isset($_GET[$answer->name])) {
                         $attempted = true;
-                        if ($answer->type && $answer->type == 'regex') {
-                            if (preg_match($answer->value, $_POST[$answer->name])) {
+             if ($answer->type && $answer->type == 'regex') {
+                            if (preg_match($answer->value, $_GET[$answer->name])) {
                                 $correct = true;
                             } else {
                                 $correct = false;
                                 break;
                             }
-                        } else if ($_GET[$answer->name] === $answer->value) {
-                            $correct = true;
-                        } else {
-                            $correct = false;
-                            break;
-                        }
+                        } else                if ($_GET[$answer->name] === $answer->value)
+                                $correct = true;
+                            else {
+                                $correct = false;
+                                break;
+                            }
                     }
                 }
             }

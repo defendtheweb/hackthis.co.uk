@@ -1,0 +1,20 @@
+<h1>Levels</h1>
+
+{% if filter %}
+    <a class="button left" href='/levels'>Back to index</a>
+{% endif %}
+
+{% for key, section in sections %}
+    <h3 class='level-section'><a href='/levels/{{ key }}'>{{ key }}</a></h3>
+    <ul class='levels-list plain clr'>
+        {% for level in section.levels %}
+        <li>
+            <a class="progress-{{ level.progress }}" href="{{ level.uri }}">
+                <span class="right">{{ level.reward|number_format }} pts</span>
+                <span class="level-title">{{ level.title }}</span>
+                <span class="dark small">{{ level.total_completed|number_format }} solvers</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% endfor %}

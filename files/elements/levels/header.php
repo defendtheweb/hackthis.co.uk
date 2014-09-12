@@ -14,7 +14,7 @@
 	<span class='right next-level dark'><i class='icon-caret-right'></i></span>
 <?php endif; ?>
 
-	<h1 class='no-margin'><?=ucwords($level->title);?></h1>
+	<h1 class='no-margin'><?=ucwords($level->group . " level " . $level->name);?></h1>
 <?php if (!($level->completed && !$level->attempts)): ?>	
 	<span class='dark'>Attempts: <?=$level->attempts;?>
 <?php 	if ($level->completed): ?>
@@ -41,8 +41,6 @@
 			$app->utils->message($level->errorMsg);
 		else
 			$app->utils->message('Invalid details');
-	} else if (isset($_GET['skipped'])) {
-		$app->utils->message('You must complete main levels in order', 'info');
 	}
 ?>
 </div>

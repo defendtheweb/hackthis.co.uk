@@ -136,5 +136,96 @@
                 $this->updateStatus($email->email_id, $email->status==0?3:++$email->status);
             }
         }
+
+
+        /* MANDRILL */
+        public function mandrillSend($to, $from, $template, $subject, $data=null) {
+            require_once 'vendor/mandrill/Mandrill.php';
+            if (!isset($this->mandrill)) {
+                if (!$this->app->config('mandrill')) {
+                    return;
+                }
+                $this->mandrill = new Mandrill($this->app->config('mandrill'));
+            }
+
+            if (ctype_digit($to)) {
+                // Get user and check settings
+                $st = $this->app->db->prepare("SELECT username, email, users_settings.* FROM users LEFT JOIN users_settings ON users_settings.user_id = users.user_id WHERE users.user_id = :uid");
+                $st->execute(array(':uid' => $to));
+                $u = $st->fetch();
+
+                if (!$u OR
+                    ($template == "new-pm" && $u->email_pm != null && $u->email_pm != '1') OR
+                    ($template == "forum-reply" && $u->email_forum_reply != null && $u->email_forum_reply != '1') OR
+                    ($template == "forum-mention"&& $u->email_forum_mention != null && $u->email_forum_mention != '1') OR
+                    ($template == "friend-request" && $u->email_friend != null && $u->email_friend != '1')) {
+                        return;
+                }
+
+                // Load the users unsubscribe token
+                $unsubscribe = $this->app->user->getData('unsubscribe', $to);
+
+                if (!$unsubscribe) {
+                    // Create new token
+                    $unsubscribe = md5(openssl_random_pseudo_bytes(32));
+                    $this->app->user->setData('unsubscribe', $unsubscribe, $to, true);
+                }
+            } else {
+                $u = new stdClass();
+                $u->email = $to;
+                $u->username = (isset($data['username']))?$data['username']:$to;
+                $unsubscribe = '';
+            }
+
+            // Build merge vars
+            $global_merge_vars = array();
+            if ($data) {
+                foreach($data AS $key => $value) {
+                    $tmp = array();
+                    $tmp['name'] = strtoupper($key);
+                    $tmp['content'] = $value;
+                    array_push($global_merge_vars, $tmp);
+                }
+            }
+
+            $template_content = array( );
+
+            $message = array(
+                    'subject' => $subject,
+                    'from_email' => 'no-reply@mail.hackthis.co.uk',
+                    'from_name' => 'HackThis',
+                    'to' => array(
+                        array(
+                            'email' => $u->email,
+                            'name' => $u->username,
+                            'type' => 'to'
+                        )
+                    ),
+                    'global_merge_vars' => $global_merge_vars,
+                    'merge' => true,
+                    'merge_vars' => array(
+                        array(
+                            'rcpt' => $u->email,
+                            'vars' => array(
+                                array(
+                                    'name' => 'USERNAME',
+                                    'content' => $u->username
+                                ),
+                                array(
+                                    'name' => 'UNSUB',
+                                    'content' => $unsubscribe
+                                )
+                            )
+                        )
+                    ),
+                    'tags' => array($template),
+                );
+
+            try {
+                $result = $this->mandrill->messages->sendTemplate($template, $template_content, $message, true);
+            } catch (Exception $e) {
+                //
+            }
+        }
     }
 ?>

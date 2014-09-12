@@ -313,12 +313,13 @@
             } else {
                 if ($st->rowCount()) {
                     // Inform other user
-                    $st = $this->app->db->prepare('SELECT `email` FROM users WHERE `user_id` = :uid');
+                    $st = $this->app->db->prepare('SELECT `user_id`, `username`, `email` FROM users WHERE `user_id` = :uid');
                     $st->execute(array(':uid' => $this->uid));
                     $res = $st->fetch();
                     if ($res) {
-                        $data = array('username' => $this->app->user->username, 'image' => $this->app->user->image, 'score' => $this->app->user->score, 'posts' => $this->app->user->posts);
-                        $this->app->email->queue($res->email, 'friend', json_encode($data), $this->uid);
+                        $data = array('username' => $res->username, 'from' => $this->app->user->username, 'image' => $this->app->user->image, 'score' => $this->app->user->score, 'posts' => $this->app->user->posts);
+                        // $this->app->email->queue($res->email, 'friend', json_encode($data), $this->uid);
+                        $this->app->email->mandrillSend($res->user_id, $this->app->user->user_id, 'friend-request', 'Friend request from ' . $this->app->user->username, $data);
                     }
                 }
             }

@@ -927,7 +927,8 @@
             // $this->app->email->queue($row->email, "Password request", $body);
 
             $data = array('token' => $token, 'username' => $row->username);
-            $this->app->email->queue($row->email, 'password', json_encode($data));
+            // $this->app->email->queue($row->email, 'password', json_encode($data));
+            $this->app->email->mandrillSend($row->email, null, 'password-request', 'Password request', $data);
 
             return true;
         }
@@ -1016,6 +1017,29 @@
             return $st->execute(array(':uid' => $uid, ':pm' => $pm, ':forum_reply' => $forum_reply, ':forum_mention' => $forum_mention, ':friend' => $friend, ':news' => $news));
         }
 
+        /**
+         * Update a users email notification settings
+         * @param  integer $uid         User id, if 0 then the current users id will be used
+         * @param  boolean $unsubscribe Unsubscribe from all emails or use POST variables
+         * @return boolean              Successes of update
+         */
+        public function changePrivacySettings($uid = 0) {
+            if ($uid === 0) {
+                $uid = $this->uid;
+            }
+            if (isset($_POST['online'])) {
+                $online = ($_POST['online'] == '1')?1:0;
+            } else return false;
+
+            if (isset($_POST['score'])) {
+                $score = ($_POST['score'] == '1')?1:0;
+            } else return false;
+
+            $st = $this->app->db->prepare('UPDATE `users_profile` SET `show_online` = :online, `show_leaderboard` = :score WHERE user_id = :uid');
+
+            return $st->execute(array(':uid' => $uid, ':online' => $online, ':score' => $score));
+        }
+
         public function sendVerficationEmail($new=false) {
             $token = md5(openssl_random_pseudo_bytes(32));
             $this->setData('verification', $token, $this->uid, true);
@@ -1030,7 +1054,8 @@
             // $this->app->email->queue($this->email, "Confirm your email address", $body);
 
             $data = array('new' => $new, 'token' => $token);
-            $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            // $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            $this->app->email->mandrillSend($this->email, null, 'verify-email', 'Confirm your email address', $data);
 
             return true;
         }

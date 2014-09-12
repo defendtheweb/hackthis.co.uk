@@ -305,6 +305,23 @@
                 $st->execute(array(':uid' => $this->app->user->uid, ':pm_id' => $pm_id));
             }
 
+            // Send email to all recipients
+            $st = $this->app->db->prepare('SELECT pm_users.user_id, COALESCE(users_settings.email_pm, 1) AS `email_pm`
+                                           FROM pm_users
+                                           LEFT JOIN users_settings
+                                           ON users_settings.user_id = pm_users.user_id
+                                           WHERE pm_id = :pm_id AND pm_users.user_id != :uid
+                                           HAVING `email_pm` = 1');
+            $st->execute(array(':pm_id' => $pm_id, ':uid' => $this->app->user->uid));
+            $result = $st->fetchAll();
+            if (count($result)) {
+                $email_data = array('author' => $this->app->user->username, 'preview' => $body, 'url' => 'inbox/' . $pm_id);
+
+                foreach ($result as $res) {
+                    $this->app->email->mandrillSend($res->user_id, $this->app->user->user_id, 'new-pm', 'New private message from ' . $this->app->user->username, $email_data);
+                }
+            }
+
             $this->lastInserted = $pm_id;
             return true;
         }

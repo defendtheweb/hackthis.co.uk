@@ -1,5 +1,5 @@
 <?php
-	if (!isset($_GET['group']) || !isset($_GET['level']))
+	if (!isset($_GET['level']))
 		header('Location: /levels/');
 
     $custom_css = array('levels.scss', 'highlight.css');
@@ -7,7 +7,11 @@
     require_once('init.php');
 
     //Load level
-    $currentLevel = $app->levels->getLevel(urlencode($_GET['group']), $_GET['level']);
+    $group = $_GET['group'];
+    if ($group === 'basic ') {
+        $group = 'basic+';
+    }
+    $currentLevel = $app->levels->getLevel($group, $_GET['level']);
 
     if (!$currentLevel) {
 		require_once('header.php');

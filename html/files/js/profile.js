@@ -173,7 +173,7 @@ $(function() {
                     $details.find('.loading').hide();
                     $details.find('.profile-stats-extra').slideDown();
 
-                    if (data['graph']) {
+                    if (type !== 'levels') {
                         $details.find('#profile-stats-chart').show();
                         drawChart(data['graph']);
 
@@ -207,25 +207,24 @@ $(function() {
                         }
                     } else {
                         $details.find('#profile-stats-chart').hide();
+                        $ul = $('<ul>');
 
-                        var $ul = $('<ul>'),
-                            $li = null,
-                            group = null;
+                        for (var key in data.data) {
+                            var section = data.data[key];
 
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
-                            if (group != d.group) {
-                                $ul.append($li);
+                            // New group
+                            $li = $('<li>', {text: key});
+                            $li.append($('<ul>'));
 
-                                group = d.group;
-                                $li = $('<li>', {text: d.group});
-                                $li.append($('<ul>'));
+                            for (var n = 0; n < section.levels.length; n++) {
+                                var level = section.levels[n];
+
+                                $a = $('<a>', {href: level.uri, text: level.name, class: 'progress_'+level.progress});
+                                $li.find('ul').append($('<li>').append($a));
                             }
 
-                            $a = $('<a>', {href: d.uri, text: d.name, class: 'progress_'+d.completed});
-                            $li.find('ul').append($('<li>').append($a));
+                            $ul.append($li);
                         }
-                        $ul.append($li);
 
                         $details.find('.profile-stats-extra .more').append($ul);
                     }

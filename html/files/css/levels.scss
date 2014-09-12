@@ -1,25 +1,49 @@
+.level-section {
+    padding-top: 8px;
+    padding-bottom: 2px;
+}
+
 .levels-list {
     margin-bottom: 8px;
 
     li {
         float: left;
+        width: 33%;
 
         a {
-            background: $bg;
-            margin: 5px 5px 5px 0;
-            width: 138px;
-            padding: 10px 6px;
-            border-bottom: 1px solid $green;
+            margin: 5px 10px 5px 0;
+            padding: 6px 8px;
+            border-left: 2px solid $green;
             display: block;
-            text-align: center;
+            background: $bg;
+            overflow: hidden;
 
             &:hover {
                 text-decoration: none;
                 background: $light_bg;
             }
 
-            &.progress_0 {
-                border-bottom-color: $red;
+            &.progress-0 {
+                border-left-color: $red;
+            }
+
+            &.progress-1 {
+                border-left-color: #EE5500;
+            }
+
+            .level-title {
+                width: 60%;
+                display: block;
+            }
+
+            .level-tags {
+                height: 16px;
+                display: block;
+
+                .level-tag:hover {
+                    color: $white;
+                    cursor: pointer;
+                }
             }
         }
     }

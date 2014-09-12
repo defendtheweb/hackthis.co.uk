@@ -89,7 +89,7 @@
                     <h2><a href='/user/{{ profile.username }}/friends'>{{ profile.friendsList|length }} Friend{% if profile.friendsList|length != 1 %}s{% endif %}</a></h2>
 
                     <ul class='friends-list'>
-                        {% for friend in profile.friendsList|slice(0, 20) %}
+                        {% for friend in profile.friendsList|slice(0, 16) %}
                             <li>
                                 <figure>
                                     <a href='/user/{{ friend.username }}'>
@@ -97,13 +97,14 @@
                                     </a>
                                     <figcaption>
                                         <a href='/user/{{ friend.username }}'>{{ friend.username }}</a><br/>
-                                        Score: {{ friend.score }}<br/>
+                                        Score: {{ friend.score|number_format }}<br/>
                                         {% if friend.status %}Friends{% endif %}
                                     </figcaption>
                                 </figure>
                             </li>
                         {% endfor %}
                     </ul>
+                    <a class='right' href='/user/{{ profile.username }}/friends'>View all</a>
                 </section>
             {% endif %}
             &nbsp;
@@ -156,11 +157,11 @@
                         </li>
                     {% endif %}
                     <li>
-                        <span class="strong">{{ profile.joined|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.joined|date('c') }}" class="forceSince">{{ profile.joined|sinceShort }}</time></span>
                         <span class="small">Joined</span>
                     </li>
                     <li>
-                        <span class="strong">{{ profile.last_active|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.last_active|date('c') }}" class="forceSince">{{ profile.last_active|sinceShort }}</time></span>
                         <span class="small">Last seen</span>
                     </li>
                 </ul>

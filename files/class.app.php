@@ -201,6 +201,17 @@
                 echo profile::getImg($img, $size, $gravatar);
             });
             $this->twig->addFunction($getImg);
+
+            $include = new Twig_SimpleFunction('include', function ($file) {
+                $app = $this;
+                include($file);
+            });
+            $this->twig->addFunction($include);
+
+            $printForumSection = new Twig_SimpleFunction('printForumSection', function ($section) {
+                $this->forum->printSectionsList($section, true);
+            });
+            $this->twig->addFunction($printForumSection);
         }
 
 

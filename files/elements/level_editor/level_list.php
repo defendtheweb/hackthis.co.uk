@@ -1,19 +1,12 @@
 <?php
-    $levels = $app->levels->getList();
+    $sections = $app->levels->getList();
     $lastGroup = '';
-    foreach($levels as $level):
-        if ($level->group !== $lastGroup):
-            if ($lastGroup !== ''):
+    foreach($sections as $key => $section):
 ?>
-            </ul>
-<?php
-            endif;
-            $lastGroup = $level->group;
-?>
-        <h3 class='white'><?=$level->group;?></h3>
+        <h3 class='white'><?=$key;?></h3>
         <ul class='levels-list plain clr'>
 <?php
-        endif;
+        foreach($section->levels as $level):
 ?>
             <li>
                 <a href="levels.php?edit=<?=$level->id;?>">
@@ -21,6 +14,9 @@
                 </a>
             </li>
 <?php
+        endforeach;
+?>
+        </ul>
+<?php
     endforeach;
 ?>
-            </ul>

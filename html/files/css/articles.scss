@@ -45,9 +45,17 @@ article.body {
     div.articleBody {
         font-size: 1.1em;
         line-height: 1.3em;
+        text-align: left;
         
         h3 {
             display: inline-block;
+        }
+
+        ul li {
+            list-style-position: outside;
+            margin-left: 15px;
+            padding-left: 2px;
+            padding-bottom: 8px;
         }
     }
 
