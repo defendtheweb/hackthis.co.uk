@@ -90,14 +90,14 @@
                             {% if user.admin == true %}
                                 <li class='right icon mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
                                     <ul>
-                                        {% if user.admin_site_priv == true %}
+                                        {% if user.site_priv > 1 %}
                                             <li><a href='/admin/levels.php'>Levels</a></li>
                                             <li><a href='/admin/users.php'>Users</a></li>
                                         {% endif %}
-                                        {% if user.admin_pub_priv == true %}
+                                        {% if user.pub_priv > 1 %}
                                             <li><a href='/admin/articles.php'>Articles</a></li>
                                         {% endif %}
-                                        {% if user.admin_forum_priv == true %}
+                                        {% if user.forum_priv > 1 %}
                                             <li><a href='/admin/forum.php'>Forum</a></li>
                                         {% endif %}
                                         <li><a href='/contact'>Tickets</a></li>
