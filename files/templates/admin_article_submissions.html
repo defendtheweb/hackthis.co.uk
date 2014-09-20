@@ -1,0 +1,23 @@
+<div class='admin-module'>
+    <h3>Article submissions</h3>
+    <table class='striped articles'>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td><a target='_blank' href='/articles/view.php?id={{ article.article_id }}'>{{ article.title }}</a></td>
+                    <td><a target='_blank' href='/user/{{ article.username }}'>{{ article.username }}</a></td>
+                    <td>{{ article.category }}</td>
+                    <td><time datetime="{{ article.datetime }}">{{ article.time }}</time></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -32,11 +32,7 @@
                         <a href='{% if post.author %}#{% else %}/admin/forum.php?post={{ post. post_id }}&remove{% endif %}' class='button icon {% if post.author %}remove{% endif %}'><i class='icon-trash'></i></a>
                     {% endif %}
                 {% else %}
-                    {% if post.flag <= 0 %}
-                        <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>
-                    {% else %}
-                        <a href='#' class='button flagged'><i class='icon-flag'></i> Flagged</a>
-                    {% endif %}
+                    <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>
                 {% endif %}
             {% endif %}
         </div>        

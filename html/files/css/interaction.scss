@@ -852,6 +852,108 @@ div.lite-pagination {
 }
 
 
+/* MODAL */
+.modal-overlay {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1000000;
+
+    .modal {
+        background: $white;
+        color: $text_dark;
+        left: 0;
+        margin: 0 auto;
+        position: fixed;
+        right: 0;
+        top: 15%;
+        width: 600px;
+        z-index: 1000001;
+
+        .modal-header {
+            padding: 20px 20px 10px;
+            cursor: move;
+
+           -moz-user-select: none;
+           -khtml-user-select: none;
+           -webkit-user-select: none;
+
+            h2 {
+                color: $dark;
+            }
+
+            a.modal-close {
+                background: $dark;
+                padding: 15px;
+                position: absolute;
+                right: 0;
+                top: 0;
+
+                &:hover {
+                    text-decoration: none;
+                    color: $bright_green;
+                }
+            }
+        }
+
+        .modal-content {
+            padding: 0px 20px 20px;
+
+            h3 {
+                color: $dark;
+            }
+
+            ul {
+                margin-bottom: 10px;
+
+                li {
+                    padding-left: 20px;
+                    padding-bottom: 10px;
+
+                    label {
+                        margin-bottom: 2px;
+                    }
+
+                    input[type="radio"] {
+                        display: inline-block;
+                        float: left;
+                        margin-left: -20px;
+                        margin-top: 2px;
+                        padding-top: 10px;
+                        width: auto;
+                    }
+
+                    textarea {
+                        color: #404040;
+                        margin-top: 10px;
+                        max-height: 100px;
+                        min-height: 100px;
+                    }
+                }
+            }
+
+            input[type=submit] {
+                padding: 4px 8px;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-overlay .modal {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: auto;
+    }
+}
+
+
+
 
 /*scrollbar themes*/
 .mCustomScrollBox>.mCSB_scrollTools .mCSB_draggerRail{

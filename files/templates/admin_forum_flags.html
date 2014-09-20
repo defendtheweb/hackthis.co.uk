@@ -1,0 +1,25 @@
+<div class='admin-module'>
+    <h3>Forum flags</h3>
+    <table class='striped flags'>
+        <thead>
+            <tr>
+                <th>Thread</th>
+                <th>Author</th>
+                <th>Flags</th>
+                <th>Reason</th>
+                <th>Latest</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flag in flags %}
+                <tr data-pid="{{ flag.post_id }}">
+                    <td><a target='_blank' href='forum.php?id={{ flag.post_id }}'>{{ flag.title }}</a></td>
+                    <td><a target='_blank' href='/user/{{ flag.username }}'>{{ flag.username }}</a></td>
+                    <td>{{ flag.flags }}</td>
+                    <td>{{ flag.reason }}</td>
+                    <td><time datetime="{{ flag.datetime }}">{{ flag.latest }}</time></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

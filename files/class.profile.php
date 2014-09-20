@@ -18,15 +18,16 @@
                              );
 
         // If $uid just get the basic user info ... for ajax stuff
-        public function __construct($username, $uid=false) {
+        public function __construct($username, $public=false) {
             global $app;
             $this->app = $app;
 
-            if ($uid) {
-                $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.forum_signature,
-                    friends.status AS friends, friends.user_id AS friend, profile.gravatar,
+            if ($public) {
+                $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.show_email, profile.about, profile.forum_signature,
+                    friends.status AS friends, profile.gravatar,
                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
-                    IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator
+                    IF (priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
+                    coalesce(priv.site_priv, 1) AS `site_priv`, coalesce(priv.pm_priv, 1) AS `pm_priv`, coalesce(priv.forum_priv, 1) AS `forum_priv`, coalesce(priv.pub_priv, 1) AS `pub_priv`
                     FROM users u
                     LEFT JOIN users_profile profile
                     ON u.user_id = profile.user_id
@@ -34,10 +35,39 @@
                     ON (friends.user_id = u.user_id AND friends.friend_id = :user) OR (friends.user_id = :user AND friends.friend_id = u.user_id)
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
-                    WHERE u.user_id = :profile");
+                    WHERE u.user_id = :profile or u.username = :profile");
                 $st->execute(array(':profile' => $username, ':user' => $this->app->user->uid));
                 $st->setFetchMode(PDO::FETCH_INTO, $this);
                 $res = $st->fetch();
+
+                if (!$res) {
+                    return false;
+                }
+
+                // is this user allowed to see that stuff?
+                if (!$this->app->user->admin_site_priv && !$this->show_email) {
+                    unset($this->email);
+                }
+                unset($this->show_email);
+
+                if (isset($this->image)) {
+                    $gravatar = isset($this->gravatar) && $this->gravatar == 1;
+                    $this->image = profile::getImg($this->image, 198, $gravatar);
+                } else {
+                    $this->image = profile::getImg(null, 198);
+                }
+                unset($this->gravatar);
+
+                if (!$this->app->user->admin_site_priv) {
+                    unset($this->site_priv);
+                    unset($this->pm_priv);
+                    unset($this->forum_priv);
+                    unset($this->pub_priv);
+                }
+
+                if ($this->friends === null) {
+                    unset($this->friends);
+                }
             } else {
                 $st = $this->app->db->prepare("SELECT u.user_id as uid, u.username, u.score, u.email, profile.*, activity.joined,
                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
@@ -81,7 +111,7 @@
                 $this->image = profile::getImg(null, 198);
 
 
-            if ($uid)
+            if ($public)
                 return true;
 
 

@@ -372,6 +372,9 @@ blockquote {
             background-color: darken(green, 12%);
         }
     }
+    &.medal-error {
+        background: darken($red, 10%);
+    }
 }
 
 .colour-bronze {
