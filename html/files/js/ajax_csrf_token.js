@@ -10,7 +10,7 @@
     // The value for this user
     var TOKEN_VALUE = dataKey;
     // list of hostnames that the token is added for
-    var ALLOWED_HOSTNAMES = ['www.hackthis.co.uk', 'hackthis.co.uk'];
+    var ALLOWED_HOSTNAMES = ['www.hackthis.co.uk', 'hackthis.co.uk', 'localhost'];
 
     // The token string added to the url of each request
     var TOKEN_STRING = TOKEN_NAME + '=' + TOKEN_VALUE;

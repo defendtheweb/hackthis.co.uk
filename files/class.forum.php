@@ -101,7 +101,7 @@
             return $result;
         }
 
-        public function printThreadPost($post, $first=false, $last=false) {
+        public function printThreadPost($post, $first=false, $last=false, $admin=false) {
             $post->first = $first;
             $post->last = $last;
 
@@ -124,7 +124,11 @@
             $post->timeSince = $this->app->utils->timeSince($post->posted, true);
 
             // Use template
-            echo $this->app->twig->render('forum_post.html', array('post' => $post));
+            if (!$admin) {
+                echo $this->app->twig->render('forum_post.html', array('post' => $post));
+            } else {
+                echo $this->app->twig->render('admin_forum_post.html', array('post' => $post));
+            }
         }
 
         public function printSectionsList($cat, $menu = false, $current = null, $level = 1) {
@@ -534,20 +538,22 @@
         }
 
 
-        public function getThread($thread_id, $page = 1, $limit = 10) {
-            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
-                section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id > 0, 1, 0),1) AS `access`
-                FROM forum_threads thread
-                LEFT JOIN forum_users
-                ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
-                LEFT JOIN forum_sections section
-                ON section.section_id = thread.section_id
-                LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
-                ON replies.thread_id = thread.thread_id
-                LEFT JOIN users_levels
-                ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
-                WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
-                LIMIT 1");
+        public function getThread($thread_id, $page = 1, $limit = 10, $admin = false) {
+            $sql = "SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
+                    section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id > 0, 1, 0),1) AS `access`
+                    FROM forum_threads thread
+                    LEFT JOIN forum_users
+                    ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
+                    LEFT JOIN forum_sections section
+                    ON section.section_id = thread.section_id
+                    LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
+                    ON replies.thread_id = thread.thread_id
+                    LEFT JOIN users_levels
+                    ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
+                    WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
+                    LIMIT 1";
+
+            $st = $this->app->db->prepare($sql);
             $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             $thread = $st->fetch();
 
@@ -569,7 +575,7 @@
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -581,7 +587,7 @@
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
                 ON users_forum.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
+                LEFT JOIN (SELECT post_id, user_id, karma FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -602,7 +608,7 @@
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -614,7 +620,7 @@
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
                 ON users_forum.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
+                LEFT JOIN (SELECT post_id, user_id, karma FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -912,10 +918,13 @@
             return true;
         }
 
-        public function flagPost($post_id) {
-            $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `flag`)
-                VALUES (:uid, :post_id, NOW()) ON DUPLICATE KEY UPDATE `flag` = NOW()");
-            return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
+        public function flagPost($post_id, $reason, $extra) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            $st = $this->app->db->prepare("INSERT INTO forum_posts_flags (`user_id`, `post_id`, `reason`, `details`)
+                VALUES (:uid, :post_id, :reason, :extra)");
+            return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':reason'=>$reason, ':extra'=>$extra));
         }
 
         public function removeFlags($post_id, $reward=false) {

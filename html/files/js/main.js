@@ -4,18 +4,6 @@ while( $('.dashboard h1 a').width() > $('.dashboard').width() ) {
 }
 
 
-// Internet defense league
-window._idl = {};
-_idl.variant = "banner";
-(function() {
-    var idl = document.createElement('script');
-    idl.type = 'text/javascript';
-    idl.async = true;
-    idl.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'members.internetdefenseleague.org/include/?url=' + (_idl.url || '') + '&campaign=' + (_idl.campaign || '') + '&variant=' + (_idl.variant || 'banner');
-    document.getElementsByTagName('body')[0].appendChild(idl);
-})();
-
-
 var loggedIn = true; // overwritten in guest.js
 
 $(function() {
@@ -48,6 +36,69 @@ $(function() {
         else
             return confirm("Are you sure?");
     });
+
+    // Modal
+    var modalTemplate = '<tmpl>\
+                            <div class="modal-overlay">\
+                                <div class="modal">\
+                                    <div class="modal-header">\
+                                    <h2>${title}</h2>\
+                                    <a href="#" class="modal-close"><i class="icon-cross"></i></a>\
+                                </div>\
+                                <div class="modal-content">\
+                                    {{html content}}\
+                                </div>\
+                            </div>\
+                        </tmpl>';
+    $.createModal = function(title, content, callback) {
+        var modal = $(modalTemplate).tmpl({ 'title' : title, 'content' : content }).hide();
+        $('body').append(modal);
+        $('.modal-overlay').fadeIn(300);
+
+        $('.modal .modal-header').on('mousedown', function(e) {
+            // Start drag
+            var $modal = $(this).closest('.modal');
+
+            // Get offset
+            var offsetX = e.pageX - $modal.offset().left,
+                offsetY = e.pageY - $modal.offset().top;
+
+            $('body').on('mousemove', modalMove);
+            $('body').one('mouseup', modalDrop);
+
+            function modalMove(e) {
+                var x = e.pageX - offsetX,
+                    y = e.pageY - offsetY;
+                $modal.css('margin', 0).offset({ top: y, left: x})
+            }
+
+            function modalDrop(e) {
+                $('body').off('mousemove', modalMove);
+            }
+        });
+
+        if(typeof callback == 'function'){
+            callback.call($('.modal'));
+        }
+
+        $('.modal .modal-header a.modal-close').on('click', function(e) {
+            e.preventDefault();
+            $(this).closest('.modal-overlay').fadeOut(300, function() {
+                $(this).remove();
+            });
+        });
+
+        $('.modal-overlay').on('click', function(e) {
+            if (e.target != this) {
+                return;
+            }
+            e.preventDefault();
+            $(this).closest('.modal-overlay').fadeOut(300, function() {
+                $(this).remove();
+            });
+        });
+    };
+
 
     // Update timestamps
     (function updateTimes() {

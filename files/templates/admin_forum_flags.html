@@ -6,20 +6,18 @@
                 <th>Thread</th>
                 <th>Author</th>
                 <th>Flags</th>
+                <th>Reason</th>
                 <th>Latest</th>
-                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
             {% for flag in flags %}
                 <tr data-pid="{{ flag.post_id }}">
-                    <td><a target='_blank' href='/forum/{{ flag.slug }}?post={{ flag.post_id }}'>{{ flag.title }}</a></td>
+                    <td><a target='_blank' href='forum.php?id={{ flag.post_id }}'>{{ flag.title }}</a></td>
                     <td><a target='_blank' href='/user/{{ flag.username }}'>{{ flag.username }}</a></td>
                     <td>{{ flag.flags }}</td>
+                    <td>{{ flag.reason }}</td>
                     <td><time datetime="{{ flag.datetime }}">{{ flag.latest }}</time></td>
-                    <td class='text-right'>
-                        <a href='#' class='remove hint--top' data-hint="Delete flag"><i class='icon-remove'></i></a>
-                    </td>
                 </tr>
             {% endfor %}
         </tbody>

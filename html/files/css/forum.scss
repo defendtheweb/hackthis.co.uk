@@ -436,6 +436,22 @@
 }
 
 
+.modal-content {
+    .thanks {
+        font-size: 2em;
+        padding-top: 40px;
+        text-align: center;
+
+        i.icon-good {
+            font-size: 4em;
+            line-height: 1.5em;
+            color: $green;
+            display: block;
+        }
+    }
+}
+
+
 @media ( max-width : 769px ) {
     .forum-sidebar, .section_voices, .section_latest {
         display: none !important;

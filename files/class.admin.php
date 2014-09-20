@@ -19,19 +19,20 @@
             return $count;
         }
 
-        public function getLatestForumFlags() {
-            $sql = "SELECT MAX(users_forum.flag) AS `latest`, COUNT(users_forum.post_id) AS `flags`, users.username, forum_threads.thread_id, forum_threads.slug, forum_threads.title, forum_posts.post_id, forum_posts.body
-                    FROM users_forum
+        public function getLatestForumFlags($limit = true) {
+            $sql = "SELECT MAX(forum_posts_flags.time) AS `latest`, COUNT(forum_posts_flags.post_id) AS `flags`, forum_posts_flags.reason, users.username, forum_threads.thread_id, forum_threads.slug, forum_threads.title, forum_posts.post_id, forum_posts.body
+                    FROM forum_posts_flags
                     INNER JOIN forum_posts
-                    ON users_forum.post_id = forum_posts.post_id
+                    ON forum_posts_flags.post_id = forum_posts.post_id
                     INNER JOIN forum_threads
                     ON forum_posts.thread_id = forum_threads.thread_id
                     INNER JOIN users
                     ON users.user_id = forum_posts.author
-                    WHERE flag > 0 AND forum_posts.deleted = 0 AND forum_threads.deleted = 0
-                    GROUP BY users_forum.post_id
-                    ORDER BY `flags` DESC, `latest` DESC
-                    LIMIT 15";
+                    WHERE forum_posts.deleted = 0 AND forum_threads.deleted = 0
+                    GROUP BY forum_posts_flags.post_id
+                    ORDER BY `flags` DESC, `latest` DESC";
+            if ($limit) $sql .= " LIMIT 5";
+
             $st = $this->app->db->prepare($sql);
             $st->execute();
             $result = $st->fetchAll();
@@ -39,7 +40,7 @@
             return $result;
         }
 
-        public function getLatestArticleSubmissions() {
+        public function getLatestArticleSubmissions($limit = true) {
             $sql = "SELECT articles_draft.article_id, articles_draft.title, articles_draft.time, articles_categories.title AS `category`, users.username
                     FROM articles_draft
                     INNER JOIN articles_categories
@@ -47,8 +48,9 @@
                     INNER JOIN users
                     ON users.user_id = articles_draft.user_id
                     WHERE articles_draft.note IS NULL
-                    ORDER BY `time` DESC
-                    LIMIT 5";
+                    ORDER BY `time` DESC";
+            if ($limit) $sql .= " LIMIT 5";
+                    
             $st = $this->app->db->prepare($sql);
             $st->execute();
             $result = $st->fetchAll();

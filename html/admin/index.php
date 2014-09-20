@@ -18,6 +18,15 @@
         $post->title = $app->parse($post->title, false);
         $post->datetime = date('c', strtotime($post->latest));
         $post->latest = $app->utils->timeSince($post->latest);
+
+        switch ($post->reason) {
+            case '1': $post->reason = "Off-topic"; break;
+            case '2': $post->reason = "Spoiler"; break;
+            case '3': $post->reason = "Spam"; break;
+            case '4': $post->reason = "Low quality"; break;
+            case '5': $post->reason = "Non-English"; break;
+            case '6': $post->reason = "Other"; break;
+        }
     endforeach;
 
     echo $app->twig->render('admin_forum_flags.html', array('flags' => $flags));
