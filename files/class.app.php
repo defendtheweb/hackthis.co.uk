@@ -122,28 +122,6 @@
             require('vendor/nbbc.php');
             $this->bbcode = new BBCode;
             $this->bbcode->SetDetectURLs(true);
-            function fixnewlines($bbcode, $action, $name, $default, $params, $content){
-                if ($action !== BBCODE_OUTPUT) return true;
-
-                $content = preg_replace('/<br(?: \/)?>'."\n".'/',"\n", $content);
-                $content = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $content);
-
-                $content = "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{$content}</pre>\n</div>\n";
-
-                return $content;
-            }
-            $this->bbcode->AddRule('code', Array(
-                'mode' => BBCODE_MODE_CALLBACK,
-                'method' => 'fixnewlines',
-                'class' => 'code',
-                'allow_in' => Array('listitem', 'block', 'columns'),
-                'before_tag' => "sns",
-                'after_tag' => "sn",
-                'before_endtag' => "sn",
-                'after_endtag' => "sns",
-                'plain_start' => "\n<b>Code:</b>\n",
-                'plain_end' => "\n",
-            ));
         }
 
 

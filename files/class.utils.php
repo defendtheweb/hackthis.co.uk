@@ -31,11 +31,23 @@
 
             if (!$bbcode) {
                 $text = strip_tags($text);
+            } else {
+                $text = preg_replace_callback("/\[code\](.+)\[\/code\]/is", array($this, 'code_block_callback'), $text);
             }
 
             $this->app->bbcode->SetLimit(0);
 
             return $text;
+        }
+
+        private function code_block_callback($text) {
+            $content = $text[1];
+            $content = preg_replace('/<br(?: \/)?>'."\n".'/',"\n", $content);
+            $content = str_replace("\t", "    ", $content);
+
+            $content = "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{$content}</pre>\n</div>\n";
+
+            return $content;
         }
 
         private function mentions_callback($matches) {
