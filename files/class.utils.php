@@ -32,7 +32,7 @@
             if (!$bbcode) {
                 $text = strip_tags($text);
             } else {
-                $text = preg_replace_callback("/\[code\](.+)\[\/code\]/is", array($this, 'code_block_callback'), $text);
+                $text = preg_replace_callback("/\[code\](.*?)\[\/code\]/is", array($this, 'code_block_callback'), $text);
             }
 
             $this->app->bbcode->SetLimit(0);
@@ -45,7 +45,7 @@
             $content = preg_replace('/<br(?: \/)?>'."\n".'/',"\n", $content);
             $content = str_replace("\t", "    ", $content);
 
-            $content = "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{$content}</pre>\n</div>\n";
+            $content = "<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{$content}</pre>\n</div>\n";
 
             return $content;
         }
