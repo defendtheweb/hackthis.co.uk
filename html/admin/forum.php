@@ -3,7 +3,7 @@
     $custom_js = array('highlight.js', 'admin.js', 'admin_forum.js');
     $page_title = 'Admin - Forum';
     define("PAGE_PRIV", "admin_forum");
-
+    
     require_once('header.php');
 
     if (!isset($_GET['id'])) {
@@ -13,6 +13,15 @@
             $post->title = $app->parse($post->title, false);
             $post->datetime = date('c', strtotime($post->latest));
             $post->latest = $app->utils->timeSince($post->latest);
+
+            switch ($post->reason) {
+                case '1': $post->reason = "Off-topic"; break;
+                case '2': $post->reason = "Spoiler"; break;
+                case '3': $post->reason = "Spam"; break;
+                case '4': $post->reason = "Low quality"; break;
+                case '5': $post->reason = "Non-English"; break;
+                case '6': $post->reason = "Other"; break;
+            }
         endforeach;
 
         echo $app->twig->render('admin_forum_flags.html', array('flags' => $flags));
@@ -36,46 +45,61 @@
         $section = $thread->section;
 
         $breadcrumb = $app->forum->getBreadcrumb($section, true) . "<a href='/forum/{$thread->slug}'>{$thread->title}</a>";
-?>
 
-
-<div class="forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
-    <h1 class='no-margin' itemprop="name"><?=$thread->title;?></h1>
-    <?=$breadcrumb;?><br/><br/>
-    <ul class='post-list'>
-<?php
-        if ($thread->question->post_id == $post_id) {
-            $tmp = clone $thread->question;
-            $thread->question->highlight = true;
-            $app->forum->printThreadPost($tmp, true, false, true);
-        } else {
-            foreach($thread->posts AS $post) {
-                if ($post->post_id == $post_id) {
-                    $tmp = clone $post;
-                    $post->highlight = true;
-                    $app->forum->printThreadPost($tmp, false, false, true);
-                    break;
-                }
+        $flags = $app->forum->getPostFlags($post_id);
+        foreach ($flags AS $flag):
+            switch ($flag->reason) {
+                case '1': $flag->reason = "Off-topic"; break;
+                case '2': $flag->reason = "Spoiler"; break;
+                case '3': $flag->reason = "Spam"; break;
+                case '4': $flag->reason = "Low quality"; break;
+                case '5': $flag->reason = "Non-English"; break;
+                case '6': $flag->reason = "Other - " . $flag->details; break;
             }
-        }
-?>
-    </ul>
-</div>
-
-<br/><br/>
-<h2>Full thread</h2>
-<div class="forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
-    <ul class='post-list'>
-<?php
-        $post = $thread->question;
-        $app->forum->printThreadPost($post, true, false, true);
-
-        foreach($thread->posts AS $post):
-            $app->forum->printThreadPost($post, false, false, true);
         endforeach;
 ?>
-    </ul>
-</div>
+
+    <div class="forum-main admin-forum" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
+        <h1 class='no-margin' style="display: inline-block" itemprop="name"><?=$thread->title;?></h1>
+        <a href='#' class='button icon thread-edit'><i class='icon-edit'></i></a>
+        <a href='#' class='button icon thread-delete'><i class='icon-trash'></i></a><br/>
+        <?=$breadcrumb;?><br/><br/>
+        <?= $app->twig->render('admin_forum_post_flags.html', array('flags' => $flags)); ?>
+        <h2>Post</h2>
+        <ul class='post-list'>
+    <?php
+            if ($thread->question->post_id == $post_id) {
+                $tmp = clone $thread->question;
+                $thread->question->highlight = true;
+                $app->forum->printThreadPost($tmp, true, false, true);
+            } else {
+                foreach($thread->posts AS $post) {
+                    if ($post->post_id == $post_id) {
+                        $tmp = clone $post;
+                        $post->highlight = true;
+                        $app->forum->printThreadPost($tmp, false, false, true);
+                        break;
+                    }
+                }
+            }
+    ?>
+        </ul>
+    </div>
+
+    <br/>
+    <h2>Full thread</h2>
+    <div class="forum-main" data-thread-id="<?=$thread->id;?>" itemscope itemtype="http://schema.org/Article">
+        <ul class='post-list'>
+    <?php
+            $post = $thread->question;
+            $app->forum->printThreadPost($post, true, false, true);
+
+            foreach($thread->posts AS $post):
+                $app->forum->printThreadPost($post, false, false, true);
+            endforeach;
+    ?>
+        </ul>
+    </div>
 
 <?php
     }

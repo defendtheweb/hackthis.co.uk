@@ -17,8 +17,12 @@
 
     $breadcrumb = '';
     if (isset($_GET['slug'])) {
+        // Get id from slug
+        preg_match('/\/([0-9]+)[a-z0-9\s-]+$/s', $_GET['slug'], $matches);
+        $id = $matches[1];
+
         // Section or thread?
-        $thread = $forum->isThread($_GET['slug']);
+        $thread = $forum->isThread($id);
         if ($thread) {
             if (isset($_GET['edit']))
                 include('edit.php');

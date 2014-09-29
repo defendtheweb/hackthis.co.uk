@@ -84,6 +84,27 @@ a.accept:hover {
 
 
 /* FORUM */
+.admin-forum {
+    ul.post-flags {
+        margin-bottom: 30px;
+        margin-top: -9px;
+    }
+
+    ul.post-flags li {
+        overflow: hidden;
+        padding: 8px;
+        background: $light_bg;
+    }
+
+    ul.post-flags li:first-child {
+        background: none;
+    }
+
+    ul.post-flags li:nth-child(2n) {
+        background: $bg;
+    }
+}
+
 ul.post-list li {
     &.highlight {
         border: 4px solid $green;

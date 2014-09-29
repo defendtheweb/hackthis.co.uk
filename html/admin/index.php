@@ -29,7 +29,9 @@
         }
     endforeach;
 
-    echo $app->twig->render('admin_forum_flags.html', array('flags' => $flags));
+    if ($flags) {
+        echo $app->twig->render('admin_forum_flags.html', array('flags' => $flags));
+    }
 
     // Article submissions
     $articles = $app->admin->getLatestArticleSubmissions();
@@ -39,7 +41,9 @@
         $article->time = $app->utils->timeSince($article->time);
     endforeach;
 
-    echo $app->twig->render('admin_article_submissions.html', array('articles' => $articles));
+    if ($articles) {
+        echo $app->twig->render('admin_article_submissions.html', array('articles' => $articles));
+    }
 ?>
 
 

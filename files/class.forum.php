@@ -56,11 +56,11 @@
             return $result;
         }
 
-        public function isThread($slug) {
+        public function isThread($id) {
             $st = $this->app->db->prepare("SELECT thread_id AS id
                      FROM forum_threads
-                     WHERE slug = :slug");
-            $st->execute(array(':slug'=>$slug));
+                     WHERE `thread_id` = :id");
+            $st->execute(array(':id'=>$id));
             return $st->fetch();
         }
 
@@ -933,7 +933,7 @@
 
             // If reward give all users who flagged a medal
             if ($reward) {
-                $st = $this->app->db->prepare("SELECT user_id FROM users_forum WHERE post_id = :post_id AND flag > 0");
+                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id");
                 $st->execute(array(':post_id'=>$post_id));
                 if ($result = $st->fetchAll()) {
                     foreach($result AS $res) {
@@ -942,10 +942,18 @@
                 }
             }
 
-            $st = $this->app->db->prepare("UPDATE users_forum SET `flag` = 0 WHERE post_id = :post_id");
+            $st = $this->app->db->prepare("DELETE FROM forum_posts_flags WHERE post_id = :post_id");
             return $st->execute(array(':post_id'=>$post_id));
         }
 
+        public function getPostFlags($post_id) {
+            if (!$this->app->user->admin_forum_priv)
+                return false;
+
+            $st = $this->app->db->prepare("SELECT username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id");
+            $st->execute(array(':post_id'=>$post_id));
+            return $st->fetchAll();
+        }
 
         public function getError() {
             return ($this->error)?$this->error:'Error making request';
