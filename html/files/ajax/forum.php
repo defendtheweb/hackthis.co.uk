@@ -23,6 +23,12 @@
             $result['status'] = $forum->flagPost($_GET['id'], $_GET['reason'], $_GET['extra']);
         } else if ($_GET['action'] == "post.remove" && isset($_GET['id'])) {
             $result['status'] = $forum->deletePost($_GET['id']);
+        } else if ($app->user->admin_forum_priv) {
+            if ($_GET['action'] == "admin.post.remove" && isset($_GET['id'])) {
+                $result['status'] = $app->admin->removeForumPost($_GET['id'], $_GET['reason'], $_GET['extra']);
+            } else if ($_GET['action'] == "admin.thread.remove" && isset($_GET['id'])) {
+                $result['status'] = $app->admin->removeForumThread($_GET['id'], $_GET['reason'], $_GET['extra']);
+            }
         }
     }
 

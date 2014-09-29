@@ -1,0 +1,7 @@
+<h2>Flags</h2>
+<ul class='post-flags plain row'>
+    <li><div class='col span_4 strong'>Username</div><div class='col span_20 strong'>Reason</div></li>
+    {% for flag in flags %}
+        <li><div class='col span_4'>{{ flag.username }}</div><div class='col span_20'>{{ flag.reason }}</div></li>
+    {% endfor %}
+</ul>

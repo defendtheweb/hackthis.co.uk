@@ -116,7 +116,7 @@ $(function() {
         $.createModal('Flag post', flagTemplate, function() {
             var $modal = this;
             $modal.find('.reasons input[type=radio]').on('change', function() {
-                if ($modal.find('#reason5:checked').length) {
+                if ($modal.find('#reason6:checked').length) {
                     $modal.find('.modal-reason-other').slideDown('fast');
                 } else {
                     $modal.find('.modal-reason-other').slideUp('fast');

@@ -3,6 +3,8 @@
             <a class="user" href="/user/{{ post.username }}">
                 {{ post.username }}
             </a>
+            <a href='#' class='button icon post-edit'><i class='icon-edit'></i></a>
+            <a href='#' class='button icon post-delete'><i class='icon-trash'></i></a>
             <div class="karma right">
                 {% if (post.karma_priv >= 2 and post.author == false) %}
                     <a class="karma karma-down {% if post.user_karma < 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-down"></i></a>

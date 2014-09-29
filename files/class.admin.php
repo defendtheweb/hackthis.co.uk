@@ -1,6 +1,19 @@
 <?php
     class admin {
 
+        private $forum_reasons_posts = array('This post is not relevant to the thread. If you need help or want to post something that has not been discussed then please create a new thread. If you want to ask a user a specific question unrelated to the current topic please use the PM system.',
+                                            'This post is primarily an answer or has far more detail than is necessary to be helpful.',
+                                            'This post is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
+                                            'This post has severe formatting or content problems. Please be more considered when posting in future.',
+                                            'The communities first and only language is English. If you are feel you need to talk in another language please find another member who can speak that language and contact them directly via PM.',
+                                            'This post refers to a post that longer exists and is being removed just to tidy things up. Don\'t worry about this report.');
+        private $forum_reasons_threads = array('This thread is not relevant to this site. If you want to ask a user a specific question unrelated to the site topic please use the PM system.',
+                                            'This thread is primarily an answer or has far more detail than is necessary to be helpful.',
+                                            'This thread is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
+                                            'This thread has severe formatting or content problems. Please be more considered when posting in future.',
+                                            'The communities first and only language is English. If you are feel you need to talk in another language please find another member who can speak that language and contact them directly via PM.',
+                                            'This thread has been removed to tidy things up. Don\'t worry about this report.');
+
         public function __construct($app) {
             $this->app = $app;
         }
@@ -58,5 +71,81 @@
             return $result;
         }
 
+
+
+
+        // Forum
+        public function removeForumThread($thread_id, $reason, $extra) {
+            // Delete post
+            $deleted = $this->app->forum->deleteThread($thread_id);
+            if (!$deleted) {
+                return false;
+            }
+
+            if (isset($this->forum_reasons_threads[(int)$reason-1])) {
+                $reason = $this->forum_reasons_threads[(int)$reason-1];
+            } else {
+                $reason = $extra;
+            }
+
+            // Add to reports
+            $st = $this->app->db->prepare("INSERT INTO mod_reports (`user_id`, `type`, `about`, `subject`, `body`)
+                    VALUES (:uid, 'forum_thread', :pid, 'Deleted thread', :body)");
+            $status = $st->execute(array(':pid'=>$thread_id, ':uid'=>$this->app->user->uid, ':body'=>$reason));
+
+            $id = $this->app->db->lastInsertId();
+
+            // Notify user
+            $st = $this->app->db->prepare("SELECT owner FROM forum_threads WHERE thread_id = :tid");
+            $st->execute(array(':tid'=>$thread_id));
+            $thread = $st->fetch();
+            $this->app->notifications->add($thread->owner, 'mod_report', $this->app->user->uid, $id);
+
+            // Remove flags and award users who flagged
+            $st = $this->app->db->prepare("SELECT post_id FROM forum_posts WHERE thread_id = :tid ORDER BY posted ASC LIMIT 1");
+            $st->execute(array(':tid'=>$thread->id));
+            $res = $st->fetch();
+            $this->app->forum->removeFlags($res->post_id, true);
+
+            return true;
+        }
+
+        public function removeForumPost($post_id, $reason, $extra) {
+            // Delete post
+            $deleted = $this->app->forum->deletePost($post_id);
+            if (!$deleted) {
+                return false;
+            }
+
+            if (isset($this->forum_reasons_posts[(int)$reason-1])) {
+                $reason = $this->forum_reasons_posts[(int)$reason-1];
+            } else {
+                $reason = $extra;
+            }
+
+            // Add to reports
+            $st = $this->app->db->prepare("INSERT INTO mod_reports (`user_id`, `type`, `about`, `subject`, `body`)
+                    VALUES (:uid, 'forum', :pid, 'Deleted post', :body)");
+            $status = $st->execute(array(':pid'=>$post_id, ':uid'=>$this->app->user->uid, ':body'=>$reason));
+
+            $id = $this->app->db->lastInsertId();
+
+            // Notify user
+            $st = $this->app->db->prepare("SELECT author FROM forum_posts WHERE post_id = :pid");
+            $st->execute(array(':pid'=>$post_id));
+            $post = $st->fetch();
+            $this->app->notifications->add($post->author, 'mod_report', $this->app->user->uid, $id);
+
+            // Remove flags and award users who flagged
+            // $st = $app->db->prepare("SELECT post_id FROM forum_posts WHERE thread_id = :tid ORDER BY posted ASC LIMIT 1");
+            // $st->execute(array(':tid'=>$thread->id));
+            // $res = $st->fetch();
+            // $app->forum->removeFlags($res->post_id, true);
+
+            // Reward anyone who flagged post
+            $this->app->forum->removeFlags($post_id, true);
+
+            return true;
+        }
     }
 ?>
