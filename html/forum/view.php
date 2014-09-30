@@ -108,6 +108,10 @@
         </ul>
     </div>
 <?php
+        elseif (!$thread->closed && $thread->question->user_id === $app->user->uid):
+?>
+            <a href='?close=<?= $app->generateCSRFKey("closeThread"); ?>' class='post-close button right mobile-hide'><i class='icon-lock'></i> Close</a>
+<?php
         endif;
       endif;
 ?>
