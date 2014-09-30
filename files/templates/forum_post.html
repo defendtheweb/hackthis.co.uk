@@ -24,15 +24,18 @@
             {% endif %}
 
             {% if post.loggedIn %}
-                {% if (post.moderator or post.author) %}
+                {% if post.author %}
                     {% if post.first %}
-                        <a class="button" href="{% if post.author %} ?edit={{ post. post_id }} {% else %} /admin/forum.php?post={{ post. post_id }}&edit {% endif %}"><i class="icon-edit"></i> Edit post</a>
+                        <a class="button" href="?edit={{ post. post_id }}"><i class="icon-edit"></i> Edit post</a>
                     {% else %}
-                        <a href='{% if post.author %}?edit={{ post. post_id }}{% else %}/admin/forum.php?post={{ post. post_id }}&edit{% endif %}' class='button icon'><i class='icon-edit'></i></a>
-                        <a href='{% if post.author %}#{% else %}/admin/forum.php?post={{ post. post_id }}&remove{% endif %}' class='button icon {% if post.author %}remove{% endif %}'><i class='icon-trash'></i></a>
+                        <a href='?edit={{ post. post_id }}' class='button icon'><i class='icon-edit'></i></a>
+                        <a href='#' class='button icon remove'><i class='icon-trash'></i></a>
                     {% endif %}
                 {% else %}
-                    <a href='#' class='button flag'><i class='icon-flag'></i> Flag post</a>
+                    {% if post.moderator %}
+                        <a class="button" href="/admin/forum.php?id={{ post. post_id }}"><i class="icon-lock"></i> Admin</a>
+                    {% endif %}
+                    <a href='#' class='button flag'><i class='icon-flag'></i>{% if post.moderator %}{% else %} Flag post{% endif %}</a>
                 {% endif %}
             {% endif %}
         </div>        
