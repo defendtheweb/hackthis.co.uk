@@ -138,8 +138,11 @@
             $st->execute(array(':uid' => $this->uid, ':user' => $this->app->user->uid));
             $this->friendsList = $st->fetchAll();
 
+            // Parse content
+            $this->name = $this->app->parse($this->name, false, false);
+
             if (isset($this->about)) {
-                $this->about_plain = $this->about;
+                $this->about_plain = $this->app->parse($this->about, false, false);
                 $this->about = $this->app->parse($this->about);
             }
 
