@@ -17,7 +17,7 @@ Caption
 
 function isPackageInstalled {
 	packagePolicyOutput=`apt-cache policy $1`
-	echo $packagePolicyOutput | grep Installed > /dev/null
+	echo $packagePolicyOutput | grep -v none | grep Installed > /dev/null
 	return $?
 }
 
