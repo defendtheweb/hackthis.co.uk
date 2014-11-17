@@ -190,6 +190,21 @@
                 ?>
                 <input id="comment_submit" type="submit" value="Send" class="submit button right"/>
             </form>
+            <script>
+                $(document).ready(function() {
+                    // If transferred here from the message dropdown view, fill in the cached values
+                    if (window.localStorage) {
+                        if (window.localStorage.recipients) {
+                            $('#to')[0].value =  window.localStorage.recipients;
+                            window.localStorage.removeItem('recipients');
+                        }
+                        if (window.localStorage.content) {
+                            $('form textarea.editor')[0].value = window.localStorage.content;
+                            window.localStorage.removeItem('content');
+                        }
+                    }
+                });
+            </script>
 <?php
     else:
         if (isset($_GET['delete'])) {
@@ -205,3 +220,4 @@
 <?php
     require_once('footer.php');
 ?>
+
