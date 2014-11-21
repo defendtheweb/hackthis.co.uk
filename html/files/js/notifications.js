@@ -360,7 +360,7 @@ $(function() {
 
                 container.addClass('show-extra');
 
-                $('#global-nav .scroll').mCustomScrollbar();hideNotifications
+                $('#global-nav .scroll').mCustomScrollbar();
 
                 if (container.find('.new').length) {
                     $('#global-nav .scroll').mCustomScrollbar("scrollTo", "li.new:first");
