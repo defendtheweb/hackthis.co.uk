@@ -356,7 +356,7 @@ $(function() {
 
                 $('<a>', {text: "Back to Inbox", class: "toggle-compose more", href: "/inbox"}).appendTo(messagesHTML);
                 messagesHTML.append(items);
-                $('<a>', {text: "Full View", class: "more", href: "/inbox/"+id}).appendTo(messagesHTML);
+                $('<a>', {text: "Full View", class: "more full-view-via-storage", href: "/inbox/"+id}).appendTo(messagesHTML);
 
                 container.addClass('show-extra');
 
@@ -439,7 +439,7 @@ $(function() {
         }, 'json');
 
     }).on('click', '.full-view-via-storage', function(e) {
-
+	console.log('To full view');
         // Since it's a link we don't want to prevent default
         e.stopPropagation();
 
@@ -448,7 +448,8 @@ $(function() {
         // The data will not be sent to the server, and will be erased as soon
         // as it's copied to the respective fields in the full view form.
         if (window.localStorage) {
-            window.localStorage.recipients = $('#to')[0].value;
+	    if ($('#to').length)
+                window.localStorage.recipients = $('#to')[0].value;
             window.localStorage.content = $('form.send textarea')[0].value;
         }
     });

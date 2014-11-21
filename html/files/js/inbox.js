@@ -4,6 +4,18 @@ $(function() {
     $(".inbox .sticky").css('width', $(".inbox .sticky").width()-2);
     $(".inbox .sticky").sticky({topSpacing:45});
 
+                    // If transferred here from the message dropdown view, fill in the cached values
+                    if (window.localStorage) {
+                        if (window.localStorage.recipients) {
+                            $('#to')[0].value =  window.localStorage.recipients;
+                            window.localStorage.removeItem('recipients');
+                        }
+                        if (window.localStorage.content) {
+                            $('form textarea.editor')[0].value = window.localStorage.content;
+                            window.localStorage.removeItem('content');
+                        }
+                    }
+
 
     if ($(".inbox-main ul").length) {
         if (container.find('.new').length) {
