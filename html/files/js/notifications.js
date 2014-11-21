@@ -328,7 +328,7 @@ $(function() {
 
             $('<a>', {text: "Back to Inbox", class: "toggle-compose more", href: "/inbox"}).appendTo(composeHTML);
             composeHTML.append(composeForm);
-            $('<a>', {text: "Full View", class: "more", href: "/inbox/compose"}).appendTo(composeHTML);
+            $('<a>', {text: "Full View", class: "more full-view-via-storage", href: "/inbox/compose"}).appendTo(composeHTML);
 
             container.addClass('show-extra');
 
@@ -436,6 +436,20 @@ $(function() {
             } else
                 $error.text("Error sending message");
         }, 'json');
+
+    }).on('click', '.full-view-via-storage', function(e) {
+
+        // Since it's a link we don't want to prevent default
+        e.stopPropagation();
+
+        // Moving from composing in the message dropdown to full view.
+        // Save the recipients and content of the message in the local storage
+        // The data will not be sent to the server, and will be erased as soon
+        // as it's copied to the respective fields in the full view form.
+        if (window.localStorage) {
+            window.localStorage.recipients = $('#to')[0].value;
+            window.localStorage.content = $('form.send textarea')[0].value;
+        }
     });
 
     $('body').on('click', '.messages-new', function(e) {
