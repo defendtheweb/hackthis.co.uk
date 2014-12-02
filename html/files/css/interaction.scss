@@ -944,11 +944,13 @@ div.lite-pagination {
 
 @media (max-width: 768px) {
     .modal-overlay .modal {
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         width: auto;
+        min-height: 100%;
     }
 }
 
