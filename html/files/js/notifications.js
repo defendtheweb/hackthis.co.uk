@@ -319,7 +319,7 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        var container = $('#global-nav .message-container');
+        var container = $('#global-nav .message-container');co
 
         if (container.hasClass('show-extra')) {
             container.removeClass('show-extra');
@@ -360,7 +360,7 @@ $(function() {
 
                 container.addClass('show-extra');
 
-                $('#global-nav .scroll').mCustomScrollbar();hideNotifications
+                $('#global-nav .scroll').mCustomScrollbar();
 
                 if (container.find('.new').length) {
                     $('#global-nav .scroll').mCustomScrollbar("scrollTo", "li.new:first");
@@ -439,7 +439,6 @@ $(function() {
         }, 'json');
 
     }).on('click', '.full-view-via-storage', function(e) {
-	console.log('To full view');
         // Since it's a link we don't want to prevent default
         e.stopPropagation();
 
