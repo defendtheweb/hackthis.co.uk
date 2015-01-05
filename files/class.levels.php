@@ -197,59 +197,83 @@
             $st->execute(array(':lid'=> $level_id, ':uid' => $this->app->user->uid));
         }
 
-        function check($level) {
-            if (!isset($level->data['answer']))
-                return false;
 
-            $answers = json_decode($level->data['answer']);
+function check($level) {
+    if (!isset($level->data['answer']))
+        return false;
 
-            $attempted = false;
-            $correct = false;
-            foreach($answers AS $answer) {
-                if (strtolower($answer->method) == 'post') {
-                    if (isset($_POST[$answer->name])) {
-                        $attempted = true;
-                           if ($answer->type && $answer->type == 'regex') {
-                            if (preg_match($answer->value, $_POST[$answer->name])) {
-                                $correct = true;
-                            } else {
-                                $correct = false;
-                                break;
-                            }
-                           } else if ($_POST[$answer->name] === $answer->value)
-                                $correct = true;
-                            else {
-                                $correct = false;
-                                break;
-                            }
+    $answers = json_decode($level->data['answer']);
+
+    $attempted = false;
+    $correct = false;
+    $incorrect = 0;
+    foreach($answers AS $answer) {
+        $valid = false;
+
+        if (strtolower($answer->method) == 'post') {
+            if (isset($_POST[$answer->name])) {
+                $attempted = true;
+                if (isset($answer->type) && $answer->type == 'regex') {
+                    if (preg_match($answer->value, $_POST[$answer->name])) {
+                        $valid = true;
+                        if ($incorrect === 0) {
+                            $correct = true;
+                        }
+                    } else {
+                        $correct = false;
                     }
-                } else if (strtolower($answer->method) == 'get') {
-                    if (isset($_GET[$answer->name])) {
-                        $attempted = true;
-             if ($answer->type && $answer->type == 'regex') {
-                            if (preg_match($answer->value, $_GET[$answer->name])) {
-                                $correct = true;
-                            } else {
-                                $correct = false;
-                                break;
-                            }
-                        } else                if ($_GET[$answer->name] === $answer->value)
-                                $correct = true;
-                            else {
-                                $correct = false;
-                                break;
-                            }
+                } else if ($_POST[$answer->name] === $answer->value) {
+                    $valid = true;
+                    if ($incorrect === 0) {
+                        $correct = true;
                     }
+                } else {
+                    $correct = false;
                 }
-            }
-
-            if ($attempted) {
-                $level->attempt = $correct;
-                $this->attempt($level, $correct);
-            }
-
-            return $correct;
+            } else {
+		$correct = false;
+		}
+        } else if (strtolower($answer->method) == 'get') {
+            if (isset($_GET[$answer->name])) {
+                $attempted = true;
+                if ($answer->type && $answer->type == 'regex') {
+                    if (preg_match($answer->value, $_GET[$answer->name])) {
+                        $valid = true;
+                        if ($incorrect === 0) {
+                            $correct = true;
+                        }
+                    } else {
+                        $correct = false;
+                    }
+                } else if ($_GET[$answer->name] === $answer->value) {
+                    $valid = true;
+                    if ($incorrect === 0) {
+                        $correct = true;
+                    }
+                } else {
+                    $correct = false;
+                }
+            } else {
+		$correct = false;
+		}
         }
+
+        if (!$valid) {
+            $incorrect++;
+        }
+    }
+
+    if ($attempted) {
+        $level->attempt = $correct;
+        $this->attempt($level, $correct);
+
+        if ($level->level_id == 53) {
+            $level->errorMsg = (3 - $incorrect) . ' out of 3 answers correct';
+        }
+    }
+
+    return $correct;
+}
 
 
         function attempt($level, $correct=false) {
