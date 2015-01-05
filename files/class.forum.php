@@ -968,6 +968,18 @@
                 $this->error = "You have been banned from posting messages";
                 return false;
             }
+            
+            $st = $this->app->db->prepare('SELECT user_id, karma.karma
+                                           FROM users
+                                           LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
+                                           ON karma.author = u.user_id
+                                           WHERE user_id = :uid AND (karma < 0 AND score <= 0)
+                                           LIMIT 1');
+            $st->execute(array(':uid'=>$this->app->user->uid));
+                if ($res = $st->fetch()) {
+                $this->error = "You have been temporarily banned from posting messages";
+                return false;
+            }
 
             //check post length
             if (str_word_count($body) < 2) {
