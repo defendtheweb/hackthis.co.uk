@@ -102,6 +102,8 @@
         }
 
         public function printThreadPost($post, $first=false, $last=false, $admin=false) {
+	    if (!$post) return;
+
             $post->first = $first;
             $post->last = $last;
 
@@ -927,13 +929,13 @@
             return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':reason'=>$reason, ':extra'=>$extra));
         }
 
-        public function removeFlags($post_id, $reward=false) {
+        public function removeFlags($post_id, $reward=false, $flag_id = null) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
 
             // If reward give all users who flagged a medal
-            if ($reward) {
-                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id");
+            if ($post_id && $reward) {
+                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id AND response = 0");
                 $st->execute(array(':post_id'=>$post_id));
                 if ($result = $st->fetchAll()) {
                     foreach($result AS $res) {
@@ -942,15 +944,26 @@
                 }
             }
 
-            $st = $this->app->db->prepare("DELETE FROM forum_posts_flags WHERE post_id = :post_id");
-            return $st->execute(array(':post_id'=>$post_id));
+            if ($reward) {
+                $response = 1;
+            } else {
+                $response = -1;
+            }
+
+            if ($post_id) {
+                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE post_id = :post_id");
+                return $st->execute(array(':response'=>$response, ':post_id'=>$post_id));
+            } else {
+                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE flag_id = :flag_id");
+                return $st->execute(array(':response'=>$response, ':flag_id'=>$flag_id));
+            }
         }
 
         public function getPostFlags($post_id) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
 
-            $st = $this->app->db->prepare("SELECT username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id");
+            $st = $this->app->db->prepare("SELECT flag_id AS id, username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id AND response = 0");
             $st->execute(array(':post_id'=>$post_id));
             return $st->fetchAll();
         }
@@ -972,7 +985,7 @@
             $st = $this->app->db->prepare('SELECT user_id, karma.karma
                                            FROM users
                                            LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
-                                           ON karma.author = u.user_id
+                                           ON karma.author = users.user_id
                                            WHERE user_id = :uid AND (karma < 0 AND score <= 0)
                                            LIMIT 1');
             $st->execute(array(':uid'=>$this->app->user->uid));
@@ -1016,6 +1029,30 @@
             }
 
             return true;
+        }
+
+        public function getStats() {
+            $stats = $this->app->cache->get('forum_stats', 5);
+
+            if ($stats)
+                return json_decode($stats);
+
+            $stats = new stdClass();
+
+            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_threads WHERE deleted = 0");
+            $result = $st->fetch();
+            $stats->threads = $result->count;
+
+            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_posts WHERE deleted = 0");
+            $result = $st->fetch();
+            $stats->posts = $result->count;
+
+            $result = $this->app->db->query('SELECT `author` FROM forum_posts WHERE deleted = 0 GROUP BY author');
+            $stats->members = $result->rowCount();
+
+            $this->app->cache->set('forum_stats', json_encode($stats));
+
+            return $stats;
         }
     }
 ?>

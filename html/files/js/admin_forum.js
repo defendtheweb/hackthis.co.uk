@@ -1,14 +1,12 @@
 $(function() {
     // Flag controls
-    $('.flags a.remove').on('click', function(e) {
+    $('.post-flags a.remove').on('click', function(e) {
         e.preventDefault();
         var $this = $(this),
-            $row = $(this).closest('tr');
+            $row = $this.closest('li');
         
-        $.getJSON('forum.php?action=flag.remove&id='+$row.attr('data-pid'), function(data) {
-            if (data.status === true) {
-                $row.slideUp();
-            }
+        $.get($this.data('href'), function(data) {
+            $row.slideUp();
         });
     });
 

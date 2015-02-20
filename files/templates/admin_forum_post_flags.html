@@ -3,7 +3,7 @@
     <ul class='post-flags plain row'>
         <li><div class='col span_4 strong'>Username</div><div class='col span_20 strong'>Reason</div></li>
         {% for flag in flags %}
-            <li><div class='col span_4'>{{ flag.username }}</div><div class='col span_20'>{{ flag.reason }}</div></li>
+            <li><div class='col span_4'>{{ flag.username }}</div><div class='col span_20'>{{ flag.reason }}<a href='#' data-href='?id={{ post }}&remove={{ flag.id }}' class='remove right icon-hover'><i class='icon-cross'></i></a></div></li>
         {% endfor %}
     </ul>
 {% endif %}

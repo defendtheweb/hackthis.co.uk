@@ -41,7 +41,7 @@
                     ON forum_posts.thread_id = forum_threads.thread_id
                     INNER JOIN users
                     ON users.user_id = forum_posts.author
-                    WHERE forum_posts.deleted = 0 AND forum_threads.deleted = 0
+                    WHERE forum_posts.deleted = 0 AND forum_threads.deleted = 0 AND forum_posts_flags.response = 0
                     GROUP BY forum_posts_flags.post_id
                     ORDER BY `flags` DESC, `latest` DESC";
             if ($limit) $sql .= " LIMIT 5";
