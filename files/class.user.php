@@ -83,7 +83,7 @@
          *
          * @todo Split functionality into separate functions e.g. medal checks
          */
-        private function get_details() {
+        public function get_details() {
             $this->app->stats->users_activity($this);
 
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
@@ -522,7 +522,8 @@
 
             // Check if IP has created more than 10 accounts
             $st = $this->app->db->prepare('SELECT count(*) AS `count` FROM users_registration WHERE ip=?');
-            $st->bindParam(1, ip2long($_SERVER['REMOTE_ADDR']));
+	    $ip = ip2long($_SERVER['REMOTE_ADDR']);
+            $st->bindParam(1, $ip);
             $st->execute();
             $res = $st->fetch();
             if ($res && $res->count >= 10) {
@@ -620,6 +621,10 @@
                         $this->app->log->add('users', 'Deleted [' . $this->username . ']');
 
                         $this->app->db->commit();
+
+			// Remove session
+			$this->logout();
+
                         return true;
                     } catch (PDOException $e) {
                         $this->app->db->rollback();
@@ -809,7 +814,7 @@
             if ($uid) {
                 $sql = 'SELECT `value`
                         FROM users_data
-                        WHERE `type` = :type AND users.user_id = :uid';
+                        WHERE `type` = :type AND user_id = :uid';
                 if ($interval)
                     $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
                 $sql .= ' LIMIT 1';
