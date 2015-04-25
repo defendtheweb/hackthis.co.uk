@@ -319,7 +319,7 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        var container = $('#global-nav .message-container');co
+        var container = $('#global-nav .message-container');
 
         if (container.hasClass('show-extra')) {
             container.removeClass('show-extra');
