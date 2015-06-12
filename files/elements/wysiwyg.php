@@ -1,5 +1,7 @@
 <?php
-    array_push($minifier->custom_js, 'wysiwyg.js');
+    if ($minifier->custom_js) {
+       array_push($minifier->custom_js, 'wysiwyg.js');
+    }
 ?>
 
 <div class='wysiwyg'>
