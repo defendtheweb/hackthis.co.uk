@@ -9,7 +9,8 @@
 
     $tab = '2-step';
     include('elements/tabs_settings.php');
-    
+
+    require('vendor/gauth.php'); 
     $ga = new gauth();
 
     $st = $app->db->prepare('SELECT g_auth, g_secret FROM users WHERE user_id = :uid');

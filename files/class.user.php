@@ -492,6 +492,7 @@
 
         private function googleAuth($authCode) {
             // setup Google Auth class
+            require('vendor/gauth.php');
             $ga = new gauth();
             $st = $this->app->db->prepare('SELECT g_secret FROM users WHERE user_id = :uid');
             $st->execute(array(':uid' => $_SESSION['g_auth']));
