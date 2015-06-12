@@ -222,6 +222,37 @@
         }
 
         public function login($user, $pass) {
+            $ldapID = $this->app->ldap->checkLogin($user, $pass);
+            if ($ldapID) {            
+                // Check everything matches MySQL
+                $st = $this->app->db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
+                    FROM users u
+                    LEFT JOIN users_priv priv
+                    ON u.user_id = priv.user_id
+                    WHERE u.user_id = :uid AND u.username = :u');
+                $st->execute(array(':uid' => $ldapID, ':u' => $user));
+                $row = $st->fetch();
+                
+                if ($row) {
+                    if (!$row->site_priv) {
+                        $this->login_error = 'Account has been banned';
+                        return false;
+                    }
+                
+                    $this->loggedIn = true;
+                    $this->uid = $row->user_id;
+
+                    // Setup GA event
+                    $this->app->ssga->set_event('user', 'login', 'ldap', $this->uid);
+                    $this->app->ssga->send();
+
+                    $this->createSession();
+                    return $this->loggedIn;
+                }
+            }
+            
+            // User isn't valid in LDAP, double check with MySQL backup 
+
             $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
@@ -275,6 +306,12 @@
                         $this->createSession();
                     }
                 }
+            }
+
+            
+            // Add none LDAP user to LDAP
+            if ($this->loggedIn) {
+                $this->app->ldap->createUser($this->uid, $user, $pass);
             }
 
             return $this->loggedIn;
@@ -540,6 +577,9 @@
                 return "Error creating account";
 
             $uid = $this->app->db->lastInsertId();
+
+            // Add to LDAP
+            $this->app->ldap->createUser($uid, $username, $pass);
 
             // Login user
             $this->loggedIn = true;
@@ -965,6 +1005,9 @@
             $status = $st->execute(array(':uid' => $uid, ':hash' => $hash));
 
             if ($status) {
+                // Update LDAP
+                $this->app->ldap->changePassword($this->username, $pass);
+
                 $this->removeData('reset', $uid);
                 return true;
             } else {
