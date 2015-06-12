@@ -30,7 +30,7 @@
         <p><a href="?google=1">Enable Google Authenticator</a></p>
 <?php
     } else if (!isset($_GET['google'])) {
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl('HackThis - '.$app->user->username, $step->g_secret);
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl($app->user->username, $step->g_secret, 'HackThis!!');
 ?>
         <p>Your Google Authenticator QR Code</p>
         <p><img src="<?php echo $qrCodeUrl; ?>" /></p>
@@ -42,7 +42,7 @@
         $secret = $ga->createSecret();
         $st = $app->db->prepare('UPDATE users SET g_auth = 1, g_secret = :secret WHERE user_id = :uid LIMIT 1');
         $status = $st->execute(array(':secret' => $secret, ':uid' => $app->user->uid));
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl('HackThis - '.$app->user->username, $secret);
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl($app->user->username, $secret, 'HackThis!!');
 ?>
     
         <p>Please scan the below QR code using your Google Authenticator App to add the account</p>
