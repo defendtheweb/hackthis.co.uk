@@ -26,7 +26,6 @@
     }
 ?>
     <h1>Become a Donator</h1>
-    <?php $app->utils->message('Shirts are currently not available, if you still wish to order one please contact us', 'info'); ?>
     In order to support our growth and the costs of maintaining and developing new features, we've added some perks and are offering them as a thank you to those who support us with a small donation:<br/>
     <p>
         <h2 class='no-margin'>£1 or more</h2>
