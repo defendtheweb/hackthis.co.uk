@@ -65,6 +65,16 @@
                 }
             }
 
+            // Check if user is using Google Auth code
+            if (isset($_GET['g_auth']) && isset($_POST['g_code'])) {
+                if(is_numeric($_POST['g_code'])) {
+                    $this->googleAuth($_POST['g_code']);
+                } else {
+                    $this->login_error = 'Google Auth code must be numeric';
+                    unset($_SESSION['g_auth']);
+                }
+            }
+
             //Login, register or connect via facebook
             if (isset($_GET['facebook'])) {
                 if (isset($_GET['code'])) {
@@ -225,7 +235,7 @@
             $ldapID = $this->app->ldap->checkLogin($user, $pass);
             if ($ldapID) {            
                 // Check everything matches MySQL
-                $st = $this->app->db->prepare('SELECT u.user_id, IFNULL(priv.site_priv, 1) as site_priv
+                $st = $this->app->db->prepare('SELECT u.user_id, u.g_auth, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
@@ -238,22 +248,30 @@
                         $this->login_error = 'Account has been banned';
                         return false;
                     }
-                
-                    $this->loggedIn = true;
+
                     $this->uid = $row->user_id;
 
-                    // Setup GA event
-                    $this->app->ssga->set_event('user', 'login', 'ldap', $this->uid);
-                    $this->app->ssga->send();
+                    // Check if Google Auth is enabled
+                    if($row->g_auth == 1) {
+                        // set Google Auth session and don't log in
+                        $_SESSION['g_auth'] = $this->uid;
+                    } else {
+                        $this->loggedIn = true;
 
-                    $this->createSession();
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'login', 'ldap', $this->uid);
+                        $this->app->ssga->send();
+
+                        $this->createSession();
+                    }
+
                     return $this->loggedIn;
                 }
             }
             
             // User isn't valid in LDAP, double check with MySQL backup 
 
-            $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, IFNULL(priv.site_priv, 1) as site_priv
+            $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, g_auth, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
@@ -279,14 +297,21 @@
                             return false;
                         }
 
-                        $this->loggedIn = true;
                         $this->uid = $row->user_id;
 
-                        // Setup GA event
-                        $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
-                        $this->app->ssga->send();
+                        // Check if Google Auth is enabled
+                        if($row->g_auth == 1) {
+                            // set Google Auth session and don't log in
+                            $_SESSION['g_auth'] = $this->uid;
+                        } else {
+                            $this->loggedIn = true;
 
-                        $this->createSession();
+                            // Setup GA event
+                            $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
+                            $this->app->ssga->send();
+
+                            $this->createSession();
+                        }
                     }
                 } else {
                     if ($row->password == crypt($pass, $row->password)) {
@@ -462,6 +487,36 @@
                         return false;
                     }
                 }     
+            }
+        }
+
+        private function googleAuth($authCode) {
+            // setup Google Auth class
+            $ga = new gauth();
+            $st = $this->app->db->prepare('SELECT g_secret FROM users WHERE user_id = :uid');
+            $st->execute(array(':uid' => $_SESSION['g_auth']));
+            $secret = $st->fetch();
+
+            // verify Google code
+            $checkResult = $ga->verifyCode($secret->g_secret, $authCode, 2); // 2 = 2*30sec clock tolerance
+
+            if ($checkResult) {
+                $this->uid = $_SESSION['g_auth'];
+
+                // if ok unset the session and log in
+                unset($_SESSION['g_auth']);
+                $this->loggedIn = true;
+
+                // Setup GA event
+                $this->app->ssga->set_event('user', 'login', 'GAuth', $this->uid);
+                $this->app->ssga->send();
+                $this->createSession();
+            } else {
+                unset($_SESSION['g_auth']);
+
+                $app->user->loggedIn = false;
+                $app->user->g_auth = false;
+                $this->login_error = 'Incorrect Authenticator code';
             }
         }
 

@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     `email` varchar(128) NOT NULL,
     `verified` tinyint(1) NOT NULL DEFAULT 0,
     `score` mediumint(6) NOT NULL DEFAULT 0,
+    `g_auth` tinyint(1),
+    `g_secret` varchar(255),
     PRIMARY KEY (`user_id`),
     UNIQUE KEY (`username`),
     UNIQUE KEY (`email`)
