@@ -416,14 +416,7 @@
             if (!$title || strlen($title) < 3)
                 return "Title must be longer than three characters";
 
-            // Check for spam - pretty much always new threads
-            $regex = "/(". implode('|', $this->banned) .")/i";
-            $matched = preg_match_all($regex, $title, $matches) + preg_match_all($regex, $body, $matches);
-            if ($matched > 2) {
-                // Could implement http://www.stopforumspam.com and ban user
-                return "Banned words found in content";
-            }
-
+            // Post validation happens within transaction
 
             $section_id = $section->id;
             $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
@@ -743,9 +736,6 @@
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
 
-                
-
-
 
                 // Check for forum medal
                 $st = $this->app->db->prepare('SELECT COUNT(post_id) AS posts FROM forum_posts
@@ -981,18 +971,6 @@
                 $this->error = "You have been banned from posting messages";
                 return false;
             }
-            
-            $st = $this->app->db->prepare('SELECT user_id, karma.karma
-                                           FROM users
-                                           LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
-                                           ON karma.author = users.user_id
-                                           WHERE user_id = :uid AND (karma < 0 AND score <= 0)
-                                           LIMIT 1');
-            $st->execute(array(':uid'=>$this->app->user->uid));
-                if ($res = $st->fetch()) {
-                $this->error = "You have been temporarily banned from posting messages";
-                return false;
-            }
 
             //check post length
             if (str_word_count($body) < 2) {
@@ -1000,7 +978,50 @@
                 return false;
             }
 
+            // Check for spam - pretty much always new threads
+            $regex = "/(". implode('|', $this->banned) .")/i";
+            $matched = preg_match_all($regex, $body, $matches);
+            if ($matched > 2) {
+                // Could implement http://www.stopforumspam.com and ban user
+                $this->error = "Banned words found in content";
+                return false;
+            }
+
             if (!$edit)  {
+                // Don't allow users to post in the first 10 mins of being a member
+                $st = $this->app->db->prepare('select TIMESTAMPDIFF(MINUTE, joined, NOW()) AS `joining` from users_activity WHERE user_id = :uid');
+                $st->execute(array(':uid'=>$this->app->user->uid));
+                if ($res = $st->fetch() && $res->joined < 15) {
+                    $this->error = "New users can not post in the forum for the first 15 minutes. You have been registered for {$res->joined} minutes.";
+                    return false;
+                }
+
+                $minutes_joined = $res->joined;
+                $hours_joined = ceil($minutes_joined / 60);
+
+                if ($hours_joined < 24) {
+                    // Don't allow users to post on more than 2 threads, per hour for the first 24 hours
+                    $st = $this->app->db->prepare('select COUNT(DISTINCT(`thread_id`)) AS `threads` FROM forum_posts where author = :uid');
+                    $st->execute(array(':uid'=>$this->app->user->uid));
+                    if ($res = $st->fetch() && $res->threads > $hours_joined * 2) {
+                        $this->error = "New users are only allowed to post in two threads, per hour, for the first 24 hours.";
+                        return false;
+                    }
+                }
+
+                // Don't allow user to post if they have karma < 0 and score <= 0
+                $st = $this->app->db->prepare('SELECT user_id, karma.karma
+                                               FROM users
+                                               LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
+                                               ON karma.author = users.user_id
+                                               WHERE user_id = :uid AND (karma < 0 AND score <= 0)
+                                               LIMIT 1');
+                $st->execute(array(':uid'=>$this->app->user->uid));
+                if ($res = $st->fetch()) {
+                    $this->error = "You have been temporarily banned from posting messages";
+                    return false;
+                }
+
                 //check when last post was made
 
                 // The time left calculation was previously done using
