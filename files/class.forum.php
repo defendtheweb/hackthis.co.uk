@@ -989,7 +989,7 @@
 
             if (!$edit)  {
                 // Don't allow users to post in the first 10 mins of being a member
-                $st = $this->app->db->prepare('select TIMESTAMPDIFF(MINUTE, joined, NOW()) AS `joining` from users_activity WHERE user_id = :uid');
+                $st = $this->app->db->prepare('SELECT TIMESTAMPDIFF(MINUTE, joined, NOW()) AS `joined` from users_activity WHERE user_id = :uid');
                 $st->execute(array(':uid'=>$this->app->user->uid));
                 if ($res = $st->fetch() && $res->joined < 15) {
                     $this->error = "New users can not post in the forum for the first 15 minutes. You have been registered for {$res->joined} minutes.";
@@ -1001,7 +1001,7 @@
 
                 if ($hours_joined < 24) {
                     // Don't allow users to post on more than 2 threads, per hour for the first 24 hours
-                    $st = $this->app->db->prepare('select COUNT(DISTINCT(`thread_id`)) AS `threads` FROM forum_posts where author = :uid');
+                    $st = $this->app->db->prepare('SELECT COUNT(DISTINCT(`thread_id`)) AS `threads` FROM forum_posts where author = :uid');
                     $st->execute(array(':uid'=>$this->app->user->uid));
                     if ($res = $st->fetch() && $res->threads > $hours_joined * 2) {
                         $this->error = "New users are only allowed to post in two threads, per hour, for the first 24 hours.";
