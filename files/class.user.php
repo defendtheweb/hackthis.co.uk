@@ -255,6 +255,7 @@
                     if($row->g_auth == 1) {
                         // set Google Auth session and don't log in
                         $_SESSION['g_auth'] = $this->uid;
+                        $this->g_auth = $this->uid;
                     } else {
                         $this->loggedIn = true;
 
@@ -270,7 +271,6 @@
             }
             
             // User isn't valid in LDAP, double check with MySQL backup 
-
             $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, g_auth, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
@@ -283,36 +283,10 @@
             $this->login_error = 'Invalid login details';
             if ($row) {
                 if ($row->old_password == 1) {
-                    $user = strtolower($user);
-                    $userhash = md5($user[0]."h97".md5(md5($pass))."t77Ds");
-
-                    if ($row->password === $userhash) {
-                        // Store new password
-                        $hash = crypt($pass, $this->salt());
-                        $st = $this->app->db->prepare('UPDATE users SET password = :hash, old_password = 0 WHERE user_id = :uid LIMIT 1');
-                        $status = $st->execute(array(':uid' => $row->user_id, ':hash' => $hash));
-
-                        if (!$row->site_priv) {
-                            $this->login_error = 'Account has been banned';
-                            return false;
-                        }
-
-                        $this->uid = $row->user_id;
-
-                        // Check if Google Auth is enabled
-                        if($row->g_auth == 1) {
-                            // set Google Auth session and don't log in
-                            $_SESSION['g_auth'] = $this->uid;
-                        } else {
-                            $this->loggedIn = true;
-
-                            // Setup GA event
-                            $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
-                            $this->app->ssga->send();
-
-                            $this->createSession();
-                        }
-                    }
+                    $this->app->ssga->set_event('user', 'login', 'old_password', $this->uid);
+                    $this->app->ssga->send();
+                    $this->login_error = 'Your password has expired, <a href="/?request">click here</a> to generate a new one.';
+                    return false;
                 } else {
                     if ($row->password == crypt($pass, $row->password)) {
 
