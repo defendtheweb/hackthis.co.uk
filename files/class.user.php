@@ -490,19 +490,23 @@
             }
         }
 
-        private function googleAuth($authCode) {
+        public function googleAuth($authCode, $uid=null) {
+            if (!$uid) {
+                $uid = $_SESSION['g_auth'];
+            }
+
             // setup Google Auth class
             require('vendor/gauth.php');
             $ga = new gauth();
             $st = $this->app->db->prepare('SELECT g_secret FROM users WHERE user_id = :uid');
-            $st->execute(array(':uid' => $_SESSION['g_auth']));
+            $st->execute(array(':uid' => $uid));
             $secret = $st->fetch();
 
             // verify Google code
             $checkResult = $ga->verifyCode($secret->g_secret, $authCode, 2); // 2 = 2*30sec clock tolerance
 
             if ($checkResult) {
-                $this->uid = $_SESSION['g_auth'];
+                $this->uid = $uid;
 
                 // if ok unset the session and log in
                 unset($_SESSION['g_auth']);
@@ -512,12 +516,16 @@
                 $this->app->ssga->set_event('user', 'login', 'GAuth', $this->uid);
                 $this->app->ssga->send();
                 $this->createSession();
+
+                return true;
             } else {
                 unset($_SESSION['g_auth']);
 
                 $app->user->loggedIn = false;
                 $app->user->g_auth = false;
                 $this->login_error = 'Incorrect Authenticator code';
+
+                return false;
             }
         }
 
