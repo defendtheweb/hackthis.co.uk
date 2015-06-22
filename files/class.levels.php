@@ -171,6 +171,20 @@ class levels {
         $result = $st->fetch();
         $level->count = $result->completed;
 
+	// If level has uptime code, check level status
+	if ($level->data['uptime']) {
+		$level->online = $this->app->cache->get('level_uptime_' . $level->data['uptime'], 5);
+
+		if (!$level->online) {
+    		    $status = file_get_contents("https://api.uptimerobot.com/getMonitors?apiKey=".$level->data['uptime']."&format=json&noJsonCallback=1");
+		    $status = json_decode($status);
+ 		    $level->online = $status->monitors->monitor[0]->status == 2 ? 'online' : 'offline';
+
+		    $this->app->cache->set('level_uptime_' . $level->data['uptime'], $level->online);
+                }
+	}
+
+
             // // // Get latest
             // $sql = "SELECT username, completed FROM users_levels INNER JOIN users ON users.user_id = users_levels.user_id WHERE completed > 0 AND level_id = :lid AND users.user_id != 69 ORDER BY completed DESC LIMIT 1";
         $sql = "SELECT username, completed FROM users INNER JOIN (SELECT `user_id`, `completed` FROM users_levels WHERE completed > 0 AND level_id = :lid AND user_id != 69 ORDER BY `completed` DESC LIMIT 1) `a` ON `a`.user_id = users.user_id;";
@@ -333,7 +347,6 @@ class levels {
         if (!$this->app->user->admin_site_priv)
             return false;
 
-
         $changes = array();
 
         if (!$new) {
@@ -350,6 +363,9 @@ class levels {
 
         if (isset($_POST['reward']) && is_numeric($_POST['reward'])) {
             $changes['reward'] = $_POST['reward'];
+        }
+        if (isset($_POST['uptime']) && strlen($_POST['uptime'])) {
+            $changes['uptime'] = $_POST['uptime'];
         }
         if (isset($_POST['description']) && strlen($_POST['description'])) {
             $changes['description'] = $_POST['description'];
