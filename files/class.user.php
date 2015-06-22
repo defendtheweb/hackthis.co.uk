@@ -258,7 +258,11 @@
                     if($row->g_auth == 1) {
                         // set Google Auth session and don't log in
                         $_SESSION['g_auth'] = $this->uid;
+<<<<<<< HEAD
                          $this->g_auth = $this->uid;
+=======
+                        $this->g_auth = $this->uid;
+>>>>>>> fa3bd7e3d89a2b0e81a191e49a884f48fb45f20d
                     } else {
                         $this->loggedIn = true;
 
@@ -274,7 +278,6 @@
             }
             
             // User isn't valid in LDAP, double check with MySQL backup 
-
             $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, g_auth, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
@@ -287,7 +290,7 @@
             $this->login_error = 'Invalid login details';
             if ($row) {
                 if ($row->old_password == 1) {
-		    $this->app->ssga->set_event('user', 'login', 'old_password', $this->uid);
+                    $this->app->ssga->set_event('user', 'login', 'old_password', $this->uid);
                     $this->app->ssga->send();
                     $this->login_error = 'Your password has expired, <a href="/?request">click here</a> to generate a new one.';
                     return false;
