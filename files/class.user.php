@@ -258,11 +258,7 @@
                     if($row->g_auth == 1) {
                         // set Google Auth session and don't log in
                         $_SESSION['g_auth'] = $this->uid;
-<<<<<<< HEAD
-                         $this->g_auth = $this->uid;
-=======
                         $this->g_auth = $this->uid;
->>>>>>> fa3bd7e3d89a2b0e81a191e49a884f48fb45f20d
                     } else {
                         $this->loggedIn = true;
 
