@@ -40,7 +40,10 @@
 
             //Check if user is registering in
             if (isset($_GET['register'])) {
-                $this->reg_error = $this->register();
+                $reg_error = $this->register();
+                if (!is_numeric($reg_error)) {
+                    $this->reg_error = $reg_error;
+                }
             }
 
             // Check if user is logged in
@@ -255,6 +258,7 @@
                     if($row->g_auth == 1) {
                         // set Google Auth session and don't log in
                         $_SESSION['g_auth'] = $this->uid;
+                         $this->g_auth = $this->uid;
                     } else {
                         $this->loggedIn = true;
 
@@ -283,36 +287,10 @@
             $this->login_error = 'Invalid login details';
             if ($row) {
                 if ($row->old_password == 1) {
-                    $user = strtolower($user);
-                    $userhash = md5($user[0]."h97".md5(md5($pass))."t77Ds");
-
-                    if ($row->password === $userhash) {
-                        // Store new password
-                        $hash = crypt($pass, $this->salt());
-                        $st = $this->app->db->prepare('UPDATE users SET password = :hash, old_password = 0 WHERE user_id = :uid LIMIT 1');
-                        $status = $st->execute(array(':uid' => $row->user_id, ':hash' => $hash));
-
-                        if (!$row->site_priv) {
-                            $this->login_error = 'Account has been banned';
-                            return false;
-                        }
-
-                        $this->uid = $row->user_id;
-
-                        // Check if Google Auth is enabled
-                        if($row->g_auth == 1) {
-                            // set Google Auth session and don't log in
-                            $_SESSION['g_auth'] = $this->uid;
-                        } else {
-                            $this->loggedIn = true;
-
-                            // Setup GA event
-                            $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
-                            $this->app->ssga->send();
-
-                            $this->createSession();
-                        }
-                    }
+		    $this->app->ssga->set_event('user', 'login', 'old_password', $this->uid);
+                    $this->app->ssga->send();
+                    $this->login_error = 'Your password has expired, <a href="/?request">click here</a> to generate a new one.';
+                    return false;
                 } else {
                     if ($row->password == crypt($pass, $row->password)) {
 
@@ -490,19 +468,23 @@
             }
         }
 
-        private function googleAuth($authCode) {
+        public function googleAuth($authCode, $uid=null) {
+            if (!$uid) {
+                $uid = $_SESSION['g_auth'];
+            }
+
             // setup Google Auth class
             require('vendor/gauth.php');
             $ga = new gauth();
             $st = $this->app->db->prepare('SELECT g_secret FROM users WHERE user_id = :uid');
-            $st->execute(array(':uid' => $_SESSION['g_auth']));
+            $st->execute(array(':uid' => $uid));
             $secret = $st->fetch();
 
             // verify Google code
             $checkResult = $ga->verifyCode($secret->g_secret, $authCode, 2); // 2 = 2*30sec clock tolerance
 
             if ($checkResult) {
-                $this->uid = $_SESSION['g_auth'];
+                $this->uid = $uid;
 
                 // if ok unset the session and log in
                 unset($_SESSION['g_auth']);
@@ -512,12 +494,16 @@
                 $this->app->ssga->set_event('user', 'login', 'GAuth', $this->uid);
                 $this->app->ssga->send();
                 $this->createSession();
+
+                return true;
             } else {
                 unset($_SESSION['g_auth']);
 
                 $app->user->loggedIn = false;
                 $app->user->g_auth = false;
                 $this->login_error = 'Incorrect Authenticator code';
+
+                return false;
             }
         }
 
@@ -583,9 +569,21 @@
             setcookie('autologin', $token, time()+60*60*24*7, '/', 'hackthis.co.uk', true, true);
         }
 
-        public function register() {
+        public function register($username=null, $password=null, $email=null) {
+            if (!$username) {
+                $username = $_POST['reg_username'];
+            }
+            if (!$password) {
+                $password = $_POST['reg_password'];
+                $password2 = $_POST['reg_password_2'];
+            } else {
+                $password2 = $password;
+            }
+            if (!$email) {
+                $email = $_POST['reg_email'];
+            }
+
             //Input check
-            $username = $_POST['reg_username'];
             if (!$this->app->utils->check_user($username))
                 return "Invalid username";
 
@@ -595,15 +593,13 @@
             if ($st->fetch(PDO::FETCH_ASSOC))
                 return "Username already in use";
 
-            $pass = $_POST['reg_password'];
-            if (!isset($pass) || strlen($pass) < 5)
+            if (!isset($password) || strlen($password) < 5)
                 return "Invalid password";
-            if ($pass !== $_POST['reg_password_2'])
+            if ($password !== $password2)
                 return "Passwords don't match";
 
-            $hash = crypt($pass, $this->salt());
+            $hash = crypt($password, $this->salt());
 
-            $email = $_POST['reg_email'];
             if (!$this->app->utils->check_email($email))
                 return "Invalid email address";
 
@@ -615,7 +611,7 @@
 
             // Check if IP has created more than 10 accounts
             $st = $this->app->db->prepare('SELECT count(*) AS `count` FROM users_registration WHERE ip=?');
-	    $ip = ip2long($_SERVER['REMOTE_ADDR']);
+            $ip = ip2long($_SERVER['REMOTE_ADDR']);
             $st->bindParam(1, $ip);
             $st->execute();
             $res = $st->fetch();
@@ -635,7 +631,7 @@
             $uid = $this->app->db->lastInsertId();
 
             // Add to LDAP
-            $this->app->ldap->createUser($uid, $username, $pass);
+            $this->app->ldap->createUser($uid, $username, $password);
 
             // Login user
             $this->loggedIn = true;
@@ -659,6 +655,8 @@
             $result = $st->execute(array(':u' => $uid, ':i' => ip2long($_SERVER['REMOTE_ADDR'])));
 
             $this->createSession();
+
+            return $uid;
         }
 
         public function logout() {
@@ -718,8 +716,8 @@
 
                         $this->app->db->commit();
 
-			// Remove session
-			$this->logout();
+                        // Remove session
+                        $this->logout();
 
                         return true;
                     } catch (PDOException $e) {
