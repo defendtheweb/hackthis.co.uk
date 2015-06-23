@@ -264,7 +264,7 @@
                 } else if (strtolower($answer->method) == 'get') {
                     if (isset($_GET[$answer->name])) {
                         $attempted = true;
-                        if ($answer->type && $answer->type == 'regex') {
+                        if (isset($answer->type) && $answer->type == 'regex') {
                             if (preg_match($answer->value, $_GET[$answer->name])) {
                                 $valid = true;
                                 if ($incorrect === 0) {
