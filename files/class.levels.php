@@ -142,7 +142,7 @@
             $cache = $this->app->cache->get('level_data_' . $cacheKey, 5);
 
             if ($cache) {
-                return json_decode($cache);
+                return unserialize($cache);
             } else {
                 // Build level data
                 $sql = 'SELECT `key`, `value`, users.username
@@ -212,7 +212,7 @@
                 $level->first_user = $result->username;
 
                 // Cache level data 
-                $this->app->cache->set($cacheKey, json_encode($level));
+                $this->app->cache->set($cacheKey, serialize($level));
 
                 return $level;
             }
