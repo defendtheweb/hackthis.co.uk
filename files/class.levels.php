@@ -139,7 +139,7 @@
 
             // Check cache for level data
             $cacheKey = 'level_data_' . $level->level_id;
-            $cache = $this->app->cache->get('level_data_' . $cacheKey, 5);
+            $cache = $this->app->cache->get($cacheKey, 5);
 
             if ($cache) {
                 return unserialize($cache);
