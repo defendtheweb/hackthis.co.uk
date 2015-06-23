@@ -11,7 +11,7 @@
 				$fh = @fopen($file, "rb");
 				if (!$fh)
 					return false;
-				$data = fread($fh, filesize($file));
+				$data = stream_get_contents($fh, filesize($file));
 				fclose($fh);
 			}
 
