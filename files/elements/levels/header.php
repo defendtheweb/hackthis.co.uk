@@ -25,7 +25,7 @@
 <?php endif; ?>
 	<span class='strong <?=$level->completed?'green':'red';?>'><?=$level->completed?'Completed':'Incomplete';?></span><br/>
 
-<?php if ($level->online): ?>
+<?php if (isset($level->online) && $level->online): ?>
 	<br/><span class='strong <?=$level->online == 'online'?'green':'red';?>'>Level <?=$level->online;?></span><br/>
 <?php endif; ?>
 
