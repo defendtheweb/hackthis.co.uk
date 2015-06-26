@@ -86,33 +86,28 @@
         }
 
         public function getLevel($group, $name, $noSkip=false) {
-            $before_after_sql = 'SELECT `level_id`, `name`, LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`
-                                 FROM levels
-                                 INNER JOIN levels_groups
-                                 ON levels_groups.title = levels.group
-                                 WHERE `group` = :group
-                                 ORDER BY level_id';
+            // Check cache for level data
+            $cacheKey = 'level_data_' . $group . '_' . $name;
+            $cache = $this->app->cache->get($cacheKey, 5);
 
-            $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
-                        IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
-                        IFNULL(users_levels.attempts, 0) as `attempts`,
-                        levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
-                    FROM levels
-                    INNER JOIN levels_groups
-                    ON levels_groups.title = levels.group
-                    LEFT JOIN ({$before_after_sql} DESC) levels_before
-                    ON levels_before.level_id < levels.level_id
-                    LEFT JOIN ({$before_after_sql} ASC) levels_after
-                    ON levels_after.level_id > levels.level_id
-                    LEFT JOIN users_levels
-                    ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
-                    WHERE levels.name = :level AND levels.group = :group";
+            if ($cache):
+                $level = unserialize($cache);
 
-            $st = $this->app->db->prepare($sql);
-            $st->execute(array(':level'=>$name, ':group'=>$group, ':uid'=>$this->app->user->uid));
-            $level = $st->fetch();        
+                $sql = "SELECT
+                            IF(users_levels.completed > 0, 1, 0) as `completed`,
+                            users_levels.completed as `completed_time`,
+                            users_levels.started,
+                            IFNULL(users_levels.attempts, 0) as `attempts`
+                        FROM users_levels
+                        WHERE level_id = :levelid AND user_id = :uid";
 
-            if ($level) {
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':levelid' => $level->level_id, ':uid' => $this->app->user->uid));
+                $tmpLevel = $st->fetch();
+
+                // Merge users stats into cache response
+                $level = (object) array_merge((array) $level, (array) $tmpLevel);
+
                 //Check if user has access
                 if (isset($level->level_before_uri) && strtolower($level->group) == 'main') {
                     $sql = 'SELECT IF(users_levels.completed > 0, 1, 0) as `completed` FROM levels
@@ -133,17 +128,61 @@
                 }
 
                 $this->levelView($level->level_id);
-            } else {
-                return false;
-            }
 
-            // Check cache for level data
-            $cacheKey = 'level_data_' . $level->level_id;
-            $cache = $this->app->cache->get($cacheKey, 5);
+                return $level;
 
-            if ($cache) {
-                return unserialize($cache);
-            } else {
+            else:
+                $before_after_sql = 'SELECT `level_id`, `name`, LOWER(CONCAT("/levels/", CONCAT_WS("/", levels_groups.title, levels.name))) as `uri`
+                                     FROM levels
+                                     INNER JOIN levels_groups
+                                     ON levels_groups.title = levels.group
+                                     WHERE `group` = :group
+                                     ORDER BY level_id';
+
+                $sql = "SELECT levels.level_id, levels.name, levels_groups.title AS `group`, CONCAT(`group`, ' Level ', levels.name) as `title`,
+                            IF(users_levels.completed > 0, 1, 0) as `completed`, users_levels.completed as `completed_time`, `started`,
+                            IFNULL(users_levels.attempts, 0) as `attempts`,
+                            levels_before.uri AS `level_before_uri`, levels_after.uri AS `level_after_uri`
+                        FROM levels
+                        INNER JOIN levels_groups
+                        ON levels_groups.title = levels.group
+                        LEFT JOIN ({$before_after_sql} DESC) levels_before
+                        ON levels_before.level_id < levels.level_id
+                        LEFT JOIN ({$before_after_sql} ASC) levels_after
+                        ON levels_after.level_id > levels.level_id
+                        LEFT JOIN users_levels
+                        ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
+                        WHERE levels.name = :level AND levels.group = :group";
+
+                $st = $this->app->db->prepare($sql);
+                $st->execute(array(':level'=>$name, ':group'=>$group, ':uid'=>$this->app->user->uid));
+                $level = $st->fetch();        
+
+                if ($level) {
+                    //Check if user has access
+                    if (isset($level->level_before_uri) && strtolower($level->group) == 'main') {
+                        $sql = 'SELECT IF(users_levels.completed > 0, 1, 0) as `completed` FROM levels
+                                LEFT JOIN users_levels
+                                ON users_levels.user_id = :uid AND users_levels.level_id = levels.level_id
+                                WHERE `group` = :group AND levels.level_id < :level_id
+                                ORDER BY levels.level_id DESC
+                                LIMIT 1';
+                        
+                        $st = $this->app->db->prepare($sql);
+                        $st->execute(array(':level_id'=>$level->level_id, ':group'=>$group, ':uid'=>$this->app->user->uid));
+                        $previous = $st->fetch();
+
+                        if (!$noSkip && (!$previous || !$previous->completed)) {
+                            header("Location: $level->level_before_uri?skipped");
+                            die();
+                        }
+                    }
+
+                    $this->levelView($level->level_id);
+                } else {
+                    return false;
+                }
+
                 // Build level data
                 $sql = 'SELECT `key`, `value`, users.username
                         FROM levels_data
@@ -215,7 +254,8 @@
                 $this->app->cache->set($cacheKey, serialize($level));
 
                 return $level;
-            }
+
+            endif; // End cache check
         }
 
         // Mark that the user has viewed a level
