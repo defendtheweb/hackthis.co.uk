@@ -16,6 +16,7 @@
     }
 
     // Check for update
+    $updated = false;
     if (isset($_GET['save'])) {
         if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['gender']) && isset($_POST['dob'])) {
             $changes = array_map('trim', $_POST);
@@ -48,19 +49,19 @@
         }
     }
 
+    $templateData = array('profile' => $profile);
+
     if (isset($_GET['done'])) {
-        $goodMsg = 'Profile updated';
+        $templateData['goodMsg'] = 'Profile updated';
     } else if ($updated) {
-        $errorMsg = $updated;
+        $templateData['errorMsg'] = $updated;
     }
 
     require_once('header.php');
     $tab = 'profile';
     include('elements/tabs_settings.php');
 
-
-    echo $app->twig->render('settings_profile.html', array('profile' => $profile, 'goodMsg' => $goodMsg, 'errorMsg' => $errorMsg));
-
+    echo $app->twig->render('settings_profile.html', $templateData);
 
     require_once('footer.php');
 ?>
