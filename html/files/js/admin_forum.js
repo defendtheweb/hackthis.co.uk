@@ -101,9 +101,16 @@ $(function() {
                                 </form>\
                             </tmpl>';
 
+    var postEditTmpl = '<tmpl>\
+                                <form>\
+                                    <textarea></textarea>\
+                                    <input type="submit" class="button left" value="Update post"/>\
+                                </form>\
+                            </tmpl>';
+
     var modal_thread_edit = 'hello',
         modal_thread_delete = $(threadDeleteTmpl).tmpl()[0].outerHTML,
-        modal_post_edit = 'hello',
+        modal_post_edit = $(postEditTmpl).tmpl()[0].outerHTML,
         modal_post_delete = $(postDeleteTmpl).tmpl()[0].outerHTML;
 
     $('.thread-edit, .thread-delete, .post-edit, .post-delete').on('click', function(e) {

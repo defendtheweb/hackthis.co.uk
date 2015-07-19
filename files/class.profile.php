@@ -58,7 +58,7 @@
                 }
                 unset($this->gravatar);
 
-                if (!$this->app->user->admin_site_priv) {
+                if (!$this->app->admin) {
                     unset($this->site_priv);
                     unset($this->pm_priv);
                     unset($this->forum_priv);
@@ -73,6 +73,7 @@
                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                     IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
+                    priv.*,
                     forum_posts.posts, articles.articles, (donated.user_id IS NOT NULL) AS donator, (users_blocks.user_id IS NOT NULL) AS blocked, (users_blocks_me.user_id IS NOT NULL) AS blockedMe, karma.karma
                     FROM users u
                     LEFT JOIN users_profile profile
@@ -107,12 +108,9 @@
             if (isset($this->image)) {
                 $gravatar = isset($this->gravatar) && $this->gravatar == 1;
                 $this->image = profile::getImg($this->image, 198, $gravatar);
-            } else
+            } else {
                 $this->image = profile::getImg(null, 198);
-
-
-            if ($public)
-                return true;
+            }
 
 
             $st = $this->app->db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
@@ -124,6 +122,17 @@
                     WHERE users_medals.user_id = :uid');
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
+
+            if (!$this->app->user->admin) {
+                unset($this->site_priv);
+                unset($this->pm_priv);
+                unset($this->forum_priv);
+                unset($this->pub_priv);
+            }
+
+            // Limit the amount of information public users can see
+            if ($public)
+                return true;
 
             $st = $this->app->db->prepare('SELECT u.user_id as uid, u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users_friends as friends

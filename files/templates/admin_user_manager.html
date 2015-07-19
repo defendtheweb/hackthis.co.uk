@@ -1,4 +1,4 @@
-<div class='admin-module admin-module-user-manager'>
+<div class='admin-module admin-module-user-manager {% if editable %}admin-module-user-manager-editable{% endif %}'>
     <h3>Users</h3>
     <form>
         <input type="text"/>
@@ -8,35 +8,19 @@
     </div>
 </div>
 
-<div class='admin-module admin-module-moderators'>
+<div class='admin-module admin-module-moderators {% if editable %}admin-module-moderators-editable{% endif %}'>
     <h3>Moderators</h3>
     <ul class='plain'>
+        {% for mod in mods %}
         <li>
-            <a href='#'>flabbyrabbit</a>
-            <div>
-                <span class='medal medal-gold'>Site</span>
-                <span class='medal'>PM</span>
-                <span class='medal medal-gold'>Forum</span>
-                <span class='medal medal-gold'>Publish</span>
+            <a href='/user/{{ mod.username }}' target='_blank'>{{ mod.username }}</a>
+            <div data-uid="{{ mod.uid }}">
+                <a href="#" data-priv="site" class='medal {% if mod.site_priv == 2 %}medal-gold{% elseif mod.site_priv == 0 %}medal-error{% endif %}'>Site</a>
+                <a href="#" data-priv="pm" class='medal {% if mod.pm_priv == 2 %}medal-gold{% elseif mod.pm_priv == 0 %}medal-error{% endif %}'>PM</a>
+                <a href="#" data-priv="forum" class='medal {% if mod.forum_priv == 2 %}medal-gold{% elseif mod.forum_priv == 0 %}medal-error{% endif %}'>Forum</a>
+                <a href="#" data-priv="pub" class='medal {% if mod.pub_priv == 2 %}medal-gold{% elseif mod.pub_priv == 0 %}medal-error{% endif %}'>Publish</a>
             </div>
         </li>
-        <li>
-            <a href='#'>Osaka</a>
-            <div>
-                <span class='medal medal'>Site</span>
-                <span class='medal medal'>PM</span>
-                <span class='medal medal-gold'>Forum</span>
-                <span class='medal medal-gold'>Publish</span>
-            </div>
-        </li>
-        <li>
-            <a href='#'>daMage</a>
-            <div>
-                <span class='medal medal'>Site</span>
-                <span class='medal medal'>PM</span>
-                <span class='medal medal-gold'>Forum</span>
-                <span class='medal medal-gold'>Publish</span>
-            </div>
-        </li>
+        {% endfor %}
     </ul>
 </div>

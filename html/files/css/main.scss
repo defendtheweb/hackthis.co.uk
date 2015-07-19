@@ -373,7 +373,8 @@ blockquote {
         }
     }
     &.medal-error {
-        background: darken($red, 10%);
+        background: $red;
+        color: white;
     }
 }
 
