@@ -37,7 +37,7 @@
 
         /******* LOGS *******/
         public function getModeratorLogs($limit = true) {
-            $sql = "SELECT `report_id`, `type`, `subject`, username
+            $sql = "SELECT `report_id`, `type`, `subject`, username, `time`
                     FROM mod_reports
                     INNER JOIN `users`
                     ON `users`.user_id = `mod_reports`.user_id
