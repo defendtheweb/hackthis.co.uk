@@ -92,7 +92,7 @@ ls README.md > /dev/null 2>&1 || {
 git_root_dir=`pwd`
 
 # Package installation
-required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql"
+required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql php5-ldap"
 echo Checking installed packages
 for package in $required_packages; do
 	installMissingPackages $package
