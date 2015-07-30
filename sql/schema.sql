@@ -489,7 +489,7 @@ CREATE TABLE IF NOT EXISTS mod_reports (
     `subject` varchar(64),
     `body` text,
     `visible` tinyint(1) DEFAULT 1, 
-    `time` timestamp DEFAULT CURRENT_TIMESTAMP
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`report_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
