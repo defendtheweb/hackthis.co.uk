@@ -45,6 +45,10 @@
                             <li><a href='https://www.facebook.com/hackthisuk'><i class='icon-facebook'></i> Facebook</a></li>
                             <li><a href='https://twitter.com/hackthisuk'><i class='icon-twitter'></i> Twitter</a></li>
                             <li><a href='https://github.com/HackThis'><i class='icon-github'></i> GitHub</a></li>
+                            <li>
+                                <a href='/rss/rss.php'><img class='icon-rss' src='../files/images/rss.png' /></a>&nbsp;
+                                <a href='/rss/atom.php'><img class='icon-atom' src='../files/images/atom.png' /></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
