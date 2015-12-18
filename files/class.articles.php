@@ -451,7 +451,7 @@
             $this->app->user->awardMedal('writer', 2, $result->user_id);
 
             // Add to RSS
-            if(!$this->app->rss->storeRSS($result->title, $slug, substr($result->body, 0, 100), $cat_id))
+            if(!$this->app->rss->storeRSS($result->title, $slug, substr($result->body, 0, 200).'...', $cat_id))
                 $this->app->log->add('rss', 'Failed to add an item to the feed.');
 
             return true;

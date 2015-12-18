@@ -455,7 +455,7 @@
             $this->app->ssga->send();
 
             // Add to RSS
-            if(!$this->app->rss->storeRSS($title, $slug, substr($body, 0, 100), 2))
+            if(!$this->app->rss->storeRSS($title, $slug, substr($body, 0, 200).'...', 2))
                 $this->app->log->add('rss', 'Failed to add an item to the feed.');
 
             return '/forum/' . $slug;

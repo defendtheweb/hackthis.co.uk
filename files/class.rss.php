@@ -96,8 +96,8 @@
 
             try {
                 // Insert article
-                $st = $this->db->prepare('INSERT INTO `rss_feed` (`title`,`link`,`description`,`category`)
-                                        VALUES (:title,:link,:description,:category)');
+                $st = $this->db->prepare('INSERT INTO `rss_feed` (`unique_id`,`title`,`link`,`description`,`category`)
+                                        VALUES (UUID(),:title,:link,:description,:category)');
                 $st->execute(array(':title' => $title, ':link' => $link, ':description' => $description, ':category' => $category));
 
                 $this->db->commit();
@@ -134,6 +134,7 @@
                 foreach ($result as $row) {
                     $data .= '<item>';
                     $data .= '<title>'.$row->title.'</title>';
+                    $data .= '<guid>'.$row->unique_id.'</guid>';
                     $data .= '<link>'.$row->link.'</link>';
                     $data .= '<description>'.$row->description.'</description>';
                     $data .= '<category>'.$row->category.'</category>';
@@ -144,17 +145,20 @@
                 $data .= '</channel>';
                 $data .= '</rss> ';
             } elseif ($type == feedType::ATOM) {
+                $objDateTime = new DateTime('NOW');
                 $data = '<?xml version="1.0" encoding="utf-8" ?>';
                 $data .= '<?xml-stylesheet type="text/css" href="../files/css/rss.css" ?>';
                 $data .= '<feed xmlns="http://www.w3.org/2005/Atom">';
+                $data .= '<id>https://www.hackthis.co.uk/</id>';
                 $data .= '<title>HackThis!! ATOM</title>';
+                $data .= '<updated>'.$objDateTime->format(DateTime::ATOM).'</updated>';
                 $data .= '<link href="https://www.hackthis.co.uk/" />';
                 $data .= '<subtitle>Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.</subtitle>';
-                $data .= '<language>en-gb</language>';
 
                 foreach ($result as $row) {
                     $data .= '<entry>';
                     $data .= '<title>'.$row->title.'</title>';
+                    $data .= '<id>'.$row->unique_id.'</id>';
                     $data .= '<link href="'.$row->link.'" />';
                     $data .= '<updated>'.$row->pubDate.'</updated>';
                     $data .= '<summary>'.$row->description.'</summary>';

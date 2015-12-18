@@ -92,13 +92,13 @@ INSERT INTO `articles_comments` (`comment_id`, `article_id`, `user_id`, `parent_
 (6, 2, 4, 2, 'Me again...', NULL, '2013-05-13 19:34:34');
 
 -- rss_feed
-INSERT INTO `rss_feed` (`id`, `title`, `link`, `description`, `category`) VALUES
-('Test data 1', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'News'),
-('Test data 2', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Articles'),
-('Test data 3', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Forum'),
-('Test data 4', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'News'),
-('Test data 5', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Articles'),
-('Test data 6', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Forum');
+INSERT INTO `rss_feed` (`unique_id`, `title`, `link`, `description`, `category`) VALUES
+('6a3091e4-a5bb-11e5-acec-000c29ce2aa6', 'Test data 1', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'News'),
+('71957a4d-a5bb-11e5-acec-000c29ce2aa6', 'Test data 2', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Article'),
+('8e74f552-a5bb-11e5-acec-000c29ce2aa6', 'Test data 3', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Forum'),
+('8e74fe6f-a5bb-11e5-acec-000c29ce2aa6', 'Test data 4', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'News'),
+('8e7505e9-a5bb-11e5-acec-000c29ce2aa6', 'Test data 5', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Article'),
+('8e750e55-a5bb-11e5-acec-000c29ce2aa6', 'Test data 6', 'https://www.hackthis.co.uk/', 'This is a simple test.', 'Forum');
 
 -- Check The Data.
 SELECT '== USER ==';
