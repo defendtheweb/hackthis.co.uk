@@ -563,13 +563,13 @@ CREATE TABLE IF NOT EXISTS `irc_logs` (
 	RSS FEED
 */
 CREATE TABLE IF NOT EXISTS `rss_feed` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) NOT NULL,
-  `link` varchar(200) NOT NULL,
-  `description` text NOT NULL,
-  `category` varchar(20) NOT NULL,
-  `pubDate` timestamp DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `title` varchar(200) NOT NULL,
+    `link` varchar(200) NOT NULL,
+    `description` text NOT NULL,
+    `category` varchar(20) NOT NULL,
+    `pubDate` timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 /*
