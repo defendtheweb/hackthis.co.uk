@@ -439,18 +439,23 @@
             if ($result->category_id == 0) {
                 $slug = '/news/' . $result->slug;
                 $type = 'news';
+                $cat_id = 0;
             } else {
                 $slug = '/articles/' . $result->slug;
                 $type = 'article';
+                $cat_id = 1;
             }
             $this->app->feed->call($result->username, $type, $result->title, $slug);
 
             // Award medal to user
             $this->app->user->awardMedal('writer', 2, $result->user_id);
 
+            // Add to RSS
+            if(!$this->app->rss->storeRSS($result->title, $slug, substr($result->body, 0, 100), $cat_id))
+                $this->app->log->add('rss', 'Failed to add an item to the feed.');
+
             return true;
         }
-
 
         /*
          * COMMENTS

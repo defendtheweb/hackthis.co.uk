@@ -69,16 +69,42 @@
          * Store a new feed item in the DB
          *
          * @param string $title Feed title
-         * @param string $link Link to the thread/news item/article
+         * @param string $slug Link to the thread/news item/article
          * @param string $description A short descriptive text
-         * @param feedCategory $category To allow RSS readers to cathegorize the feeds
+         * @param integer $catID To allow RSS readers to cathegorize the feeds
          *
          * @return Boolean
          *
          * @todo Create everything, pubDate will be done using SQL Now()
          */
-        public function storeRSS($title, $link, $description, $category) {
-            // TO-DO
+        public function storeRSS($title, $slug, $description, $catID) {
+            $category = feedCategory::ARTICLE;
+
+            switch ($catID) {
+                case 0:
+                    $category = feedCategory::NEWS;
+                    break;
+                case 1:
+                    $category = feedCategory::ARTICLE;
+                    break;
+                case 2:
+                    $category = feedCategory::FORUM;
+                    break;
+            }
+
+			$link = $this->config['domain'] . $slug;
+
+            try {
+                // Insert article
+                $st = $this->db->prepare('INSERT INTO `rss_feed` (`title`,`link`,`description`,`category`)
+                                        VALUES (:title,:link,:description,:category)');
+                $st->execute(array(':title' => $title, ':link' => $link, ':description' => $description, ':category' => $category));
+
+                $this->db->commit();
+            } catch(PDOException $e) {
+                $this->db->rollBack();
+                return False;
+            }
             return True;
         }
 
@@ -90,7 +116,7 @@
          * @return array
          */
         public function generateRSS($type) {
-            $sql = 'SELECT * FROM rss_feed ORDER BY id DESC';
+            $sql = 'SELECT * FROM `rss_feed` ORDER BY `id` DESC';
             $st = $this->db->prepare($sql);
             $st->execute();
             $result = $st->fetchAll();
@@ -102,7 +128,7 @@
                 $data .= '<channel>';
                 $data .= '<title>HackThis!! RSS</title>';
                 $data .= '<link>https://www.hackthis.co.uk/</link>';
-                $data .= '<description><![CDATA[Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.]]></description>';
+                $data .= '<description>Want to learn about hacking, hackers and network security. Try our hacking challenges or join our community to discuss the latest software and cracking tools.</description>';
                 $data .= '<language>en-gb</language>';
 
                 foreach ($result as $row) {
