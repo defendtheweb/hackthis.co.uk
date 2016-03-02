@@ -1,0 +1,21 @@
+<div class='admin-module'>
+    <h3><a href='/admin/forum.php'>Moderator logs</a></h3>
+    <table class='striped flags'>
+        <thead>
+            <tr>
+                <th>Moderator</th>
+                <th>Action</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td><a target='_blank' href='/user/{{ log.username }}'>{{ log.username }}</a></td>
+                    <td><a target='_blank' href='/contact/?report={{ log.report_id }}'>{{ log.subject }}</a></td>
+                    <td><time datetime="{{ log.datetime }}">{{ log.time }}</time></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

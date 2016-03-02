@@ -37,27 +37,18 @@
         <?= $minifier->load("css"); ?>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.6/socket.io.min.js"></script>-->
-	<script src="https://hackthis.co.uk:8080/socket.io/socket.io.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 <?php
     if (isset($currentLevel) && isset($currentLevel->data['code']->pos1)) {
         echo '        '.$currentLevel->data['code']->pos1."\n";
     }
 ?>
-        <script src="/files/js/modernizr-2.6.2.min.js"></script>
+        <script src="https://d3t63m1rxnixd2.cloudfront.net/files/js/modernizr-2.6.2.min.js"></script>
         <!--[if lt IE 9]>
-            <script src="/files/js/respond.min.js"></script>
-            <script src="/files/js/html5shiv.js"></script>
+            <script src="https://d3t63m1rxnixd2.cloudfront.net/files/js/respond.min.js"></script>
+            <script src="https://d3t63m1rxnixd2.cloudfront.net/files/js/html5shiv.js"></script>
         <![endif]-->
 
-	<script>
-	  !function(g,s,q,r,d){r=g[r]=g[r]||function(){(r.q=r.q||[]).push(
-	  arguments)};d=s.createElement(q);q=s.getElementsByTagName(q)[0];
-	  d.src='//d1l6p2sc9645hc.cloudfront.net/tracker.js';q.parentNode.
-	  insertBefore(d,q)}(window,document,'script','_gs');
-
-	  _gs('GSN-585161-V');
-	</script>
     </head>
     <body class='theme-<?php echo $app->theme; ?>' <?php if ($app->user) echo "data-username='{$app->user->username}' data-key='".$app->user->csrf_basic."'";?>>
 <?php
@@ -89,9 +80,8 @@
 <?php
             if (!$app->user->loggedIn || !$app->user->donator):
                 $ads = array(
-/*                    array('nullsec.png', 'http://www.nullsecurity.net'),
-                    array('walker.png', 'http://www.walkerlocksmiths.co.uk/'),*/
-		    array('cannons.gif', 'http://www.deadcannons.com')
+                    array('nullsec.png', 'http://www.nullsecurity.net'),
+                    array('walker.png', 'http://www.walkerlocksmiths.co.uk/')
                 );
 
                 $id = array_rand($ads);
@@ -100,7 +90,7 @@
 ?>
                 <div class="col span_13 advert">
                     <a href='<?=$link;?>' target='_blank' class='hide-external'>
-                        <img src='/files/images/ad_banner_<?=$image;?>'/>
+                        <img src='https://d3t63m1rxnixd2.cloudfront.net/files/images/header/banner_<?=$image;?>'/>
                     </a>
                 </div>
 <?php
