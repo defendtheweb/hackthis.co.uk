@@ -2,7 +2,7 @@
     define("_SIDEBAR", false);
 
     $custom_css = array('inbox.scss', 'confirm.css');
-    $custom_js = array('jquery.confirm.js', 'inbox.js', 'bbcode.js');
+    $custom_js = array('jquery.confirm.js', 'inbox.js');
     $page_title = 'Inbox';
     require_once('init.php');
 
