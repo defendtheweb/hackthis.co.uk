@@ -19,7 +19,7 @@
                     <h1 itemprop="name">Code of Conduct</h1>
                     <div class='meta'>
                         <i class="icon-clock"></i> September 7, 2014
-                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit>'>flabbyrabbit</a>
+                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit'>flabbyrabbit</a>
                     </div>
                 </div>
             </header>
