@@ -19,7 +19,7 @@
                     <h1 itemprop="name">Terms of Use</h1>
                     <div class='meta'>
                         <i class="icon-clock"></i> April 1, 2014
-                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit>'>flabbyrabbit</a>
+                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit'>flabbyrabbit</a>
                     </div>
                 </div>
             </header>
