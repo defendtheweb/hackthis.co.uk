@@ -6,7 +6,7 @@
                                             'This post is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
                                             'This post has severe formatting or content problems. Please be more considered when posting in future.',
                                             'The communities first and only language is English. If you are feel you need to talk in another language please find another member who can speak that language and contact them directly via PM.',
-                                            'This post refers to a post that longer exists and is being removed just to tidy things up. Don\'t worry about this report.');
+                                            'This post refers to a post that no longer exists and is being removed just to tidy things up. Don\'t worry about this report.');
         private $forum_reasons_threads = array('This thread is not relevant to this site. If you want to ask a user a specific question unrelated to the site topic please use the PM system.',
                                             'This thread is primarily an answer or has far more detail than is necessary to be helpful.',
                                             'This thread is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
