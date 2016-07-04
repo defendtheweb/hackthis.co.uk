@@ -152,7 +152,10 @@ cat > /etc/apache2/sites-available/${vdomain}.conf <<VirtualHostDefinition
 </virtualhost>
 VirtualHostDefinition
 a2ensite $vdomain
-service apache2 reload
+a2enmod rewrite
+# enabling module rewrite requires restart (reload not sufficient)
+# service apache2 reload
+service apache2 restart
 # Add the virtual domain to /etc/hosts
 echo "127.0.0.1 $vdomain" >> /etc/hosts
 
