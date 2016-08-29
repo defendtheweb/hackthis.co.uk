@@ -1,6 +1,7 @@
 <?php
     require_once('init.php');
-
+    include_once(str_replace('\\','/',dirname(__FILE__)) . "class.GIFDecoder.php" );
+    
     function upload() {
         global $app, $user;
         $allowedExtensions = array(".jpg", ".jpeg", ".png", ".gif", ".bmp");
