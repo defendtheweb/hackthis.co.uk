@@ -2,7 +2,7 @@
 /*
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::
-::	GIFDecoder Version 2.0 by László Zsidi
+::	GIFDecoder Version 2.0 by LÃ¡szlÃ³ Zsidi
 ::
 ::	Created at 2007. 02. 01. '07.47.AM'
 ::
