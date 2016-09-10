@@ -110,7 +110,7 @@
 <?php
         elseif (!$thread->closed && $thread->question->user_id === $app->user->uid):
 ?>
-            <a href='?close=<?= $app->generateCSRFKey("closeThread"); ?>' class='post-close button right mobile-hide'><i class='icon-lock'></i> Close</a>
+            <a href='?close=<?= $app->generateCSRFKey("closeThread", true); ?>' class='post-close button right mobile-hide'><i class='icon-lock'></i> Close</a>
 <?php
         endif;
       endif;
@@ -156,7 +156,7 @@
                             </div>
 <?php
         if (!$thread->closed && $thread->question->user_id === $app->user->uid) {
-            $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread")."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
+            $app->utils->message("Is one of these posts the answer to your question? If so <a href='?close=".$app->generateCSRFKey("closeThread", true)."'>click here to close thread</a>.<br/>After closing a thread no more posts will be accepted.", 'info');
         }
 ?>
                             <ul class='post-list reply-list'>
