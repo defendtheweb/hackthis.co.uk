@@ -27,22 +27,70 @@
 ?>
     <h1>Become a Donator</h1>
     In order to support our growth and the costs of maintaining and developing new features, we've added some perks and are offering them as a thank you to those who support us with a small donation:<br/>
-    <p>
-        <h2 class='no-margin'>£1 or more</h2>
-        Get yourself listed on our donator hall of fame.
-    </p>
-    <p>
-        <h2 class='no-margin'>£5 or more</h2>
-        You will not only be listed on our donator hall of fame, you will also be awarded the donator medal. On top
-        of this a heart will be displayed next to your username throughout the site to show your support.
-    </p>
-    <p>
-        <h2 class='no-margin'>£15 or more</h2>
-        As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
-    </p>
+    <?php if (isset($_GET["currency"]) == "eur") { ?>
+        Select your currency:
+        <select onChange="window.location.href=this.value" style="max-width: 100px;">
+            <option value="?currency=gbp">Great British Pounds</option>
+            <option selected>Euro</option>
+            <option value="?currency=usd">US Dollars</option>
+        </select><br />
+        <p>
+            <h2 class='no-margin'>€1.50 or more</h2>
+            Get yourself listed on our donator hall of fame.
+        </p>
+        <p>
+            <h2 class='no-margin'>€7 or more</h2>
+            You will not only be listed on our donator hall of fame, you will also be awarded the donator medal. On top
+            of this a heart will be displayed next to your username throughout the site to show your support.
+        </p>
+        <p>
+            <h2 class='no-margin'>€21 or more</h2>
+            As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
+        </p>
+    <?php } elseif (isset($_GET["currency"]) == "usd") { ?>
+        Select your currency:
+        <select onChange="window.location.href=this.value" style="max-width: 100px;">
+            <option value="?currency=gbp">Great British Pounds</option>
+            <option value="?currency=eur">Euro</option>
+            <option selected>US Dollars</option>
+        </select><br />
+        <p>
+            <h2 class='no-margin'>$1.50 or more</h2>
+            Get yourself listed on our donator hall of fame.
+        </p>
+        <p>
+            <h2 class='no-margin'>$7.50 or more</h2>
+            You will not only be listed on our donator hall of fame, you will also be awarded the donator medal. On top
+            of this a heart will be displayed next to your username throughout the site to show your support.
+        </p>
+        <p>
+            <h2 class='no-margin'>$22 or more</h2>
+            As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
+        </p>
+    <?php } else { ?>
+        Select your currency:
+        <select onChange="window.location.href=this.value" style="max-width: 100px;">
+            <option selected>Great British Pounds</option>
+            <option value="?currency=eur">Euro</option>
+            <option value="?currency=usd">US Dollars</option>
+        </select><br />
+        <p>
+            <h2 class='no-margin'>£1 or more</h2>
+            Get yourself listed on our donator hall of fame.
+        </p>
+        <p>
+            <h2 class='no-margin'>£5 or more</h2>
+            You will not only be listed on our donator hall of fame, you will also be awarded the donator medal. On top
+            of this a heart will be displayed next to your username throughout the site to show your support.
+        </p>
+        <p>
+            <h2 class='no-margin'>£15 or more</h2>
+            As well as all perks listed above you will also be able to show off your support with a stylish HackThis!! T-shirt.
+        </p>
+    <?php } ?>
     <br/>
     <form method="POST" class='center donate'>
-        <input name="donate" class='tiny' placeholder="Amount to donate"/><br/>
+        <input name="donate" class='tiny' placeholder="Amount to donate in £"/><br/>
         <div class='donate-perk hide'>
             <label style="display: inline-block; width: 25%; min-width: 160px; text-align: left; margin-top: 0; margin-bottom: 4px" for="size">Shirt size</label><br/>
             <select class='tiny' id="size" name="size">
