@@ -204,10 +204,19 @@ class loader {
             }
 
             // store file
-            file_put_contents($php_base.$filename, $contents);
+            $this->file_force_contents($php_base.$filename, $contents);
         }
 
         return true;
+    }
+
+    function file_force_contents($dir, $contents){
+        $parts = explode('/', $dir);
+        $file = array_pop($parts);
+        $dir = '';
+        foreach($parts as $part)
+            if(!is_dir($dir .= "/$part")) mkdir($dir);
+        file_put_contents("$dir/$file", $contents);
     }
 
     private function minify_js($contents) {
