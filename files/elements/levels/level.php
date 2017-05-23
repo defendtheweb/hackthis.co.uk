@@ -26,7 +26,7 @@
                 <form <?=isset($form->method)?'method="'.strtoupper($form->method).'"':'';?>>
                     <fieldset>
 <?php       foreach($form->fields AS $field): ?>
-                        <label for="user"><?=$field->label;?>:</label>
+                        <label <?=isset($field->name)?"for='{$field->name}'?>><?=$field->label;?>:</label>
                         <input type='<?=isset($field->type)?"{$field->type}":'text';?>' autocomplete="off" <?=isset($field->name)?"id='{$field->name}' name='{$field->name}'":'';?>><br>
 <?php       endforeach; ?>
                         <input type="submit" class="button" value="Submit">
