@@ -12,6 +12,11 @@
         $status = $messages->deleteConvo($_GET['delete']);
     }
 
+    if(isset($_GET['readall']))
+    {
+        $messages->markMessagesRead();
+    }
+
     if (isset($_POST['body']) && isset($_GET['view'])) {
         $result = $messages->newMessage(null, $_POST['body'], $_GET['view']);
         if ($result) {
@@ -60,6 +65,9 @@
 ?>
     <a class='button right' href='/inbox/compose'>
         <i class="icon-envelope-alt"></i> New Message
+    </a>
+    <a class='button right' href='/inbox/?readall'>
+        <i class="icon-eye-open"></i> Mark all as Read
     </a>
 <?php
     endif;
@@ -194,6 +202,9 @@
     else:
         if (isset($_GET['delete'])) {
             $app->utils->message($status?'Conversation deleted':'Error deleting conversation', $status?'good':'error');
+        }
+        if(isset($_GET['readall'])) {
+            $app->utils->message("All messages has been marked as read.", 'good');
         }
 ?>
             <div class="center empty"><i class="icon-envelope-alt icon-4x"></i><?=count($inbox)?'No conversation selected':'No messages available';?></div>
