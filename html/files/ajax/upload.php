@@ -1,6 +1,6 @@
 <?php
     require_once('init.php');
-    
+
     function upload() {
         global $app, $user;
         $allowedExtensions = array(".jpg", ".jpeg", ".png", ".gif", ".bmp");
