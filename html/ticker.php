@@ -97,6 +97,9 @@
                         case '2':
                             echo "<span class='status-2'>[declined]</span>";
                             break;
+                        case '3':
+                            echo "<span class='status-3'>[edit needed]</span>";
+                            break;
                     }
                 endif;
 ?>
