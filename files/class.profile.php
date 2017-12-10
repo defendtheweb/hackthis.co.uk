@@ -465,7 +465,7 @@
         }
 
         public static function getImg($img, $size, $gravatar=false) {
-            $default = "https://hackthis-10af.kxcdn.com/users/images/{$size}/1:1/no_pic.jpg";
+            $default = "https://www.hackthis.co.uk/users/images/{$size}/1:1/no_pic.jpg";
 
             if (!$img)
                 return $default;
@@ -473,7 +473,7 @@
             if ($gravatar) {
                 return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=identicon&s=" . $size;
             } else {
-                return "https://hackthis-10af.kxcdn.com/users/images/{$size}/1:1/{$img}";
+                return "https://www.hackthis.co.uk/users/images/{$size}/1:1/{$img}";
             }
         }
     }

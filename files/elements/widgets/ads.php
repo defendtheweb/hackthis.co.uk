@@ -14,7 +14,7 @@
                    <article class="widget">
                         <div class="center">
                             <a href='<?=$link;?>' class='hide-external'>
-                            	<img src='https://hackthis-10af.kxcdn.com/files/images/sidebar/<?=$image;?>.png'/>
+                            	<img src='https://www.hackthis.co.uk/files/images/sidebar/<?=$image;?>.png'/>
                             </a>
                         </div>
                     </article>

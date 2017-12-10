@@ -30,7 +30,7 @@
         require_once('header.php');
 ?>
                 <div class='row header'>
-                    <img src="https://hackthis-10af.kxcdn.com/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
+                    <img src="https://www.hackthis.co.uk/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
                 </div>
 <?php
         if (isset($_GET['deleted'])) {
