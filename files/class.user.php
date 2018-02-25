@@ -40,7 +40,10 @@
 
             //Check if user is registering in
             if (isset($_GET['register'])) {
-                $this->reg_error = $this->register();
+                $reg_error = $this->register();
+                if (!is_numeric($reg_error)) {
+                    $this->reg_error = $reg_error;
+                }
             }
 
             // Check if user is logged in
@@ -65,6 +68,16 @@
                 }
             }
 
+            // Check if user is using Google Auth code
+            if (isset($_GET['g_auth']) && isset($_POST['g_code'])) {
+                if(is_numeric($_POST['g_code'])) {
+                    $this->googleAuth($_POST['g_code']);
+                } else {
+                    $this->login_error = 'Google Auth code must be numeric';
+                    unset($_SESSION['g_auth']);
+                }
+            }
+
             //Login, register or connect via facebook
             if (isset($_GET['facebook'])) {
                 if (isset($_GET['code'])) {
@@ -83,7 +96,7 @@
          *
          * @todo Split functionality into separate functions e.g. medal checks
          */
-        private function get_details() {
+        public function get_details() {
             $this->app->stats->users_activity($this);
 
             $st = $this->app->db->prepare('SELECT username, score, email, (oauth_id IS NOT NULL) as connected,
@@ -222,7 +235,46 @@
         }
 
         public function login($user, $pass) {
-            $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, IFNULL(priv.site_priv, 1) as site_priv
+            $ldapID = $this->app->ldap->checkLogin($user, $pass);
+            if ($ldapID) {            
+                // Check everything matches MySQL
+                $st = $this->app->db->prepare('SELECT u.user_id, u.g_auth, IFNULL(priv.site_priv, 1) as site_priv
+                    FROM users u
+                    LEFT JOIN users_priv priv
+                    ON u.user_id = priv.user_id
+                    WHERE u.user_id = :uid AND u.username = :u');
+                $st->execute(array(':uid' => $ldapID, ':u' => $user));
+                $row = $st->fetch();
+                
+                if ($row) {
+                    if (!$row->site_priv) {
+                        $this->login_error = 'Account has been banned';
+                        return false;
+                    }
+
+                    $this->uid = $row->user_id;
+
+                    // Check if Google Auth is enabled
+                    if($row->g_auth == 1) {
+                        // set Google Auth session and don't log in
+                        $_SESSION['g_auth'] = $this->uid;
+                        $this->g_auth = $this->uid;
+                    } else {
+                        $this->loggedIn = true;
+
+                        // Setup GA event
+                        $this->app->ssga->set_event('user', 'login', 'ldap', $this->uid);
+                        $this->app->ssga->send();
+
+                        $this->createSession();
+                    }
+
+                    return $this->loggedIn;
+                }
+            }
+            
+            // User isn't valid in LDAP, double check with MySQL backup 
+            $st = $this->app->db->prepare('SELECT u.user_id, u.password, u.old_password, g_auth, IFNULL(priv.site_priv, 1) as site_priv
                     FROM users u
                     LEFT JOIN users_priv priv
                     ON u.user_id = priv.user_id
@@ -234,29 +286,10 @@
             $this->login_error = 'Invalid login details';
             if ($row) {
                 if ($row->old_password == 1) {
-                    $user = strtolower($user);
-                    $userhash = md5($user[0]."h97".md5(md5($pass))."t77Ds");
-
-                    if ($row->password === $userhash) {
-                        // Store new password
-                        $hash = crypt($pass, $this->salt());
-                        $st = $this->app->db->prepare('UPDATE users SET password = :hash, old_password = 0 WHERE user_id = :uid LIMIT 1');
-                        $status = $st->execute(array(':uid' => $row->user_id, ':hash' => $hash));
-
-                        if (!$row->site_priv) {
-                            $this->login_error = 'Account has been banned';
-                            return false;
-                        }
-
-                        $this->loggedIn = true;
-                        $this->uid = $row->user_id;
-
-                        // Setup GA event
-                        $this->app->ssga->set_event('user', 'login', 'default', $this->uid);
-                        $this->app->ssga->send();
-
-                        $this->createSession();
-                    }
+                    $this->app->ssga->set_event('user', 'login', 'old_password', $this->uid);
+                    $this->app->ssga->send();
+                    $this->login_error = 'Your password has expired, <a href="/?request">click here</a> to generate a new one.';
+                    return false;
                 } else {
                     if ($row->password == crypt($pass, $row->password)) {
 
@@ -275,6 +308,12 @@
                         $this->createSession();
                     }
                 }
+            }
+
+            
+            // Add none LDAP user to LDAP
+            if ($this->loggedIn) {
+                $this->app->ldap->createUser($this->uid, $user, $pass);
             }
 
             return $this->loggedIn;
@@ -428,6 +467,45 @@
             }
         }
 
+        public function googleAuth($authCode, $uid=null) {
+            if (!$uid) {
+                $uid = $_SESSION['g_auth'];
+            }
+
+            // setup Google Auth class
+            require('vendor/gauth.php');
+            $ga = new gauth();
+            $st = $this->app->db->prepare('SELECT g_secret FROM users WHERE user_id = :uid');
+            $st->execute(array(':uid' => $uid));
+            $secret = $st->fetch();
+
+            // verify Google code
+            $checkResult = $ga->verifyCode($secret->g_secret, $authCode, 2); // 2 = 2*30sec clock tolerance
+
+            if ($checkResult) {
+                $this->uid = $uid;
+
+                // if ok unset the session and log in
+                unset($_SESSION['g_auth']);
+                $this->loggedIn = true;
+
+                // Setup GA event
+                $this->app->ssga->set_event('user', 'login', 'GAuth', $this->uid);
+                $this->app->ssga->send();
+                $this->createSession();
+
+                return true;
+            } else {
+                unset($_SESSION['g_auth']);
+
+                $app->user->loggedIn = false;
+                $app->user->g_auth = false;
+                $this->login_error = 'Incorrect Authenticator code';
+
+                return false;
+            }
+        }
+
         private function createSession() {
             if ($this->loggedIn && isset($this->uid)) {
                 //session_regenerate_id();
@@ -490,9 +568,21 @@
             setcookie('autologin', $token, time()+60*60*24*7, '/', 'hackthis.co.uk', true, true);
         }
 
-        public function register() {
+        public function register($username=null, $password=null, $email=null) {
+            if (!$username) {
+                $username = $_POST['reg_username'];
+            }
+            if (!$password) {
+                $password = $_POST['reg_password'];
+                $password2 = $_POST['reg_password_2'];
+            } else {
+                $password2 = $password;
+            }
+            if (!$email) {
+                $email = $_POST['reg_email'];
+            }
+
             //Input check
-            $username = $_POST['reg_username'];
             if (!$this->app->utils->check_user($username))
                 return "Invalid username";
 
@@ -502,15 +592,13 @@
             if ($st->fetch(PDO::FETCH_ASSOC))
                 return "Username already in use";
 
-            $pass = $_POST['reg_password'];
-            if (!isset($pass) || strlen($pass) < 5)
+            if (!isset($password) || strlen($password) < 5)
                 return "Invalid password";
-            if ($pass !== $_POST['reg_password_2'])
+            if ($password !== $password2)
                 return "Passwords don't match";
 
-            $hash = crypt($pass, $this->salt());
+            $hash = crypt($password, $this->salt());
 
-            $email = $_POST['reg_email'];
             if (!$this->app->utils->check_email($email))
                 return "Invalid email address";
 
@@ -522,7 +610,8 @@
 
             // Check if IP has created more than 10 accounts
             $st = $this->app->db->prepare('SELECT count(*) AS `count` FROM users_registration WHERE ip=?');
-            $st->bindParam(1, ip2long($_SERVER['REMOTE_ADDR']));
+            $ip = ip2long($_SERVER['REMOTE_ADDR']);
+            $st->bindParam(1, $ip);
             $st->execute();
             $res = $st->fetch();
             if ($res && $res->count >= 10) {
@@ -539,6 +628,9 @@
                 return "Error creating account";
 
             $uid = $this->app->db->lastInsertId();
+
+            // Add to LDAP
+            $this->app->ldap->createUser($uid, $username, $password);
 
             // Login user
             $this->loggedIn = true;
@@ -562,6 +654,8 @@
             $result = $st->execute(array(':u' => $uid, ':i' => ip2long($_SERVER['REMOTE_ADDR'])));
 
             $this->createSession();
+
+            return $uid;
         }
 
         public function logout() {
@@ -620,6 +714,10 @@
                         $this->app->log->add('users', 'Deleted [' . $this->username . ']');
 
                         $this->app->db->commit();
+
+                        // Remove session
+                        $this->logout();
+
                         return true;
                     } catch (PDOException $e) {
                         $this->app->db->rollback();
@@ -809,7 +907,7 @@
             if ($uid) {
                 $sql = 'SELECT `value`
                         FROM users_data
-                        WHERE `type` = :type AND users.user_id = :uid';
+                        WHERE `type` = :type AND user_id = :uid';
                 if ($interval)
                     $sql .= ' AND `time` > date_sub(now(), interval 10 minute)';
                 $sql .= ' LIMIT 1';
@@ -927,7 +1025,8 @@
             // $this->app->email->queue($row->email, "Password request", $body);
 
             $data = array('token' => $token, 'username' => $row->username);
-            $this->app->email->queue($row->email, 'password', json_encode($data));
+            // $this->app->email->queue($row->email, 'password', json_encode($data));
+            $this->app->email->mandrillSend($row->email, null, 'password-request', 'Password request', $data);
 
             return true;
         }
@@ -959,6 +1058,9 @@
             $status = $st->execute(array(':uid' => $uid, ':hash' => $hash));
 
             if ($status) {
+                // Update LDAP
+                $this->app->ldap->changePassword($this->username, $pass);
+
                 $this->removeData('reset', $uid);
                 return true;
             } else {
@@ -1053,7 +1155,8 @@
             // $this->app->email->queue($this->email, "Confirm your email address", $body);
 
             $data = array('new' => $new, 'token' => $token);
-            $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            // $this->app->email->queue($this->email, 'email_confirmation', json_encode($data));
+            $this->app->email->mandrillSend($this->email, null, 'verify-email', 'Confirm your email address', $data);
 
             return true;
         }

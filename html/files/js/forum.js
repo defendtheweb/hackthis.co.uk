@@ -68,32 +68,85 @@ $(function() {
         });
     });
 
+    var flagTemplate = '<form>\
+                            <ul class="reasons plain">\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason1" value="1"/>\
+                                    <h3><label for="reason1">It is off-topic</label></h3>\
+                                    This post is not useful or relevant to the current thread, or the thread itself is not appropriate to this section.\
+                                </li>\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason2" value="2"/>\
+                                    <h3><label for="reason2">It is a spoiler</label></h3>\
+                                    This post contains answers or more detailed information than is necessary.\
+                                </li>\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason3" value="3"/>\
+                                    <h3><label for="reason3">It is spam</label></h3>\
+                                    This post is effectively an advertisement with no disclosure. It is not useful or relevant, but promotional.\
+                                </li>\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason4" value="4"/>\
+                                    <h3><label for="reason4">It is very low quality</label></h3>\
+                                    This post has severe formatting or content problems. The post is unlikely to be salvageable through editing.\
+                                </li>\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason5" value="5"/>\
+                                    <h3><label for="reason5">It is not English</label></h3>\
+                                    The HackThis!! community’s first language is English.\
+                                </li>\
+                                <li>\
+                                    <input type="radio" name="reason" id="reason6" value="6"/>\
+                                    <h3><label for="reason6">Other</label></h3>\
+                                    This post needs a moderator\'s attention. Please describe exactly what\'s wrong.\
+                                    <div class="modal-reason-other hide">\
+                                        <textarea name="other" placeholder="Explain reason"/>\
+                                    </div>\
+                                </li>\
+                            </ul>\
+                            <input type="submit" class="button left" value="Submit flag"/>\
+                        </form>'
+
     $('a.flag').click(function(e) {
         e.preventDefault();
         var $this = $(this),
         $elem = $(this).closest('li'),
         id = $elem.attr('data-id');
 
-        $.confirm({
-            title   : 'Flag post',
-            message : 'Are you sure you want to flag this post as inappropriate?',
-            buttons : {
-                Cancel  : {
-                    class: 'cancel'
-                },
-                Confirm : {
-                    action: function(){
-                        // Remove item from feed
-                        var uri = '/files/ajax/forum.php?action=post.flag&id=' + id;
-                        $.getJSON(uri, function(data) {
-                            // console.log(data);
-                            if (data.status) {
-                                $this.html("<i class='icon-flag'></i> Flagged").addClass('flagged').removeClass('flag');
-                            }
-                        });
-                    }
+        $.createModal('Flag post', flagTemplate, function() {
+            var $modal = this;
+            $modal.find('.reasons input[type=radio]').on('change', function() {
+                if ($modal.find('#reason6:checked').length) {
+                    $modal.find('.modal-reason-other').slideDown('fast');
+                } else {
+                    $modal.find('.modal-reason-other').slideUp('fast');
                 }
-            }
+            });
+
+            $modal.find('input[type=submit]').on('click', function(e) {
+                e.preventDefault();
+
+                console.log($modal.find(':checked').length);
+
+                if (!$modal.find(':checked').length)
+                    return false;
+
+                var reason = $modal.find(':checked').attr('value'),
+                    other = $modal.find('textarea').val();
+
+                data = {
+                    reason: reason,
+                    extra: other,
+                    id: id
+                }
+
+                $modal.height($modal.height());
+                $modal.find('.modal-content').fadeOut('fast', function() {
+                    $.get('/files/ajax/forum.php?action=post.flag', data, function() {
+                        $modal.find('.modal-content').html($('<div>', {'html': "<i class='icon-good'></i>Thank you", 'class': 'thanks'})).fadeIn();
+                    });
+                });
+            });
         });
     });
 

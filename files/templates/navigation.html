@@ -1,0 +1,137 @@
+        <div id="global-nav-sticky">
+            <div id="global-nav">
+                <nav class="container row">
+                    <a class="mobile-only show-nav" href="#"><i class="icon-menu"></i></a>
+                    <ul>
+                        <li><a href="/">home</a></li>
+                        <li><a href="/news">news</a></li>
+                        <li><a href="/levels">levels</a>
+                            <ul>
+                                {% for key, section in levelSections %}
+                                    <li class="parent"><a href="/levels/{{ key }}">{{ key }}</a>
+                                        <ul>
+                                            {% for level in section.levels %}
+                                                <li>
+                                                    <a class="progress_{{ level.progress }}" href="{{ level.uri }}">
+                                                        {{ level.title }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li><a href="/articles/">articles</a>
+                            <ul>
+                                <li class='parent'><a href='/articles/'>categories</a>
+                                    <ul>
+                                        {% for category in articleCategories %}
+                                            <li {% if category.children %}class="parent"{% endif %}><a href="/articles/{{ category.slug }}">{{ category.title }}</a>
+                                                {% if category.children %}
+                                                    <ul class="levels-list plain clr">
+                                                        {% for child in category.children %}
+                                                            <li><a href="/articles/{{ child.slug }}">{{ child.title }}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                <li><a href='/articles/contributors'>Contributors</a></li>
+                                {% if user.loggedIn == true %}
+                                    <li class='parent'><a href='/articles/me'>My Articles</a>
+                                        <ul>
+                                            <li><a href='/articles/me'>Approved</a></li>
+                                            <li><a href='/articles/me?submissions'>Submitted</a></li>
+                                            <li><a href='/articles/submit'>Submit</a></li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li><a href='/forum/'>forum</a>
+                            <ul>
+                                {% for section in forumSections %}
+                                    {{ printForumSection(section) }}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li><a href='/irc'>Chat</a>
+                            <ul>
+                                <li><a href='/irc/stats.php'>Stats</a></li>
+                            </ul>
+                        </li>
+                        <li><a href='/more.php'>more</a>
+                            <ul>
+                                {% if user.loggedIn == true %}
+                                    <li><a href='/medals.php'>Medals</a></li>
+                                {% endif %}
+                                <li><a href='/contact'>contact us</a></li>
+                                {% if user.loggedIn == true %}
+                                    <li><a href='/donator.php'>Donate</a></li>
+                                    <li><a href='/git.php'>Contribute</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+
+                        {% if user.loggedIn == true %}
+                            <li class='right icon mobile-hide'><a href='/user/{{ user.username }}'><i class="icon-avatar"></i></a>
+                                <ul>
+                                    <li><a href='/user/{{ user.username }}'>{{ user.username }}</a></li>
+                                    <li><a href='/settings/'>Settings</a></li>
+                                    <li class='seperator'><a href='/?logout={{ user.csrf_basic }}'>Logout</a></li>
+                                </ul>
+                            </li>
+                            <li class='mobile-only'><a href='/settings/'>Settings</a></li>
+                            <li class='mobile-only'><a href='/?logout={{ user.csrf_basic }}'>Logout</a></li>
+
+                            {% if user.admin == true %}
+                                <li class='right icon mobile-hide'><a href='/admin/'><i class="icon-lock"></i></a>
+                                    <ul>
+                                        {% if user.site_priv > 1 %}
+                                            <li><a href='/admin/levels.php'>Levels</a></li>
+                                            <li><a href='/admin/users.php'>Users</a></li>
+                                        {% endif %}
+                                        {% if user.pub_priv > 1 %}
+                                            <li><a href='/admin/articles.php'>Articles</a></li>
+                                        {% endif %}
+                                        {% if user.forum_priv > 1 %}
+                                            <li><a href='/admin/forum.php'>Forum</a></li>
+                                        {% endif %}
+                                        <li><a href='/contact'>Tickets</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                            <li class='right icon'><a class='nav-extra nav-extra-pm' href='/inbox/'><i class="icon-envelope-alt"></i><span class='notification-counter' id='pm-counter'>1</span></a></li>
+                            <li class='right icon nav-extra-events-cont'><a class='nav-extra nav-extra-events' href='/alerts.php'><i class="icon-globe"></i><span class='notification-counter' id='event-counter'>1</span></a></li>
+                            <li class='right icon mobile-hide nav-search'>
+                                <form action='/search.php' method='get'>
+                                    <input autocomplete="off" placeholder='Search: topic, user, article..' name='q'/>
+                                    <i class='icon-search'></i>
+                                </form>
+                            </li>
+
+                        {% else %}
+                            <li class='right nav-extra-login-item {% if user.login_error %}active{% endif %}'><a class='nav-extra nav-extra-login' href='/auth.php' {% if user.login_error %}data-error='{{ user.login_error }}'{% endif %}>Login</a></li>
+                            <li class='right nav-extra-register-item {% if user.reg_error %}active{% endif %}'><a class='nav-extra nav-extra-register' href='/auth.php' {% if user.reg_error %}data-error='{{ user.reg_error }}'{% endif %}>Register</a></li>
+                        {% endif %}
+                    </ul>
+
+                    {% if user.loggedIn == true %}
+                        <div id='nav-extra-dropdown'>
+                            Hey there :)
+                        </div>
+                    {% else %}
+                        <div id='nav-extra-login' class='nav-extra-dropdown'>
+                            {{ include('elements/widgets/login.php') }}
+                        </div>
+                        <div id='nav-extra-register' class='nav-extra-dropdown'>
+                            {{ include('elements/widgets/register.php') }}
+                        </div>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>

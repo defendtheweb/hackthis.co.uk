@@ -2,7 +2,7 @@
     class forum {
         private $app;
         private $error;
-        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track');
+        private $banned = array('ccv', 'sell', 'passport', 'visa', 'electron', 'icq', 'bank', 'track', 'dump');
 
         public function __construct($app) {
             $this->app = $app;
@@ -56,11 +56,11 @@
             return $result;
         }
 
-        public function isThread($slug) {
+        public function isThread($id) {
             $st = $this->app->db->prepare("SELECT thread_id AS id
                      FROM forum_threads
-                     WHERE slug = :slug");
-            $st->execute(array(':slug'=>$slug));
+                     WHERE `thread_id` = :id");
+            $st->execute(array(':id'=>$id));
             return $st->fetch();
         }
 
@@ -101,7 +101,9 @@
             return $result;
         }
 
-        public function printThreadPost($post, $first=false, $last=false) {
+        public function printThreadPost($post, $first=false, $last=false, $admin=false) {
+	    if (!$post) return;
+
             $post->first = $first;
             $post->last = $last;
 
@@ -124,7 +126,11 @@
             $post->timeSince = $this->app->utils->timeSince($post->posted, true);
 
             // Use template
-            echo $this->app->twig->render('forum_post.html', array('post' => $post));
+            if (!$admin) {
+                echo $this->app->twig->render('forum_post.html', array('post' => $post));
+            } else {
+                echo $this->app->twig->render('admin_forum_post.html', array('post' => $post));
+            }
         }
 
         public function printSectionsList($cat, $menu = false, $current = null, $level = 1) {
@@ -174,6 +180,10 @@
                 WHERE isnull(t1.parent_id) AND (t1.slug = :slug OR t2.slug = :slug OR t3.slug = :slug OR t4.slug = :slug)");
             $st->execute(array(':slug'=>$slug));
             $result = $st->fetch();
+            
+            if (!$result) {
+                return null;
+            }
 
             if ($result->slug1 == $result->slug) {
                 unset($result->title2); unset($result->slug2); unset($result->priv2);
@@ -194,15 +204,17 @@
             // has user completed level
             $result->incomplete = false;
             if ($priv_level) {
-                $levels = $this->app->levels->getList();
+                $sections = $this->app->levels->getList();
 
                 // loop and find level
-                foreach($levels AS $level) {
-                    if ($level->id == $priv_level) {
-                        if (!$level->completed) {
-                            $result->incomplete = true;
+                foreach($sections AS $section) {
+                    foreach($section->levels AS $level) {
+                        if ($level->id == $priv_level) {
+                            if ($level->progress < 2) {
+                                $result->incomplete = true;
+                            }
+                            break 2; // Break out of both loops
                         }
-                        break;
                     }
                 }
             }
@@ -404,14 +416,7 @@
             if (!$title || strlen($title) < 3)
                 return "Title must be longer than three characters";
 
-            // Check for spam - pretty much always new threads
-            $regex = "/(". implode('|', $this->banned) .")/i";
-            $matched = preg_match_all($regex, $title, $matches) + preg_match_all($regex, $body, $matches);
-            if ($matched > 2) {
-                // Could implement http://www.stopforumspam.com and ban user
-                return "Banned words found in content";
-            }
-
+            // Post validation happens within transaction
 
             $section_id = $section->id;
             $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
@@ -528,20 +533,22 @@
         }
 
 
-        public function getThread($thread_id, $page = 1, $limit = 10) {
-            $st = $this->app->db->prepare("SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
-                section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id > 0, 1, 0),1) AS `access`
-                FROM forum_threads thread
-                LEFT JOIN forum_users
-                ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
-                LEFT JOIN forum_sections section
-                ON section.section_id = thread.section_id
-                LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
-                ON replies.thread_id = thread.thread_id
-                LEFT JOIN users_levels
-                ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
-                WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
-                LIMIT 1");
+        public function getThread($thread_id, $page = 1, $limit = 10, $admin = false) {
+            $sql = "SELECT thread.thread_id AS `id`, thread.title, thread.slug, thread.deleted, thread.closed, thread.sticky,
+                    section.slug AS section_slug, replies.count AS replies, COALESCE(forum_users.watching, 0) AS `watching`, IF(section.priv_level,IF(users_levels.level_id > 0, 1, 0),1) AS `access`
+                    FROM forum_threads thread
+                    LEFT JOIN forum_users
+                    ON forum_users.thread_id = thread.thread_id AND forum_users.user_id = :uid
+                    LEFT JOIN forum_sections section
+                    ON section.section_id = thread.section_id
+                    LEFT JOIN (SELECT `thread_id`, count(*)-1 AS `count` FROM forum_posts WHERE deleted = 0 GROUP BY `thread_id`) replies
+                    ON replies.thread_id = thread.thread_id
+                    LEFT JOIN users_levels
+                    ON users_levels.user_id = :uid AND users_levels.completed > 0 AND users_levels.level_id = section.priv_level
+                    WHERE thread.thread_id = :thread_id AND (thread.section_id != 95 && (thread.section_id < 100 || thread.section_id > 233)) AND thread.deleted = 0
+                    LIMIT 1";
+
+            $st = $this->app->db->prepare($sql);
             $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             $thread = $st->fetch();
 
@@ -563,7 +570,7 @@
             // Get question
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -575,7 +582,7 @@
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
                 ON users_forum.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
+                LEFT JOIN (SELECT post_id, user_id, karma FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -596,7 +603,7 @@
             // Get replies
             $st = $this->app->db->prepare("SELECT post.post_id, users.user_id, users.username, post.body, post.posted, post.updated AS edited, profile.forum_signature AS signature,
                 profile.gravatar, IF (profile.gravatar = 1, users.email , profile.img) as `image`,
-                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, user_karma.flag, (donate.medal_id IS NOT NULL) AS donator
+                forum_posts.posts, users.score, coalesce(users_forum.karma, 0) AS `karma`, coalesce(user_karma.karma, 0) AS `user_karma`, (donate.medal_id IS NOT NULL) AS donator
                 FROM forum_posts post
                 LEFT JOIN users
                 ON users.user_id = post.author
@@ -608,7 +615,7 @@
                 ON forum_posts.author = post.author
                 LEFT JOIN (SELECT post_id, SUM(karma) AS `karma` FROM users_forum GROUP BY post_id) users_forum
                 ON users_forum.post_id = post.post_id
-                LEFT JOIN (SELECT post_id, user_id, karma, flag FROM users_forum) user_karma
+                LEFT JOIN (SELECT post_id, user_id, karma FROM users_forum) user_karma
                 ON user_karma.post_id = post.post_id AND user_karma.user_id = :uid
                 WHERE post.thread_id = :thread_id AND post.deleted = 0
                 ORDER BY `posted` ASC
@@ -638,6 +645,18 @@
             if ($this->app->user->loggedIn) {
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`)
                         VALUES (:uid, :thread_id) ON DUPLICATE KEY UPDATE `viewed` = now()");
+                $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
+
+                // Mark notifications as seen
+                $st = $this->app->db->prepare("update users_notifications SET seen = 1 WHERE notification_id IN (
+                                                    SELECT notifications.id
+                                                    FROM (  select notification_id as `id`
+                                                            from users_notifications
+                                                            inner join forum_posts
+                                                            on users_notifications.item_id = forum_posts.post_id
+                                                            where (type='forum_reply' or type='forum_post') AND user_id = :uid AND thread_id = :thread_id AND seen = 0
+                                                         ) AS `notifications`
+                                                    );");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
             }
 
@@ -669,6 +688,8 @@
                 $thread = $st->fetch();
                 $this->app->feed->call($this->app->user->username, 'forum_post', $thread->title, '/forum/'.$thread->slug . '?post=' . $post_id);
 
+                // Build email data
+                $email_data = array('author' => $this->app->user->username, 'preview' => $body, 'thread' => $thread->title, 'threadurl' => $thread->slug . '?post=' . $post_id);
 
                 // Check for mentions
                 preg_match_all("/(?:(?<=\s)|^)@(\w*[0-9A-Za-z_.-]+\w*)/", $body, $mentions);
@@ -682,8 +703,9 @@
                             array_push($notified, $result->user_id);
                             $this->app->notifications->add($result->user_id, 'forum_mention', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($result->email, 'forum_mention', json_encode($data), $result->user_id);
+                            $this->app->email->mandrillSend($result->user_id, $this->app->user->user_id, 'forum-mention', 'You were mentioned in "' . $thread->title . '"', $email_data);
                         }
                     }
                 }
@@ -702,8 +724,9 @@
                             array_push($notified, $watcher->author);
                             $this->app->notifications->add($watcher->author, 'forum_post', $this->app->user->uid, $post_id);
 
-                            $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
-                            $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            // $data = array('username' => $this->app->user->username, 'post' => $body, 'title' => $thread->title, 'uri' => $thread->slug . '?post=' . $post_id);
+                            // $this->app->email->queue($watcher->email, 'forum_reply', json_encode($data), $watcher->author);
+                            $this->app->email->mandrillSend($watcher->author, $this->app->user->user_id, 'forum-reply', 'Reply added to "' . $thread->title . '"', $email_data);
                         }
                     }
                 }
@@ -712,9 +735,6 @@
                 $st = $this->app->db->prepare("INSERT INTO forum_users (`user_id`, `thread_id`, `watching`)
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
-
-                
-
 
 
                 // Check for forum medal
@@ -890,19 +910,22 @@
             return true;
         }
 
-        public function flagPost($post_id) {
-            $st = $this->app->db->prepare("INSERT INTO users_forum (`user_id`, `post_id`, `flag`)
-                VALUES (:uid, :post_id, NOW()) ON DUPLICATE KEY UPDATE `flag` = NOW()");
-            return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid));
+        public function flagPost($post_id, $reason, $extra) {
+            if (!$this->app->user->loggedIn)
+                return false;
+
+            $st = $this->app->db->prepare("INSERT INTO forum_posts_flags (`user_id`, `post_id`, `reason`, `details`)
+                VALUES (:uid, :post_id, :reason, :extra)");
+            return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':reason'=>$reason, ':extra'=>$extra));
         }
 
-        public function removeFlags($post_id, $reward=false) {
+        public function removeFlags($post_id, $reward=false, $flag_id = null) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
 
             // If reward give all users who flagged a medal
-            if ($reward) {
-                $st = $this->app->db->prepare("SELECT user_id FROM users_forum WHERE post_id = :post_id AND flag > 0");
+            if ($post_id && $reward) {
+                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id AND response = 0");
                 $st->execute(array(':post_id'=>$post_id));
                 if ($result = $st->fetchAll()) {
                     foreach($result AS $res) {
@@ -911,10 +934,29 @@
                 }
             }
 
-            $st = $this->app->db->prepare("UPDATE users_forum SET `flag` = 0 WHERE post_id = :post_id");
-            return $st->execute(array(':post_id'=>$post_id));
+            if ($reward) {
+                $response = 1;
+            } else {
+                $response = -1;
+            }
+
+            if ($post_id) {
+                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE post_id = :post_id");
+                return $st->execute(array(':response'=>$response, ':post_id'=>$post_id));
+            } else {
+                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE flag_id = :flag_id");
+                return $st->execute(array(':response'=>$response, ':flag_id'=>$flag_id));
+            }
         }
 
+        public function getPostFlags($post_id) {
+            if (!$this->app->user->admin_forum_priv)
+                return false;
+
+            $st = $this->app->db->prepare("SELECT flag_id AS id, username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id AND response = 0");
+            $st->execute(array(':post_id'=>$post_id));
+            return $st->fetchAll();
+        }
 
         public function getError() {
             return ($this->error)?$this->error:'Error making request';
@@ -936,7 +978,54 @@
                 return false;
             }
 
+            // Check for spam - pretty much always new threads
+            $regex = "/(". implode('|', $this->banned) .")/i";
+            $matched = preg_match_all($regex, $body, $matches);
+            if ($matched > 2) {
+                // Could implement http://www.stopforumspam.com and ban user
+                $this->error = "Banned words found in content";
+                return false;
+            }
+
             if (!$edit)  {
+                // Don't allow users to post in the first 10 mins of being a member
+                $st = $this->app->db->prepare('SELECT TIMESTAMPDIFF(MINUTE, joined, NOW()) AS `joined` from users_activity WHERE user_id = :uid');
+                $st->execute(array(':uid'=>$this->app->user->uid));
+                $res = $st->fetch();
+
+                if ($res->joined < 15) {
+                    $this->error = "New users can not post in the forum for the first 15 minutes. You have been registered for {$res->joined} minutes.";
+                    return false;
+                }
+
+                $minutes_joined = $res->joined;
+                $hours_joined = ceil($minutes_joined / 60);
+
+                if ($hours_joined < 24) {
+                    // Don't allow users to post on more than 2 threads, per hour for the first 24 hours
+                    $st = $this->app->db->prepare('SELECT COUNT(DISTINCT(`thread_id`)) AS `threads` FROM forum_posts where author = :uid');
+                    $st->execute(array(':uid'=>$this->app->user->uid));
+                    $res = $st->fetch();
+
+                    if ($res->threads > $hours_joined * 2) {
+                        $this->error = "New users are only allowed to post in two threads, per hour, for the first 24 hours.";
+                        return false;
+                    }
+                }
+
+                // Don't allow user to post if they have karma < 0 and score <= 0
+                $st = $this->app->db->prepare('SELECT user_id, karma.karma
+                                               FROM users
+                                               LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
+                                               ON karma.author = users.user_id
+                                               WHERE user_id = :uid AND (karma < 0 AND score <= 0)
+                                               LIMIT 1');
+                $st->execute(array(':uid'=>$this->app->user->uid));
+                if ($res = $st->fetch()) {
+                    $this->error = "You have been temporarily banned from posting messages";
+                    return false;
+                }
+
                 //check when last post was made
 
                 // The time left calculation was previously done using
@@ -965,6 +1054,30 @@
             }
 
             return true;
+        }
+
+        public function getStats() {
+            $stats = $this->app->cache->get('forum_stats', 5);
+
+            if ($stats)
+                return json_decode($stats);
+
+            $stats = new stdClass();
+
+            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_threads WHERE deleted = 0");
+            $result = $st->fetch();
+            $stats->threads = $result->count;
+
+            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_posts WHERE deleted = 0");
+            $result = $st->fetch();
+            $stats->posts = $result->count;
+
+            $result = $this->app->db->query('SELECT `author` FROM forum_posts WHERE deleted = 0 GROUP BY author');
+            $stats->members = $result->rowCount();
+
+            $this->app->cache->set('forum_stats', json_encode($stats));
+
+            return $stats;
         }
     }
 ?>

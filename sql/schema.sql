@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     `email` varchar(128) NOT NULL,
     `verified` tinyint(1) NOT NULL DEFAULT 0,
     `score` mediumint(6) NOT NULL DEFAULT 0,
+    `g_auth` tinyint(1),
+    `g_secret` varchar(255),
     PRIMARY KEY (`user_id`),
     UNIQUE KEY (`username`),
     UNIQUE KEY (`email`)
@@ -245,7 +247,7 @@ CREATE TABLE IF NOT EXISTS levels (
 
 CREATE TABLE IF NOT EXISTS levels_data (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code') NOT NULL,
+    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code', 'uptime') NOT NULL,
     `value` text NOT NULL,
     PRIMARY KEY (`level_id`, `key`),
     FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
@@ -340,6 +342,19 @@ CREATE TABLE IF NOT EXISTS forum_posts_audit (
     -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS forum_posts_flags (
+    `flag_id` int(6) NOT NULL AUTO_INCREMENT,
+    `post_id` int(6) NOT NULL,
+    `user_id` int(7), 
+    `reason` tinyint(1) NOT NULL,
+    `details` TEXT,
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
+    `response` tinyint(1) DEFAULT 0,
+    PRIMARY KEY (`flag_id`),
+    FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
+    FOREIGN KEY (`post_id`) REFERENCES forum_posts (`post_id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS forum_users (
     `user_id` int(7) NOT NULL,
     `thread_id` int(6) NOT NULL,
@@ -354,7 +369,6 @@ CREATE TABLE IF NOT EXISTS users_forum (
     `user_id` int(7) NOT NULL,
     `post_id` int(6) NOT NULL,
     `karma` tinyint(1) DEFAULT 0,
-    `flag` timestamp DEFAULT 0,
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`, `post_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
@@ -474,6 +488,8 @@ CREATE TABLE IF NOT EXISTS mod_reports (
     `about` int(7) NOT NULL,
     `subject` varchar(64),
     `body` text,
+    `visible` tinyint(1) DEFAULT 1, 
+    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`report_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
@@ -505,6 +521,21 @@ CREATE TABLE IF NOT EXISTS email_queue (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
 
+
+/*
+    API
+*/
+CREATE TABLE IF NOT EXISTS `api_clients` (
+  `client_id` int(3) NOT NULL AUTO_INCREMENT,
+  `user_id` int(7) DEFAULT NULL,
+  `identifier` text NOT NULL,
+  `domain` text NOT NULL,
+  `key` varchar(64) NOT NULL,
+  `privileges` text NOT NULL,
+  PRIMARY KEY (`client_id`),
+  UNIQUE KEY `secret_key` (`key`)
+) ENGINE=InnoDB;
+
 /*
     IRC LOGS
 */
@@ -527,7 +558,6 @@ CREATE TABLE IF NOT EXISTS `irc_logs` (
     `removed` int(1) NOT NULL,
     PRIMARY KEY (`log_id`)
 ) ENGINE=MyISAM;
-
 
 
 /*

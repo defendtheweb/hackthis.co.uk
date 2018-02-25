@@ -1,0 +1,32 @@
+    <li data-id="{{ post.post_id }}" class="row clr {% if (post.highlight == true) %}highlight{% endif %}">
+        <div class='header'>
+            <a class="user" href="/user/{{ post.username }}">
+                {{ post.username }}
+            </a>
+            {% if post.first %}
+                <span class='dark small'>This is a root post - please use thread controls above</span>
+            {% else %}
+                <a href='#' class='button icon post-edit'><i class='icon-edit'></i></a>
+                <a href='#' class='button icon post-delete'><i class='icon-trash'></i></a>
+            {% endif %}
+            <div class="karma right">
+                {% if (post.karma_priv >= 2 and post.author == false) %}
+                    <a class="karma karma-down {% if post.user_karma < 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-down"></i></a>
+                {% endif %}
+                <span>{{ post.karma }}</span>
+                {% if (post.karma_priv >= 1 and post.author == false) %}
+                    <a class="karma karma-up {% if post.user_karma > 0 %} karma-cancel {% endif %}" href="#"><i class="icon-caret-up"></i></a> 
+                {% endif %}
+            </div>
+        </div>
+        <article class="post_content">
+            <div itemprop="articleBody" class="post_body">
+                {{ post.body }}
+                {% if post.signature %}
+                <div class="post_signature">
+                    {{ post.signature }}
+                </div>
+                {% endif %}
+            </div>
+        </article>
+    </li>

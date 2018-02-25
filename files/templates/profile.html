@@ -28,12 +28,18 @@
 
     <h1 class='lower'>{{ profile.username }}</h1>
 
-    {% if profile.admin %}
-        <strong>Administrator</strong>
-    {% elseif profile.moderator %}
-        <strong>Moderator</strong>
+    {% if moderator %}
+        <span class='medal {% if profile.site_priv == 2 %}medal-gold{% elseif profile.site_priv == 0 %}medal-error{% endif %}'>Site</span>
+        <span class='medal {% if profile.pm_priv == 2 %}medal-gold{% elseif profile.pm_priv == 0 %}medal-error{% endif %}'>PM</span>
+        <span class='medal {% if profile.forum_priv == 2 %}medal-gold{% elseif profile.forum_priv == 0 %}medal-error{% endif %}'>Forum</span>
+        <span class='medal {% if profile.pub_priv == 2 %}medal-gold{% elseif profile.pub_priv == 0 %}medal-error{% endif %}'>Publish</span>
+    {% else %}
+        {% if profile.admin %}
+            <strong>Administrator</strong>
+        {% elseif profile.moderator %}
+            <strong>Moderator</strong>
+        {% endif %}
     {% endif %}
-
 
     <section class='clr'>
         <div class='col span_7 clr'>
@@ -97,13 +103,14 @@
                                     </a>
                                     <figcaption>
                                         <a href='/user/{{ friend.username }}'>{{ friend.username }}</a><br/>
-                                        Score: {{ friend.score }}<br/>
+                                        Score: {{ friend.score|number_format }}<br/>
                                         {% if friend.status %}Friends{% endif %}
                                     </figcaption>
                                 </figure>
                             </li>
                         {% endfor %}
                     </ul>
+                    <a class='right' href='/user/{{ profile.username }}/friends'>View all</a>
                 </section>
             {% endif %}
             &nbsp;
@@ -156,11 +163,11 @@
                         </li>
                     {% endif %}
                     <li>
-                        <span class="strong">{{ profile.joined|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.joined|date('c') }}" class="forceSince">{{ profile.joined|sinceShort }}</time></span>
                         <span class="small">Joined</span>
                     </li>
                     <li>
-                        <span class="strong">{{ profile.last_active|sinceShort }}</span>
+                        <span class="strong"><time datetime="{{ profile.last_active|date('c') }}" class="forceSince">{{ profile.last_active|sinceShort }}</time></span>
                         <span class="small">Last seen</span>
                     </li>
                 </ul>

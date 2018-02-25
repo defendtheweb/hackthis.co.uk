@@ -14,7 +14,10 @@
             $this->config['log'] = $this->config['path'] . "/files/log/";
 
             // Connect to database
-            $this->connectDB($this->config['db']);
+            $this->connectDB($this->config['db'], false);
+
+            // Connect to LDAP
+            $this->ldap = new ldap($this);
 
             //get version number
             $this->cache = new cache($this);
@@ -53,6 +56,11 @@
             // Create user object
             $this->user = new user($this);
 
+            // Create admin object
+            if ($this->user->admin_priv) {
+                $this->admin = new admin($this);
+            }
+
             $this->notifications = new notifications($this);
 
             // Create level object
@@ -87,14 +95,14 @@
          *
          * @todo Create site config option that is passed in to the debug param
          */
-        private function connectDB($config, $debug=false) {
+        protected function connectDB($config, $debug=true) {
             // Connect to database
             try {
                 $dsn = "{$config['driver']}:host={$config['host']}";
                 $dsn .= (!empty($config['port'])) ? ';port=' . $config['port'] : '';
                 $dsn .= ";dbname={$config['database']}";
                 $this->db = new PDO($dsn, $config['username'], $config['password']);
-                
+
                 if ($debug) {
                     $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 }
@@ -117,28 +125,6 @@
             require('vendor/nbbc.php');
             $this->bbcode = new BBCode;
             $this->bbcode->SetDetectURLs(true);
-            function fixnewlines($bbcode, $action, $name, $default, $params, $content){
-                if ($action !== BBCODE_OUTPUT) return true;
-
-                $content = preg_replace('/<br(?: \/)?>'."\n".'/',"\n", $content);
-                $content = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $content);
-
-                $content = "<br/>\n<div class=\"bbcode_code\">\n<div class=\"bbcode_code_head\">Code:</div>\n<pre class=\"bbcode_code_body prettyprint\" style=\"overflow: hidden\">{$content}</pre>\n</div>\n";
-
-                return $content;
-            }
-            $this->bbcode->AddRule('code', Array(
-                'mode' => BBCODE_MODE_CALLBACK,
-                'method' => 'fixnewlines',
-                'class' => 'code',
-                'allow_in' => Array('listitem', 'block', 'columns'),
-                'before_tag' => "sns",
-                'after_tag' => "sn",
-                'before_endtag' => "sn",
-                'after_endtag' => "sns",
-                'plain_start' => "\n<b>Code:</b>\n",
-                'plain_end' => "\n",
-            ));
         }
 
 
@@ -196,6 +182,17 @@
                 echo profile::getImg($img, $size, $gravatar);
             });
             $this->twig->addFunction($getImg);
+
+            $include = new Twig_SimpleFunction('include', function ($file) {
+                $app = $this;
+                include($file);
+            });
+            $this->twig->addFunction($include);
+
+            $printForumSection = new Twig_SimpleFunction('printForumSection', function ($section) {
+                $this->forum->printSectionsList($section, true);
+            });
+            $this->twig->addFunction($printForumSection);
         }
 
 

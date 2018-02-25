@@ -1,13 +1,17 @@
 <?php
-	define("public_page", true);
+    define("public_page", true);
     require_once('init.php');
     require_once('page_header.php'); // re-include incase this page was included by init
 
     if (!$app->user->loggedIn) {
-        header('HTTP/1.0 401 Not Authorized');
+    	if (!headers_sent()) {
+        	header('HTTP/1.0 401 Not Authorized');
+    	}
         $app->page->title = "Permission denied";
     } else {
-        header("HTTP/1.0 404 Not Found");
+    	if (!headers_sent()) {
+        	header("HTTP/1.0 404 Not Found");
+    	}
         $app->page->title = "Page not found";
     }
 

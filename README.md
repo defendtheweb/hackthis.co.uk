@@ -1,8 +1,6 @@
 HackThis
 ========
-[![project status](http://stillmaintained.com/HackThis/hackthis.co.uk.png)](http://stillmaintained.com/HackThis/hackthis.co.uk)
-
-This repository contains all code for http://www.hackthis.co.uk.
+This repository contains the majority of the code for security challenge site http://www.hackthis.co.uk.
 
 ## Installation Instructions
 

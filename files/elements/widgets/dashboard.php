@@ -18,7 +18,7 @@
             $todo_position = 1;
 
             $levels = $app->levels->getList();
-            if ($levels[0]->completed) {
+            if ($levels['Main']->levels[0]->progress > 1) {
                 $todo_position = 2;
 
                 // Does user have cheese medal?

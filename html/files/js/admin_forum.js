@@ -1,102 +1,177 @@
 $(function() {
     // Flag controls
-    $('.flags a.remove').on('click', function(e) {
+    $('.post-flags a.remove').on('click', function(e) {
         e.preventDefault();
         var $this = $(this),
-            $row = $(this).closest('tr');
+            $row = $this.closest('li');
         
-        $.getJSON('forum.php?action=flag.remove&id='+$row.attr('data-pid'), function(data) {
-            if (data.status === true) {
-                $row.slideUp();
-            }
+        $.get($this.data('href'), function(data) {
+            $row.slideUp();
         });
     });
 
 
+    var threadDeleteTmpl = '<tmpl>\
+                                <form>\
+                                    <ul class="reasons plain">\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason1" value="1"/>\
+                                            <h3><label for="reason1">It is off-topic</label></h3>\
+                                            This thread is not relevant to any section of the site.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason2" value="2"/>\
+                                            <h3><label for="reason2">It is a spoiler</label></h3>\
+                                            This thread contains primarily answers or more detailed information than is necessary.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason3" value="3"/>\
+                                            <h3><label for="reason3">It is spam</label></h3>\
+                                            This thread is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason4" value="4"/>\
+                                            <h3><label for="reason4">It is very low quality</label></h3>\
+                                            This thread has severe formatting or content problems.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason5" value="5"/>\
+                                            <h3><label for="reason5">It is not English</label></h3>\
+                                            The HackThis!! community’s first language is English.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason6" value="6"/>\
+                                            <h3><label for="reason6">No longer relevant</label></h3>\
+                                            This thread is being removed just to tidy things up.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason7" value="7"/>\
+                                            <h3><label for="reason7">Other</label></h3>\
+                                            <div class="modal-reason-other hide">\
+                                                <textarea name="other" placeholder="Add explanation"/>\
+                                            </div>\
+                                        </li>\
+                                    </ul>\
+                                    <input type="submit" class="button left" value="Delete thread"/>\
+                                </form>\
+                            </tmpl>';
 
+    var postDeleteTmpl = '<tmpl>\
+                                <form>\
+                                    <ul class="reasons plain">\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason1" value="1"/>\
+                                            <h3><label for="reason1">It is off-topic</label></h3>\
+                                            This post is not relevant to the thread.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason2" value="2"/>\
+                                            <h3><label for="reason2">It is a spoiler</label></h3>\
+                                            This post contains primarily answers or more detailed information than is necessary.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason3" value="3"/>\
+                                            <h3><label for="reason3">It is spam</label></h3>\
+                                            This post is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason4" value="4"/>\
+                                            <h3><label for="reason4">It is very low quality</label></h3>\
+                                            This post has severe formatting or content problems.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason5" value="5"/>\
+                                            <h3><label for="reason5">It is not English</label></h3>\
+                                            The HackThis!! community’s first language is English.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason6" value="6"/>\
+                                            <h3><label for="reason6">No longer relevant</label></h3>\
+                                            This post refers to a post that longer exists and is being removed just to tidy things up.\
+                                        </li>\
+                                        <li>\
+                                            <input type="radio" name="reason" id="reason7" value="7"/>\
+                                            <h3><label for="reason7">Other</label></h3>\
+                                            <div class="modal-reason-other hide">\
+                                                <textarea name="other" placeholder="Add explanation"/>\
+                                            </div>\
+                                        </li>\
+                                    </ul>\
+                                    <input type="submit" class="button left" value="Delete post"/>\
+                                </form>\
+                            </tmpl>';
 
+    var postEditTmpl = '<tmpl>\
+                                <form>\
+                                    <textarea></textarea>\
+                                    <input type="submit" class="button left" value="Update post"/>\
+                                </form>\
+                            </tmpl>';
 
+    var modal_thread_edit = 'hello',
+        modal_thread_delete = $(threadDeleteTmpl).tmpl()[0].outerHTML,
+        modal_post_edit = $(postEditTmpl).tmpl()[0].outerHTML,
+        modal_post_delete = $(postDeleteTmpl).tmpl()[0].outerHTML;
 
+    $('.thread-edit, .thread-delete, .post-edit, .post-delete').on('click', function(e) {
+        e.preventDefault();
+        var title = '',
+            id = $(this).closest('li').data('id'),
+            action;
 
+        if ($(this).hasClass('thread-delete')) {
+            action = 'admin.thread.remove';
+            id = $('.forum-main').data('thread-id');
+        } else if ($(this).hasClass('post-delete')) {
+            action = 'admin.post.remove';
+        }
 
+        if ($(this).hasClass('thread-edit')) {
+            title = 'Edit thread';
+            template = modal_thread_edit;
+        } else if ($(this).hasClass('thread-delete')) {
+            title = 'Delete thread';
+            template = modal_thread_delete;
+        } else if ($(this).hasClass('post-edit')) {
+            title = 'Edit post';
+            template = modal_post_edit;
+        } else if ($(this).hasClass('post-delete')) {
+            title = 'Delete post';
+            template = modal_post_delete;
+        }
 
-    if (graphData) {
-        // GRAPH
-        var data = graphData.slice();
-        var format = d3.time.format("%d-%m-%Y");
-        var getCount = function(d) { return d.count };
-        var getDate = function(d) { return format.parse(d.date) };
+        $.createModal(title, template, function() {
+            var $modal = this;
+            $modal.find('.reasons input[type=radio]').on('change', function() {
+                if ($modal.find('#reason7:checked').length) {
+                    $modal.find('.modal-reason-other').slideDown('fast');
+                } else {
+                    $modal.find('.modal-reason-other').slideUp('fast');
+                }
+            });
 
-        var width = $(".graph").width();
+            $modal.find('input[type=submit]').on('click', function(e) {
+                e.preventDefault();
 
-        var margin = {top: 30, right: 20, bottom: 20, left: 30},
-            width = width - margin.left - margin.right,
-            height = 180 - margin.top - margin.bottom;
+                if (!$modal.find(':checked').length)
+                    return false;
 
-        var formatNumber = d3.format(".1f");
-        var  date_format = d3.time.format("%d %b");
+                var reason = $modal.find(':checked').attr('value'),
+                    other = $modal.find('textarea').val();
 
-        var xscale = d3.time.scale().domain(d3.extent(data, getDate)).range([0, width]);
-        var yscale = d3.scale.linear().domain(d3.extent(data, getCount)).range([height,0]);
+                data = {
+                    reason: reason,
+                    extra: other,
+                    id: id
+                }
 
-        var y = d3.scale.linear()
-            .domain(d3.extent(data, getCount)).nice()
-            .range([height, 0]);
-
-        var x = d3.time.scale()
-            .domain(d3.extent(data, getDate))
-            .range([0, width]);
-
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .ticks(d3.time.hours, 24)
-            .tickFormat(date_format)
-            .orient("bottom");
-
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .ticks(4)
-            .tickSize(width)
-            .orient("right");
-
-        var svg = d3.select(".graph").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        var gy = svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
-
-        gy.selectAll("g").filter(function(d) { return d; })
-            .classed("minor", true);
-
-        gy.selectAll("text")
-            .attr("x", -30)
-            .attr("dy", 4);
-
-        svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("transform", "translate("+ (width/2) +",-18)")
-            .text(graphTitle)
-            .classed("title", true);
-
-
-        var line = d3.svg.line()
-            .interpolate("linear")
-            .x(function(n) { return xscale(getDate(n)) })
-            .y(function(n) { return yscale(getCount(n)) });
-        svg.append("path")
-              .attr("d", line(data))
-              .attr("stroke-width", "1")
-              .attr("fill", "none");
-
-    }
+                $modal.height($modal.height());
+                $modal.find('.modal-content').fadeOut('fast', function() {
+                    $.get('/files/ajax/forum.php?action='+action, data, function() {
+                        $modal.find('.modal-content').html($('<div>', {'html': "<i class='icon-good'></i>Thank you", 'class': 'thanks'})).fadeIn();
+                    });
+                });
+            });
+        });
+    });
 });

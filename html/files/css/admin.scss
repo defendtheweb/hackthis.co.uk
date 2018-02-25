@@ -26,3 +26,101 @@ a.accept:hover {
         color: $green;
     }
 }
+
+.admin-module {
+    background: $bg;
+    margin-bottom: 12px;
+    padding: 12px 8px;
+
+    h3 {
+        margin: 0;
+        margin-bottom: 0.5em;
+    }
+
+    table.striped tbody tr:nth-child(odd) {
+        background: $light_bg;
+    }
+
+
+
+    &.admin-module-tickets {
+        overflow: hidden;
+
+        .open-tickets {
+            text-align: center;
+            margin: 25px 0;
+            span {
+                @include title_font;
+                font-size: 2.5em;
+                color: $green;
+                display: block;
+            }
+        }
+    }
+
+    &.admin-module-user-manager {
+        img {
+            float: left;
+            margin-right: 12px;
+        }
+
+        .privilages {
+            margin-top: 6px;
+        }
+    }
+
+    &.admin-module-moderators {
+        li {
+            margin-bottom: 6px;
+
+            div {
+                padding-top: 2px;
+            }
+        }
+    }
+}
+
+
+
+
+/* FORUM */
+.admin-forum {
+    ul.post-flags {
+        margin-bottom: 30px;
+        margin-top: -9px;
+    }
+
+    ul.post-flags li {
+        overflow: hidden;
+        padding: 8px;
+        background: $light_bg;
+    }
+
+    ul.post-flags li:first-child {
+        background: none;
+    }
+
+    ul.post-flags li:nth-child(2n) {
+        background: $bg;
+    }
+}
+
+ul.post-list li {
+    &.highlight {
+        border: 4px solid $green;
+        margin-bottom: 14px;
+    }
+
+    .header {
+        background: $bg;
+        padding: 10px 14px;
+
+        .karma span {
+            padding: 0 5px;
+        }
+    }
+
+    .post_body {
+        padding: 8px 14px !important;
+    }
+}

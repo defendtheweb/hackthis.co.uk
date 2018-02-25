@@ -14,9 +14,9 @@
 ?>
                 <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
 <?php   if (isset($article->thumbnail) && $article->thumbnail): ?>
-                    <img src="/images/200/4:3/<?=$article->thumbnail;?>">
+                    <img src="https://hackthis-10af.kxcdn.com/images/200/4:3/<?=$article->thumbnail;?>" alt="<?=$article->title;?> thumbnail">
 <?php   elseif (isset($article->video)): ?>
-                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg">
+                    <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg" alt="<?=$article->title;?> thumbnail">
 <?php   endif; ?>
                     <div class="caption">
                         <h3><?=$article->title;?></h3>
@@ -30,28 +30,4 @@
 ?>
         </div>
     </div>
-<?php /*
-    <div class='home-module home-module-black col span_8 external-articles mobile-hide'>
-        <ul class='plain slider'>
-            <li>
-                <a href='#'>
-                    <h3>[BBC] Four UK men arrested over Silk Road links</h3>
-                </a>
-                Four men have been arrested in the UK over their role in illegal online marketplace Silk Road. 
-                Three men in their early 20s were arrested in Manchester while a fourth man, in his 50s, was detained in Devon.
-            </li>
-            <li>
-                <a href='#'>
-                    <h3>[BBC] Symantec disables 500,000 botnet-infected computers</h3>
-                    <img src='https://news.bbcimg.co.uk/media/images/70210000/jpg/_70210113_148056808.jpg'/>
-                </a>
-            </li>
-            <li>
-                <a href='#'>
-                    <h3>[SecurityWeek] Argentina Nabs Young 'Super Hacker'</h3>
-                </a>
-                A 19-year-old Argentine has been arrested on charges of hacking into online gambling pages and international money transfer sites, authorities said Friday. 
-            </li>
-        </ul>
-    </div> */ ?>
 </div>

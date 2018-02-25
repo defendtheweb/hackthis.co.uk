@@ -14,7 +14,7 @@ body {
         color: $black;
         repeat: no-repeat; 
 
-        image: url("/files/images/bg2.png");
+        image: url("https://hackthis-10af.kxcdn.com/files/images/bg2.png");
         position: center -32px;
     }
 
@@ -213,7 +213,7 @@ header .advert {
 
 /* MAIN CONTENT */
 #main-content {
-    text-align: justify; 
+    text-align: left; 
 }
 
 .bbcode  {
@@ -371,6 +371,10 @@ blockquote {
         &.medal-green-dark {
             background-color: darken(green, 12%);
         }
+    }
+    &.medal-error {
+        background: $red;
+        color: white;
     }
 }
 
