@@ -99,7 +99,7 @@
                     if (!$n)
                         unset($result[$key]);
                     else
-                        $res->uri = "{$res->uri}#post-{$res->item_id}";
+                        $res->uri = "{$res->uri}?post={$res->item_id}";
                 } else if ($res->type == 'article' || $res->type == 'favourite') {
                     // uri, title
                     $st = $this->app->db->prepare("SELECT articles.title, articles.category_id, CONCAT(IF(articles.category_id = 0, '/news/', '/articles/'), articles.slug) AS uri

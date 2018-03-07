@@ -14,7 +14,10 @@
             $this->config['log'] = $this->config['path'] . "/files/log/";
 
             // Connect to database
-            $this->connectDB($this->config['db']);
+            $this->connectDB($this->config['db'], false);
+
+            // Connect to LDAP
+            $this->ldap = new ldap($this);
 
             //get version number
             $this->cache = new cache($this);
@@ -99,7 +102,7 @@
                 $dsn .= (!empty($config['port'])) ? ';port=' . $config['port'] : '';
                 $dsn .= ";dbname={$config['database']}";
                 $this->db = new PDO($dsn, $config['username'], $config['password']);
-                
+
                 if ($debug) {
                     $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 }

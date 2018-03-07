@@ -11,7 +11,7 @@
 ?>
 
 <section class="row">
-    
+
     <div class="col span_24 article-main">
         <article class='bbcode body' itemscope itemtype="http://schema.org/Article">
             <header class='clearfix'>
@@ -19,7 +19,7 @@
                     <h1 itemprop="name">Privacy Policy</h1>
                     <div class='meta'>
                         <i class="icon-clock"></i> June 8, 2014
-                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit>'>flabbyrabbit</a>
+                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit'>flabbyrabbit</a>
                     </div>
                 </div>
             </header>
@@ -52,7 +52,7 @@
                     <br/><br/>
                     We offer the use of a secure server. All supplied sensitive/credit information is transmitted via Secure Socket Layer (SSL) technology and then encrypted into our Payment gateway providers database only to be accessible by those authorized with special access rights to such systems, and are required to keep the information confidential.
                     <br/><br/>
-                    After a transaction, your private information (credit cards, social security numbers, financials, etc.) will be kept on file for more than 60 days in order to proccess transactions.
+                    After a transaction, your private information (credit cards, social security numbers, financials, etc.) will be kept on file for more than 60 days in order to process transactions.
                 </p>
                 <p>
                     <h2>Do we use cookies?</h2></br>
@@ -95,6 +95,6 @@
     </div>
 </section>
 
-<?php  
+<?php
     require_once('footer.php');
 ?>

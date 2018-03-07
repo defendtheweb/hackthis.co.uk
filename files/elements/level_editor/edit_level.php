@@ -57,7 +57,7 @@
         <div class='col span_6'>
             <label>Category:</label><br/>
             <div class='select-menu' data-id="category" data-value="">
-                <label><?=isset($level->group)?htmlentities($level->group):'Category';?></label>            
+                <label><?=isset($level->group)?htmlentities($level->group):'Category';?></label>
                 <ul>
 <?php
     $groups = $app->levels->getGroups();
@@ -73,6 +73,10 @@
         <div class='col span_3'>
             <label for="reward">Reward:</label><br/>
             <input name="reward" value="<?=isset($level->data['reward'])?$level->data['reward']:0;?>"/>
+        </div>
+        <div class='col span_9'>
+            <label for="uptime">Uptime:</label><br/>
+            <input name="uptime" value="<?=isset($level->data['uptime'])?$level->data['uptime']:'';?>"/>
         </div>
     </div>
 

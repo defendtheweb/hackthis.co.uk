@@ -6,7 +6,7 @@
                                             'This post is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
                                             'This post has severe formatting or content problems. Please be more considered when posting in future.',
                                             'The communities first and only language is English. If you are feel you need to talk in another language please find another member who can speak that language and contact them directly via PM.',
-                                            'This post refers to a post that longer exists and is being removed just to tidy things up. Don\'t worry about this report.');
+                                            'This post refers to a post that no longer exists and is being removed just to tidy things up. Don\'t worry about this report.');
         private $forum_reasons_threads = array('This thread is not relevant to this site. If you want to ask a user a specific question unrelated to the site topic please use the PM system.',
                                             'This thread is primarily an answer or has far more detail than is necessary to be helpful.',
                                             'This thread is primarily an advertisement with no disclosure. It is not useful or relevant, but promotional. If you are interested in advertising on our platform please contact us.',
@@ -18,6 +18,7 @@
             $this->app = $app;
         }
 
+        /******* TICKETS *******/
         public function getUnreadTickets() {
             $sql = "SELECT `mod_contact`.*, COUNT(a.message_id) AS `replies` FROM `mod_contact`
                     LEFT JOIN `mod_contact` a
@@ -32,20 +33,17 @@
             return $count;
         }
 
-        public function getLatestForumFlags($limit = true) {
-            $sql = "SELECT MAX(forum_posts_flags.time) AS `latest`, COUNT(forum_posts_flags.post_id) AS `flags`, forum_posts_flags.reason, users.username, forum_threads.thread_id, forum_threads.slug, forum_threads.title, forum_posts.post_id, forum_posts.body
-                    FROM forum_posts_flags
-                    INNER JOIN forum_posts
-                    ON forum_posts_flags.post_id = forum_posts.post_id
-                    INNER JOIN forum_threads
-                    ON forum_posts.thread_id = forum_threads.thread_id
-                    INNER JOIN users
-                    ON users.user_id = forum_posts.author
-                    WHERE forum_posts.deleted = 0 AND forum_threads.deleted = 0
-                    GROUP BY forum_posts_flags.post_id
-                    ORDER BY `flags` DESC, `latest` DESC";
-            if ($limit) $sql .= " LIMIT 5";
 
+
+        /******* LOGS *******/
+        public function getModeratorLogs($limit = true) {
+            $sql = "SELECT `report_id`, `type`, `subject`, username, `time`
+                    FROM mod_reports
+                    INNER JOIN `users`
+                    ON `users`.user_id = `mod_reports`.user_id
+                    ORDER BY `report_id` DESC";
+            if ($limit) $sql .= " LIMIT 5";
+                    
             $st = $this->app->db->prepare($sql);
             $st->execute();
             $result = $st->fetchAll();
@@ -53,6 +51,9 @@
             return $result;
         }
 
+
+
+        /******* ARTICLES *******/
         public function getLatestArticleSubmissions($limit = true) {
             $sql = "SELECT articles_draft.article_id, articles_draft.title, articles_draft.time, articles_categories.title AS `category`, users.username
                     FROM articles_draft
@@ -71,10 +72,48 @@
             return $result;
         }
 
+        public function getLatestArticleComments() {
+            $sql = "SELECT users.username, articles.title, articles_comments.time, articles_comments.comment
+                    FROM articles_comments
+                    INNER JOIN users
+                    ON users.user_id = articles_comments.user_id
+                    INNER JOIN articles
+                    ON articles.article_id = articles_comments.article_id
+                    WHERE articles_comments.deleted IS NULL
+                    ORDER BY `time` DESC
+                    LIMIT 5";
+                    
+            $st = $this->app->db->prepare($sql);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            return $result;
+        }
 
 
 
-        // Forum
+        /******* FORUM *******/
+        public function getLatestForumFlags($limit = true) {
+            $sql = "SELECT MAX(forum_posts_flags.time) AS `latest`, COUNT(forum_posts_flags.post_id) AS `flags`, forum_posts_flags.reason, users.username, forum_threads.thread_id, forum_threads.slug, forum_threads.title, forum_posts.post_id, forum_posts.body
+                    FROM forum_posts_flags
+                    INNER JOIN forum_posts
+                    ON forum_posts_flags.post_id = forum_posts.post_id
+                    INNER JOIN forum_threads
+                    ON forum_posts.thread_id = forum_threads.thread_id
+                    INNER JOIN users
+                    ON users.user_id = forum_posts.author
+                    WHERE forum_posts.deleted = 0 AND forum_threads.deleted = 0 AND forum_posts_flags.response = 0
+                    GROUP BY forum_posts_flags.post_id
+                    ORDER BY `flags` DESC, `latest` DESC";
+            if ($limit) $sql .= " LIMIT 5";
+
+            $st = $this->app->db->prepare($sql);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            return $result;
+        }
+
         public function removeForumThread($thread_id, $reason, $extra) {
             // Delete post
             $deleted = $this->app->forum->deleteThread($thread_id);
@@ -147,5 +186,47 @@
 
             return true;
         }
+
+
+
+        /******* USER MANAGEMENT *******/
+        public function getModerators() {
+            $query = "SELECT username, users.user_id AS `uid`, users_priv.*
+                      FROM users_priv
+                      INNER JOIN users
+                      ON users.user_id = users_priv.user_id
+                      WHERE users_priv.site_priv > 1 OR 
+                            users_priv.pm_priv > 1 OR 
+                            users_priv.forum_priv > 1 OR 
+                            users_priv.pub_priv > 1";
+
+            $st = $this->app->db->prepare($query);
+            $st->execute();
+            $result = $st->fetchAll();
+
+            return $result;
+        }
+
+        public function setModeratorPriv($user_id, $priv, $priv_value) {
+            // Check user has privilages
+            if ($this->app->user->site_priv < 2 || $user_id == '69') {
+                echo "No";
+                return;
+            }
+
+            if ($priv != 'site' && $priv != 'pm' && $priv != 'forum' && $priv != 'pub') {
+                return;
+            }
+            
+            $priv = $priv.'_priv';
+
+            $this->app->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+
+            $st = $this->app->db->prepare("INSERT INTO users_priv (`user_id`, ".$priv.") VALUES (:uid, :priv_value) ON DUPLICATE KEY UPDATE ".$priv."=:priv_value");
+            $status = $st->execute(array(':uid'=>$user_id, ':priv_value'=>$priv_value));
+
+            print_r($status);
+        }
+
     }
 ?>

@@ -14,7 +14,7 @@ body {
         color: $black;
         repeat: no-repeat; 
 
-        image: url("https://d3t63m1rxnixd2.cloudfront.net/files/images/bg2.png");
+        image: url("https://hackthis-10af.kxcdn.com/files/images/bg2.png");
         position: center -32px;
     }
 
@@ -373,7 +373,8 @@ blockquote {
         }
     }
     &.medal-error {
-        background: darken($red, 10%);
+        background: $red;
+        color: white;
     }
 }
 

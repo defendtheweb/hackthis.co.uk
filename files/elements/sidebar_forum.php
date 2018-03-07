@@ -26,5 +26,13 @@
             <li <?=isset($_GET['popular'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?popular'>Most popular threads</a></li>
             <li <?=isset($_GET['no-replies'])?'class="active"':'';?>><a href='<?=isset($viewing_thread)?'/forum':'';?>?no-replies'>Threads with no replies</a></li>
         </ul>
+
+
+        <?php $stats = $forum->getStats(); ?>
+        <h1 class='no-margin'>Stats</h1>
+
+        <span class='forum-stats-label'>Threads</span><?= number_format($stats->threads); ?><br/>
+        <span class='forum-stats-label'>Posts</span><?= number_format($stats->posts); ?><br/>
+        <span class='forum-stats-label'>Authors</span><?= number_format($stats->members); ?><br/>        
     </div>
 </div>

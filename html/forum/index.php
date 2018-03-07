@@ -19,16 +19,18 @@
     if (isset($_GET['slug'])) {
         // Get id from slug
         preg_match('/\/([0-9]+)[a-z0-9\s-]+$/s', $_GET['slug'], $matches);
-        $id = $matches[1];
+        if ($matches) {
+            $id = $matches[1];
 
-        // Section or thread?
-        $thread = $forum->isThread($id);
-        if ($thread) {
-            if (isset($_GET['edit']))
-                include('edit.php');
-            else
-                include('view.php');
-            die();
+            // Section or thread?
+            $thread = $forum->isThread($id);
+            if ($thread) {
+                if (isset($_GET['edit']))
+                    include('edit.php');
+                else
+                    include('view.php');
+                die();
+            }
         }
 
         $section = $forum->getSection($_GET['slug']);
@@ -99,7 +101,7 @@
     <a href='#' class='new-thread button right'><i class='icon-chat'></i> New thread</a>
 <?php
         endif;
-    elseif ($section->incomplete):
+    elseif ($section && $section->incomplete):
 ?>
     <a class='button button-disabled right'><i class='icon-chat'></i> New thread</a>
 <?php
@@ -120,7 +122,7 @@
                             <div class='forum-container clearfix <?=isset($newThreadResult)?'new-thread':'';?>'>
                                 <div class='forum-topics'>
 <?php
-    if (count($threads) && !$section->incomplete):
+    if (count($threads) && (!$section || !$section->incomplete)):
 ?>
                                     <ul class='fluid'>
                                         <li class='forum-topic-header row'>
