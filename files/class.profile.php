@@ -58,7 +58,7 @@
                 }
                 unset($this->gravatar);
 
-                if (!$this->app->admin) {
+                if (!$this->app->user->admin_site_priv) {
                     unset($this->site_priv);
                     unset($this->pm_priv);
                     unset($this->forum_priv);
@@ -73,7 +73,6 @@
                     activity.last_active, friends.status AS friends, friends.user_id AS friend, profile.gravatar,
                     IF (profile.gravatar = 1, u.email , profile.img) as `image`,
                     IF(priv.site_priv = 2, true, false) AS admin, IF(priv.forum_priv = 2, true, false) AS moderator,
-                    priv.*,
                     forum_posts.posts, articles.articles, (donated.user_id IS NOT NULL) AS donator, (users_blocks.user_id IS NOT NULL) AS blocked, (users_blocks_me.user_id IS NOT NULL) AS blockedMe, karma.karma
                     FROM users u
                     LEFT JOIN users_profile profile
@@ -108,9 +107,12 @@
             if (isset($this->image)) {
                 $gravatar = isset($this->gravatar) && $this->gravatar == 1;
                 $this->image = profile::getImg($this->image, 198, $gravatar);
-            } else {
+            } else
                 $this->image = profile::getImg(null, 198);
-            }
+
+
+            if ($public)
+                return true;
 
 
             $st = $this->app->db->prepare('SELECT users_medals.medal_id, medals.label, medals.description, medals_colours.colour
@@ -122,17 +124,6 @@
                     WHERE users_medals.user_id = :uid');
             $st->execute(array(':uid' => $this->uid));
             $this->medals = $st->fetchAll();
-
-            if (!$this->app->user->admin) {
-                unset($this->site_priv);
-                unset($this->pm_priv);
-                unset($this->forum_priv);
-                unset($this->pub_priv);
-            }
-
-            // Limit the amount of information public users can see
-            if ($public)
-                return true;
 
             $st = $this->app->db->prepare('SELECT u.user_id as uid, u.username, users_friends.status, u.score, profile.gravatar, IF (profile.gravatar = 1, u.email , profile.img) as `image`
                     FROM users_friends as friends
@@ -147,11 +138,8 @@
             $st->execute(array(':uid' => $this->uid, ':user' => $this->app->user->uid));
             $this->friendsList = $st->fetchAll();
 
-            // Parse content
-            $this->name = $this->app->parse($this->name, false, false);
-
             if (isset($this->about)) {
-                $this->about_plain = $this->app->parse($this->about, false, false);
+                $this->about_plain = $this->about;
                 $this->about = $this->app->parse($this->about);
             }
 
@@ -465,7 +453,7 @@
         }
 
         public static function getImg($img, $size, $gravatar=false) {
-            $default = "https://hackthis-10af.kxcdn.com/users/images/{$size}/1:1/no_pic.jpg";
+            $default = "/users/images/{$size}/1:1/no_pic.jpg";
 
             if (!$img)
                 return $default;
@@ -473,7 +461,7 @@
             if ($gravatar) {
                 return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($img))) . "?d=identicon&s=" . $size;
             } else {
-                return "https://hackthis-10af.kxcdn.com/users/images/{$size}/1:1/{$img}";
+                return "/users/images/{$size}/1:1/{$img}";
             }
         }
     }

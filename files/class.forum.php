@@ -102,8 +102,6 @@
         }
 
         public function printThreadPost($post, $first=false, $last=false, $admin=false) {
-	    if (!$post) return;
-
             $post->first = $first;
             $post->last = $last;
 
@@ -416,7 +414,14 @@
             if (!$title || strlen($title) < 3)
                 return "Title must be longer than three characters";
 
-            // Post validation happens within transaction
+            // Check for spam - pretty much always new threads
+            $regex = "/(". implode('|', $this->banned) .")/i";
+            $matched = preg_match_all($regex, $title, $matches) + preg_match_all($regex, $body, $matches);
+            if ($matched > 2) {
+                // Could implement http://www.stopforumspam.com and ban user
+                return "Banned words found in content";
+            }
+
 
             $section_id = $section->id;
             $slug = $section->slug . '/' . $this->app->utils->generateSlug($title);
@@ -736,6 +741,9 @@
                         VALUES (:uid, :thread_id, 1) ON DUPLICATE KEY UPDATE `watching` = 1");
                 $st->execute(array(':thread_id'=>$thread_id, ':uid'=>$this->app->user->uid));
 
+                
+
+
 
                 // Check for forum medal
                 $st = $this->app->db->prepare('SELECT COUNT(post_id) AS posts FROM forum_posts
@@ -919,13 +927,13 @@
             return $st->execute(array(':post_id'=>$post_id, ':uid'=>$this->app->user->uid, ':reason'=>$reason, ':extra'=>$extra));
         }
 
-        public function removeFlags($post_id, $reward=false, $flag_id = null) {
+        public function removeFlags($post_id, $reward=false) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
 
             // If reward give all users who flagged a medal
-            if ($post_id && $reward) {
-                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id AND response = 0");
+            if ($reward) {
+                $st = $this->app->db->prepare("SELECT user_id FROM forum_posts_flags WHERE post_id = :post_id");
                 $st->execute(array(':post_id'=>$post_id));
                 if ($result = $st->fetchAll()) {
                     foreach($result AS $res) {
@@ -934,26 +942,15 @@
                 }
             }
 
-            if ($reward) {
-                $response = 1;
-            } else {
-                $response = -1;
-            }
-
-            if ($post_id) {
-                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE post_id = :post_id");
-                return $st->execute(array(':response'=>$response, ':post_id'=>$post_id));
-            } else {
-                $st = $this->app->db->prepare("UPDATE forum_posts_flags SET response = :response WHERE flag_id = :flag_id");
-                return $st->execute(array(':response'=>$response, ':flag_id'=>$flag_id));
-            }
+            $st = $this->app->db->prepare("DELETE FROM forum_posts_flags WHERE post_id = :post_id");
+            return $st->execute(array(':post_id'=>$post_id));
         }
 
         public function getPostFlags($post_id) {
             if (!$this->app->user->admin_forum_priv)
                 return false;
 
-            $st = $this->app->db->prepare("SELECT flag_id AS id, username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id AND response = 0");
+            $st = $this->app->db->prepare("SELECT username, reason, details FROM forum_posts_flags INNER JOIN users ON users.user_id = forum_posts_flags.user_id where post_id = :post_id");
             $st->execute(array(':post_id'=>$post_id));
             return $st->fetchAll();
         }
@@ -978,54 +975,7 @@
                 return false;
             }
 
-            // Check for spam - pretty much always new threads
-            $regex = "/(". implode('|', $this->banned) .")/i";
-            $matched = preg_match_all($regex, $body, $matches);
-            if ($matched > 2) {
-                // Could implement http://www.stopforumspam.com and ban user
-                $this->error = "Banned words found in content";
-                return false;
-            }
-
             if (!$edit)  {
-                // Don't allow users to post in the first 10 mins of being a member
-                $st = $this->app->db->prepare('SELECT TIMESTAMPDIFF(MINUTE, joined, NOW()) AS `joined` from users_activity WHERE user_id = :uid');
-                $st->execute(array(':uid'=>$this->app->user->uid));
-                $res = $st->fetch();
-
-                if ($res->joined < 15) {
-                    $this->error = "New users can not post in the forum for the first 15 minutes. You have been registered for {$res->joined} minutes.";
-                    return false;
-                }
-
-                $minutes_joined = $res->joined;
-                $hours_joined = ceil($minutes_joined / 60);
-
-                if ($hours_joined < 24) {
-                    // Don't allow users to post on more than 2 threads, per hour for the first 24 hours
-                    $st = $this->app->db->prepare('SELECT COUNT(DISTINCT(`thread_id`)) AS `threads` FROM forum_posts where author = :uid');
-                    $st->execute(array(':uid'=>$this->app->user->uid));
-                    $res = $st->fetch();
-
-                    if ($res->threads > $hours_joined * 2) {
-                        $this->error = "New users are only allowed to post in two threads, per hour, for the first 24 hours.";
-                        return false;
-                    }
-                }
-
-                // Don't allow user to post if they have karma < 0 and score <= 0
-                $st = $this->app->db->prepare('SELECT user_id, karma.karma
-                                               FROM users
-                                               LEFT JOIN (SELECT SUM(karma) AS karma, forum_posts.author FROM users_forum INNER JOIN forum_posts ON users_forum.post_id = forum_posts.post_id AND forum_posts.deleted = 0 GROUP BY forum_posts.author) karma
-                                               ON karma.author = users.user_id
-                                               WHERE user_id = :uid AND (karma < 0 AND score <= 0)
-                                               LIMIT 1');
-                $st->execute(array(':uid'=>$this->app->user->uid));
-                if ($res = $st->fetch()) {
-                    $this->error = "You have been temporarily banned from posting messages";
-                    return false;
-                }
-
                 //check when last post was made
 
                 // The time left calculation was previously done using
@@ -1054,30 +1004,6 @@
             }
 
             return true;
-        }
-
-        public function getStats() {
-            $stats = $this->app->cache->get('forum_stats', 5);
-
-            if ($stats)
-                return json_decode($stats);
-
-            $stats = new stdClass();
-
-            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_threads WHERE deleted = 0");
-            $result = $st->fetch();
-            $stats->threads = $result->count;
-
-            $st = $this->app->db->query("SELECT count(*) AS `count` FROM forum_posts WHERE deleted = 0");
-            $result = $st->fetch();
-            $stats->posts = $result->count;
-
-            $result = $this->app->db->query('SELECT `author` FROM forum_posts WHERE deleted = 0 GROUP BY author');
-            $stats->members = $result->rowCount();
-
-            $this->app->cache->set('forum_stats', json_encode($stats));
-
-            return $stats;
         }
     }
 ?>

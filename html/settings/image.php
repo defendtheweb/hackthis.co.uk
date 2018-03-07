@@ -84,7 +84,7 @@
         <div class="col span_8">
             <h1>Use Gravatar</h1>
             <div class='gravatar-pic'>
-                <img width='200px' src='https://www.gravatar.com/avatar/<?=md5(strtolower(trim($app->user->email)));?>?d=identicon&s=200'/>
+                <img width='200px' src='https://www.gravatar.com/avatar/<?=md5(strtolower(trim($app->user->email)));?>?d=http://www.hackthis.co.uk/users/images/no_pic.jpg&s=200'/>
                 <a href='?gravatar'>
                     <i class="icon-image"></i><br/>
                     Use Gravatar

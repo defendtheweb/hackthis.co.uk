@@ -5,8 +5,7 @@
 <?php
         if ($app->user->loggedIn) {
             include('widgets/dashboard.php');
-	    if (!$app->user->loggedIn || !$app->user->donator)
-	            include('widgets/ads.php');
+            include('widgets/ads.php');
             include('widgets/feed.php');
             include('widgets/scoreboard.php');
             // include('widgets/adverts.php');
@@ -17,8 +16,6 @@
                 // include('widgets/adverts.php');
             endif;
 
-           include('widgets/ads.php');
-	   include('widgets/feed.php');
             include('widgets/scoreboard.php');
             // include('widgets/login.php');
             // include('widgets/register.php');

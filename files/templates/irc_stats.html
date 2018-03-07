@@ -55,15 +55,15 @@
             {% for user in data.users %}
             <tr>
                 <td><a href='/user/{{ user.nick }}'>{{ user.nick }}</a></td>
-                <td>{{ user.lines|number_format }}</td>
-                <td>{{ user.words|number_format }}</td>
+                <td>{{ user.lines }}</td>
+                <td>{{ user.words }}</td>
                 <td>
                     <div class='night' style="width: {{ user.night }}%"></div>
                     <div class='morning' style="width: {{ user.morning }}%"></div>
                     <div class='daytime' style="width: {{ user.daytime }}%"></div>
                     <div class='evening' style="width: {{ user.evening }}%"></div>
                 </td>
-                <td width="150">{{ user.last|since }}</td>
+                <td width="150">{{ user.last }}</td>
             </tr>
             {% endfor %}
         </tbody>
