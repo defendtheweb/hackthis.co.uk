@@ -6,8 +6,6 @@
     $latestNews = $latestNews['articles'][0];
     $latestNews->title = $app->parse($latestNews->title, false);
     $latestNews->body = $app->parse($latestNews->body);
-
-	    if (strtotime($latestNews->submitted) > strtotime('14 days ago')):
 ?>
 
 <div class='home-module home-news clr'>
@@ -34,6 +32,5 @@
 </div>
 
 <?php
-	endif;
     endif;
 ?>

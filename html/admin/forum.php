@@ -4,14 +4,6 @@
     $page_title = 'Admin - Forum';
     define("PAGE_PRIV", "admin_forum");
     
-    require_once('init.php');
-
-    // Remove post flag
-    if (isset($_GET['remove'])) {
-        $app->forum->removeFlags(false, true, $_GET['remove']);
-        die();
-    }
-
     require_once('header.php');
 
     if (!isset($_GET['id'])) {
@@ -43,7 +35,7 @@
             die();
         }
 
-        $thread = $app->forum->getThread($post->thread_id, 1, 250, true);
+        $thread = $app->forum->getThread($post->thread_id, 1, 50, true);
         if (!$thread) {
             $app->utils->message('Thread not found');
             require_once('footer.php');
@@ -72,7 +64,7 @@
         <a href='#' class='button icon thread-edit'><i class='icon-edit'></i></a>
         <a href='#' class='button icon thread-delete'><i class='icon-trash'></i></a><br/>
         <?=$breadcrumb;?><br/><br/>
-        <?= $app->twig->render('admin_forum_post_flags.html', array('post' => $post->post_id, 'flags' => $flags)); ?>
+        <?= $app->twig->render('admin_forum_post_flags.html', array('flags' => $flags)); ?>
         <h2>Post</h2>
         <ul class='post-list'>
     <?php

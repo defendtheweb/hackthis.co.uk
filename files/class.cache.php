@@ -7,11 +7,11 @@
 		function get($file, $freshness=null) {
 			$file = $this->app->config['cache'] . $file;
 			$data = false;
-			if (file_exists($file) && (!$freshness || filemtime($file) > (time() - (60 * $freshness )))) {
+			if (file_exists($file) && (!$freshness || filemtime($file) > (time() - 60 * $freshness ))) {
 				$fh = @fopen($file, "rb");
 				if (!$fh)
 					return false;
-				$data = stream_get_contents($fh, filesize($file));
+				$data = fread($fh, filesize($file));
 				fclose($fh);
 			}
 

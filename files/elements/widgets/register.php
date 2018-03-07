@@ -25,7 +25,7 @@
 
                             <div class='small'>By providing my information and clicking on the register button, I confirm that I have read and agree to this website's <a target='_blank' href='/terms'>terms and conditions</a> and <a target='_blank' href='/privacy'>privacy policy</a>.</div><br/>
 
-                            <div class='small'>All members must abide by the <a target='_blank' href='/conduct'>Code of Conduct</a>. Failing to do so will result in your account being terminated.</div><br/>
+                            <div class='small'>All members must obied by the <a target='_blank' href='/conduct'>Code of Conduct</a>. Failing to do so will result in your account being terminated.</div><br/>
                             <input type="submit" value="Register" class="button right clr">
                         </form>
 

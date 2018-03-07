@@ -1,8 +1,7 @@
 var socket = null;
 if (typeof io !== 'undefined') {
-    socket = io.connect('https://www.hackthis.co.uk:8080/', { secure: true });
+    socket = io.connect('https://hackthis.co.uk:8080/', { secure: true });
 }
-
 var favcounter = new FavCounter();
 var counter_chat = 0;
 var counter_notifications = 0;
@@ -329,7 +328,7 @@ $(function() {
 
             $('<a>', {text: "Back to Inbox", class: "toggle-compose more", href: "/inbox"}).appendTo(composeHTML);
             composeHTML.append(composeForm);
-            $('<a>', {text: "Full View", class: "more full-view-via-storage", href: "/inbox/compose"}).appendTo(composeHTML);
+            $('<a>', {text: "Full View", class: "more", href: "/inbox/compose"}).appendTo(composeHTML);
 
             container.addClass('show-extra');
 
@@ -356,11 +355,11 @@ $(function() {
 
                 $('<a>', {text: "Back to Inbox", class: "toggle-compose more", href: "/inbox"}).appendTo(messagesHTML);
                 messagesHTML.append(items);
-                $('<a>', {text: "Full View", class: "more full-view-via-storage", href: "/inbox/"+id}).appendTo(messagesHTML);
+                $('<a>', {text: "Full View", class: "more", href: "/inbox/"+id}).appendTo(messagesHTML);
 
                 container.addClass('show-extra');
 
-                $('#global-nav .scroll').mCustomScrollbar();
+                $('#global-nav .scroll').mCustomScrollbar();hideNotifications
 
                 if (container.find('.new').length) {
                     $('#global-nav .scroll').mCustomScrollbar("scrollTo", "li.new:first");
@@ -437,20 +436,6 @@ $(function() {
             } else
                 $error.text("Error sending message");
         }, 'json');
-
-    }).on('click', '.full-view-via-storage', function(e) {
-        // Since it's a link we don't want to prevent default
-        e.stopPropagation();
-
-        // Moving from composing in the message dropdown to full view.
-        // Save the recipients and content of the message in the local storage
-        // The data will not be sent to the server, and will be erased as soon
-        // as it's copied to the respective fields in the full view form.
-        if (window.localStorage) {
-	    if ($('#to').length)
-                window.localStorage.recipients = $('#to')[0].value;
-            window.localStorage.content = $('form.send textarea')[0].value;
-        }
     });
 
     $('body').on('click', '.messages-new', function(e) {

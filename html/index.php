@@ -14,7 +14,7 @@
         // Make call to api
         try {
             $api = new api($app, $_GET['key']);
-            $api->handleRequest($_POST['action'], null);
+            $api->process();
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -30,7 +30,7 @@
         require_once('header.php');
 ?>
                 <div class='row header'>
-                    <img src="https://hackthis-10af.kxcdn.com/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
+                    <img src="/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
                 </div>
 <?php
         if (isset($_GET['deleted'])) {
@@ -50,7 +50,7 @@
                                 <div class='col span_19'>
                                     <h2>Challenges</h2>
                                     <span class='blurb'>
-                                        <strong class='white'>Test your skills with 50+ hacking levels, covering all aspects of security.</strong><br/>Each level is hand coded with help available at every stage.
+                                        <strong class='white'>Test your skills with 40+ hacking levels, covering all aspects of security.</strong><br/>Each level is hand coded with help available at every stage.
                                     </span>
                                 </div>
                             </a>
@@ -61,7 +61,7 @@
                                 <div class='col span_19'>
                                     <h2>Community</h2>
                                     <span class='blurb'>
-                                        <strong class='white'>Join in the discussion with 250,000+ like-minded members.</strong><br/>
+                                        <strong class='white'>Join in the discussion with 200,000+ like-minded members.</strong><br/>
                                         Need a hint? Want to talk about the latest cracking software tool?
                                     </span>
                                 </div>
@@ -104,13 +104,7 @@
 ?>
                         <div class='row'>
                             <h2>Login</h2>
-                            <?php
-                                if(isset($_SESSION['g_auth'])) {
-                                    include('elements/widgets/login_google_auth.php');
-                                } else {
-                                    include('elements/widgets/login.php');
-                                }
-                                ?>
+                            <?php include('elements/widgets/login.php'); ?>
                         </div>
                         <div class='row'>
                             <h2>Register</h2>

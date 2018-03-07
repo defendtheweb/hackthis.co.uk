@@ -102,7 +102,7 @@
                                 <header class='clearfix'>
                                     <div class='width-center'>
 <?php if ($myArticle): ?>
-                                        <a href='/articles/me/submit.php?action=edit&id=<?=$article->id;?>' class='button icon right'><i class='icon-edit'></i></a>  
+                                        <a href='/articles/me/submit.php?action=edit&id=<?=$id;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php elseif ($app->user->admin_pub_priv): ?>
                                         <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php endif; ?>

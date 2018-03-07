@@ -25,9 +25,6 @@
 <?php endif; ?>
 	<span class='strong <?=$level->completed?'green':'red';?>'><?=$level->completed?'Completed':'Incomplete';?></span><br/>
 
-<?php if (isset($level->online) && $level->online): ?>
-	<br/><span class='strong <?=$level->online == 'online'?'green':'red';?>'>Level <?=$level->online;?></span><br/>
-<?php endif; ?>
 
 <?php
         if (isset($level->data['description']) && (!isset($level->attempt) || $level->attempt !== true)):

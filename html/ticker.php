@@ -58,7 +58,7 @@
     <h1>Ticker</h1>
 
     <p>The HackThis!! ticker is a list of the most popular user submitted links.
-    Anyone can submit a link to the list but currently all submissions need to be approved by a moderator.</p>
+    Anyone can submit a link to the list but currently all submissions need to approved by a moderator.</p>
 
     <?php include('elements/tabs_ticker.php'); ?>
 

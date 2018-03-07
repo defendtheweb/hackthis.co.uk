@@ -7,7 +7,7 @@
 
     if (isset($_GET['password'])) {
         $changed = $app->user->changePassword($_POST['newpassword1'], $_POST['newpassword1']);
-    } else if (isset($_GET['delete']) && isset($_POST['delete']) && isset($_POST['token'])) {
+    } else if (isset($_GET['delete'])) {
         $status = $app->user->delete($_POST['delete'], $_POST['token']);
 
         if ($status === true) {

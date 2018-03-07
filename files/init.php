@@ -13,10 +13,10 @@
 
     // Content Security Policy
     $csp_rules = "
-        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com https://fonts.gstatic.com https://hackthis-10af.kxcdn.com;
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org https://hackthis-10af.kxcdn.com https://cdn.socket.io https://d3t63m1rxnixd2.cloudfront.net;
-        style-src 'self' 'unsafe-inline' https://*.googleapis.com https://hackthis-10af.kxcdn.com;
-        img-src * data:;
+        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com  https://fonts.gstatic.com;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org;
+        style-src 'self' 'unsafe-inline' https://*.googleapis.com;
+        img-src *;
         object-src 'self' https://*.youtube.com  https://*.ytimg.com;
         frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com";
     header("Content-Security-Policy: " . $csp_rules);

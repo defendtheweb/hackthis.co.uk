@@ -13,8 +13,6 @@ CREATE TABLE IF NOT EXISTS users (
     `email` varchar(128) NOT NULL,
     `verified` tinyint(1) NOT NULL DEFAULT 0,
     `score` mediumint(6) NOT NULL DEFAULT 0,
-    `g_auth` tinyint(1),
-    `g_secret` varchar(255),
     PRIMARY KEY (`user_id`),
     UNIQUE KEY (`username`),
     UNIQUE KEY (`email`)
@@ -247,7 +245,7 @@ CREATE TABLE IF NOT EXISTS levels (
 
 CREATE TABLE IF NOT EXISTS levels_data (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code', 'uptime') NOT NULL,
+    `key` enum('author', 'reward', 'form', 'answer', 'articles', 'hint', 'description', 'solution', 'code') NOT NULL,
     `value` text NOT NULL,
     PRIMARY KEY (`level_id`, `key`),
     FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
@@ -488,8 +486,6 @@ CREATE TABLE IF NOT EXISTS mod_reports (
     `about` int(7) NOT NULL,
     `subject` varchar(64),
     `body` text,
-    `visible` tinyint(1) DEFAULT 1, 
-    `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`report_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
 ) ENGINE=InnoDB;
