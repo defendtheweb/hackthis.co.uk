@@ -92,7 +92,7 @@ ls README.md > /dev/null 2>&1 || {
 git_root_dir=`pwd`
 
 # Package installation
-required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql php5-ldap"
+required_packages="apache2 php libapache2-mod-php mysql-server php-mysql php-ldap"
 echo Checking installed packages
 for package in $required_packages; do
 	installMissingPackages $package
@@ -152,7 +152,10 @@ cat > /etc/apache2/sites-available/${vdomain}.conf <<VirtualHostDefinition
 </virtualhost>
 VirtualHostDefinition
 a2ensite $vdomain
-service apache2 reload
+a2enmod rewrite
+# enabling module rewrite requires restart (reload not sufficient)
+# service apache2 reload
+service apache2 restart
 # Add the virtual domain to /etc/hosts
 echo "127.0.0.1 $vdomain" >> /etc/hosts
 
