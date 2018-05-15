@@ -38,7 +38,7 @@
                 </p>
                 <p>
                     <h2>3. Changes to the Terms.</h2></br>
-                    From time to time, HackThis!! may change, remove, add to or otherwise modify the Terms, and reserves the right to do so in its discretion. We encourage you to periodically review the Terms. All new and/or amended Terms take effect immediately. Notwithstanding the foregoing, (i) no modification to the Terms will apply to any dispute between you and HackThis!! that arose prior to the effective date of any modification and (ii) if you do not agree with any modification to the Terms, you may terminate this agreement by ceasing use of the Websites and Services. Your continued use of any Website or Service after new and/or revised Terms are effective indicate that you have read, understood and agreed to those Terms.
+                    From time to time, HackThis!! may change, remove, add to or otherwise modify the Terms, and reserves the right to do so in its discretion. We encourage you to periodically review the Terms. All new and/or amended Terms take effect immediately. Notwithstanding the foregoing, (i) no modification to the Terms will apply to any dispute between you and HackThis!! that arose prior to the effective date of any modification and (ii) if you do not agree with any modification to the Terms, you may terminate this agreement by ceasing use of the Websites and Services. Your continued use of any Website or Service after new and/or revised Terms are effective to indicate that you have read, understood and agreed to those Terms.
                 </p>
                 <p>
                     <h2>4. Provision of the Websites and Services Generally.</h2></br>

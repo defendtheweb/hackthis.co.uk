@@ -92,7 +92,7 @@ ls README.md > /dev/null 2>&1 || {
 git_root_dir=`pwd`
 
 # Package installation
-required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql"
+required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql php5-ldap"
 echo Checking installed packages
 for package in $required_packages; do
 	installMissingPackages $package
@@ -177,7 +177,6 @@ mysql -u $mysql_user $pass_clause < setup.sql
 echo -e "\t HackThis database was initialized"
 
 # Setting up directories and permissions
-
 echo Setting up directories and permissions
 mkdir -p html/files/css/min{,/light,/dark}
 chmod 777 html/files/css/min{,/light,/dark}
@@ -189,5 +188,10 @@ mkdir -p files/cache{,/twig}
 chmod 777 files/cache{,/twig}
 mkdir -p files/logs
 chmod 777 files/logs
+
+# Enabeling ModRewrite to solve RewriteEngine issue
+echo Enabeling Mod_Rewrite
+a2enmod rewrite
+service apache2 restart
 
 echo Done!

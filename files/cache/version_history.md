@@ -129,7 +129,7 @@
 * Added WeChall API pages
 
 ## 08-06-2014
-* Fixed gramatical error in privacy statement - [sabretooth](/user/sabretooth)
+* Fixed grammatical error in privacy statement - [sabretooth](/user/sabretooth)
 
 ## 09-05-2014
 * Added H3 tag to BBCode
@@ -191,7 +191,7 @@
 * W3C validation fixes - [DJDavid98](/user/djdavid98)
 * Styling fix for invisible select elements - [DJDavid98](/user/djdavid98)
 
-## 23-02-2104
+## 23-02-2014
 * Code added to handle plural articles on article contributors - [DJDavid98](/user/djdavid98)
 * Footer grammar fix - [kamzhik](/user/kamzhik)
 

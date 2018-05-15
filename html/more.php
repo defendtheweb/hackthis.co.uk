@@ -8,8 +8,8 @@
 ?>
 <h1>More</h1>
 <ul>
-    <li><a href='/irc'>IRC</a><Br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;- <a href='/irc/stats.php'>Stats</a>
+    <li><a href="/irc">IRC</a><br>
+     -&nbsp;&nbsp;&nbsp;&nbsp; <a href="/irc/stats.php">Stats</a>
     </li>
 <?php
 if ($app->user->loggedIn):
