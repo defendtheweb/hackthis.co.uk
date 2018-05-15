@@ -171,6 +171,13 @@
             return $st->execute(array(':uid' => $this->app->user->uid, ':pm_id' => $id));
         }
 
+        public function markMessagesRead()
+        {
+            // Mark thread as seen
+            $st = $this->app->db->prepare("UPDATE pm_users SET `seen` = NOW() WHERE user_id = :uid");
+            $st->execute(array(':uid' => $this->app->user->uid));
+        }
+
         public function newMessage($to, $body, $pm_id=null) {
             
             $body = trim($body);
