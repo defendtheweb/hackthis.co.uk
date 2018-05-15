@@ -19,7 +19,7 @@
         $article = $app->articles->getArticle($_GET['slug']);
     } else if (isset($_GET['id'])) {
         $myArticle = true;
-        $id = preg_replace('/[^0-9]*/','',$_GET['id']);
+        $id = preg_replace('#([0-9]*)#', '\1', $_GET['id']);
         if (!$id) {
             header('Location: /articles');
             die();
