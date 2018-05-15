@@ -13,7 +13,7 @@
 * Added WeChall API pages
 
 ## 08-06-2014
-* Fixed gramatical error in privacy statement - [sabretooth](/user/sabretooth)
+* Fixed grammatical error in privacy statement - [sabretooth](/user/sabretooth)
 
 ## 09-05-2014
 * Added H3 tag to BBCode
