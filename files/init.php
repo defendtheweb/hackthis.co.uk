@@ -1,4 +1,12 @@
 <?php
+    // session_set_save_handler('redis');
+    // session_save_path("tcp://gir:9248");
+
+    session_save_path('/srv/www/hackthis.co.uk/sessions');
+    ini_set('session.gc_maxlifetime', 3*60*60); // 3 hours
+    ini_set('session.gc_probability', 1);
+    ini_set('session.gc_divisor', 100);
+
     ini_set('session.cookie_httponly', true);
     ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
 
@@ -13,17 +21,21 @@
 
     // Content Security Policy
     $csp_rules = "
-        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com  https://fonts.gstatic.com;
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org;
-        style-src 'self' 'unsafe-inline' https://*.googleapis.com;
-        img-src *;
+        default-src 'self' https://www.hackthis.co.uk:8080 wss://www.hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com https://fonts.gstatic.com https://bam.nr-data.net https://hackthis-10af.kxcdn.com;
+        script-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://www.hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org https://netdna.bootstrapcdn.com https://ajax.aspnetcdn.com/ajax/jquery.validate d1l6p2sc9645hc.cloudfront.net https://*.gosquared.com cdn.socket.io d3t63m1rxnixd2.cloudfront.net widget.battleforthenet.com *.newrelic.com https://hackthis-10af.kxcdn.com;
+        style-src 'self' 'unsafe-inline' https://*.googleapis.com https://netdna.bootstrapcdn.com widget.battleforthenet.com https://hackthis-10af.kxcdn.com;
+        img-src * data:;
         object-src 'self' https://*.youtube.com  https://*.ytimg.com;
-        frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com";
-    header("Content-Security-Policy: " . $csp_rules);
+        frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com https://fightforthefuture.github.io;
+        report-uri https://hack.report-uri.com/r/d/csp/reportOnly;";
+    @header("Content-Security-Policy: " . trim(preg_replace('/\n/', ' ', $csp_rules)));
+
+    @header("X-Content-Type-Options: nosniff");
+    @header("X-Frame-Options: SAMEORIGIN");
 
     //Set timezone
-    date_default_timezone_set("Europe/London");
-    putenv("TZ=Europe/London");
+    date_default_timezone_set("Etc/UTC");
+    putenv("TZ=Etc/UTC");
 
 
     spl_autoload_register(function ($class) {
@@ -51,7 +63,7 @@
 
         array_push($minifier->custom_js, 'ajax_csrf_token.js');
         array_push($minifier->custom_js, 'notifications.js');
-        array_push($minifier->custom_js, 'chat.js');
+        // array_push($minifier->custom_js, 'chat.js');
         array_push($minifier->custom_js, 'autosuggest.js');
     } else {
         array_push($minifier->custom_js, 'guest.js');
