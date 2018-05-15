@@ -10,4 +10,13 @@ Disallow: /ctf/8/php/*
 User-agent: Mediapartners-Google
 Disallow:
 
+User-agent: Yahoo Pipes 1.0
+Disallow: /
+
+User-agent: KSCrawler
+Disallow: /
+
+User-agent: Spinn3r
+Disallow: /
+
 Sitemap: https://www.hackthis.co.uk/sitemap.xml
