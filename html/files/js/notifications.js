@@ -13,7 +13,7 @@ $(function() {
 
     var feedTmpl = '<tmpl>'+
     '    <li>'+
-    '      <div class="col span_18">'+
+    '      <div class="col span_18" style="overflow-y:auto; height:209.2px;">'+
     '        {{if type == "join"}}'+
     '            <i class="icon-user"></i><a href="/user/${username}">${username}</a>'+
     '        {{else type == "friend"}}'+
