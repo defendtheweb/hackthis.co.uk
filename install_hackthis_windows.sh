@@ -118,16 +118,16 @@ ls /c/wamp/wampmanager.exe > /dev/null 2>&1 || {
 }
 echo -e "\t WAMP installation found in C:\wamp"
 
-# Make sure that sh.exe is found in C:\Program Files (x86)\Git\bin\sh.exe
-ls /c/Program\ Files\ \(x86\)/Git/bin/sh.exe > /dev/null 2>&1 || {
+# Make sure that sh.exe is found in C:\Program Files\Git\bin\sh.exe
+ls /c/Program\ Files/Git/bin/sh.exe > /dev/null 2>&1 || {
 	echo
 	echo -e "\t Git Bash was not installed in the default location."
-	echo -e '\t Installation requires sh.exe to be found at C:\Program Files (x86)\Git\\bin\sh.exe.'
+	echo -e '\t Installation requires sh.exe to be found at C:\Program Files\Git\\bin\sh.exe.'
 	echo
 	echo -e "\e[0;31mAborting...\e[m"
 	waitForEnterAndExit
 }
-echo -e "\t Git Bash installation found in C:\Program Files (x86)/Git/bin/sh.exe"
+echo -e "\t Git Bash installation found in C:\Program Files/Git/bin/sh.exe"
 
 # Make sure mysql client is installed in C:\wamp\bin\mysql\[mysql version\bin\mysql.exe
 mysql_client=`ls /c/wamp/bin/mysql/*/bin/mysql.exe 2>/dev/null`;

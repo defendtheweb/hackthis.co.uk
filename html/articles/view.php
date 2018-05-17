@@ -102,7 +102,7 @@
                                 <header class='clearfix'>
                                     <div class='width-center'>
 <?php if ($myArticle): ?>
-                                        <a href='/articles/me/submit.php?action=edit&id=<?=$article->id;?>' class='button icon right'><i class='icon-edit'></i></a>  
+                                        <a href='/articles/me/submit.php?action=edit&id=<?=$article->id;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php elseif ($app->user->admin_pub_priv): ?>
                                         <a href='/admin/articles.php?action=edit&slug=<?=$article->slug;?>' class='button icon right'><i class='icon-edit'></i></a>
 <?php endif; ?>
@@ -147,13 +147,6 @@
     if (count($matches[0])):
 ?>
                                 <div class="right contents">
-<?php
-    if ($article->cat_id == 6):
-?>
-        <a href='http://www.walkerlocksmiths.co.uk'><img src='/files/images/lock_picking_sponsor.png'/></a><br/>
-<?php
-    endif;
-?>
                                     <h2>Contents</h2>
                                     <ul>
 <?php
@@ -188,10 +181,10 @@
                                 </div>
                             </article>
 <?php
-        if (!$myArticle && (!isset($_GET['view']) || $_GET['view'] != 'app')) {
-            $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
-            include('elements/comments.php');
-        }
+//        if (!$myArticle && (!isset($_GET['view']) || $_GET['view'] != 'app')) {
+//            $comments = array("id"=>$article->id,"title"=>$article->title,"count"=>$article->comments);
+//            include('elements/comments.php');
+//        }
     endif;
 ?>
                         </div>

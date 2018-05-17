@@ -6,7 +6,7 @@ This repository contains the majority of the code for security challenge site ht
 
 You can set up the site on your own local machine and help the development.
 The specific instructions differ depending on your operating system.
-Following are instructions for Windows and Ubuntu. In the end you can find a general description of the process for any other OS.
+Following are instructions for Windows and Ubuntu. In the end, you can find a general description of the process for any other OS.
 
 ### Ubuntu Installation
 
@@ -15,7 +15,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     git clone http://github.com/HackThis/hackthis.co.uk
     ```
 
-2. Run the the installation script by using the following command
+2. Run the installation script by using the following command
     ```
     sudo ./install_hackthis_ubuntu.sh
     ```
@@ -53,7 +53,7 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     Follow the instructions of the script until it's done.
     If an error occurs, the script will let you know what to do.
     Fix what's wrong and re-run the script until it ends successfully.
-6. Open your broswer and navigate to
+6. Open your browser and navigate to
 
     ```
     http://localhost/hackthis/?generate
@@ -113,13 +113,13 @@ Following are instructions for Windows and Ubuntu. In the end you can find a gen
     nano html/.htaccess
     ```
 
-8. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, twitter and lastfm API keys are not required but some features will not work correctly.
+8. Create and configure config file. Change path to the path of your hackthis.co.uk directory, without trailing slash. Next set MySQL credentials to match those used in setup, database is `hackthis`. Facebook, Twitter and Lastfm API keys are not required but some features will not work correctly.
     ```
     cp files/example.config.php files/config.php
     nano files/config.php
     ```
 
-9. Create and set new folder privilages
+9. Create and set new folder privileges
     ```
     mkdir html/files/css/min
     mkdir html/files/css/min/light

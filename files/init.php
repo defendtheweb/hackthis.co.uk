@@ -1,4 +1,12 @@
 <?php
+    // session_set_save_handler('redis');
+    // session_save_path("tcp://gir:9248");
+
+    session_save_path('/srv/www/hackthis.co.uk/sessions');
+    ini_set('session.gc_maxlifetime', 3*60*60); // 3 hours
+    ini_set('session.gc_probability', 1);
+    ini_set('session.gc_divisor', 100);
+
     ini_set('session.cookie_httponly', true);
     ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
 
@@ -18,12 +26,16 @@
         style-src 'self' 'unsafe-inline' https://*.googleapis.com https://www.hackthis.co.uk;
         img-src * data:;
         object-src 'self' https://*.youtube.com  https://*.ytimg.com;
-        frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com";
-    header("Content-Security-Policy: " . $csp_rules);
+        frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com https://fightforthefuture.github.io;
+        report-uri https://hack.report-uri.com/r/d/csp/reportOnly;";
+    @header("Content-Security-Policy: " . trim(preg_replace('/\n/', ' ', $csp_rules)));
+
+    @header("X-Content-Type-Options: nosniff");
+    @header("X-Frame-Options: SAMEORIGIN");
 
     //Set timezone
-    date_default_timezone_set("Europe/London");
-    putenv("TZ=Europe/London");
+    date_default_timezone_set("Etc/UTC");
+    putenv("TZ=Etc/UTC");
 
 
     spl_autoload_register(function ($class) {
@@ -51,7 +63,7 @@
 
         array_push($minifier->custom_js, 'ajax_csrf_token.js');
         array_push($minifier->custom_js, 'notifications.js');
-        array_push($minifier->custom_js, 'chat.js');
+        // array_push($minifier->custom_js, 'chat.js');
         array_push($minifier->custom_js, 'autosuggest.js');
     } else {
         array_push($minifier->custom_js, 'guest.js');
