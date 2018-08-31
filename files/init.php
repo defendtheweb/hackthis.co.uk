@@ -21,9 +21,9 @@
 
     // Content Security Policy
     $csp_rules = "
-        default-src 'self' https://www.hackthis.co.uk:8080 wss://www.hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com https://fonts.gstatic.com https://bam.nr-data.net https://hackthis-10af.kxcdn.com;
-        script-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://www.hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org https://netdna.bootstrapcdn.com https://ajax.aspnetcdn.com/ajax/jquery.validate d1l6p2sc9645hc.cloudfront.net https://*.gosquared.com cdn.socket.io d3t63m1rxnixd2.cloudfront.net widget.battleforthenet.com *.newrelic.com https://hackthis-10af.kxcdn.com;
-        style-src 'self' 'unsafe-inline' https://*.googleapis.com https://netdna.bootstrapcdn.com widget.battleforthenet.com https://hackthis-10af.kxcdn.com;
+        default-src 'self' https://hackthis.co.uk:8080 wss://hackthis.co.uk:8080 https://themes.googleusercontent.com https://*.facebook.com https://fonts.gstatic.com https://www.hackthis.co.uk;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://*.google-analytics.com https://hackthis.co.uk:8080 https://cdnjs.cloudflare.com https://*.twitter.com https://*.api.twitter.com https://pagead2.googlesyndication.com *.newrelic.com https://www.google.com https://ssl.gstatic.com https://members.internetdefenseleague.org https://www.hackthis.co.uk https://cdn.socket.io https://d3t63m1rxnixd2.cloudfront.net;
+        style-src 'self' 'unsafe-inline' https://*.googleapis.com https://www.hackthis.co.uk;
         img-src * data:;
         object-src 'self' https://*.youtube.com  https://*.ytimg.com;
         frame-src 'self' https://googleads.g.doubleclick.net https://*.youtube-nocookie.com https://*.vimeo.com https://kiwiirc.com https://www.google.com https://fightforthefuture.github.io;

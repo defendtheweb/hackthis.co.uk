@@ -1,6 +1,10 @@
 CREATE DATABASE hackthis;
 USE hackthis;
 
+SET GLOBAL innodb_file_format=Barracuda;
+SET GLOBAL innodb_file_per_table=ON;
+SET GLOBAL innodb_large_prefix=1;
+
 /*
     USERS
 */
@@ -18,7 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY (`user_id`),
     UNIQUE KEY (`username`),
     UNIQUE KEY (`email`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_oauth (
     id int(7) AUTO_INCREMENT,
@@ -26,7 +30,7 @@ CREATE TABLE IF NOT EXISTS users_oauth (
     provider enum('facebook','twitter'),
     PRIMARY KEY (`id`),
     UNIQUE (`uid`, `provider`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_levels (
     `user_id` int(7) NOT NULL,
@@ -37,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users_levels (
     PRIMARY KEY (`user_id`, `level_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
     -- Level constraint added later
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_levels_data (
     `user_id` int(7) NOT NULL,
@@ -47,7 +51,7 @@ CREATE TABLE IF NOT EXISTS users_levels_data (
     PRIMARY KEY (`user_id`, `level_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
     -- Level constraint added later
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_profile (
     `user_id` int(7) NOT NULL,
@@ -70,7 +74,7 @@ CREATE TABLE IF NOT EXISTS users_profile (
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     INDEX (`show_online`),
     INDEX (`show_leaderboard`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
  * Assigns users different privileges for site sections
@@ -85,7 +89,7 @@ CREATE TABLE IF NOT EXISTS users_priv (
     `pub_priv` tinyint(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
  * Stores the relationship between different users
@@ -100,7 +104,7 @@ CREATE TABLE IF NOT EXISTS users_friends (
     PRIMARY KEY (`user_id`, `friend_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`friend_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
  * Remove the ability for blocked_id from contacting
@@ -113,7 +117,7 @@ CREATE TABLE IF NOT EXISTS users_blocks (
     PRIMARY KEY (`user_id`, `blocked_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`blocked_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_activity (
     `user_id` int(7) NOT NULL,
@@ -127,7 +131,7 @@ CREATE TABLE IF NOT EXISTS users_activity (
     `days` int(5) DEFAULT 0,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
  * Notification types:
@@ -143,7 +147,7 @@ CREATE TABLE IF NOT EXISTS users_notifications (
     `seen` tinyint(1) DEFAULT 0,
     PRIMARY KEY (`notification_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
  * Feed types:
@@ -157,7 +161,7 @@ CREATE TABLE IF NOT EXISTS users_feed (
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`feed_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_data (
     `data_id` int(4)  NOT NULL AUTO_INCREMENT,
@@ -169,7 +173,7 @@ CREATE TABLE IF NOT EXISTS users_data (
     PRIMARY KEY (`data_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     UNIQUE (`type`, `value`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `users_donations` (
   `user_id` int(7) DEFAULT NULL,
@@ -177,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `users_donations` (
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` text NOT NULL,
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_settings (
     `user_id` int(7) NOT NULL,
@@ -188,14 +192,14 @@ CREATE TABLE IF NOT EXISTS users_settings (
     `email_news` tinyint(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_registration (
     `user_id` int(7) NOT NULL,
     `ip` bigint(12) NOT NULL,
     `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -206,7 +210,7 @@ CREATE TABLE IF NOT EXISTS medals_colours (
     `reward` int(4) NOT NULL DEFAULT 0,
     `colour` varchar(6) NOT NULL,
     PRIMARY KEY (`colour_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS medals (
     `medal_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -215,7 +219,7 @@ CREATE TABLE IF NOT EXISTS medals (
     `description` text NOT NULL,
     PRIMARY KEY (`medal_id`),
     FOREIGN KEY (`colour_id`) REFERENCES medals_colours (`colour_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_medals (
     `user_id` int(7) NOT NULL,
@@ -224,7 +228,7 @@ CREATE TABLE IF NOT EXISTS users_medals (
     PRIMARY KEY (`user_id`, `medal_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`medal_id`) REFERENCES medals (`medal_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -234,7 +238,7 @@ CREATE TABLE IF NOT EXISTS levels_groups (
     `title` varchar(16),
     `order` tinyint(1),
     PRIMARY KEY (`title`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS levels (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -243,7 +247,7 @@ CREATE TABLE IF NOT EXISTS levels (
     PRIMARY KEY (`level_id`),
     UNIQUE (`name`, `group`),
     FOREIGN KEY (`group`) REFERENCES levels_groups (`title`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS levels_data (
     `level_id` tinyint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -251,7 +255,7 @@ CREATE TABLE IF NOT EXISTS levels_data (
     `value` text NOT NULL,
     PRIMARY KEY (`level_id`, `key`),
     FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 ALTER TABLE users_levels
 ADD FOREIGN KEY (`level_id`) REFERENCES levels (`level_id`);
@@ -265,7 +269,7 @@ CREATE TABLE IF NOT EXISTS pm (
     `pm_id` int(7) NOT NULL AUTO_INCREMENT,
     `title` varchar(64) NOT NULL,
     PRIMARY KEY (`pm_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS pm_messages (
     `message_id` int(7) NOT NULL AUTO_INCREMENT,
@@ -276,7 +280,7 @@ CREATE TABLE IF NOT EXISTS pm_messages (
     PRIMARY KEY (`message_id`),
     FOREIGN KEY (`pm_id`) REFERENCES pm (`pm_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS pm_users (
     `pm_id` int(7) NOT NULL,
@@ -286,7 +290,7 @@ CREATE TABLE IF NOT EXISTS pm_users (
     PRIMARY KEY (`pm_id`, `user_id`),
     FOREIGN KEY (`pm_id`) REFERENCES pm (`pm_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -301,7 +305,7 @@ CREATE TABLE IF NOT EXISTS forum_sections (
     `priv_level` tinyint(3) UNSIGNED NULL DEFAULT NULL,
     PRIMARY KEY (`section_id`),
     UNIQUE (`slug`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS forum_threads (
     `thread_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -316,7 +320,7 @@ CREATE TABLE IF NOT EXISTS forum_threads (
     UNIQUE (`slug`),
     FOREIGN KEY (`owner`) REFERENCES users (`user_id`),
     FOREIGN KEY (`section_id`) REFERENCES forum_sections (`section_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS forum_posts (
     `post_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -329,7 +333,7 @@ CREATE TABLE IF NOT EXISTS forum_posts (
     PRIMARY KEY (`post_id`),
     FOREIGN KEY (`author`) REFERENCES users (`user_id`),
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS forum_posts_audit (
     `audit_id` int(7) NOT NULL AUTO_INCREMENT,
@@ -340,7 +344,7 @@ CREATE TABLE IF NOT EXISTS forum_posts_audit (
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`audit_id`,`post_id`,`field`)-- ,
     -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS forum_posts_flags (
     `flag_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -353,7 +357,7 @@ CREATE TABLE IF NOT EXISTS forum_posts_flags (
     PRIMARY KEY (`flag_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES forum_posts (`post_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS forum_users (
     `user_id` int(7) NOT NULL,
@@ -363,7 +367,7 @@ CREATE TABLE IF NOT EXISTS forum_users (
     PRIMARY KEY (`user_id`, `thread_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`thread_id`) REFERENCES forum_threads (`thread_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS users_forum (
     `user_id` int(7) NOT NULL,
@@ -373,7 +377,7 @@ CREATE TABLE IF NOT EXISTS users_forum (
     PRIMARY KEY (`user_id`, `post_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES forum_posts (`post_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -386,7 +390,7 @@ CREATE TABLE IF NOT EXISTS articles_categories (
     `slug` varchar(255),
     PRIMARY KEY (`category_id`),
     UNIQUE (`slug`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 -- TODO: Timestamps man TIME!!
 CREATE TABLE IF NOT EXISTS articles (
@@ -404,7 +408,7 @@ CREATE TABLE IF NOT EXISTS articles (
     UNIQUE (`slug`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS articles_draft (
     `article_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -417,7 +421,7 @@ CREATE TABLE IF NOT EXISTS articles_draft (
     PRIMARY KEY (`article_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`),
     FOREIGN KEY (`category_id`) REFERENCES articles_categories (`category_id`) 
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS articles_audit (
     `audit_id` int(7) NOT NULL AUTO_INCREMENT,
@@ -431,7 +435,7 @@ CREATE TABLE IF NOT EXISTS articles_audit (
     `comment` TEXT NULL,
     PRIMARY KEY (`audit_id`,`article_id`,`draft`,`field`)-- ,
     -- FOREIGN KEY (`user_id`) REFERENCES users (`user_id`) -- TODO: Provide the ability to get the user id from within the trigger.
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS articles_comments (
     `comment_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -445,7 +449,7 @@ CREATE TABLE IF NOT EXISTS articles_comments (
     PRIMARY KEY (`comment_id`),
     FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS articles_favourites (
     `article_id` int(6) NOT NULL,
@@ -454,7 +458,7 @@ CREATE TABLE IF NOT EXISTS articles_favourites (
     PRIMARY KEY (`article_id`, `user_id`),
     FOREIGN KEY (`article_id`) REFERENCES articles (`article_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 CREATE TABLE IF NOT EXISTS home_ticker (
@@ -467,7 +471,7 @@ CREATE TABLE IF NOT EXISTS home_ticker (
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS home_ticker_votes (
     `ticker_id` int(6) NOT NULL,
@@ -475,7 +479,7 @@ CREATE TABLE IF NOT EXISTS home_ticker_votes (
     PRIMARY KEY (`ticker_id`, `user_id`),
     FOREIGN KEY (`ticker_id`) REFERENCES home_ticker (`id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -492,7 +496,7 @@ CREATE TABLE IF NOT EXISTS mod_reports (
     `time` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`report_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS mod_contact (
     `message_id` int(6) NOT NULL AUTO_INCREMENT,
@@ -504,7 +508,7 @@ CREATE TABLE IF NOT EXISTS mod_contact (
     `browser` varchar(32) DEFAULT NULL,
     `sent` timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
     EMAIL TABLES
@@ -519,7 +523,7 @@ CREATE TABLE IF NOT EXISTS email_queue (
     `status` tinyint(1) DEFAULT 0, -- 0 waiting, 1 sending, 2 sent, 3+ error (error * 3mins = wait)
     PRIMARY KEY (`email_id`),
     FOREIGN KEY (`user_id`) REFERENCES users (`user_id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 
 /*
@@ -534,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `api_clients` (
   `privileges` text NOT NULL,
   PRIMARY KEY (`client_id`),
   UNIQUE KEY `secret_key` (`key`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB, ROW_FORMAT=DYNAMIC;
 
 /*
     IRC LOGS

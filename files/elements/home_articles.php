@@ -14,7 +14,7 @@
 ?>
                 <a href='<?=$article->slug;?>' class="col span_8 <?=isset($article->thumbnail) || isset($article->video)?'img':'';?> thumbnail" data-overlay="<?=$article->category;?>">
 <?php   if (isset($article->thumbnail) && $article->thumbnail): ?>
-                    <img src="https://hackthis-10af.kxcdn.com/images/200/4:3/<?=$article->thumbnail;?>" alt="<?=$article->title;?> thumbnail">
+                    <img src="https://www.hackthis.co.uk/images/200/4:3/<?=$article->thumbnail;?>" alt="<?=$article->title;?> thumbnail">
 <?php   elseif (isset($article->video)): ?>
                     <img src="https://img.youtube.com/vi/<?=$article->video;?>/0.jpg" alt="<?=$article->title;?> thumbnail">
 <?php   endif; ?>
