@@ -6,8 +6,8 @@
     $app->page->title = 'Settings - Account';
 
     if (isset($_GET['password'])) {
-        $changed = $app->user->changePassword($_POST['newpassword1'], $_POST['newpassword1']);
-    } else if (isset($_GET['delete'])) {
+        $changed = $app->user->changePassword($_POST['newpassword1'], $_POST['newpassword2']);
+    } else if (isset($_GET['delete']) && isset($_POST['delete']) && isset($_POST['token'])) {
         $status = $app->user->delete($_POST['delete'], $_POST['token']);
 
         if ($status === true) {

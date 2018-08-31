@@ -63,11 +63,21 @@ RewriteRule ^levels/main/extras/ssap.xml$ /levels/extras/ssap.xml [L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^user/(.+)/friends$ /user/index.php?user=$1&friends&%{QUERY_STRING} [L]
-RewriteRule ^user/(.+)/userbar$ /user/index.php?user=$1&image&%{QUERY_STRING} [L]
+RewriteRule ^user/(.+)/userbar.png$ /user/userbar.php?user=$1 [L]
+RewriteRule ^user/userbar.png$ /user/userbar.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^user/(.+)$ /user/index.php?user=$1&%{QUERY_STRING}
+
+# INBOX
+RewriteRule ^inbox/([0-9]+)$ /inbox/?view=$1&%{QUERY_STRING} [L]
+RewriteRule ^inbox/compose$ /inbox/?compose&%{QUERY_STRING} [L]
+
+# API
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api/?$ /handle_api.php?%{QUERY_STRING}
 
 # INBOX
 RewriteRule ^inbox/([0-9]+)$ /inbox/?view=$1&%{QUERY_STRING} [L]
@@ -146,7 +156,7 @@ AddDefaultCharset utf-8
 
 # Block access to directories without a default document.
 # Usually you should leave this uncommented because you shouldn't allow anyone
-# to surf through every directory on your server (which may includes rather
+# to surf through every directory on your server (which may include rather
 # private places like the CMS's directories).
 
 <IfModule mod_autoindex.c>

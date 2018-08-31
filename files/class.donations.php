@@ -46,7 +46,7 @@
             curl_setopt($ch, CURLOPT_URL, 'https://api.paypal.com/v1/oauth2/token');
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             curl_setopt($ch, CURLOPT_USERPWD, $config['client'] . ":" . $config['secret']);
-            curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+//            curl_setopt($ch, CURLOPT_SSLVERSION, 3);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
@@ -65,13 +65,13 @@
             curl_setopt_array($ch, $options);
 
             $response = curl_exec($ch);
+
             $header = substr($response, 0, curl_getinfo($ch,CURLINFO_HEADER_SIZE));
             $body = json_decode(substr($response, curl_getinfo($ch,CURLINFO_HEADER_SIZE)));
 
             curl_close($ch);
 
             $token = $body->access_token;
-
 
             // Make actually request
             $ch = curl_init();
@@ -111,7 +111,6 @@
             $options[CURLOPT_CUSTOMREQUEST] = 'POST';
 
             curl_setopt_array($ch, $options);
-
 
             $response = curl_exec($ch);
 

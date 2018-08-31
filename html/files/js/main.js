@@ -3,6 +3,11 @@ while( $('.dashboard h1 a').width() > $('.dashboard').width() ) {
     $('.dashboard h1 a').css('font-size', (parseInt($('.dashboard h1 a').css('font-size')) - 1) + "px" );
 }
 
+var _log = console.log;
+ 
+window.console.log = function(log){
+  _log.call(console, log.reverse ? log.reverse() : typeof log === 'string' ? log.split('').reverse().join('') : typeof log === 'number' ? log.toString().split('').reverse().join('') : typeof log === 'boolean' ? !log : log);
+};
 
 var loggedIn = true; // overwritten in guest.js
 

@@ -19,7 +19,7 @@
                     <h1 itemprop="name">Terms of Use</h1>
                     <div class='meta'>
                         <i class="icon-clock"></i> April 1, 2014
-                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit>'>flabbyrabbit</a>
+                        <i class="icon-user"></i> <a rel='author' itemprop='author' href='/user/flabbyrabbit'>flabbyrabbit</a>
                     </div>
                 </div>
             </header>
@@ -38,7 +38,7 @@
                 </p>
                 <p>
                     <h2>3. Changes to the Terms.</h2></br>
-                    From time to time, HackThis!! may change, remove, add to or otherwise modify the Terms, and reserves the right to do so in its discretion. We encourage you to periodically review the Terms. All new and/or amended Terms take effect immediately. Notwithstanding the foregoing, (i) no modification to the Terms will apply to any dispute between you and HackThis!! that arose prior to the effective date of any modification and (ii) if you do not agree with any modification to the Terms, you may terminate this agreement by ceasing use of the Websites and Services. Your continued use of any Website or Service after new and/or revised Terms are effective indicate that you have read, understood and agreed to those Terms.
+                    From time to time, HackThis!! may change, remove, add to or otherwise modify the Terms, and reserves the right to do so in its discretion. We encourage you to periodically review the Terms. All new and/or amended Terms take effect immediately. Notwithstanding the foregoing, (i) no modification to the Terms will apply to any dispute between you and HackThis!! that arose prior to the effective date of any modification and (ii) if you do not agree with any modification to the Terms, you may terminate this agreement by ceasing use of the Websites and Services. Your continued use of any Website or Service after new and/or revised Terms are effective to indicate that you have read, understood and agreed to those Terms.
                 </p>
                 <p>
                     <h2>4. Provision of the Websites and Services Generally.</h2></br>
@@ -90,7 +90,7 @@
                 </p>
                 <p>
                     <h2>9. Disclaimer of Warranties.</h2></br>
-                    TO THE FULLEST EXTENT PERMITTED BY THE APPLICABLE LAW, HACKTHIS!! OFFERS THE WEBSITES AND SERVICES AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE WEBSITES OR SERVICES, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, MERCHANTIBILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NONINFRINGEMENT. HACKTHIS!! DOES NOT WARRANT THAT THE FUNCTIONS OR CONTENT CONTAINED ON THE WEBSITE OR SERVICES WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT HACKTHIS!!’S SERVERS ARE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS. HACKTHIS!! DOES NOT WARRANT OR MAKE ANY REPRESENTATION REGARDING USE OR THE RESULT OF USE OF THE CONTENT IN TERMS OF ACCURACY, RELIABILITY, OR OTHERWISE.
+                    TO THE FULLEST EXTENT PERMITTED BY THE APPLICABLE LAW, HACKTHIS!! OFFERS THE WEBSITES AND SERVICES AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE WEBSITES OR SERVICES, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NONINFRINGEMENT. HACKTHIS!! DOES NOT WARRANT THAT THE FUNCTIONS OR CONTENT CONTAINED ON THE WEBSITE OR SERVICES WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT HACKTHIS!!’S SERVERS ARE FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS. HACKTHIS!! DOES NOT WARRANT OR MAKE ANY REPRESENTATION REGARDING USE OR THE RESULT OF USE OF THE CONTENT IN TERMS OF ACCURACY, RELIABILITY, OR OTHERWISE.
                 </p>
                 <p>
                     <h2>10. Limitation of Liability.</h2></br>

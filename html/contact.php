@@ -405,7 +405,7 @@
         <h1>Contact Us</h1>
 
         <p style="text-align: justify; padding-bottom: 16px; margin: 0px">
-            The easiest way to contact us is to use the form provided below. We will respond to you as quickly as we can. Feel free to say hi or send us any comments or suggestions you have...good or bad.
+            The easiest way to contact us is to use the form provided below. We will respond to you as quickly as we can. Feel free to say hi, suggest changes, or share your thoughts with us (good or bad).
         </p>
 
 <?php

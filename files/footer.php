@@ -29,6 +29,7 @@
                             <li><a href='/articles'>Articles</a></li>
                             <li><a href='/forum'>Forum</a></li>
                             <li><a href='/contact'>Contact Us</a></li>
+                            <li><a href='https://status.hackthis.co.uk'>Status</a></li>
                         </ul>
                     </div>
                     <div class='col span_3'>

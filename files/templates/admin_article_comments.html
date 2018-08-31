@@ -1,10 +1,10 @@
 <div class='admin-module'>
-    <h3><a href='/admin/articles.php'>Article submissions</a></h3>
+    <h3><a href='/admin/articles.php'>Latest article comments</a></h3>
     <table class='striped articles'>
         <thead>
             <tr>
-                <th>Title</th>
                 <th>Author</th>
+                <th>Article</th>
                 <th>Category</th>
                 <th>Submitted</th>
             </tr>
@@ -12,9 +12,9 @@
         <tbody>
             {% for article in articles %}
                 <tr>
-                    <td><a target='_blank' href='/articles/view.php?id={{ article.article_id }}'>{{ article.title }}</a></td>
                     <td><a target='_blank' href='/user/{{ article.username }}'>{{ article.username }}</a></td>
-                    <td>{{ article.category }}</td>
+                    <td><a target='_blank' href='/articles/view.php?id={{ article.article_id }}'>{{ article.title }}</a></td>
+                    <td>{{ article.comment }}</td>
                     <td><time datetime="{{ article.datetime }}">{{ article.time }}</time></td>
                 </tr>
             {% endfor %}
