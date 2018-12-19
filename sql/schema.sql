@@ -559,6 +559,19 @@ CREATE TABLE IF NOT EXISTS `irc_logs` (
     PRIMARY KEY (`log_id`)
 ) ENGINE=MyISAM;
 
+/*
+	RSS FEED
+*/
+CREATE TABLE IF NOT EXISTS `rss_feed` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `unique_id` varchar(36) NOT NULL,
+    `title` varchar(200) NOT NULL,
+    `link` varchar(200) NOT NULL,
+    `description` text NOT NULL,
+    `category` varchar(20) NOT NULL,
+    `pubDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
 
 /*
     TRIGGERS

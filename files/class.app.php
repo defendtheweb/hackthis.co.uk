@@ -11,7 +11,7 @@
 
             $this->config = $config;
             $this->config['cache'] = $this->config['path'] . "/files/cache/";
-            $this->config['log'] = $this->config['path'] . "/files/log/";
+            $this->config['log'] = $this->config['path'] . "/files/logs/";
 
             // Connect to database
             $this->connectDB($this->config['db'], false);
@@ -69,6 +69,8 @@
             $this->articles = new articles($this);
             // Create forum object
             $this->forum = new forum($this);
+            // Create RSS object
+            $this->rss = new rss();
 
             if (!is_array($custom_css))
                 $custom_css = Array();

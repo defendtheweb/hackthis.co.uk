@@ -1,0 +1,83 @@
+rss, feed {
+   background-color: #000;
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size: 0.7em;
+   line-height: 130%;
+   margin: 1em;
+}
+/* HEADER */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+channel {
+   display: block;
+   background-color: #1e1e1e;
+   padding-bottom: 0.3em;
+}
+feed>id {
+   display: block;
+   color: #0C8200;
+   font-size: 130%;
+   font-weight: bold;
+   margin: 0.3em 0.3em 1em 0.5em;
+}
+channel>title, feed>title  {
+   display: block;
+   padding: 0.4em 0.2em;
+   color: #0C8200;
+   border-bottom: 1px solid black;
+   font-weight: bold;
+   font-size: 140%;
+   background-color: #141414;
+}
+channel>link, feed>link {
+   display: block;
+   color: #aaa;
+   font-size: 130%;
+   font-weight: bold;
+   margin: 0.5em;
+}
+channel>description, feed>subtitle, feed>updated {
+   display: block;
+   color: #aaa;
+   font-size: 130%;
+   font-weight: bold;
+   margin: 0.3em 0.5em 1em 0.5em;
+}
+language, feed>entry>link , feed>entry>category {
+   display: none;
+}
+/* CONTENT */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+channel>item, feed>entry {
+   background-color: #383838;
+   border: 1px solid #094802;
+   clear: both;
+   display: block;
+   padding: 0 0 0.5em;
+   margin: 1em;
+}
+channel>item>title, feed>entry>title {
+   background-color: #141414;
+   color: #FFF;
+   display: block;
+   font-size: 110%;
+   font-weight: bold;
+   padding: 0.3em 0.5em;
+}
+channel>item>description, channel>item>category, channel>item>guid, feed>entry>summary, feed>entry>id{
+   display: block;
+   float: none;
+   text-align: left;
+   padding: 0.2em 0.5em 0.4em;
+   color: #aaa;
+}
+channel>item>link {
+   color: #fff;
+   display: block;
+   margin: 0.5em 0.3em 1em 0.3em;
+}
+channel>item>pubDate, feed>entry>updated {
+   color: #aaa;
+   display: block;
+   font-size: 86%;
+   padding: 0 0.5em;
+}
