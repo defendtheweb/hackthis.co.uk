@@ -21,6 +21,18 @@ function isPackageInstalled {
 	return $?
 }
 
+function addRepositoryForPHP5 {
+    echo -e '\t Adding ondrej/php PPA in order to install php5.'
+    sudo add-apt-repository ppa:ondrej/php
+    # If the command was not found, install software-properties-common
+    if [ $? != 0 ]; then
+        echo -e '\t Adding ondrej/php PPA unsuccessful, installing dependency and retrying.'
+        sudo apt-get install software-properties-common
+        sudo add-apt-repository ppa:ondrej/php
+    fi
+    sudo apt-get update
+}
+
 function installMissingPackages {
 
 	isPackageInstalled $1
@@ -93,6 +105,13 @@ git_root_dir=`pwd`
 
 # Package installation
 required_packages="apache2 php5 libapache2-mod-php5 mysql-server php5-mysql php5-ldap"
+
+# Check if the Ubuntu release is >= 16.04 and change php5 to php5.6
+if [ $(lsb_release -r | tr -dc '0-9') -ge 1604 ]; then
+    addRepositoryForPHP5
+    required_packages="apache2 php5.6 libapache2-mod-php5.6 mysql-server php5.6-mysql php5.6-ldap"
+fi
+
 echo Checking installed packages
 for package in $required_packages; do
 	installMissingPackages $package
@@ -195,3 +214,4 @@ a2enmod rewrite
 service apache2 restart
 
 echo Done!
+
