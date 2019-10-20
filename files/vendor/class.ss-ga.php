@@ -74,6 +74,7 @@
          * @return 
          */
         public function send() {
+            if ($this->data['utmac'] == null) return;
             if ( !isset( $this->tracking ) )
                 $this->create_gif();
             
