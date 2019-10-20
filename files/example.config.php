@@ -4,6 +4,7 @@
 
     // Site variables
     $config['path'] = realpath($_SERVER["DOCUMENT_ROOT"] . '/../');
+    $config['session-path'] = '/srv/www/hackthis.co.uk/sessions';
 
     // Database configuration
     $config['db']['driver'] = 'mysql';
