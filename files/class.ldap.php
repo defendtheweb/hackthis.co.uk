@@ -10,6 +10,10 @@
             $this->config = $config = $this->app->config['ldap'];
         }
         
+        public function isEnabled() {
+            return $this->config['enabled'];
+        }
+
         private function bind($authenticated=false) {
             if ($this->connected) {
                 if ($authenticated && !$this->authenticated) {
@@ -44,6 +48,7 @@
         }
         
         public function checkLogin($username, $password) {
+            if (!$this->isEnabled()) return false;
             if (!$username || !$password) return false;
 
             $username = $this->escapeUsername($username);
@@ -73,6 +78,7 @@
         }
         
         public function createUser($user_id, $username, $password) {
+            if (!$this->isEnabled()) return false;
             $username = $this->escapeUsername($username);
             if (!$username) return false;
             
@@ -96,6 +102,7 @@
         }
         
         public function changePassword($username, $newPassword) {
+            if (!$this->isEnabled()) return false;
             if (!$username || !$newPassword) return false;
         
             $username = $this->escapeUsername($username);
