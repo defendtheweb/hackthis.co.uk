@@ -82,7 +82,7 @@ class loader {
             $path = "{$this->css_base}min/{$this->theme}/main.css";
             if ($this->generate($path, $this->default_css, 'css')) {
                 $buster = filemtime($this->php_base.$path);
-                $css_includes = "<link rel='stylesheet' href='https://hackthis-10af.kxcdn.com{$path}?{$buster}' type='text/css'/>\n";
+                $css_includes = "<link rel='stylesheet' href='{$this->app->config('http-cache')}{$path}?{$buster}' type='text/css'/>\n";
             }
             
             //Build custom CSS file, if required
@@ -94,7 +94,7 @@ class loader {
 
                 if ($this->generate($path, $this->custom_css, 'css')) {
                     $buster = filemtime($this->php_base.$path);
-                    $css_includes .= "        <link rel='stylesheet' href='https://hackthis-10af.kxcdn.com{$path}?{$buster}' type='text/css'/>\n";
+                    $css_includes .= "        <link rel='stylesheet' href='{$this->app->config('http-cache')}{$path}?{$buster}' type='text/css'/>\n";
                 }
             }
 
@@ -104,7 +104,7 @@ class loader {
             $path = "{$this->js_base}min/main.js";
             if ($this->generate($path, $this->default_js, 'js')) {
                 $buster = filemtime($this->php_base.$path);
-                $js_includes = "<script type='text/javascript' src='https://hackthis-10af.kxcdn.com{$path}?{$buster}'></script>\n";
+                $js_includes = "<script type='text/javascript' src='{$this->app->config('http-cache')}{$path}?{$buster}'></script>\n";
             }
 
             //Build custom JS, if required
@@ -116,7 +116,7 @@ class loader {
                 
                 if ($this->generate($path, $this->custom_js, 'js')) {
                     $buster = filemtime($this->php_base.$path);
-                    $js_includes .= "        <script type='text/javascript' src='https://hackthis-10af.kxcdn.com{$path}?{$buster}'></script>\n";
+                    $js_includes .= "        <script type='text/javascript' src='{$this->app->config('http-cache')}{$path}?{$buster}'></script>\n";
                 }
             }
 

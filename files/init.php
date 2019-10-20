@@ -2,7 +2,8 @@
     // session_set_save_handler('redis');
     // session_save_path("tcp://gir:9248");
 
-    session_save_path('/srv/www/hackthis.co.uk/sessions');
+    require('config.php');
+    session_save_path($config['session-path']);
     ini_set('session.gc_maxlifetime', 3*60*60); // 3 hours
     ini_set('session.gc_probability', 1);
     ini_set('session.gc_divisor', 100);
