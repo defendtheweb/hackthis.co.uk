@@ -18,7 +18,7 @@
     $breadcrumb = '';
     if (isset($_GET['slug'])) {
         // Get id from slug
-        preg_match('/\/([0-9]+)[a-z0-9\s-]+$/s', $_GET['slug'], $matches);
+        preg_match('/\/([0-9]+)[a-z0-9\s-]*$/s', $_GET['slug'], $matches);
         if ($matches) {
             $id = $matches[1];
 
