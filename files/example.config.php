@@ -32,4 +32,10 @@
     $config['socket']['key'] = '';
 
     $config['ssga-ua'] = '';
+
+    $config['ldap']['enabled'] = false;
+    $config['ldap']['host'] = '';
+    $config['ldap']['username'] = '';
+    $config['ldap']['password'] = '';
+    $config['ldap']['dn'] = '';
 ?>
