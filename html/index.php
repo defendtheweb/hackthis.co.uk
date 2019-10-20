@@ -30,7 +30,7 @@
         require_once('header.php');
 ?>
                 <div class='row header'>
-                    <img src="https://hackthis-10af.kxcdn.com/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
+                    <img src="<?php echo $app->config('http-cache') ?>/files/images/logo_landing.png" alt="HackThis!! - The hackers playground">
                 </div>
 <?php
         if (isset($_GET['deleted'])) {

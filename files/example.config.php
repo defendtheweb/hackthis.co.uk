@@ -1,5 +1,6 @@
 <?php
-    $config['domain'] = 'http://example.org';
+    $config['domain'] = 'example.org';
+    $config['http-cache'] = 'http://example.org';
 
     // Site variables
     $config['path'] = realpath($_SERVER["DOCUMENT_ROOT"] . '/../');
